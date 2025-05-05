@@ -1,0 +1,38 @@
+case 'qtweet': {
+ if (!text) return reply(example('bagus gaming awokawok '))
+
+ const moment = require('moment-timezone')
+ const bulanInggris = [
+ "January", "February", "March", "April", "May", "June",
+ "July", "August", "September", "October", "November", "December"
+ ]
+ const waktu = moment().tz('Asia/Jakarta')
+ const jam = waktu.format('h:mm A')
+ const tanggal = waktu.date()
+ const bulan = bulanInggris[waktu.month()]
+ const tahun = waktu.year()
+ const tanggalFinal = `${bulan} ${tanggal}, ${tahun}`
+
+ let ppuser
+ try {
+ ppuser = await conn.profilePictureUrl(m.sender, 'image')
+ } catch {
+ ppuser = 'https://cloudgood.web.id/file/snxYFeB.jpg'
+ }
+
+ const apiUrl = `https://fastrestapis.fasturl.cloud/maker/tweet?content=${encodeURIComponent(text)}&ppUrl=${encodeURIComponent(ppuser)}&name=${encodeURIComponent(pushname)}&username=${encodeURIComponent(pushname)}&verified=true&time=${encodeURIComponent(jam)}&date=${encodeURIComponent(tanggalFinal)}&retweets=1115&quotes=245&likes=5885&mode=dim`
+
+ try {
+ const res = await fetch(apiUrl)
+ const buffer = await res.buffer()
+
+ await conn.sendMessage(m.chat, {
+ image: buffer,
+ caption: `*✅ Tweet created successfully!*`
+ }, { quoted: m })
+ } catch (err) {
+ console.error(err)
+ reply('❌ Gagal membuat tweet!')
+ }
+}
+break
