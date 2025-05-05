@@ -1,0 +1,33 @@
+case 'tourl': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime) return reply('Silakan kirim atau reply gambar/video/mp3/file dengan caption .tourl');
+
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+
+ let results = [];
+
+ try {
+ results.push({
+ name: 'Cdn Bagus',
+ url: await toCloudGood(media)
+ });
+ } catch (error) {
+ console.log('Error Upload:', error);
+ }
+
+ if (results.length === 0 || !results[0].url) {
+ return reply('Gagal mengunggah file ke Cdn Bagus.');
+ }
+
+ let caption = `𝗙𝗶𝗹𝗲 𝗕𝗲𝗿𝗵𝗮𝘀𝗶𝗹 𝗗𝗶 𝗨𝗽𝗹𝗼𝗮𝗱 ! 😎
+ 
+> url : ${results[0].url}
+> expired : not expired
+
+𝗖𝗿𝗲𝗮𝘁𝗲 𝗕𝘆 𝗕𝗮𝗴𝘂𝘀𝘀 ⚡ `;
+
+ await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+
+ break
