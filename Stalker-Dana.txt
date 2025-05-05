@@ -1,0 +1,21 @@
+case 'danastalk': {
+ if (!text) return reply(`Kirim nomor Dana!\nContoh: *.${command} 08123456789*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/bank?number=${encodeURIComponent(text)}&bank=dana`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return reply('Gagal mengambil data Dana.');
+
+ let { account_number, name, bank_code } = data.result.data;
+
+ let captionText = `💳 *Stalker Dana*\n\n📌 *Nomor:* ${account_number}\n👤 *Nama:* ${name}\n🏦 *Bank:* ${bank_code}`;
+
+ // Kirim pesan
+ conn.sendMessage(m.chat, { text: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
