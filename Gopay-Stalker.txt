@@ -1,0 +1,19 @@
+case 'gopaystalk': {
+ if (!text) return reply(`Kirim nomor GoPay!\nContoh: *.${command} 08123456789*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/bank?number=${encodeURIComponent(text)}&bank=gopay`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return reply('Gagal mengambil data GoPay.');
+
+ let { account_number, name, bank_code } = data.result.data;
+
+ let captionText = `💳 *Stalker GoPay*\n\n📌 *Nomor:* ${account_number}\n👤 *Nama:* ${name}\n🏦 *Bank:* ${bank_code}`;
+ conn.sendMessage(m.chat, { text: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
