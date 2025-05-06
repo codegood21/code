@@ -1,0 +1,51 @@
+case 'fakektp': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime.startsWith('image/')) return reply(`❌ Kirim atau reply passphotonya dulu dengan .${command}`);
+ if (!text) return reply(`Kirim format seperti ini bro:\n\n.${command}\nNAMA=...\nNIK=...\nTTL=...\nJK=...\nDARAH=...\nALAMAT=...\nRTRW=...\nKEL=...\nKEC=...\nAGAMA=...\nSTATUS=...\nKERJA=...\nWN=...\nBERLAKU=...\nPROV=...\nKOTA=...\nTERBUAT=...\n\nDan reply sama pas photo-nya!`);
+
+ const lines = text.trim().split('\n');
+ let data = {};
+ for (const line of lines) {
+ const [key, ...val] = line.split('=');
+ if (key && val.length > 0) data[key.trim().toLowerCase()] = val.join('=').trim();
+ }
+
+ let pasFoto = await conn.downloadAndSaveMediaMessage(quoted);
+ let pasPhotoUrl = await toCatBoxMoe(pasFoto);
+ if (!pasPhotoUrl) return reply('❌ Gagal upload pas photo!');
+
+ let apiUrl = `https://fastrestapis.fasturl.cloud/maker/ktp?` + new URLSearchParams({
+ provinsi: data.prov || 'JAWA BARAT',
+ kota: data.kota || 'BANDUNG',
+ nik: data.nik || '3275024509970001',
+ nama: data.nama || 'BUDI SANTOSO',
+ ttl: data.ttl || 'BANDUNG, 25-09-1997',
+ jenisKelamin: data.jk || 'LAKI-LAKI',
+ golonganDarah: data.darah || 'A',
+ alamat: data.alamat || 'JL. SUDIRMAN NO. 123',
+ rtRw: data.rtrw || '05/08',
+ kelDesa: data.kel || 'RAWA BOBO',
+ kecamatan: data.kec || 'PASAR MINGGU',
+ agama: data.agama || 'ISLAM',
+ status: data.status || 'BELUM MENIKAH',
+ pekerjaan: data.kerja || 'PEGAWAI SWASTA',
+ kewarganegaraan: data.wn || 'WNI',
+ masaBerlaku: data.berlaku || 'SEUMUR HIDUP',
+ terbuat: data.terbuat || '25-09-2023',
+ pasPhoto: pasPhotoUrl
+ });
+
+ try {
+ m.reply('⏳ Membuat E-KTP palsu...');
+ let response = await fetch(apiUrl);
+ let buffer = await response.buffer();
+
+ await conn.sendMessage(m.chat, { image: buffer, caption: '✅ Berikut KTP palsu-nya bro!' }, { quoted: m });
+ } catch (e) {
+ console.error(e);
+ reply('❌ Gagal membuat e-KTP bro!');
+ }
+}
+break
