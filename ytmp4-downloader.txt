@@ -1,0 +1,34 @@
+case 'ytmp4': {
+ if (!text) return reply(`Masukkan URL YouTube!\n\nContoh: .ytmp4 https://youtube.com/watch?v=KHgllosZ3kA`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/ytmp4?url=${encodeURIComponent(text)}`;
+ 
+ let res = await fetch(apiUrl);
+ let json = await res.json();
+ 
+ console.log("API JSON Response:", json); 
+
+ if (!json.status || !json.result || !json.result.download) {
+ return reply('Gagal mengambil data. Pastikan link YouTube valid!');
+ }
+
+ let { metadata, download } = json.result;
+ let { title } = metadata;
+ let { url, filename } = download;
+
+ let videoBuffer = await getBuffer(url);
+
+ await conn.sendMessage(m.chat, { 
+ video: videoBuffer, 
+ mimetype: 'video/mp4', 
+ fileName: filename || `${title}.mp4`,
+ caption: `*「 YouTube MP4 」*\n\n📺 *Judul*: ${title}`
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error("Error ytmp4:", e);
+ reply('Terjadi kesalahan saat mengambil data.');
+ }
+ break
