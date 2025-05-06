@@ -1,0 +1,32 @@
+case 'getpp': {
+ if (!m.isGroup && !text) return m.reply(`Example: ${prefix + command} @tag atau ${prefix + command} 628xxxxxx`)
+ 
+ let user;
+ if (m.quoted) {
+ user = m.quoted.sender;
+ } else if (text) {
+ const mentioned = text.match(/@(\d{5,})/);
+ if (mentioned) {
+ user = mentioned[1] + '@s.whatsapp.net';
+ } else if (text.includes('62')) {
+ const number = text.replace(/[^0-9]/g, '');
+ user = number + '@s.whatsapp.net';
+ } else {
+ return m.reply(`Format salah! Gunakan ${prefix + command} @tag atau ${prefix + command} 628xxxxx`);
+ }
+ } else {
+ user = m.sender;
+ }
+
+ try {
+ let pp = await conn.profilePictureUrl(user, 'image');
+ await conn.sendMessage(m.chat, {
+ image: { url: pp },
+ caption: `Foto profil dari *@${user.split('@')[0]}*`,
+ mentions: [user]
+ }, { quoted: m });
+ } catch (e) {
+ m.reply('Gagal mengambil foto profil! Mungkin tidak ada atau disembunyikan.');
+ }
+}
+break
