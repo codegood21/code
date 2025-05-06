@@ -1,0 +1,49 @@
+case 'sendmail': {
+ if (!text) return reply('*Contoh:* .sendmail email@gmail.com|Subjek|Pesan');
+
+ const [target, subject, ...messageParts] = text.split('|');
+ if (!target || !subject || !messageParts.length) return reply('❌ Format salah!\nContoh: .sendmail email@gmail.com|Subjek|Isi pesan');
+
+ const message = messageParts.join('|');
+
+ async function bagusmail(target, subject, message) {
+ const axios = require('axios');
+ const data = JSON.stringify({
+ "to": target,
+ "subject": subject,
+ "message": message
+ });
+
+ const config = {
+ method: 'POST',
+ url: 'https://sendmail-lime.vercel.app/send-email',
+ headers: {
+ 'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.36',
+ 'Content-Type': 'application/json',
+ 'sec-ch-ua-platform': '"Android"',
+ 'sec-ch-ua': '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
+ 'sec-ch-ua-mobile': '?1',
+ 'origin': 'https://goodsite.vercel.app',
+ 'sec-fetch-site': 'same-origin',
+ 'sec-fetch-mode': 'cors',
+ 'sec-fetch-dest': 'empty',
+ 'referer': 'https://goodsite.vercel.app/',
+ 'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+ 'priority': 'u=1, i'
+ },
+ data: data
+ };
+
+ const api = await axios.request(config);
+ return api.data;
+ }
+
+ try {
+ const result = await bagusmail(target.trim(), subject.trim(), message.trim());
+ reply('✅ Pesan E-Mail berhasil dikirim!');
+ } catch (err) {
+ console.error(err);
+ reply(`❌ Gagal mengirim email:\n${err.response?.data || err.message}`);
+ }
+}
+break
