@@ -1,0 +1,47 @@
+case 'snackstalk': {
+ if (!text) return reply(`Kirim username SnackVideo!\nContoh: *.${command} bolanetk30552*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ 
+ const url = `https://www.snackvideo.com/@${encodeURIComponent(text)}`;
+ const headers = {
+ 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/119.0.0.0 Safari/537.36',
+ 'accept-language': 'en-US,en;q=0.9',
+ };
+
+ const { data: html } = await axios.get(url, { headers });
+ const $ = cheerio.load(html);
+ const jsonRaw = $('#Person').html();
+ if (!jsonRaw) return reply('Gagal mengambil data SnackVideo.');
+
+ const jsonData = JSON.parse(jsonRaw);
+ const entity = jsonData.mainEntity;
+
+ const likes = entity.interactionStatistic.find(i => i.interactionType['@type'].includes('LikeAction'))?.userInteractionCount || 0;
+ const followers = entity.interactionStatistic.find(i => i.interactionType['@type'].includes('FollowAction'))?.userInteractionCount || 0;
+ const posts = entity.agentInteractionStatistic?.userInteractionCount || 0;
+
+ let captionText = `📌 *Nama:* ${entity.name || 'Tidak diketahui'}\n👤 *Username:* @${entity.alternateName || text}\n📝 *Bio:* ${entity.description || 'Tidak ada bio'}\n\n👥 *Followers:* ${followers}\n👤 *Following:* ${entity.interactionStatistic.find(i => i.interactionType['@type'].includes('FollowAction'))?.userInteractionCount || 0}\n❤️ *Likes:* ${likes}\n🎥 *Posts:* ${posts}`;
+
+ let avatarBuffer;
+ if (entity.image) {
+ try {
+ avatarBuffer = await getBuffer(entity.image);
+ } catch (err) {
+ console.error('Gagal mengambil gambar avatar:', err);
+ avatarBuffer = null;
+ }
+ }
+
+ if (avatarBuffer) {
+ conn.sendMessage(m.chat, { image: avatarBuffer, caption: captionText }, { quoted: m });
+ } else {
+ reply(captionText);
+ }
+
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
