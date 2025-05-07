@@ -1,0 +1,25 @@
+case 'threads': {
+ if (!text) return m.reply(`Contoh penggunaan:\n.threads <url>\n\nContoh:\n.threads https://www.threads.com/@aalszakila/post/DJWPtGvziLi`);
+
+ try {
+ const res = await axios.get(`https://velyn.biz.id/api/downloader/threads?url=${encodeURIComponent(text)}`);
+ const json = res.data;
+
+ if (!json.status) {
+ return m.reply('❌ Gagal mendapatkan data dari URL Threads. Pastikan URL valid.');
+ }
+
+ const downloadUrl = json.data.downloads[0].download_url;
+ const mediaType = json.data.type;
+
+ if (mediaType === 'video') {
+ await conn.sendMessage(m.chat, { video: { url: downloadUrl }, caption: '✅ Video Threads berhasil diunduh.' }, { quoted: m });
+ } else {
+ await conn.sendMessage(m.chat, { image: { url: downloadUrl }, caption: '✅ Gambar Threads berhasil diunduh.' }, { quoted: m });
+ }
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses permintaan.');
+ }
+}
+break;
