@@ -1,0 +1,39 @@
+case 'bratvid': {
+ if (!text) return reply(`Mana teks-nya? Contoh: ${prefix + command} apanih cok`);
+
+ const cleanText = text.replace(new RegExp(`^${command}\\s*`, 'i'), '').trim();
+
+ if (!cleanText) return reply('Masukkan teks setelah perintah!');
+
+ const encodedText = encodeURIComponent(cleanText);
+ const videoUrl = `https://fastrestapis.fasturl.cloud/maker/brat/animated?text=${encodedText}&mode=animated`;
+
+ try {
+ const videoBuffer = await getBuffer(videoUrl);
+ 
+ const { writeFileSync, unlinkSync } = require('fs');
+ const { exec } = require('child_process');
+
+ // Simpan video sementara
+ const inputPath = './temp/input.mp4';
+ const outputPath = './temp/output.webp';
+ writeFileSync(inputPath, videoBuffer);
+
+ exec(`ffmpeg -i ${inputPath} -vf scale=512:512 -c:v libwebp -lossless 1 -q:v 50 -preset default -an ${outputPath}`, async (err) => {
+ if (err) {
+ console.error('FFmpeg Error:', err);
+ reply('Gagal mengubah video ke stiker. Coba lagi!');
+ return;
+ }
+
+ const webpBuffer = require('fs').readFileSync(outputPath);
+ await conn.sendMessage(m.chat, { sticker: webpBuffer }, { quoted: m });
+ unlinkSync(inputPath);
+ unlinkSync(outputPath);
+ });
+ } catch (err) {
+ reply('Gagal membuat brat video. Coba lagi nanti.');
+ console.error(err);
+ }
+}
+break
