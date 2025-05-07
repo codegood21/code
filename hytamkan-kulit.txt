@@ -1,0 +1,39 @@
+case 'hytamkan': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime.startsWith('image/') && !mime.startsWith('video/')) return reply(`❌ Kirim atau reply gambar/video dengan .${command}`);
+
+ try {
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+ let imageUrl = '';
+
+ if (mime.startsWith('video/')) {
+ let ffmpeg = require('fluent-ffmpeg');
+ let outputImage = media.replace('.mp4', '.jpg');
+
+ await new Promise((resolve, reject) => {
+ ffmpeg(media)
+ .screenshots({ count: 1, folder: './', filename: outputImage })
+ .on('end', resolve)
+ .on('error', reject);
+ });
+
+ imageUrl = await toCatBoxMoe(outputImage);
+ } else {
+ imageUrl = await toCatBoxMoe(media);
+ }
+
+ if (!imageUrl) return reply('❌ Gagal upload media!');
+
+ let apiUrl = `https://fastrestapis.fasturl.cloud/aiimage/negro?imageUrl=${encodeURIComponent(imageUrl)}&filter=black`;
+ let response = await fetch(apiUrl);
+ let buffer = await response.buffer();
+
+ await conn.sendMessage(m.chat, { image: buffer, caption: '✅ Ini kulit nya udh jadi blackaren' }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat memproses media!');
+ }
+}
+break
