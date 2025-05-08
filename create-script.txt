@@ -1,0 +1,118 @@
+case 'createsc': {
+ (async () => {
+ if (!isCreator && !isSellerSc) return m.reply("*Fitur Khusus Seller 💬*\n_Buy Seller? Chat .owner_");
+ let path = require("path");
+ let AdmZip = require("adm-zip");
+ let fs = require("fs");
+ let fetch = require("node-fetch");
+ let crct = "https://img1.pixhost.to/images/5183/590304755_imgtmp.jpg";
+ let txtcrct = `\n--- Gunakan format: ---\n\`${prefix+command} <namaBot>|<namaOwner>|<Versi script>|<Password>|<fitur1>,<fitur2>,...\`\n\n--- Contoh : ---\n*${prefix+command} keel|keelll|V1|12345|brat,qc,play,pinterest*\n\n> ketik .listfitursc untuk melihat fitur tersedia.\n`;
+
+ const args = text.split('|');
+ if (args.length < 5) {
+ return kxz.sendMessage(m.chat, { image: { url: crct }, caption: txtcrct }, { quoted: m });
+ }
+
+ const mycfitur = require('./lib/casefitur.json');
+ const [botName, ownerName, botVersion, password, featuresStr] = args;
+ let features = featuresStr.split(',').map(f => f.trim());
+ if (features.includes("allfitur")) features = mycfitur.map(f => f.name);
+
+ m.reply(`🗂 *Process Script Created*\n> [ \`${botName}\` ]`);
+
+ const mediaFireAPI = 'https://api.siputzx.my.id/api/d/mediafire?url=https://www.mediafire.com/file/4tvn38pcwm6684i/RLBasesZ.zip/file';
+ const fixLink = "https://files.catbox.moe/tdquuz.zip"
+
+ try {
+ let res = await fetch(fixLink);
+ let buffer = await res.arrayBuffer();
+ let tempZipPath = './temp/disini.zip';
+ // PERBAIKAN ERROR DI SINI
+ fs.writeFileSync(tempZipPath, Buffer.from(buffer));
+
+ let zip = new AdmZip(tempZipPath);
+ let extractPath = `./temp/extracted_${m.pushName || 'user'}`;
+ zip.extractAllTo(extractPath, true);
+
+ const casePath = `${extractPath}/case.js`;
+ let caseContent = fs.readFileSync(casePath, 'utf-8');
+ let validFeatures = [];
+
+ for (let feature of features) {
+ let data = mycfitur.find(f => f.name === feature);
+ if (!data) {
+ m.reply(`⚠ *Fitur "${feature}" tidak ditemukan!*`);
+ continue;
+ }
+
+ if (!caseContent.includes(data.function)) {
+ caseContent = data.function + '\n' + caseContent;
+ }
+
+ if (!caseContent.includes(data.casenya)) {
+ caseContent = caseContent.replace('switch (command) {', `switch (command) {\n${data.casenya}`);
+ }
+
+ if (data.upFile?.length > 0) {
+ for (let file of data.upFile) {
+ let filePath = Object.keys(file)[0];
+ let fileContent = file[filePath];
+ let fullPath = path.join(extractPath, filePath);
+ fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+ fs.writeFileSync(fullPath, fileContent, 'utf-8');
+ }
+ }
+
+ validFeatures.push(feature);
+ await new Promise(r => setTimeout(r, 500));
+ }
+
+ fs.writeFileSync(casePath, caseContent, 'utf-8');
+
+ const updateText = (filePath, updates) => {
+ let text = fs.readFileSync(filePath, 'utf-8');
+ for (let [pattern, replacement] of updates) {
+ text = text.replace(new RegExp(pattern, 'g'), replacement);
+ }
+ fs.writeFileSync(filePath, text, 'utf-8');
+ };
+
+ updateText(`${extractPath}/connection.js`, [[`const pw = ".*?";`, `const pw = "${password}";`]]);
+ updateText(`${extractPath}/settings.js`, [
+ [`global.owner = .*`, `global.owner = "${m.sender.split('@')[0]}";`],
+ [`global.namabot = .*`, `global.namabot = '${botName}';`],
+ [`global.ownername = .*`, `global.ownername = '${ownerName}';`],
+ [`global.botversion = .*`, `global.botversion = '${botVersion}';`]
+ ]);
+
+ fs.writeFileSync(`${extractPath}/database/owner.json`, JSON.stringify([m.sender.split('@')[0]]), 'utf-8');
+
+ const listMenuPath = `${extractPath}/lib/listmenu.json`;
+ let menu = fs.existsSync(listMenuPath) ? JSON.parse(fs.readFileSync(listMenuPath)) : [];
+ validFeatures.forEach(f => { if (!menu.includes(f)) menu.push(f) });
+ fs.writeFileSync(listMenuPath, JSON.stringify(menu, null, 2), 'utf-8');
+
+ let newZip = new AdmZip();
+ newZip.addLocalFolder(extractPath);
+ let outputZip = `./temp/sc_${m.pushName || 'user'}.zip`;
+ newZip.writeZip(outputZip);
+
+ if (validFeatures.length === 0) return m.reply("❌ Tidak ada fitur valid!");
+
+ await kxz.sendMessage(m.chat, {
+ document: fs.readFileSync(outputZip),
+ mimetype: 'application/zip',
+ fileName: `sc_${botName}.zip`,
+ caption: `✅ *Success Script Created!*\n> By keel Official\n\n*Creator:* ${m.pushName || 'user'}\n*Fitur:* [${validFeatures}]\n*Password:* ${password}`
+ }, { quoted: m });
+
+ fs.rmSync(extractPath, { recursive: true, force: true });
+ fs.unlinkSync(tempZipPath);
+ fs.unlinkSync(outputZip);
+ } catch (err) {
+ console.error(err);
+ m.reply(`❌ Terjadi error saat membuat script:\n${err.message}`);
+ }
+ })();
+}
+break;
