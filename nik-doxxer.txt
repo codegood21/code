@@ -1,0 +1,56 @@
+case 'getnik': {
+ if (!text) return m.reply('Contoh: .detailnik 6203011408000006');
+ 
+ try {
+ if (!/^\d{16}$/.test(text)) return m.reply('❌ Format NIK tidak valid (16 digit angka)');
+
+ const axios = require('axios');
+ const moment = require('moment-timezone');
+
+ const provId = text.substring(0, 2);
+ const kabId = text.substring(0, 4);
+ const kecId = text.substring(0, 6);
+ const kodePos = text.substring(12, 16);
+ const kelaminKode = parseInt(text.substring(6, 8));
+ const tanggal = kelaminKode > 40 ? kelaminKode - 40 : kelaminKode;
+ const bulan = parseInt(text.substring(8, 10));
+ const tahun = parseInt(text.substring(10, 12));
+ const kelamin = kelaminKode > 40 ? 'Perempuan' : 'Laki-Laki';
+ const tahunLahir = tahun < 25 ? 2000 + tahun : 1900 + tahun;
+ const tanggalLahir = moment(`${tahunLahir}-${bulan}-${tanggal}`, 'YYYY-MM-DD').format('DD-MM-YYYY');
+
+ // Ambil data dari API Wilayah Indonesia
+ const [provRes, kabRes, kecRes] = await Promise.all([
+ axios.get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json'),
+ axios.get(`https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${provId}.json`),
+ axios.get(`https://emsifa.github.io/api-wilayah-indonesia/api/districts/${kabId}.json`)
+ ]);
+
+ const provinsi = provRes.data.find(p => p.id == provId)?.name || 'Tidak Diketahui';
+ const kabupaten = kabRes.data.find(k => k.id == kabId)?.name || 'Tidak Diketahui';
+ const kecamatan = kecRes.data.find(kc => kc.id == kecId)?.name || 'Tidak Diketahui';
+
+ const hasil = `
+✅ Success in Getting Info 📣
+
+🔹 NIK: ${text}
+🔹 Provinsi ID: ${provId}
+🔹 Nama Provinsi: ${provinsi}
+🔹 Kabupaten/Kota ID: ${kabId}
+🔹 Nama Kabupaten/Kota: ${kabupaten}
+🔹 Kecamatan ID: ${kecId}
+🔹 Nama Kecamatan: ${kecamatan}
+🔹 Kode Pos: ${kodePos}
+🔹 Jenis Kelamin: ${kelamin}
+🔹 Tanggal Lahir: ${tanggalLahir}
+🔹 Uniqcode: ${kodePos}
+
+👨‍💻 Bot Create By @bagusxixepen
+`.trim();
+ m.reply(hasil);
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses NIK. Pastikan format NIK benar atau server API sedang bermasalah.');
+ }
+}
+break
