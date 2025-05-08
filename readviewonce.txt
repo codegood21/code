@@ -1,0 +1,65 @@
+async function toCloudGood(filePath) {
+ try {
+ const form = new FormData();
+ form.append("fileToUpload", fs.createReadStream(filePath));
+ form.append("reqtype", "fileupload");
+
+ const response = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders(),
+ "User-Agent": "Mozilla/5.0"
+ },
+ maxBodyLength: Infinity,
+ maxContentLength: Infinity
+ });
+
+ return response.data;
+ } catch (error) {
+ return `Error Catbox: ${error.message}`;
+ }
+}
+
+case 'rvo':
+case 'readviewonce': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime) return reply('Reply gambar/video/audio yang view-once!');
+
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+
+ let results = [];
+ try {
+ results.push({
+ name: 'Cdn Bagus',
+ url: await toCloudGood(media)
+ });
+ } catch (error) {
+ console.log('Error Upload:', error);
+ }
+
+ if (results.length === 0 || !results[0].url) {
+ return reply('Gagal mengunggah file ke Cdn Bagus.');
+ }
+
+ try {
+ const axios = require('axios');
+ let buffer = (await axios.get(results[0].url, { responseType: 'arraybuffer' })).data;
+
+ if (/video/.test(mime)) {
+ await conn.sendMessage(m.chat, { video: buffer, caption: 'Nih bro, hasil RVO-nya.' }, { quoted: m });
+ } else if (/image/.test(mime)) {
+ await conn.sendMessage(m.chat, { image: buffer, caption: 'Nih bro, hasil RVO-nya.' }, { quoted: m });
+ } else if (/audio/.test(mime)) {
+ await conn.sendMessage(m.chat, { audio: buffer, mimetype: 'audio/mpeg', ptt: true }, { quoted: m });
+ } else {
+ reply('Tipe media tidak didukung.');
+ }
+
+ } catch (err) {
+ console.error(err);
+ reply('Gagal mengambil hasil upload.');
+ }
+
+}
+break
