@@ -1,0 +1,50 @@
+async function toCatBoxMoe(filePath) {
+ try {
+ const form = new FormData();
+ form.append("fileToUpload", fs.createReadStream(filePath));
+ form.append("reqtype", "fileupload");
+
+ const response = await axios.post("https://catbox.moe/user/api.php", form, {
+ headers: {
+ ...form.getHeaders(),
+ "User-Agent": "Mozilla/5.0"
+ },
+ maxBodyLength: Infinity,
+ maxContentLength: Infinity
+ });
+
+ return response.data;
+ } catch (error) {
+ return `Error Catbox: ${error.message}`;
+ }
+}
+
+case 'removewm': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime.startsWith('image/')) return reply('❌ Kirim atau reply gambar dengan .removewm');
+
+ try {
+ m.reply('⏳ Mengupload gambar...');
+
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+
+ let imageUrl = await toCatBoxMoe(media);
+ if (!imageUrl) return reply('❌ Gagal upload gambar ke server!');
+
+ let apiUrl = `https://fastrestapis.fasturl.cloud/aiimage/gemini?prompt=please%20remove%20the%20writing%20on%20the%20photo&imageUrl=${encodeURIComponent(imageUrl)}`;
+ let response = await fetch(apiUrl);
+ let buffer = await response.buffer();
+
+await conn.sendMessage(m.chat, {
+ image: buffer,
+ caption: '✅ udah tot'
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat memproses gambar!');
+ }
+}
+break
