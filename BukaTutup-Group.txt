@@ -1,0 +1,19 @@
+case 'open': 
+case 'buka': {
+if (!m.isGroup) return onlyGrup()
+if (!isAdmins) return onlyAdmin()
+if (!isBotAdmins) return onlyBotAdmin()
+conn.groupSettingUpdate(m.chat, 'not_announcement')
+m.reply(`Sukses membuka grup`)
+}
+break
+
+case 'close': 
+case 'tutup': {
+if (!m.isGroup) return onlyGrup()
+if (!isAdmins) return onlyAdmin()
+if (!isBotAdmins) return onlyBotAdmin()
+conn.groupSettingUpdate(m.chat, 'announcement')
+m.reply(`Sukses menutup grup`)
+}
+break
