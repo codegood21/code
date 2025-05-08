@@ -1,0 +1,22 @@
+case 'telestalk': {
+ if (!text) return reply(`Kirim username Telegram!\nContoh: *.${command} bagusror*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/telegram?username=${encodeURIComponent(text)}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return reply('Gagal mengambil data Telegram.');
+
+ let { title, desc, imageUrl } = data.result;
+
+ let captionText = `📱 *Stalker Telegram*\n\n📝 *Nama:* ${title}\n🗨️ *Deskripsi:* ${desc}`;
+
+ let imageBuffer = await getBuffer(imageUrl);
+
+ conn.sendMessage(m.chat, { image: imageBuffer, caption: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
