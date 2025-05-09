@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Modern Portfolio</title>
+<style>
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  a:hover,
+  a:focus {
+    color: #ffcc00;
+    outline: none;
+  }
+
+  header {
+    background-color: rgba(0,0,0,0.3);
+    padding: 1rem 2rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    backdrop-filter: blur(6px);
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+  nav ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav ul li {
+    margin-left: 1.5rem;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 100px auto 2rem auto;
+    padding: 0 1rem;
+  }
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  h1, h2, h3 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+  h1 {
+    font-size: 2.5rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 4rem 1rem 6rem 1rem;
+  }
+  .hero p {
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    color: #e0e0e0;
+  }
+  .btn-primary {
+    display: inline-block;
+    background-color: #ffcc00;
+    color: #222;
+    font-weight: 700;
+    padding: 0.75rem 1.75rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(255, 204, 0, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    background-color: #ffdb4d;
+    box-shadow: 0 6px 15px rgba(255, 219, 77, 0.6);
+    outline: none;
+  }
+
+  /* About */
+  .about p {
+    font-size: 1.125rem;
+    max-width: 680px;
+    color: #ddd;
+  }
+
+  /* Skills */
+  .skills ul {
+    list-style: none;
+    padding: 0;
+    columns: 2;
+    max-width: 500px;
+    color: #f0e68c;
+  }
+  .skills ul li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .skills ul li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: #ffcc00;
+  }
+
+  /* Projects Grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(255,204,0,0.5);
+    outline: none;
+  }
+  .project-card h3 {
+    margin-top: 0;
+    color: #ffcc00;
+  }
+  .project-card p {
+    color: #eee;
+    font-size: 0.95rem;
+  }
+  .project-card a {
+    margin-top: 0.8rem;
+    display: inline-block;
+    font-weight: 600;
+    color: #ffcc00;
+  }
+  
+  /* Contact */
+  .contact {
+    text-align: center;
+  }
+  .contact form {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .contact label {
+    margin-bottom: 0.25rem;
+    color: #f0e68c;
+    font-weight: 600;
+  }
+  .contact input,
+  .contact textarea {
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+  .contact textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  .contact button {
+    background-color: #ffcc00;
+    border: none;
+    color: #222;
+    font-weight: 700;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(255, 204, 0, 0.4);
+  }
+  .contact button:hover,
+  .contact button:focus {
+    background-color: #ffdb4d;
+    outline: none;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1rem 1rem;
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    nav ul {
+      flex-direction: column;
+      background: rgba(0,0,0,0.5);
+      position: fixed;
+      top: 56px;
+      right: 0;
+      width: 200px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      border-radius: 6px 0 0 6px;
+    }
+    nav ul.show {
+      transform: translateX(0);
+    }
+    nav ul li {
+      margin: 1rem 0;
+      text-align: right;
+      margin-left: 0;
+      margin-right: 1rem;
+    }
+    .menu-toggle {
+      display: block;
+      cursor: pointer;
+      font-size: 1.75rem;
+      user-select: none;
+      color: #fff;
+    }
+  }
+  @media (min-width: 601px) {
+    .menu-toggle {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav aria-label="Primary navigation">
+    <div class="logo" tabindex="0">YourName</div>
+    <div class="menu-toggle" aria-controls="primary-menu" aria-expanded="false" tabindex="0" role="button" aria-label="Toggle menu">&#9776;</div>
+    <ul id="primary-menu">
+      <li><a href="#home" tabindex="0">Home</a></li>
+      <li><a href="#about" tabindex="0">About</a></li>
+      <li><a href="#projects" tabindex="0">Projects</a></li>
+      <li><a href="#contact" tabindex="0">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <section class="hero" id="home" aria-label="Introduction">
+    <h1>Hi, I'm YourName</h1>
+    <p>Creative Frontend Developer & Designer crafting modern and responsive web experiences.</p>
+    <a class="btn-primary" href="#projects" tabindex="0">View My Work</a>
+  </section>
+
+  <section class="about" id="about" aria-label="About me">
+    <h2>About Me</h2>
+    <p>
+      I am a passionate web developer with a focus on responsive design and a user-centered approach. Experienced with modern front-end technologies like HTML5, CSS3, JavaScript, and frameworks such as React and Vue.js. I love turning ideas into beautiful, usable websites.
+    </p>
+  </section>
+
+  <section class="skills" aria-label="Skills and expertise">
+    <h2>Skills</h2>
+    <ul>
+      <li>HTML5, CSS3 & Sass</li>
+      <li>JavaScript (ES6+), TypeScript</li>
+      <li>React, Vue.js</li>
+      <li>Responsive & Mobile Design</li>
+      <li>UI/UX Design Principles</li>
+      <li>Git & Version Control</li>
+      <li>Web Accessibility (a11y)</li>
+      <li>SEO Best Practices</li>
+    </ul>
+  </section>
+
+  <section class="projects" id="projects" aria-label="My projects">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <article class="project-card" tabindex="0" aria-labelledby="proj1title">
+        <h3 id="proj1title">Project Alpha</h3>
+        <p>A responsive portfolio website built with React and styled-components. Features dynamic theming and smooth animations.</p>
+        <a href="https://github.com/yourname/project-alpha" target="_blank" rel="noopener noreferrer" tabindex="0">GitHub Repo</a>
+      </article>
+      <article class="project-card" tabindex="0" aria-labelledby="proj2title">
+        <h3 id="proj2title">Task Manager App</h3>
+        <p>A task management web app using Vue.js with local storage support for offline use and drag-and-drop functionality.</p>
+        <a href="https://github.com/yourname/task-manager" target="_blank" rel="noopener noreferrer" tabindex="0">GitHub Repo</a>
+      </article>
+      <article class="project-card" tabindex="0" aria-labelledby="proj3title">
+        <h3 id="proj3title">E-commerce Landing</h3>
+        <p>Modern e-commerce landing page built with HTML, SCSS, and vanilla JavaScript. Optimized for SEO and performance.</p>
+        <a href="https://github.com/yourname/ecommerce-landing" target="_blank" rel="noopener noreferrer" tabindex="0">GitHub Repo</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-label="Contact me">
+    <h2>Contact</h2>
+    <form aria-describedby="contact-desc" onsubmit="event.preventDefault(); alert('Thank you for reaching out! I will get back to you soon.'); this.reset();">
+      <p id="contact-desc" style="color:#ddd; max-width: 500px; margin: auto;">Feel free to send me a message for collaborations or questions.</p>
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" placeholder="Your name" required />
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required />
+      <label for="message">Message</label>
+      <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+      <button type="submit" aria-label="Send message">Send</button>
+    </form>
+  </section>
+</main>
+<footer>
+  <p>© 2024 YourName &middot; Crafted with care.</p>
+</footer>
+<script>
+  // Mobile menu toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  const primaryMenu = document.getElementById('primary-menu');
+
+  menuToggle.addEventListener('click', () => {
+    const expanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+    menuToggle.setAttribute('aria-expanded', !expanded);
+    primaryMenu.classList.toggle('show');
+  });
+
+  // Accessibility: toggle on Enter/Space on menu toggle
+  menuToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      menuToggle.click();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
