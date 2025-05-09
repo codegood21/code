@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modern Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(90deg, #06b6d4, #3b82f6);
+    padding: 1.2rem 1rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+  nav {
+    margin-top: 0.6rem;
+  }
+  nav a {
+    color: #e0f2fe;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus {
+    color: #facc15;
+    outline: none;
+  }
+  .container {
+    max-width: 960px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+  }
+  .intro {
+    text-align: center;
+    padding-bottom: 2rem;
+  }
+  .intro h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #38bdf8;
+  }
+  .intro p {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  section {
+    margin-bottom: 4rem;
+  }
+  h3 {
+    border-bottom: 2px solid #38bdf8;
+    display: inline-block;
+    padding-bottom: 0.3rem;
+    font-weight: 600;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #f0f9ff;
+  }
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 15px -5px rgba(3, 105, 161, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover, .card:focus-within {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px -5px #38bdf8cc;
+    outline: none;
+  }
+  .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  .card-content {
+    padding: 1rem 1.2rem 1.2rem;
+  }
+  .card-content h4 {
+    margin: 0 0 0.6rem 0;
+    font-weight: 700;
+    color: #e0f2fe;
+  }
+  .card-content p {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin: 0 0 1rem;
+  }
+  .card-content a {
+    text-decoration: none;
+    color: #38bdf8;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+  .card-content a:hover,
+  .card-content a:focus {
+    color: #facc15;
+    outline: none;
+  }
+  footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: #0e152a;
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+  /* Responsive for smaller devices */
+  @media (max-width: 400px) {
+    header h1 {
+      font-size: 1.4rem;
+    }
+    .intro h2 {
+      font-size: 2rem;
+    }
+    nav a {
+      margin: 0 0.6rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>John Doe</h1>
+    <nav aria-label="Primary Navigation">
+      <a href="#about" tabindex="0">About</a>
+      <a href="#projects" tabindex="0">Projects</a>
+      <a href="#contact" tabindex="0">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container" role="main">
+    <section id="about" class="intro" tabindex="0">
+      <h2>Hello, I'm John</h2>
+      <p>A passionate front-end developer creating modern and responsive web experiences with a keen eye for design and performance.</p>
+    </section>
+
+    <section id="projects" tabindex="0" aria-label="Portfolio Projects">
+      <h3>Recent Projects</h3>
+      <div class="projects">
+        <article class="card" tabindex="0" aria-labelledby="project1-title" aria-describedby="project1-desc">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Screenshot of E-commerce website" />
+          <div class="card-content">
+            <h4 id="project1-title">E-Commerce Website</h4>
+            <p id="project1-desc">A fully responsive e-commerce platform with smooth animations, cart functionality, and seamless checkout experience.</p>
+            <a href="#" aria-label="View E-Commerce Website live demo">View Demo</a>
+          </div>
+        </article>
+        <article class="card" tabindex="0" aria-labelledby="project2-title" aria-describedby="project2-desc">
+          <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80" alt="Screenshot of blog web app" />
+          <div class="card-content">
+            <h4 id="project2-title">Personal Blog</h4>
+            <p id="project2-desc">A minimalist blog platform with full CMS integration, dark mode support, and SEO optimized architecture.</p>
+            <a href="#" aria-label="View Personal Blog live demo">View Demo</a>
+          </div>
+        </article>
+        <article class="card" tabindex="0" aria-labelledby="project3-title" aria-describedby="project3-desc">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Screenshot of portfolio website" />
+          <div class="card-content">
+            <h4 id="project3-title">Portfolio Website</h4>
+            <p id="project3-desc">A clean and modern portfolio showcasing projects, skills, and contact information with smooth scrolling effects.</p>
+            <a href="#" aria-label="View Portfolio Website live demo">View Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" tabindex="0" aria-label="Contact Information">
+      <h3>Contact Me</h3>
+      <p style="max-width:400px;">Feel free to reach out for collaborations, freelance projects, or just a friendly hello.</p>
+      <address>
+        <strong>Email:</strong> <a href="mailto:john.doe@example.com" style="color:#38bdf8;">john.doe@example.com</a><br />
+        <strong>Phone:</strong> <a href="tel:+1234567890" style="color:#38bdf8;">+1 (234) 567-890</a><br />
+        <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/johndoe" target="_blank" rel="noopener" style="color:#38bdf8;">linkedin.com/in/johndoe</a>
+      </address>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 John Doe. All rights reserved.
+  </footer>
+</body>
+</html>
+
+```
