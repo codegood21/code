@@ -1,0 +1,31 @@
+case 'createhtml': {
+ if (!text) return reply('❌ Masukkan perintah dengan deskripsi website.\nContoh: .createhtml Buatkan website portofolio dengan tema modern');
+
+ try {
+ m.reply('⏳ Membuat HTML, tunggu sebentar...');
+
+ // Request ke API Zell
+ let apiUrl = `https://apizell.web.id/ai/blackbox?text=${encodeURIComponent(text)}%20jangan%20berikan%20saya%20respon%20lain,%20kirimkan%20saja%20kode%20htmlnya%20tanpa%20tambahan%20kata%20apapun,ingat%20jangan%20berikan%20respon%20lain%20apapun%20termasuk%20nama%20file`;
+ let response = await fetch(apiUrl);
+ let data = await response.json();
+ 
+ if (data.status !== "success") return reply('❌ Terjadi kesalahan saat membuat HTML.');
+
+ let htmlCode = data.result.match(/<!DOCTYPE html[\s\S]*/)?.[0];
+ if (!htmlCode) return reply('❌ Kode HTML tidak valid atau tidak ditemukan!');
+
+ let buffer = Buffer.from(htmlCode, 'utf-8');
+
+ await conn.sendMessage(m.chat, {
+ document: buffer,
+ mimetype: 'text/html',
+ fileName: 'generated.html',
+ caption: '✅ HTML berhasil dibuat dan dikirim sebagai file!'
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat membuat HTML!');
+ }
+}
+break
