@@ -1,0 +1,26 @@
+case 'pastebin': {
+ if (!text) {
+ return m.reply('*Format salah Contoh:* .pastebin https://pastebin.com/xxxxxxxx');
+ }
+
+ try {
+ const apiUrl = `https://fastrestapis.fasturl.cloud/downup/pastebindown?url=${encodeURIComponent(text)}`;
+ const res = await axios.get(apiUrl);
+ const data = res.data;
+
+ if (!data || !data.status || !data.result || !data.result.content) {
+ return m.reply('Gagal mengambil code nya nih pastikan link bener ama link pastebin nya ga private');
+ }
+
+ const pastebinContent = data.result.content.trim();
+ if (!pastebinContent) {
+ return m.reply('Data Pastebin kosong.');
+ }
+
+ m.reply(`📋 *Isi Pastebin:*\n\n${pastebinContent}`);
+ } catch (error) {
+ console.error(error);
+ m.reply('❌ Terjadi kesalahan saat mengambil data.');
+ }
+};
+break
