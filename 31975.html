@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Modern Portfolio</title>
+<style>
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    min-height: 100vh;
+    color: #333;
+  }
+  a {
+    color: #1e90ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Container */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding-bottom: 1.5rem;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #222;
+    margin-bottom: 0.3rem;
+  }
+  header p {
+    font-weight: 400;
+    color: #666;
+    font-size: 1rem;
+  }
+
+  /* Nav */
+  nav {
+    margin: 1rem 0 2rem 0;
+    text-align: center;
+  }
+  nav a {
+    margin: 0 15px;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  nav a:hover {
+    background-color: #1e90ff;
+    color: #fff;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 2rem;
+  }
+  section h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #1e90ff;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  /* About */
+  #about p {
+    line-height: 1.6;
+    font-size: 1.1rem;
+    color: #444;
+  }
+
+  /* Portfolio grid */
+  #portfolio .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+  .project-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,0.08) 0px 4px 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  .project-card:hover {
+    transform: translateY(-5px);
+  }
+  .project-image {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+  }
+  .project-content {
+    padding: 1rem;
+    flex-grow: 1;
+  }
+  .project-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #1e90ff;
+  }
+  .project-description {
+    font-size: 0.95rem;
+    color: #555;
+    flex-grow: 1;
+  }
+  .project-link {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* Contact */
+  #contact form {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,0.07) 0px 4px 10px;
+  }
+  #contact label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  #contact input, #contact textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+  #contact input:focus, #contact textarea:focus {
+    border-color: #1e90ff;
+    outline: none;
+  }
+  #contact button {
+    background-color: #1e90ff;
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #contact button:hover {
+    background-color: #0c6cd9;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 1rem 0;
+    color: #888;
+  }
+
+  /* Responsive: force no scroll horizontally */
+  @media(max-width: 350px) {
+    body, html {
+      font-size: 14px;
+    }
+    nav a {
+       margin: 0 8px;
+       font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Your Name</h1>
+      <p>Front-End Developer & Designer</p>
+    </header>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <section id="about">
+      <h2>About Me</h2>
+      <p>Hello! I am a passionate front-end developer who enjoys creating clean and modern websites. I specialize in HTML, CSS, and JavaScript with a focus on responsive and user-friendly design.</p>
+    </section>
+    <section id="portfolio">
+      <h2>Portfolio</h2>
+      <div class="projects">
+        <div class="project-card">
+          <img class="project-image" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=400&q=60" alt="Project 1 Screenshot" />
+          <div class="project-content">
+            <h3 class="project-title">Project One</h3>
+            <p class="project-description">A modern responsive website built with HTML5 and CSS3 for a local business.</p>
+            <a class="project-link" href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <img class="project-image" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=60" alt="Project 2 Screenshot" />
+          <div class="project-content">
+            <h3 class="project-title">Project Two</h3>
+            <p class="project-description">A sleek portfolio site using Flexbox and CSS Grid, optimized for mobile devices.</p>
+            <a class="project-link" href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <img class="project-image" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=60" alt="Project 3 Screenshot" />
+          <div class="project-content">
+            <h3 class="project-title">Project Three</h3>
+            <p class="project-description">An interactive single page app created with vanilla JavaScript and CSS animations.</p>
+            <a class="project-link" href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <form onsubmit="event.preventDefault(); alert('Thank you for reaching out!'); this.reset();">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" placeholder="Your name" required />
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required />
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4" placeholder="Write your message here..." required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+    <footer>
+      &copy; 2024 Your Name. All rights reserved.
+    </footer>
+  </div>
+</body>
+</html>
+
+```
