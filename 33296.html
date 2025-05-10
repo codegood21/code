@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Secure Online Banking Login</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .login-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    width: 320px;
+    box-sizing: border-box;
+  }
+  h2 {
+    margin: 0 0 1.5rem 0;
+    color: #004085;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    font-weight: 700;
+    padding: 0.6rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+    font-size: 0.85rem;
+  }
+  @media(max-width: 360px) {
+    .login-container {
+      width: 90%;
+      padding: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <form class="login-container" action="#" method="POST" onsubmit="alert('Login failed. Please try again.');return false;">
+    <h2>Secure Online Banking</h2>
+    <label for="user">User ID</label>
+    <input id="user" name="user" type="text" autocomplete="username" required autofocus />
+    <label for="pass">Password</label>
+    <input id="pass" name="pass" type="password" autocomplete="current-password" required />
+    <button type="submit">Log In</button>
+    <div class="footer">© 2024 Your Bank</div>
+  </form>
+</body>
+</html>
+
+```
