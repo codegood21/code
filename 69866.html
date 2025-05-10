@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Game & Produk Digital Otomatis</title>
+<style>
+  /* Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body, h1, h2, h3, p, ul, li, button, input, select {
+    margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    background: #0a0a23;
+    color: #f0f0f0;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+  }
+  header {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  header h1 {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 8px;
+  }
+  header p {
+    font-size: 0.9rem;
+    color: #eee;
+  }
+  main {
+    max-width: 400px;
+    width: 100%;
+    background: #121240;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  }
+
+  /* Banner Buttons */
+  .banners {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 8px;
+  }
+  .banners button {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+  .banners button:hover {
+    transform: scale(1.05);
+  }
+  .banners img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .banners button span {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffdd55;
+    font-size: 1rem;
+    font-weight: 700;
+    text-shadow: 0 0 5px black;
+    pointer-events: none;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+  select, input, button {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background-color: #1b1b57;
+    color: #fff;
+    box-shadow: inset 0 0 6px #222;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  select:focus, input:focus {
+    background-color: #272778;
+    box-shadow: inset 0 0 10px #5588ff;
+  }
+  button {
+    margin-top: 20px;
+    background: #f5a623;
+    color: #0a0a23;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #ffaa33;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #d48b12;
+  }
+
+  /* Info */
+  #payment-instruction {
+    margin-top: 20px;
+    background: #202040;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    display: none;
+  }
+  #payment-instruction strong {
+    color: #ffcc00;
+  }
+
+  /* Responsive for mobile */
+  @media (max-width: 440px) {
+    body {
+      padding: 12px 10px;
+    }
+    main {
+      max-width: 100%;
+      padding: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Top Up Game & Pulsa Otomatis</h1>
+  <p>Top Up diamond Mobile Legends, Free Fire, PUBG & lainnya, pulsa, paket data. Bayar mudah lewat DANA atau GOPAY.</p>
+</header>
+<main>
+  <div class="banners" role="list">
+    <button aria-label="Top Up Mobile Legends" onclick="selectGame('Mobile Legends')">
+      <img src="https://i.ibb.co/BnDPzr6/ml-banner.png" alt="Mobile Legends Top Up Banner" />
+      <span>Mobile Legends</span>
+    </button>
+    <button aria-label="Top Up Free Fire" onclick="selectGame('Free Fire')">
+      <img src="https://i.ibb.co/NKFYG9Z/ff-banner.png" alt="Free Fire Top Up Banner" />
+      <span>Free Fire</span>
+    </button>
+    <button aria-label="Top Up PUBG" onclick="selectGame('PUBG')">
+      <img src="https://i.ibb.co/G2KKcBL/pubg-banner.png" alt="PUBG Top Up Banner" />
+      <span>PUBG</span>
+    </button>
+  </div>
+
+  <form id="topup-form" aria-label="Formulir Top Up">
+    <label for="category">Pilih Kategori Produk</label>
+    <select id="category" name="category" required aria-required="true" onchange="populateProducts()">
+      <option value="" disabled selected>-- Pilih Kategori --</option>
+      <option value="game-diamond">Diamond Game</option>
+      <option value="pulsa">Pulsa</option>
+      <option value="paket-data">Paket Data</option>
+      <option value="voucher-game">Voucher Game Lainnya</option>
+    </select>
+
+    <label for="product">Pilih Produk</label>
+    <select id="product" name="product" required aria-required="true" disabled>
+      <option value="" disabled selected>-- Pilih Produk --</option>
+    </select>
+
+    <label for="player-id">Masukkan ID / Nomor HP</label>
+    <input type="text" id="player-id" name="playerId" placeholder="Masukkan ID Game atau Nomor HP" required aria-required="true" pattern=".{4,}" title="Masukkan ID atau nomor yang valid (minimal 4 karakter)" />
+
+    <label for="payment-method">Pilih Metode Pembayaran</label>
+    <select id="payment-method" name="paymentMethod" required aria-required="true" onchange="updatePaymentInstructions()">
+      <option value="" disabled selected>-- Pilih Metode --</option>
+      <option value="dana">DANA</option>
+      <option value="gopay">GOPAY</option>
+    </select>
+
+    <button type="submit" aria-label="Proses Top Up">Proses Top Up</button>
+  </form>
+
+  <div id="payment-instruction" role="region" aria-live="polite"></div>
+</main>
+
+<script>
+  // Product data listing for all categories
+  const productsData = {
+    'game-diamond': [
+      { name: 'Mobile Legends - 50 Diamond', price: 12500 },
+      { name: 'Mobile Legends - 100 Diamond', price: 24500 },
+      { name: 'Mobile Legends - 250 Diamond', price: 60000 },
+      { name: 'Free Fire - 50 Diamond', price: 12000 },
+      { name: 'Free Fire - 100 Diamond', price: 23000 },
+      { name: 'Free Fire - 250 Diamond', price: 57000 },
+      { name: 'PUBG Mobile - 70 UC', price: 14500 },
+      { name: 'PUBG Mobile - 140 UC', price: 28000 },
+      { name: 'PUBG Mobile - 355 UC', price: 68500 },
+      // Add other game diamonds as needed...
+    ],
+    'pulsa': [
+      { name: 'Pulsa Telkomsel 5.000', price: 5300 },
+      { name: 'Pulsa Telkomsel 10.000', price: 10200 },
+      { name: 'Pulsa Indosat 5.000', price: 5300 },
+      { name: 'Pulsa Indosat 10.000', price: 10200 },
+      { name: 'Pulsa XL 5.000', price: 5300 },
+      { name: 'Pulsa XL 10.000', price: 10200 },
+      // Add more operators and denominations...
+    ],
+    'paket-data': [
+      { name: 'Paket Data Telkomsel 1GB', price: 15000 },
+      { name: 'Paket Data Telkomsel 5GB', price: 65000 },
+      { name: 'Paket Data Indosat 2GB', price: 18000 },
+      { name: 'Paket Data XL 3GB', price: 20000 },
+      { name: 'Paket Data Tri 4GB', price: 22000 },
+      // Add more data packages...
+    ],
+    'voucher-game': [
+      { name: 'Steam Wallet 5 USD', price: 72000 },
+      { name: 'Google Play Gift Card 50K', price: 50000 },
+      { name: 'PlayStation Store 50K', price: 50000 },
+      { name: 'Nintendo eShop 20 USD', price: 300000 },
+      // Add more vouchers here...
+    ]
+  };
+
+  const danaNumber = '085659441370';
+  const gopayNumber = '085880150761';
+
+  const categorySelect = document.getElementById('category');
+  const productSelect = document.getElementById('product');
+  const paymentMethodSelect = document.getElementById('payment-method');
+  const paymentInstructionDiv = document.getElementById('payment-instruction');
+  const topupForm = document.getElementById('topup-form');
+
+  function selectGame(gameName) {
+    categorySelect.value = 'game-diamond';
+    populateProducts(gameName);
+  }
+
+  function populateProducts(selectedGame) {
+    const category = categorySelect.value;
+    productSelect.innerHTML = '<option value="" disabled selected>-- Pilih Produk --</option>';
+    productSelect.disabled = true;
+
+    if (!category || !productsData[category]) return;
+
+    let filteredProducts = productsData[category];
+
+    if (selectedGame && category === 'game-diamond') {
+      filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(selectedGame.toLowerCase()));
+    }
+
+    filteredProducts.forEach((product, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${product.name} - Rp ${product.price.toLocaleString('id-ID')}`;
+      productSelect.appendChild(opt);
+    });
+
+    productSelect.disabled = false;
+  }
+
+  function updatePaymentInstructions() {
+    const method = paymentMethodSelect.value;
+    if (method === 'dana') {
+      paymentInstructionDiv.style.display = 'block';
+      paymentInstructionDiv.innerHTML = `
+        <strong>Instruksi Pembayaran DANA:</strong><br/>
+        Silakan transfer pembayaran ke <strong>DANA</strong> nomor <a href="tel:${danaNumber}" style="color:#ffcc00; text-decoration:none;">${danaNumber}</a>. Setelah membayar, mohon konfirmasi top up Anda melalui form ini.<br/>
+        Transaksi akan otomatis diproses setelah konfirmasi.
+      `;
+    } else if (method === 'gopay') {
+      paymentInstructionDiv.style.display = 'block';
+      paymentInstructionDiv.innerHTML = `
+        <strong>Instruksi Pembayaran GOPAY:</strong><br/>
+        Silakan transfer pembayaran ke <strong>GOPAY</strong> nomor <a href="tel:${gopayNumber}" style="color:#ffcc00; text-decoration:none;">${gopayNumber}</a>.<br/>
+        Setelah membayar, transaksi akan otomatis diproses dan diamond akan langsung masuk ke akun Anda.
+      `;
+    } else {
+      paymentInstructionDiv.style.display = 'none';
+      paymentInstructionDiv.textContent = '';
+    }
+  }
+
+  topupForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Get selected product info
+    const category = categorySelect.value;
+    const productIndex = productSelect.value;
+    if (!category || productIndex === '') {
+      alert('Pilih kategori dan produk terlebih dahulu.');
+      return;
+    }
+    const product = productsData[category][productIndex];
+    if (!product) {
+      alert('Produk tidak ditemukan.');
+      return;
+    }
+
+    const playerId = document.getElementById('player-id').value.trim();
+    if (!playerId || playerId.length < 4) {
+      alert('Masukkan ID/No HP yang valid.');
+      return;
+    }
+
+    const paymentMethod = paymentMethodSelect.value;
+    if (!paymentMethod) {
+      alert('Pilih metode pembayaran.');
+      return;
+    }
+
+    // Payment instructions URLs for apps (simulate)
+    const danaNumberLink = `https://linkaja.id/transfer/${danaNumber}`;
+    const gopayNumberLink = `gopay://pay?phone=${gopayNumber}`;
+
+    // Build confirm message
+    let paymentInfo = '';
+    if (paymentMethod === 'dana') {
+      paymentInfo = `Silakan bayar menggunakan DANA ke nomor: ${danaNumber}\nSetelah membayar, diamond akan otomatis masuk ke akun Anda.`;
+      // Simulate redirect or instructions for DANA - we provide instruction only, we can offer a clickable link but direct app URI unsupported widely
+    } else if (paymentMethod === 'gopay') {
+      paymentInfo = `Silakan bayar menggunakan GOPAY ke nomor: ${gopayNumber}. Setelah pembayaran akan diproses otomatis.`;
+    }
+
+    const confirmMsg = `Konfirmasi Top Up:\n\n` +
+      `Produk: ${product.name}\n` +
+      `Harga: Rp ${product.price.toLocaleString('id-ID')}\n` +
+      `ID / Nomor HP: ${playerId}\n` +
+      `Metode Pembayaran: ${paymentMethod.toUpperCase()}\n\n` +
+      paymentInfo + `\n\n` +
+      `Klik OK untuk melanjutkan dan mendapatkan instruksi pembayaran.`;
+
+    if (!confirm(confirmMsg)) return;
+
+    // Show final instruction with clickable payment link if GOPAY
+    if (paymentMethod === 'gopay') {
+      alert(`Anda akan diarahkan untuk melakukan pembayaran GOPAY.\nSetelah bayar, diamond akan langsung masuk ke akun Anda.`);
+      // Redirect to the gopay scheme URI if possible (mobile browsers)
+      window.location.href = gopayNumberLink;
+    } else if (paymentMethod === 'dana') {
+      alert(`Silakan bayar ke nomor DANA berikut:\n${danaNumber}\n\nSetelah pembayaran, diamond akan otomatis diproses dan masuk ke akun Anda.\nTerima kasih!`);
+    }
+
+    // Reset form after process
+    topupForm.reset();
+    productSelect.innerHTML = '<option value="" disabled selected>-- Pilih Produk --</option>';
+    productSelect.disabled = true;
+    paymentInstructionDiv.style.display = 'none';
+    paymentInstructionDiv.textContent = '';
+  });
+</script>
+</body>
+</html>
+
+```
