@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TikTok Video Downloader</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #100e17;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 15px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-weight: 800;
+    text-align: center;
+    color: #ff0050;
+    margin-bottom: 15px;
+  }
+  p.subtitle {
+    font-size: 1rem;
+    color: #bbb;
+    margin-bottom: 30px;
+  }
+  form {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+  }
+  button {
+    background: #ff0050;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 0 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background: #9e1120;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background: #e60046;
+  }
+  .result {
+    width: 100%;
+    max-width: 450px;
+    background: #1c1a28;
+    border-radius: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .video-container {
+    margin-top: 15px;
+  }
+  video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+  }
+  .download-link {
+    margin-top: 15px;
+    display: inline-block;
+    background: #ff0050;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px 25px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  .download-link:hover {
+    background: #e60046;
+  }
+  .error {
+    color: #ff4444;
+    font-weight: 600;
+    margin-top: 15px;
+  }
+  @media (max-width: 400px) {
+    form {
+      flex-direction: column;
+    }
+    button {
+      width: 100%;
+      padding: 12px 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>TikTok Video Downloader</h1>
+  <p class="subtitle">Download TikTok videos without watermark</p>
+  <form id="downloadForm">
+    <input type="text" id="urlInput" placeholder="Paste TikTok video URL here" required autocomplete="off" />
+    <button type="submit" id="downloadBtn">Download</button>
+  </form>
+  <div id="result" class="result" style="display:none;">
+    <div class="video-container">
+      <video id="videoPreview" controls preload="metadata"></video>
+    </div>
+    <a href="#" id="downloadLink" class="download-link" download target="_blank">Download Video</a>
+  </div>
+  <div id="error" class="error"></div>
+
+  <script>
+    const form = document.getElementById('downloadForm');
+    const urlInput = document.getElementById('urlInput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resultBox = document.getElementById('result');
+    const videoPreview = document.getElementById('videoPreview');
+    const downloadLink = document.getElementById('downloadLink');
+    const errorBox = document.getElementById('error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.textContent = '';
+      resultBox.style.display = 'none';
+      videoPreview.src = '';
+      downloadLink.href = '#';
+      downloadLink.style.display = 'none';
+
+      let tiktokUrl = urlInput.value.trim();
+      if (!/^https?:\/\/(www\.)?tiktok\.com\/.+$/.test(tiktokUrl)) {
+        errorBox.textContent = 'Please enter a valid TikTok URL.';
+        return;
+      }
+      downloadBtn.disabled = true;
+      downloadBtn.textContent = 'Loading...';
+
+      try {
+        // Using a third-party API to get TikTok video without watermark
+        // API endpoint by https://ttdownloader.com is widely known but requires a backend proxy due to CORS
+        // Instead we use https://api.tikmate.app API which is free and supports CORS for demo purposes
+        // If any issues changing API or integrating your own API would be required.
+
+        const apiUrl = 'https://api.tikmate.app/api/lookup?url=' + encodeURIComponent(tiktokUrl);
+
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('Failed to fetch video info. Try again later.');
+        }
+        const data = await response.json();
+        if (!data || !data.video || !data.video[0] || !data.video[0].url) {
+          throw new Error('Could not extract video URL. Please check the TikTok link.');
+        }
+
+        const videoUrl = data.video[0].url + '&quality=normal'; // normal quality without watermark
+        videoPreview.src = videoUrl;
+        downloadLink.href = videoUrl;
+        downloadLink.style.display = 'inline-block';
+
+        resultBox.style.display = 'block';
+      } catch (err) {
+        errorBox.textContent = err.message || 'An error occurred while processing your request.';
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = 'Download';
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
