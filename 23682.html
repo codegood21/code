@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Game Otomatis - Codashop Style</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    background: #0a84ff;
+    padding: 1rem 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 1.5px;
+    color: #fff;
+    user-select: none;
+  }
+  main {
+    max-width: 400px;
+    width: 100%;
+    background: #1e2a48;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem;
+  }
+  h2 {
+    margin-top: 0; margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 700;
+    color: #0af;
+  }
+  /* Banner buttons container */
+  .banner-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .banner-button {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    padding: 10px 12px 10px 40px;
+    position: relative;
+    flex: 1 0 calc(50% - 0.7rem);
+    max-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    box-shadow: 0 4px 10px rgba(255, 75, 43, 0.5);
+    transition: background 0.3s ease;
+  }
+  .banner-button:hover {
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  }
+  .banner-button img {
+    position: absolute;
+    left: 10px;
+    width: 24px;
+    height: 24px;
+  }
+  /* Form Styling */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  label {
+    font-weight: 600;
+    color: #80c4ff;
+  }
+  select, input[type="text"], input[type="number"] {
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+  }
+  input[type="text"], input[type="number"] {
+    background-color: #334767;
+    color: #eee;
+  }
+  select {
+    background-color: #334767;
+    color: #eee;
+  }
+  select option {
+    background-color: #2a3b64;
+    color: #eee;
+  }
+  button.submit-btn {
+    background-color: #0af;
+    border: none;
+    padding: 0.8rem;
+    font-weight: 700;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #0aacffaa;
+    transition: background-color 0.3s ease;
+  }
+  button.submit-btn:hover {
+    background-color: #0087d4;
+  }
+  .info-text {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: -0.6rem;
+    margin-bottom: 1rem;
+  }
+  /* Payment Info */
+  .payment-info {
+    background-color: #233551;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .payment-info .payment-method {
+    color: #0af;
+  }
+  .payment-info .payment-number {
+    letter-spacing: 2px;
+  }
+  /* Result Section */
+  #result {
+    margin-top: 1rem;
+    background-color: #0a1f44;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    font-size: 1rem;
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+  /* Responsive for smaller/mobile screens */
+  @media (max-width: 380px) {
+    .banner-button {
+      flex: 1 0 100%;
+      max-width: none;
+      padding-left: 50px;
+    }
+    main {
+      margin: 0.5rem;
+      padding: 1rem 0.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Top Up Game Otomatis</header>
+<main>
+  <h2>Pilih Produk Top Up</h2>
+  <div class="banner-container">
+    <button type="button" class="banner-button" data-game="mobile-legends">
+      <img src="https://img.icons8.com/color/48/000000/mobile-legends.png" alt="Mobile Legends" />
+      Mobile Legends Top Up
+    </button>
+    <button type="button" class="banner-button" data-game="free-fire">
+      <img src="https://img.icons8.com/color/48/000000/free-fire.png" alt="Free Fire" />
+      Free Fire Top Up
+    </button>
+    <button type="button" class="banner-button" data-game="pubg">
+      <img src="https://img.icons8.com/color/48/000000/pubg.png" alt="PUBG" />
+      PUBG Top Up
+    </button>
+    <button type="button" class="banner-button" data-game="other-games">
+      🎮 Game Lainnya
+    </button>
+  </div>
+
+  <form id="topupForm" autocomplete="off">
+    <label for="category">Kategori</label>
+    <select id="category" name="category" required>
+      <option value="" disabled selected>-- Pilih kategori --</option>
+      <option value="game_diamond">Diamond Game</option>
+      <option value="pulsa">Pulsa</option>
+      <option value="paket_data">Paket Data</option>
+      <option value="ewallet">Top Up E-Wallet</option>
+    </select>
+    <label for="product">Produk</label>
+    <select id="product" name="product" disabled required>
+      <option value="" disabled selected>-- Pilih produk --</option>
+    </select>
+    <label for="quantity">Jumlah</label>
+    <input type="number" id="quantity" name="quantity" min="1" max="1000000" placeholder="Masukkan jumlah" required />
+    <label for="payment">Metode Pembayaran</label>
+    <select id="payment" name="payment" required>
+      <option value="" disabled selected>-- Pilih metode pembayaran --</option>
+      <option value="dana">DANA</option>
+      <option value="gopay">GoPay</option>
+      <option value="e-wallet">E-Wallet Otomatis</option>
+    </select>
+
+    <button type="submit" class="submit-btn">Proses Top Up</button>
+  </form>
+  <div class="payment-info" id="paymentInfo" style="display:none;"></div>
+  <div id="result"></div>
+</main>
+
+<script>
+  // Product data mockup for dependent dropdown (simplified)
+  const productsData = {
+    game_diamond: [
+      { id: 'ml_10d', name: 'Mobile Legends 10 Diamond', game: 'mobile-legends', price: 1200 },
+      { id: 'ff_10d', name: 'Free Fire 10 Diamond', game: 'free-fire', price: 1100 },
+      { id: 'pubg_10uc', name: 'PUBG 10 UC', game: 'pubg', price: 1300 },
+      { id: 'other_100', name: 'Game Lain 100 Diamond', game: 'other-games', price: 1000 }
+    ],
+    pulsa: [
+      { id: 'pulsa_5000', name: 'Pulsa 5,000 IDR', price: 5000 },
+      { id: 'pulsa_10000', name: 'Pulsa 10,000 IDR', price: 10000 },
+      { id: 'pulsa_20000', name: 'Pulsa 20,000 IDR', price: 20000 },
+      { id: 'pulsa_50000', name: 'Pulsa 50,000 IDR', price: 50000 }
+    ],
+    paket_data: [
+      { id: 'data_1gb', name: 'Paket Data 1GB', price: 15000 },
+      { id: 'data_3gb', name: 'Paket Data 3GB', price: 35000 },
+      { id: 'data_5gb', name: 'Paket Data 5GB', price: 50000 }
+    ],
+    'ewallet': [
+      { id: 'dana_topup_10000', name: 'Top Up DANA 10,000 IDR', price: 10000 },
+      { id: 'gopay_topup_10000', name: 'Top Up GoPay 10,000 IDR', price: 10000 }
+    ]
+  };
+
+  // Payment numbers linked to methods
+  const paymentNumbers = {
+    dana: '085659441370',
+    gopay: '085880150761'
+  };
+
+  const categorySelect = document.getElementById('category');
+  const productSelect = document.getElementById('product');
+  const paymentSelect = document.getElementById('payment');
+  const paymentInfo = document.getElementById('paymentInfo');
+  const resultDiv = document.getElementById('result');
+  const form = document.getElementById('topupForm');
+
+  // Banner buttons event to preset category and filter product for games
+  document.querySelectorAll('.banner-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const game = button.getAttribute('data-game');
+      categorySelect.value = 'game_diamond';
+      fillProductOptions('game_diamond', game);
+    });
+  });
+
+  categorySelect.addEventListener('change', () => {
+    fillProductOptions(categorySelect.value);
+    paymentSelect.value = '';
+    paymentInfo.style.display = 'none';
+    resultDiv.textContent = '';
+  });
+
+  paymentSelect.addEventListener('change', () => {
+    showPaymentInfo(paymentSelect.value);
+  });
+
+  function fillProductOptions(category, filterGame = null) {
+    productSelect.innerHTML = '<option value="" disabled selected>-- Pilih produk --</option>';
+    if (!category || !productsData[category]) {
+      productSelect.disabled = true;
+      return;
+    }
+    productSelect.disabled = false;
+    let filteredProducts = productsData[category];
+    if (filterGame) {
+      filteredProducts = filteredProducts.filter(p => p.game === filterGame);
+    }
+    filteredProducts.forEach(product => {
+      const opt = document.createElement('option');
+      opt.value = product.id;
+      opt.textContent = product.name;
+      productSelect.appendChild(opt);
+    });
+  }
+
+  function showPaymentInfo(method) {
+    paymentInfo.style.display = 'block';
+    if (method === 'dana') {
+      paymentInfo.innerHTML = 'Silahkan bayar melalui <span class="payment-method">DANA</span> ke nomor <span class="payment-number">' + paymentNumbers.dana + '</span>';
+    } else if (method === 'gopay') {
+      paymentInfo.innerHTML = 'Silahkan bayar melalui <span class="payment-method">GoPay</span> ke nomor <span class="payment-number">' + paymentNumbers.gopay + '</span>';
+    } else if (method === 'e-wallet') {
+      paymentInfo.innerHTML = 'Pembayaran e-wallet otomatis akan diproses setelah pembayaran berhasil.';
+    } else {
+      paymentInfo.style.display = 'none';
+    }
+  }
+
+  function simulateTopUpProcess(productId, quantity, paymentMethod) {
+    // Simulate a processing sequence like codashop automatic topup
+    // We'll fake the automatic flow with timed messages and results
+    const selectedProduct = Object.values(productsData).flat().find(p => p.id === productId);
+    if (!selectedProduct) return Promise.reject('Produk tidak ditemukan.');
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resultDiv.textContent = `Memproses pembayaran via ${paymentMethod.toUpperCase()}...`;
+      }, 500);
+      setTimeout(() => {
+        if (paymentMethod === 'dana' || paymentMethod === 'gopay') {
+          resultDiv.textContent = `Silahkan transfer ke nomor ${paymentNumbers[paymentMethod]} sejumlah Rp${(selectedProduct.price * quantity).toLocaleString('id-ID')}. Setelah pembayaran terverifikasi, diamond akan masuk otomatis.`;
+          resolve();
+        } else if (paymentMethod === 'e-wallet') {
+          // Automatic top up simulation
+          resultDiv.textContent = 'Pembayaran e-wallet berhasil diverifikasi. Diamond/top up berhasil masuk ke akun Anda.';
+          resolve();
+        } else {
+          reject('Metode pembayaran tidak dikenali.');
+        }
+      }, 2000);
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    resultDiv.textContent = '';
+    const category = categorySelect.value;
+    const product = productSelect.value;
+    const quantity = Number(document.getElementById('quantity').value);
+    const payment = paymentSelect.value;
+
+    if (!category || !product || !quantity || !payment) {
+      alert('Mohon lengkapi semua data terlebih dahulu.');
+      return;
+    }
+    if (quantity <= 0) {
+      alert('Jumlah harus lebih dari 0.');
+      return;
+    }
+
+    simulateTopUpProcess(product, quantity, payment)
+      .catch(err => {
+        resultDiv.textContent = 'Terjadi kesalahan: ' + err;
+      });
+  });
+</script>
+</body>
+</html>
+
+```
