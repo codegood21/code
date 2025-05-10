@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Prank Panel Bot Pterodactyl</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+  html, body {
+    margin:0; padding:0; height:100%;
+    background: linear-gradient(135deg, #1b2735, #090a0f);
+    font-family: 'Roboto Mono', monospace;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .panel-container {
+    background-color: #121212cc;
+    width: 320px;
+    max-width: 95vw;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow:
+      0 0 15px 3px #0f52ba,
+      inset 0 0 10px 2px #1776d2;
+  }
+
+  .panel-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #0f52ba;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #0f52ba99;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: #a1c4fd;
+    text-shadow: 0 0 3px #0f52ba88;
+  }
+
+  input[type="text"], input[type="password"], select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 17px;
+    border-radius: 6px;
+    border: none;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    background-color: #222f44ff;
+    color: #d5e1ff;
+    box-shadow: inset 0 0 6px #0f52baaa;
+    transition: box-shadow 0.3s ease;
+  }
+
+  input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    outline: none;
+    box-shadow:
+      0 0 8px 2px #0f52baee,
+      inset 0 0 10px #0f52baee;
+  }
+
+  button {
+    width: 100%;
+    background: #0f52ba;
+    border: none;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0761a8cc;
+    box-shadow:
+      0 0 8px #0f52bacc,
+      inset 0 -3px 12px #064b8b;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  button:hover {
+    background: #1760d7;
+    box-shadow:
+      0 0 12px #2a84ffdd,
+      inset 0 -3px 20px #2a84ffaa;
+  }
+
+  .log-box {
+    margin-top: 18px;
+    max-height: 150px;
+    background: #111d2cee;
+    color: #89b9ffcc;
+    font-size: 0.85rem;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Roboto Mono', monospace;
+    box-shadow: inset 0 0 10px #0f52baaa;
+    user-select: none;
+  }
+
+  .log-entry {
+    margin-bottom: 7px;
+    line-height: 1.3;
+  }
+
+  .log-entry:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 400px) {
+    .panel-container {
+      width: 90vw;
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="panel-container" role="main" aria-label="Prank Panel Bot Pterodactyl">
+    <h1 class="panel-title" aria-live="polite">Prank Panel Bot Pterodactyl</h1>
+
+    <form id="botPanel" autocomplete="off" aria-describedby="instructions">
+      <label for="serverId">Server ID</label>
+      <input type="text" id="serverId" name="serverId" placeholder="e.g. 123456" required inputmode="numeric" pattern="[0-9]+" aria-required="true" />
+
+      <label for="botToken">Bot Token</label>
+      <input type="password" id="botToken" name="botToken" placeholder="Paste your bot token here" autocomplete="new-password" required aria-required="true" />
+
+      <label for="actionType">Select Action</label>
+      <select id="actionType" name="actionType" aria-required="true" required>
+        <option value="" disabled selected>Choose an action</option>
+        <option value="spamCommand">Spam Command</option>
+        <option value="renameServer">Rename Server</option>
+        <option value="fakeKick">Fake Kick</option>
+        <option value="fakeBan">Fake Ban</option>
+        <option value="overloadServer">Overload Server</option>
+      </select>
+
+      <label for="commandInput" id="commandLabel" style="display:none;">Command to Spam</label>
+      <input type="text" id="commandInput" name="commandInput" placeholder="Type command here" style="display:none;" />
+
+      <label for="newName" id="nameLabel" style="display:none;">New Server Name</label>
+      <input type="text" id="newName" name="newName" placeholder="New server name" style="display:none;" />
+
+      <button type="submit" aria-label="Execute selected action">Execute</button>
+    </form>
+
+    <div class="log-box" aria-live="polite" aria-atomic="true" id="logBox" role="log" tabindex="0" aria-relevant="additions"></div>
+  </div>
+
+<script>
+  (function() {
+    const form = document.getElementById('botPanel');
+    const logBox = document.getElementById('logBox');
+    const actionSelect = document.getElementById('actionType');
+    const commandInput = document.getElementById('commandInput');
+    const commandLabel = document.getElementById('commandLabel');
+    const nameInput = document.getElementById('newName');
+    const nameLabel = document.getElementById('nameLabel');
+
+    function log(message) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logBox.appendChild(entry);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearActionInputs() {
+      commandInput.style.display = 'none';
+      commandLabel.style.display = 'none';
+      commandInput.value = '';
+      nameInput.style.display = 'none';
+      nameLabel.style.display = 'none';
+      nameInput.value = '';
+    }
+
+    actionSelect.addEventListener('change', () => {
+      clearActionInputs();
+      const value = actionSelect.value;
+      if (value === 'spamCommand') {
+        commandLabel.style.display = 'block';
+        commandInput.style.display = 'block';
+        commandInput.focus();
+      } else if (value === 'renameServer') {
+        nameLabel.style.display = 'block';
+        nameInput.style.display = 'block';
+        nameInput.focus();
+      } else {
+        // No extra input needed for fakeKick, fakeBan, overloadServer
+      }
+    });
+
+    function fakeAPICall(actionDescription, duration = 1500) {
+      log(`🔄 Starting: ${actionDescription}...`);
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          log(`✅ Success: ${actionDescription}!`);
+          resolve();
+        }, duration);
+      });
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    async function spamCommand(serverId, command, count=15) {
+      log(`⚡ Spamming command "${command}" x${count} on server ${serverId}...`);
+      for(let i = 1; i <= count; i++) {
+        await fakeAPICall(`Sending command "${command}" (${i}/${count})`, randomInt(400, 800));
+      }
+      log(`🎉 Finished spamming commands on server ${serverId}.`);
+    }
+
+    async function renameServer(serverId, newName) {
+      await fakeAPICall(`Renaming server ${serverId} to "${newName}"`, 2000);
+    }
+
+    async function fakeKick(serverId) {
+      await fakeAPICall(`Kicking all users from server ${serverId}`, 1800);
+    }
+
+    async function fakeBan(serverId) {
+      await fakeAPICall(`Banning all users from server ${serverId}`, 2000);
+    }
+
+    async function overloadServer(serverId) {
+      log(`🌪️ Overloading server ${serverId} with fake requests...`);
+      const overloadCount = 10;
+      for(let i = 1; i <= overloadCount; i++) {
+        await fakeAPICall(`Overload packet ${i}/${overloadCount}`, randomInt(300, 700));
+      }
+      log(`🔥 Server ${serverId} has been overloaded (prank)!`);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const serverId = form.serverId.value.trim();
+      const botToken = form.botToken.value.trim();
+      const action = form.actionType.value;
+
+      if (!serverId || !botToken || !action) {
+        alert('Please fill in all required fields and select an action.');
+        return;
+      }
+
+      if (action === 'spamCommand') {
+        const command = form.commandInput.value.trim();
+        if (!command) {
+          alert('Please enter a command to spam.');
+          return;
+        }
+        await spamCommand(serverId, command);
+      } else if (action === 'renameServer') {
+        const newName = form.newName.value.trim();
+        if (!newName) {
+          alert('Please enter a new server name.');
+          return;
+        }
+        await renameServer(serverId, newName);
+      } else if (action === 'fakeKick') {
+        await fakeKick(serverId);
+      } else if (action === 'fakeBan') {
+        await fakeBan(serverId);
+      } else if (action === 'overloadServer') {
+        await overloadServer(serverId);
+      } else {
+        log('Unknown action selected.');
+      }
+    });
+
+    // Accessibility improvements: focus log box on updates
+    const observer = new MutationObserver(() => {
+      logBox.focus();
+    });
+    observer.observe(logBox, { childList: true });
+
+  })();
+</script>
+</body>
+</html>
+
+```
