@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Code Editor</title>
+<style>
+  /* Basic Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Consolas', 'Monaco', monospace;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    overflow: hidden;
+  }
+
+  #editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  #toolbar {
+    background-color: #252526;
+    color: #cccccc;
+    padding: 8px 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    border-bottom: 1px solid #333;
+  }
+
+  #toolbar .title {
+    font-weight: 700;
+  }
+
+  #main {
+    display: flex;
+    flex-grow: 1;
+    height: calc(100% - 40px);
+  }
+
+  #file-tree {
+    background-color: #252526;
+    width: 220px;
+    padding: 10px;
+    border-right: 1px solid #333;
+    display: none; /* Hidden by default for mobile */
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  #file-tree h3 {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #cccccc;
+  }
+
+  #file-tree ul {
+    list-style: none;
+  }
+
+  #file-tree ul li {
+    padding: 5px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #cccccc;
+    font-size: 14px;
+  }
+
+  #file-tree ul li:hover,
+  #file-tree ul li.active {
+    background-color: #0e639c;
+    color: white;
+  }
+
+  #editor-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #tabs {
+    display: flex;
+    background-color: #252526;
+    border-bottom: 1px solid #333;
+    padding-left: 10px;
+    user-select: none;
+  }
+
+  #tabs .tab {
+    cursor: pointer;
+    padding: 8px 15px;
+    margin-right: 2px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-size: 14px;
+    background-color: #2d2d2d;
+    color: #ccc;
+    position: relative;
+  }
+
+  #tabs .tab.active {
+    background-color: #1e1e1e;
+    color: white;
+    font-weight: 600;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  #tabs .tab .close-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    color: #888;
+    font-family: monospace;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #tabs .tab:hover .close-btn {
+    color: #f14c4c;
+  }
+
+  #editor {
+    flex-grow: 1;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 14px;
+    color: #d4d4d4;
+    background-color: #1e1e1e;
+    border: none;
+    padding: 12px 15px;
+    outline: none;
+    resize: none;
+    width: 100%;
+    height: 100%;
+    line-height: 1.4;
+    white-space: pre;
+    overflow: auto;
+  }
+
+  /* Scrollbar */
+  #editor::-webkit-scrollbar {
+    width: 10px;
+  }
+  #editor::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+  #editor::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 5px;
+  }
+  #editor::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+  }
+
+  /* Responsive Design */
+  @media (min-width: 600px) {
+    #file-tree {
+      display: block;
+    }
+  }
+
+  @media (max-width: 600px) {
+    #toolbar {
+      font-size: 12px;
+      padding: 6px 8px;
+    }
+    #tabs .tab {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="editor-container">
+    <div id="toolbar">
+      <div class="title">BLACKBOXAI Code Editor</div>
+      <button id="toggle-file-tree" aria-label="Toggle File Tree" title="Toggle File Tree" style="background:#0e639c;color:white;border:none;padding:5px 10px;border-radius:3px;cursor:pointer;">
+        Files
+      </button>
+    </div>
+    <div id="main">
+      <nav id="file-tree" aria-label="File list">
+        <h3>Files</h3>
+        <ul id="file-list" role="list">
+          <!-- dynamically populated -->
+        </ul>
+      </nav>
+      <section id="editor-wrapper" aria-label="Code editor section">
+        <div id="tabs" role="tablist">
+          <!-- tabs dynamically populated -->
+        </div>
+        <textarea id="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-multiline="true"></textarea>
+      </section>
+    </div>
+  </div>
+
+<script>
+  (() => {
+    // Emulate a basic multi-file editor with tabs and file tree, with simplified features.
+    const fileListElem = document.getElementById('file-list');
+    const tabsElem = document.getElementById('tabs');
+    const editorElem = document.getElementById('editor');
+    const toggleFileTreeBtn = document.getElementById('toggle-file-tree');
+    const fileTreeElem = document.getElementById('file-tree');
+
+    // State
+    let files = {
+      'index.html': { content: '<!DOCTYPE html>\\n<html lang="en">\\n<head>\\n<meta charset="UTF-8">\\n<title>Sample</title>\\n</head>\\n<body>\\nHello World!\\n</body>\\n</html>', saved: true },
+      'style.css': { content: 'body { background:#fff; color:#333; }', saved: true },
+      'app.js': { content: 'console.log("Hello from app.js");', saved: true }
+    };
+    let openFileNames = [];
+    let activeFileName = null;
+    let editorChanged = false;
+
+    // Helpers
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;'
+      })[m]);
+    }
+
+    // Render file list in sidebar
+    function renderFileList() {
+      fileListElem.innerHTML = '';
+      Object.keys(files).forEach(filename => {
+        const li = document.createElement('li');
+        li.textContent = filename;
+        li.tabIndex = 0;
+        li.setAttribute('role', 'listitem');
+        li.className = (filename === activeFileName) ? 'active' : '';
+        li.addEventListener('click', () => openFile(filename));
+        li.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openFile(filename);
+          }
+        });
+        fileListElem.appendChild(li);
+      });
+    }
+
+    // Render tabs
+    function renderTabs() {
+      tabsElem.innerHTML = '';
+      openFileNames.forEach(filename => {
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        if (filename === activeFileName) tab.classList.add('active');
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-selected', filename === activeFileName ? 'true' : 'false');
+        tab.textContent = filename;
+
+        // Close button
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close-btn';
+        closeBtn.textContent = '×';
+        closeBtn.title = 'Close ' + filename;
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeFile(filename);
+        });
+        tab.appendChild(closeBtn);
+
+        tab.addEventListener('click', () => {
+          switchFile(filename);
+        });
+
+        tabsElem.appendChild(tab);
+      });
+    }
+
+    // Open file and show in editor
+    function openFile(filename) {
+      if (!files[filename]) return;
+      if (!openFileNames.includes(filename)) openFileNames.push(filename);
+      switchFile(filename);
+    }
+
+    // Switch active tab/file
+    function switchFile(filename) {
+      if (!files[filename]) return;
+      if (activeFileName !== filename) {
+        // Save current file content before switching if changed
+        if (editorChanged && activeFileName) {
+          files[activeFileName].content = editorElem.value;
+          files[activeFileName].saved = false;
+        }
+        activeFileName = filename;
+        editorElem.value = files[filename].content;
+        editorChanged = false;
+        renderTabs();
+        renderFileList();
+        editorElem.focus();
+      }
+    }
+
+    // Close a tab/file
+    function closeFile(filename) {
+      if (!openFileNames.includes(filename)) return;
+      if (editorChanged && filename === activeFileName) {
+        files[filename].content = editorElem.value;
+      }
+      openFileNames = openFileNames.filter(f => f !== filename);
+      // If closing active file, switch to another open file
+      if (filename === activeFileName) {
+        if (openFileNames.length > 0) {
+          switchFile(openFileNames[openFileNames.length - 1]);
+        } else {
+          activeFileName = null;
+          editorElem.value = '';
+          renderTabs();
+          renderFileList();
+        }
+      } else {
+        renderTabs();
+        renderFileList();
+      }
+    }
+
+    // Save current active file's content to files object
+    function saveActiveFile() {
+      if (!activeFileName) return;
+      files[activeFileName].content = editorElem.value;
+      files[activeFileName].saved = true;
+      editorChanged = false;
+      renderTabs();
+      renderFileList();
+    }
+
+    // Prompt to create new file
+    function createNewFile() {
+      let filename = prompt('Enter new file name (with extension):');
+      if (!filename) return;
+      filename = filename.trim();
+      if (files[filename]) {
+        alert('File already exists.');
+        return;
+      }
+      files[filename] = { content: '', saved: true };
+      openFile(filename);
+      renderFileList();
+      renderTabs();
+    }
+
+    // Toggle file tree visibility for small screens
+    toggleFileTreeBtn.addEventListener('click', () => {
+      if (fileTreeElem.style.display === 'block') {
+        fileTreeElem.style.display = 'none';
+      } else {
+        fileTreeElem.style.display = 'block';
+      }
+    });
+
+    // Editor change detection
+    editorElem.addEventListener('input', () => {
+      if (!activeFileName) return;
+      if (!editorChanged) {
+        editorChanged = true;
+        files[activeFileName].saved = false;
+        renderTabs();
+        renderFileList();
+      }
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          saveActiveFile();
+        }
+        if (e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          createNewFile();
+        }
+      }
+    });
+
+    // Initialize editor
+    function init() {
+      // Open first file by default
+      const firstFile = Object.keys(files)[0];
+      if (firstFile) {
+        openFile(firstFile);
+      }
+      renderFileList();
+      renderTabs();
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
+
+```
