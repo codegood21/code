@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Top Up Diamond All Game</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .container {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    padding: 30px 25px 40px 25px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #4b3f72;
+    font-weight: 600;
+    font-size: 1.8rem;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    color: #4b3f72;
+    margin-bottom: 7px;
+    font-size: 0.9rem;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    border: 2px solid #d1c4e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #764ba2;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    padding: 14px 0;
+    background: #764ba2;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(118,75,162,.7);
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #5e3a8e;
+  }
+  .result {
+    margin-top: 20px;
+    background: #f3e5f5;
+    border-radius: 12px;
+    padding: 15px 20px;
+    color: #4b3f72;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    min-height: 40px;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 25px 20px 35px 20px;
+      border-radius: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Top Up Diamond All Game</h1>
+    <form id="topupForm" aria-label="Formulir Top Up Diamond">
+      <label for="gameSelect">Pilih Game</label>
+      <select id="gameSelect" required aria-required="true" aria-describedby="gameDesc">
+        <option value="" disabled selected hidden>Pilih Game</option>
+        <option value="FF">Free Fire</option>
+        <option value="ML">Mobile Legends</option>
+        <option value="PUBG">PUBG Mobile</option>
+        <option value="COD">Call of Duty Mobile</option>
+        <option value="Genshin">Genshin Impact</option>
+        <option value="AmongUs">Among Us</option>
+      </select>
+
+      <label for="diamondAmount">Jumlah Diamond</label>
+      <input type="number" id="diamondAmount" required min="1" max="10000" aria-required="true" aria-describedby="amountDesc" placeholder="Masukkan jumlah diamond" />
+
+      <label for="playerId">ID Pemain / Nickname</label>
+      <input type="text" id="playerId" required aria-required="true" placeholder="Masukkan ID Pemain atau Nickname" />
+
+      <button type="submit" aria-label="Submit Top Up">Top Up Sekarang</button>
+    </form>
+    <div class="result" id="result" role="alert" aria-live="polite"></div>
+  </div>
+
+<script>
+  const gamePrices = {
+    "FF": 150,      // RP per diamond Free Fire
+    "ML": 170,      // RP per diamond Mobile Legends
+    "PUBG": 160,    // RP per diamond PUBG
+    "COD": 180,     // RP per diamond Call of Duty
+    "Genshin": 200, // RP per diamond Genshin Impact
+    "AmongUs": 100  // RP per diamond Among Us (example)
+  };
+
+  const gameNames = {
+    "FF": "Free Fire",
+    "ML": "Mobile Legends",
+    "PUBG": "PUBG Mobile",
+    "COD": "Call of Duty Mobile",
+    "Genshin": "Genshin Impact",
+    "AmongUs": "Among Us"
+  };
+
+  const form = document.getElementById('topupForm');
+  const result = document.getElementById('result');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const game = form.gameSelect.value;
+    const diamond = parseInt(form.diamondAmount.value, 10);
+    const playerId = form.playerId.value.trim();
+
+    if (!game || !diamond || diamond < 1 || !playerId) {
+      result.textContent = "Mohon isi semua kolom dengan benar.";
+      return;
+    }
+
+    const pricePerDiamond = gamePrices[game] || 150;
+    const totalPrice = pricePerDiamond * diamond;
+
+    const formatter = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' });
+    const formattedPrice = formatter.format(totalPrice);
+
+    result.innerHTML =
+      `Top Up berhasil untuk <strong>${gameNames[game]}</strong><br>` +
+      `ID Pemain: <strong>${playerId}</strong><br>` +
+      `Jumlah Diamond: <strong>${diamond}</strong><br>` +
+      `Total Harga: <strong>${formattedPrice}</strong><br><br>` +
+      `<em>*Simulasi ini tidak terhubung dengan server pembayaran.</em>`;
+  });
+</script>
+</body>
+</html>
+
+```
