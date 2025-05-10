@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Web Judi Slot Mesin</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(135deg, #1e1e2f, #121224);
+    color: #fefefe;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    overflow: hidden;
+    padding: 20px;
+  }
+  header {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    color: #ef4e7b;
+    text-shadow: 0 0 10px #ef4e7b, 0 0 20px #ef4e7b;
+  }
+  main {
+    background: #27273d;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 0 15px #ef4e7b80;
+    max-width: 350px;
+    width: 100%;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .balance {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #ffd369;
+    text-shadow: 0 0 5px #ffd369;
+  }
+  .reels {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .reel {
+    background: #3c3b57;
+    border-radius: 10px;
+    width: 70px;
+    height: 70px;
+    margin: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #fff;
+    box-shadow: inset 0 0 10px #ef4e7bbb;
+    text-shadow: 0 0 15px #ef4e7b90;
+  }
+  button {
+    background: #ef4e7b;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  button:disabled {
+    background: #b36b7b;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  button:hover:not(:disabled) {
+    background: #ff5c91;
+    box-shadow: 0 0 10px #ff5c91;
+  }
+  .bet-section {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  label {
+    display: block;
+    color: #ef4e7b;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    background: #3c3b57;
+    color: #fff;
+    box-shadow: inset 0 0 5px #ef4e7b88;
+    cursor: pointer;
+  }
+  .message {
+    font-size: 1rem;
+    margin-top: 10px;
+    min-height: 40px;
+    text-align: center;
+    font-weight: 700;
+    text-shadow: 0 0 10px #ffd369;
+  }
+  @media (max-width: 400px) {
+    main {
+      max-width: 100%;
+      padding: 15px;
+    }
+    .reel {
+      width: 50px;
+      height: 50px;
+      font-size: 1.8rem;
+      margin: 0 5px;
+      box-shadow: inset 0 0 7px #ef4e7bbb;
+    }
+    button {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Mesin Slot Judi</header>
+<main>
+  <div class="balance">Saldo Anda: <span id="balance">1000</span> Koin</div>
+  <div class="reels" aria-label="Mesin slot">
+    <div class="reel" id="reel1">🍒</div>
+    <div class="reel" id="reel2">🍋</div>
+    <div class="reel" id="reel3">🍊</div>
+  </div>
+  <div class="bet-section">
+    <label for="betAmount">Pilih Taruhan</label>
+    <select id="betAmount" aria-label="Pilih jumlah taruhan">
+      <option value="10">10 Koin</option>
+      <option value="20">20 Koin</option>
+      <option value="50">50 Koin</option>
+      <option value="100">100 Koin</option>
+    </select>
+  </div>
+  <button id="spinButton" aria-label="Putar mesin slot">Putar Mesin</button>
+  <div class="message" id="message" aria-live="polite"></div>
+</main>
+
+<script>
+  (function(){
+    const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '💎'];
+    const reels = [
+      document.getElementById('reel1'),
+      document.getElementById('reel2'),
+      document.getElementById('reel3')
+    ];
+    const balanceEl = document.getElementById('balance');
+    const betSelect = document.getElementById('betAmount');
+    const spinButton = document.getElementById('spinButton');
+    const messageEl = document.getElementById('message');
+
+    let balance = 1000;
+
+    function updateBalance(amount) {
+      balance += amount;
+      balanceEl.textContent = balance;
+    }
+
+    function getRandomSymbol() {
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    function checkWin(result) {
+      if (result[0] === result[1] && result[1] === result[2]) {
+        return 5; // 5x multiplier for 3 same symbols
+      } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
+        return 2; // 2x multiplier for 2 same symbols
+      }
+      return 0; // no win
+    }
+
+    function disableUI(state) {
+      spinButton.disabled = state;
+      betSelect.disabled = state;
+    }
+
+    async function spin() {
+      disableUI(true);
+      messageEl.textContent = '';
+
+      let bet = parseInt(betSelect.value, 10);
+      if (bet > balance) {
+        messageEl.textContent = 'Saldo tidak cukup untuk taruhan ini!';
+        disableUI(false);
+        return;
+      }
+
+      updateBalance(-bet);
+
+      let spinResults = ['','',''];
+      let spinCount = 10;
+      for (let i = 0; i < spinCount; i++) {
+        for (let r = 0; r < 3; r++) {
+          spinResults[r] = getRandomSymbol();
+          reels[r].textContent = spinResults[r];
+        }
+        await new Promise(r => setTimeout(r, 70 + i * 20));
+      }
+
+      const multiplier = checkWin(spinResults);
+      if (multiplier > 0) {
+        const winAmount = bet * multiplier;
+        updateBalance(winAmount);
+        messageEl.textContent = `Selamat! Anda menang ${winAmount} Koin!`;
+        messageEl.style.color = '#ffd369';
+        messageEl.style.textShadow = '0 0 15px #ffd369';
+      } else {
+        messageEl.textContent = 'Sayang sekali, Anda kalah.';
+        messageEl.style.color = '#ef4e7b';
+        messageEl.style.textShadow = '0 0 10px #ef4e7b';
+      }
+
+      disableUI(false);
+    }
+
+    spinButton.addEventListener('click', spin);
+
+    // Mobile friendly: optimize viewport and button actual size
+    window.addEventListener('load', () => {
+      document.body.style.height = window.innerHeight + 'px';
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
