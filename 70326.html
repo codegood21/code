@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ban Nomor WhatsApp Fake</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    padding: 1rem;
+  }
+  h1 {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  form {
+    background: rgba(255,255,255,0.1);
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  input[type="tel"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2rem;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="tel"]:focus {
+    box-shadow: 0 0 8px #00ffea88;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: #00ffd5;
+    border: none;
+    font-weight: 700;
+    font-size: 1.25rem;
+    padding: 0.85rem;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #002828;
+    box-shadow: 0 4px 14px #00ffd5aa;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover {
+    background: #00ccb3;
+    box-shadow: 0 6px 20px #00ccb3cc;
+  }
+  .result {
+    margin-top: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 10px;
+    background: #00b894dd;
+    color: #004d41;
+    user-select: none;
+  }
+  footer {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #ccccccaa;
+    padding: 1rem;
+    text-align: center;
+    user-select: none;
+  }
+  @media (max-width: 400px) {
+    h1 {
+      font-size: 2rem;
+    }
+    form {
+      padding: 1.5rem 1rem;
+    }
+    input[type="tel"] {
+      font-size: 1rem;
+    }
+    button {
+      font-size: 1.1rem;
+      padding: 0.75rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Ban Nomor WhatsApp Fake</h1>
+  <form id="banForm" autocomplete="off" novalidate>
+    <label for="phoneNumber">Masukkan Nomor Target WhatsApp:</label>
+    <input
+      type="tel"
+      id="phoneNumber"
+      name="phoneNumber"
+      placeholder="Contoh: 081234567890"
+      pattern="^(0|\+62)[0-9]{8,14}$"
+      required
+      inputmode="tel"
+      aria-label="Masukkan Nomor Target WhatsApp"
+    />
+    <button type="submit">Ban Nomor</button>
+  </form>
+  <div class="result" id="result" aria-live="polite" role="alert" style="display:none;"></div>
+  <footer>Powered by nanda</footer>
+<script>
+  (() => {
+    const form = document.getElementById('banForm');
+    const input = document.getElementById('phoneNumber');
+    const result = document.getElementById('result');
+
+    // Normalize phone number input for display
+    function cleanNumber(num) {
+      return num.trim().replace(/\s+/g, '');
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const val = cleanNumber(input.value);
+
+      // Validate Indonesian local or international format (just basic check)
+      const pattern = /^(0|\+62)[0-9]{8,14}$/;
+      if (!pattern.test(val)) {
+        result.style.display = 'block';
+        result.style.backgroundColor = '#ff6b6bdd';
+        result.style.color = '#7f1d1d';
+        result.textContent = 'Nomor tidak valid! Pastikan format nomor diawali dengan 0 atau +62 dan minimal 9 digit.';
+        input.focus();
+        return;
+      }
+
+      // Show the fake ban confirmation message with animation
+      result.style.backgroundColor = '#00b894dd';
+      result.style.color = '#004d41';
+      result.textContent = `Nomor target ${val} telah terkena ban WhatsApp.`;
+      result.style.display = 'block';
+      
+      // Clear input and keep focus for quick testing
+      input.value = '';
+      input.focus();
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
