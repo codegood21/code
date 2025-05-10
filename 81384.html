@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Doxing NIK</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f0f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 600px;
+    max-width: 350px;
+    overflow: hidden;
+  }
+  header {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  main {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1em;
+    width: 90%;
+    box-sizing: border-box;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.3em;
+    user-select: none;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 1em;
+    background-color: #5a67d8;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 0.7em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button:hover, button:focus {
+    background-color: #434190;
+    outline: none;
+  }
+  .result {
+    margin-top: 1em;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 1em;
+    color: #b8c0ff;
+    font-family: monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+  .footer {
+    font-size: 0.7em;
+    margin: 0.5em 0 1em;
+    text-align: center;
+    color: #c3c7ff;
+    user-select: none;
+  }
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      padding: 0.5em;
+    }
+    main {
+      width: 100%;
+      padding: 0.7em;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Doxing NIK</header>
+<main>
+  <label for="nikInput">Masukkan Nomor Induk Kependudukan (NIK):</label>
+  <input type="text" id="nikInput" maxlength="16" placeholder="Contoh: 3201011234567890" inputmode="numeric" pattern="[0-9]*" />
+  <button id="doxButton">Cari Info</button>
+  <pre class="result" id="result" aria-live="polite"></pre>
+</main>
+<div class="footer">&copy; 2024 by BLACKBOXAI</div>
+<script>
+  // Helper function to parse NIK and simulate doxing info
+  function parseNIK(nik) {
+    // Basic validation: length 16 and numeric
+    if (!/^\d{16}$/.test(nik)) {
+      return 'NIK harus 16 digit angka.';
+    }
+    let regionCode = nik.slice(0, 6);
+    let birthDatePart = nik.slice(6, 12);
+    let serial = nik.slice(12, 16);
+
+    // Extract birth date info
+    let day = parseInt(birthDatePart.slice(4,6), 10);
+    let month = parseInt(birthDatePart.slice(2,4), 10);
+    let year = parseInt(birthDatePart.slice(0,2), 10);
+
+    // Adjust day for female (day > 40)
+    let gender = "Laki-laki";
+    if (day > 40) {
+      day -= 40;
+      gender = "Perempuan";
+    }
+    // Year fix (assume 1900-1999 for year < 30, 2000-2029 for >= 30)
+    let currentYear = new Date().getFullYear() % 100;
+    let fullYear = year + (year <= currentYear ? 2000 : 1900);
+
+    // Format birthdate
+    let birthdate = new Date(fullYear, month-1, day);
+    if (birthdate.getMonth() + 1 !== month || birthdate.getDate() !== day) {
+      return 'NIK tidak valid: tanggal lahir tidak sesuai.';
+    }
+    // Region mapping (fake minimal example)
+    const regionMap = {
+      "320101": "Kabupaten Bandung, Jawa Barat",
+      "320102": "Kota Bandung, Jawa Barat",
+      "320103": "Kota Cimahi, Jawa Barat",
+      "320104": "Kabupaten Sumedang, Jawa Barat"
+    };
+    let region = regionMap[regionCode] || "Daerah Tidak Dikenal";
+
+    return (
+      `Informasi Doxing NIK:\n` +
+      `NIK           : ${nik}\n` +
+      `Wilayah       : ${region}\n` +
+      `Jenis Kelamin : ${gender}\n` +
+      `Tanggal Lahir : ${birthdate.toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'})}\n` +
+      `Nomor Urut    : ${serial}\n\n` +
+      `*Data ini hasil parsing dan simulasi. Gunakan dengan bijak.*`
+    );
+  }
+
+  document.getElementById('doxButton').addEventListener('click', () => {
+    const nikInput = document.getElementById('nikInput').value.trim();
+    const resultBox = document.getElementById('result');
+    const info = parseNIK(nikInput);
+    resultBox.textContent = info;
+  });
+
+  // Allow pressing Enter key to trigger search
+  document.getElementById('nikInput').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      document.getElementById('doxButton').click();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
