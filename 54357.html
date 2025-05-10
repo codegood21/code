@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Up Game Otomatis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Top Up Game Otomatis</h1>
+        <nav>
+            <ul>
+                <li><a href="#mobile-legends">Mobile Legends</a></li>
+                <li><a href="#free-fire">Free Fire</a></li>
+                <li><a href="#pubg">PUBG</a></li>
+                <li><a href="#pulsa">Pulsa & Paket Data</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="mobile-legends">
+            <h2>Top Up Mobile Legends</h2>
+            <img src="banner-mobile-legends.jpg" alt="Banner Mobile Legends">
+            <button onclick="buy('Mobile Legends')">Beli Diamond</button>
+        </section>
+
+        <section id="free-fire">
+            <h2>Top Up Free Fire</h2>
+            <img src="banner-free-fire.jpg" alt="Banner Free Fire">
+            <button onclick="buy('Free Fire')">Beli Diamond</button>
+        </section>
+
+        <section id="pubg">
+            <h2>Top Up PUBG</h2>
+            <img src="banner-pubg.jpg" alt="Banner PUBG">
+            <button onclick="buy('PUBG')">Beli Diamond</button>
+        </section>
+
+        <section id="pulsa">
+            <h2>Pulsa & Paket Data</h2>
+            <button onclick="buy('Pulsa')">Beli Pulsa</button>
+        </section>
+    </main>
+
+    <footer>
+        <h3>Metode Pembayaran</h3>
+        <p>Transfer ke DANA: 085659441370</p>
+        <p>Transfer ke GoPay: 085880150761</p>
+        <p>Chat Customer Service untuk konfirmasi pembayaran.</p>
+    </footer>
+
+    <script>
+        function buy(game) {
+            alert("Anda akan diarahkan untuk membayar " + game + ". Silakan pilih metode pembayaran.");
+            // Arahkan ke DANA atau GoPay sesuai pilihan
+            // Implementasi logika pembayaran otomatis di sini
+        }
+    </script>
+</body>
+</html>
+```
