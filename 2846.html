@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>QRIS All Payment Without KTP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: #fff;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    padding: 30px 25px;
+    margin-top: 20px;
+  }
+  h1 {
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+    color: #222;
+    margin-bottom: 30px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #444;
+    font-weight: 500;
+  }
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1.8px solid #ccc;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-weight: 600;
+    font-size: 18px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  .result {
+    margin-top: 25px;
+    background: #e9f5ff;
+    border-left: 5px solid #007bff;
+    padding: 15px 20px;
+    font-size: 16px;
+    color: #003f7f;
+    word-break: break-all;
+    border-radius: 5px;
+  }
+  .footer-note {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+  }
+  @media only screen and (max-width: 400px) {
+    .container {
+      padding: 20px 15px;
+      margin-top: 15px;
+    }
+    h1 {
+      font-size: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>QRIS All Payment (No KTP Required)</h1>
+  <form id="qrisForm">
+    <label for="amount">Nominal Pembayaran (Rp):</label>
+    <input type="number" id="amount" name="amount" placeholder="Masukkan nominal" min="1000" step="100" required />
+
+    <label for="payment-method">Metode Pencairan ke E-Wallet:</label>
+    <select id="payment-method" name="payment-method" required>
+      <option value="" disabled selected>Pilih metode e-wallet</option>
+      <option value="gopay">GoPay</option>
+      <option value="ovo">OVO</option>
+      <option value="dana">DANA</option>
+      <option value="linkaja">LinkAja</option>
+      <option value="shopeepay">ShopeePay</option>
+    </select>
+
+    <label for="ewallet-number">Nomor Akun E-Wallet:</label>
+    <input type="text" id="ewallet-number" name="ewallet-number" placeholder="Masukkan nomor akun e-wallet" pattern=".{8,20}" title="Nomor akun harus antara 8-20 karakter" required />
+
+    <button type="submit">Generate QRIS</button>
+  </form>
+  <div class="result" id="result" style="display:none"></div>
+  <div class="footer-note">
+    QRIS dapat dibayar dengan semua aplikasi payment QR code di Indonesia.<br/>
+    Pencairan ke payment e-wallet Anda akan diproses sesuai nomor akun yang Anda masukkan.
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('qrisForm');
+  const resultDiv = document.getElementById('result');
+
+  // Simulate QRIS generation and e-wallet payout link creation
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const amount = Number(form.amount.value);
+    const method = form['payment-method'].value;
+    const account = form['ewallet-number'].value.trim();
+
+    if (!amount || amount < 1000) {
+      alert('Nominal pembayaran minimal Rp 1000');
+      return;
+    }
+    if (!method) {
+      alert('Pilih metode e-wallet');
+      return;
+    }
+    if (!account || account.length < 8 || account.length > 20) {
+      alert('Nomor akun e-wallet harus antara 8 sampai 20 karakter');
+      return;
+    }
+
+    // Create a fake QRIS payload (for demo only)
+    // Normally, the QRIS code would be generated using payment gateway API.
+    const qrisPayload = `SPD*1.0*bizpayurl*https://payment.example.com/qr/${encodeURIComponent(method)}-${encodeURIComponent(account)}-${amount}`;
+
+    // Create fake "pencairan" link simulating redirect or payout to e-wallet
+    const payoutLink = `https://ewallet.example.com/payout?method=${method}&account=${encodeURIComponent(account)}&amount=${amount}`;
+
+    // Display QR in text and payout info with clickable link
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+      <strong>QRIS Payload:</strong><br>${qrisPayload.replace(/\*/g,'<wbr>*')}<br><br>
+      <strong>Link Pencairan ke E-Wallet:</strong><br>
+      <a href="${payoutLink}" target="_blank" rel="noopener noreferrer">${payoutLink}</a>
+    `;
+  });
+</script>
+</body>
+</html>
+
+```
