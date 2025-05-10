@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Judi Online - Slot Game</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+  body, html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #game {
+    width: 350px;
+    height: 600px;
+    background: #0a1624;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.2em;
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+  }
+  #credits {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  #slot-machine {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 25px;
+  }
+  .slot {
+    background: #112a46;
+    border-radius: 10px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+    box-shadow: inset 0 0 8px #555;
+    user-select: none;
+  }
+  #spin-button {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ff8c00, #ffd700);
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.4em;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.6);
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  #spin-button:active {
+    background: linear-gradient(135deg, #e07b00, #e6c200);
+  }
+  #message {
+    margin-top: 20px;
+    font-size: 1.2em;
+    min-height: 28px;
+    text-align: center;
+    color: #f0f0f0;
+    text-shadow: 0 0 3px #aa0c03;
+    min-height: 36px;
+  }
+  /* Responsive for mobile */
+  @media (max-width: 400px) {
+    #game {
+      width: 320px;
+      height: 580px;
+      padding: 15px;
+    }
+    .slot {
+      width: 80px;
+      height: 80px;
+      font-size: 2.6em;
+    }
+    #spin-button {
+      font-size: 1.2em;
+      padding: 13px 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="game" role="main" aria-label="Judi Online Slot Machine Game">
+  <h1>JUDI ONLINE</h1>
+  <div id="credits" aria-live="polite">Kredit: <span id="credit-amount">1000</span></div>
+  <div id="slot-machine" aria-label="Slot Machine">
+    <div class="slot" id="slot1" aria-live="polite" aria-atomic="true">🍒</div>
+    <div class="slot" id="slot2" aria-live="polite" aria-atomic="true">🍋</div>
+    <div class="slot" id="slot3" aria-live="polite" aria-atomic="true">7</div>
+  </div>
+  <button id="spin-button" aria-label="Putar Slot">PUTAR</button>
+  <div id="message" role="alert" aria-live="assertive"></div>
+</div>
+<script>
+  (function(){
+    const symbols = ['🍒', '🍋', '🍊', '🍉', '🍇', '7', '⭐'];
+    let credits = 1000;
+    const slotElems = [
+      document.getElementById('slot1'),
+      document.getElementById('slot2'),
+      document.getElementById('slot3')
+    ];
+    const creditAmountElem = document.getElementById('credit-amount');
+    const messageElem = document.getElementById('message');
+    const spinButton = document.getElementById('spin-button');
+    let spinning = false;
+
+    function updateCredits(amount) {
+      credits = Math.max(0, credits + amount);
+      creditAmountElem.textContent = credits;
+    }
+
+    function spinSlots() {
+      if(spinning) return;
+      if(credits <= 0) {
+        displayMessage('Kredit Anda habis! Segera isi ulang.');
+        return;
+      }
+      spinning = true;
+      updateCredits(-10);
+      displayMessage('Memutar...');
+
+      // Animate slots with intervals
+      let spinDuration = 1500;
+      let spinIntervals = [100, 150, 200];
+      let tempIndices = [0, 0, 0];
+      
+      spinIntervals.forEach((interval, idx) => {
+        let count = 0;
+        const maxCount = Math.floor(spinDuration/interval);
+        const slot = slotElems[idx];
+        let spinInterval = setInterval(() => {
+          tempIndices[idx] = (tempIndices[idx] + 1) % symbols.length;
+          slot.textContent = symbols[tempIndices[idx]];
+          count++;
+          if(count >= maxCount) {
+            clearInterval(spinInterval);
+            if(idx === 2) {
+              // After last slot stops, check results
+              evaluateResult();
+              spinning = false;
+            }
+          }
+        }, interval);
+      });
+    }
+
+    function evaluateResult() {
+      const results = slotElems.map(elem => elem.textContent);
+      // Winning Conditions:
+      // Jackpot: three 7's
+      if(results.every(sym => sym === '7')) {
+        updateCredits(1000);
+        displayMessage('Jackpot! Anda menang 1000 kredit!');
+        return;
+      }
+      // Three same symbols
+      if(results[0] === results[1] && results[1] === results[2]) {
+        updateCredits(200);
+        displayMessage('Tiga simbol sama! Anda menang 200 kredit!');
+        return;
+      }
+      // Two same symbols
+      if(results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+        updateCredits(50);
+        displayMessage('Dua simbol sama! Anda menang 50 kredit!');
+        return;
+      }
+      // No win
+      displayMessage('Coba lagi! Jangan menyerah!');
+    }
+
+    function displayMessage(msg) {
+      messageElem.textContent = msg;
+    }
+
+    spinButton.addEventListener('click', spinSlots);
+
+    // Initialize slots with random symbols
+    function initSlots() {
+      slotElems.forEach(elem => {
+        elem.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      });
+    }
+    initSlots();
+
+    // Keyboard accessibility: allow space/enter on button
+    spinButton.addEventListener('keyup', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        spinSlots();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
