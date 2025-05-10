@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>HTML to URL Uploader</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  .container {
+    background: rgba(0,0,0,0.4);
+    padding: 20px 30px;
+    border-radius: 15px;
+    width: 90vw;
+    max-width: 450px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    display: flex;
+    flex-direction: column;
+  }
+  h1 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.8rem;
+  }
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    border-radius: 8px;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: monospace;
+    margin-bottom: 15px;
+    outline: none;
+  }
+  button {
+    background: #6c63ff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #5750d1;
+  }
+  .output {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    border-radius: 8px;
+    min-height: 44px;
+    user-select: all;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 15px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Upload HTML to URL (Clougood API)</h1>
+    <label for="htmlContent" style="font-size: 0.9rem; margin-bottom: 6px;">Paste your HTML code here:</label>
+    <textarea id="htmlContent" aria-label="HTML content to upload" placeholder="Paste your HTML code here..."></textarea>
+    <button id="uploadBtn" aria-live="polite">Upload</button>
+    <div id="result" class="output" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+<script>
+(async () => {
+  const uploadBtn = document.getElementById('uploadBtn');
+  const htmlContent = document.getElementById('htmlContent');
+  const resultDiv = document.getElementById('result');
+
+  // Replace this with your actual Clougood API endpoint and key
+  const CLOUGOOD_API_URL = 'https://api.clougood.io/v1/upload/html'; // Example endpoint, adjust if needed
+  const API_KEY = ''; // Insert your Clougood API key here if required
+
+  uploadBtn.addEventListener('click', async () => {
+    const html = htmlContent.value.trim();
+
+    if (!html) {
+      resultDiv.textContent = 'Please paste the HTML content to upload.';
+      resultDiv.style.color = '#ff6b6b';
+      return;
+    }
+
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Uploading...';
+    resultDiv.textContent = '';
+    resultDiv.style.color = '#fff';
+
+    try {
+      // Prepare form data if needed by API, or JSON body
+      // Assuming Clougood API accepts JSON with html content, adjust if necessary.
+      const response = await fetch(CLOUGOOD_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(API_KEY ? {'Authorization': `Bearer ${API_KEY}`} : {})
+        },
+        body: JSON.stringify({ html: html })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Expected 'url' in response, adjust depending on real API response structure
+      if (data.url) {
+        resultDiv.innerHTML = `<strong>Upload Successful! Access your HTML here:</strong><br><a href="${data.url}" target="_blank" rel="noopener">${data.url}</a>`;
+        resultDiv.style.color = '#a3f7bf';
+      } else {
+        throw new Error('Unexpected response structure from server.');
+      }
+    } catch (error) {
+      resultDiv.textContent = 'Error uploading HTML: ' + error.message;
+      resultDiv.style.color = '#ff6b6b';
+    } finally {
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = 'Upload';
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
