@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pembayaran Dana & GoPay</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f2f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+  }
+  .container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    width: 320px;
+    padding: 24px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 16px;
+    color: #007aff;
+  }
+  .info {
+    font-size: 1.1em;
+    margin-bottom: 24px;
+    word-break: break-word;
+  }
+  .payment-method {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 24px;
+  }
+  .method {
+    flex: 1;
+    margin: 0 10px;
+    padding: 16px;
+    border: 2px solid #007aff;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .method:hover, .method.active {
+    background-color: #007aff;
+    color: white;
+  }
+  button {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #005bb5;
+  }
+  .copy-text {
+    font-size: 0.9em;
+    margin-top: 8px;
+    color: #555;
+  }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-size: 0.9em;
+  }
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pembayaran Digital</h1>
+  <div class="info">
+    Nomor pembayaran:<br />
+    <strong id="phone-number">083845989155</strong>
+  </div>
+  <div class="payment-method">
+    <div class="method active" data-method="dana" tabindex="0" aria-selected="true" role="button" aria-label="Pilih metode pembayaran Dana">
+      Dana
+    </div>
+    <div class="method" data-method="gopay" tabindex="0" aria-selected="false" role="button" aria-label="Pilih metode pembayaran GoPay">
+      GoPay
+    </div>
+  </div>
+  <button id="copy-button" aria-live="polite" aria-label="Salin nomor pembayaran">Salin Nomor &rarr;</button>
+  <div class="copy-text" id="instruction-text">Gunakan aplikasi Dana untuk pembayaran dengan nomor di atas.</div>
+</div>
+
+<div class="toast" id="toast">Nomor disalin ke clipboard!</div>
+
+<script>
+  (function() {
+    const methods = {
+      dana: 'Gunakan aplikasi Dana untuk pembayaran dengan nomor di atas.',
+      gopay: 'Gunakan aplikasi GoPay untuk pembayaran dengan nomor di atas.'
+    };
+    const phoneNumber = '083845989155';
+    const methodElems = document.querySelectorAll('.method');
+    const instructionText = document.getElementById('instruction-text');
+    const copyButton = document.getElementById('copy-button');
+    const toast = document.getElementById('toast');
+
+    let selectedMethod = 'dana';
+
+    function setActiveMethod(method) {
+      selectedMethod = method;
+      methodElems.forEach(el => {
+        if (el.dataset.method === method) {
+          el.classList.add('active');
+          el.setAttribute('aria-selected', 'true');
+          el.focus();
+        } else {
+          el.classList.remove('active');
+          el.setAttribute('aria-selected', 'false');
+        }
+      });
+      instructionText.textContent = methods[method];
+    }
+
+    methodElems.forEach(el => {
+      el.addEventListener('click', () => {
+        setActiveMethod(el.dataset.method);
+      });
+      el.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          setActiveMethod(el.dataset.method);
+        }
+      });
+    });
+
+    copyButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(phoneNumber).then(() => {
+        showToast();
+      }).catch(() => {
+        alert('Gagal menyalin nomor. Silakan salin manual: ' + phoneNumber);
+      });
+    });
+
+    function showToast(){
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+  })();
+</script>
+</body>
+</html>
+
+```
