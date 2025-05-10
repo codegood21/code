@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple Video Gallery</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #111;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    color: #ff3366;
+    text-shadow: 0 0 5px #ff3366;
+  }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 960px;
+  }
+  .video-item {
+    background-color: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #ff3366cc;
+    transition: transform 0.3s ease;
+  }
+  .video-item:hover {
+    transform: scale(1.05);
+  }
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .caption {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    background-color: #330022;
+    color: #ff99bb;
+  }
+  @media (max-width: 600px) {
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+    body {
+      padding: 0.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Video Gallery</h1>
+<div class="video-grid">
+  <div class="video-item">
+    <video controls preload="metadata" poster="">
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="caption">Flower Video (Sample)</div>
+  </div>
+  <div class="video-item">
+    <video controls preload="metadata" poster="">
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.webm" type="video/webm" />
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="caption">Bee Video (Sample)</div>
+  </div>
+</div>
+</body>
+</html>
+
+```
