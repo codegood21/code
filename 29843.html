@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Nokos Wa Game</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(135deg, #121212, #222222);
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #game-container {
+    position: relative;
+    width: 350px;
+    height: 600px;
+    background: #111;
+    border: 3px solid #00ffea;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffea;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #header {
+    text-align: center;
+    padding: 12px 0;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    user-select: none;
+    text-shadow: 0 0 8px #00ffea;
+  }
+  
+  #scoreboard {
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0;
+    font-size: 1.1rem;
+    border-top: 1px solid #00ffcaa0;
+    border-bottom: 1px solid #00ffcaa0;
+    user-select: none;
+  }
+  .score-item {
+    flex: 1;
+    text-align: center;
+  }
+  #game-area {
+    position: relative;
+    flex: 1;
+    background: #000;
+    margin: 8px 10px 15px 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    touch-action: none;
+  }
+  #player {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #00ffea;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00fffaa0;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .obstacle {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: #ff0044;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #ff0044aa;
+    top: -50px;
+  }
+  #controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+  .control-btn {
+    width: 70px;
+    height: 40px;
+    #09c7e2 disabled text shadows;
+    background: linear-gradient(145deg, #00ffea, #029899);
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    color: #00332f;
+    text-shadow: 0 0 5px #00ffea;
+    user-select: none;
+    box-shadow: inset 2px 2px 5px #00e8d9, inset -2px -2px 5px #00ffea;
+    touch-action: manipulation;
+  }
+  .control-btn:active {
+    box-shadow: inset -2px -2px 5px #00e8d9, inset 2px 2px 5px #00ffea;
+  }
+  #game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111a;
+    color: #ff0044;
+    font-size: 2rem;
+    font-weight: 900;
+    border: 3px solid #ff0044;
+    padding: 15px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 30px #ff0044;
+    display: none;
+    user-select: none;
+  }
+  #game-over button {
+    margin-top: 12px;
+    padding: 8px 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ff0044;
+    background: transparent;
+    border: 2px solid #ff0044;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  #game-over button:hover {
+    background: #ff0044;
+    color: #111;
+  }
+</style>
+</head>
+<body>
+<div id="game-container">
+  <div id="header">Nokos Wa</div>
+  <div id="scoreboard">
+    <div class="score-item">Score: <span id="score">0</span></div>
+    <div class="score-item">Lives: <span id="lives">3</span></div>
+  </div>
+  <div id="game-area" tabindex="0" role="main" aria-label="Game area">
+    <div id="player" aria-label="Player"></div>
+    <div id="game-over" role="alert" aria-live="assertive">
+      Game Over<br />
+      <button id="restart-btn" aria-label="Restart Game">Restart</button>
+    </div>
+  </div>
+  <div id="controls" aria-label="Game controls">
+    <button id="left-btn" class="control-btn" aria-label="Move left">Left</button>
+    <button id="right-btn" class="control-btn" aria-label="Move right">Right</button>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const gameArea = document.getElementById('game-area');
+    const player = document.getElementById('player');
+    const scoreElem = document.getElementById('score');
+    const livesElem = document.getElementById('lives');
+    const gameOverElem = document.getElementById('game-over');
+    const restartBtn = document.getElementById('restart-btn');
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
+
+    const gameAreaWidth = gameArea.clientWidth;
+    const gameAreaHeight = gameArea.clientHeight;
+
+    const playerSpeed = 8;
+    const obstacleSpeedBase = 2.2;
+    const obstacleSpeedIncrement = 0.005;
+    let obstacleSpeed = obstacleSpeedBase;
+
+    let playerPosX = (gameAreaWidth - player.offsetWidth) / 2;
+    player.style.left = playerPosX + 'px';
+
+    let obstacles = [];
+    let obstacleSpawnInterval = 1500; // ms
+    let lastSpawnTime = 0;
+
+    let score = 0;
+    let lives = 3;
+
+    let gameRunning = false;
+
+    // Clamp function
+    function clamp(v, min, max) {
+      return v < min ? min : v > max ? max : v;
+    }
+
+    // Create a new obstacle element at a random horizontal position
+    function createObstacle() {
+      const obstacle = document.createElement('div');
+      obstacle.classList.add('obstacle');
+      const maxX = gameAreaWidth - 45;
+      const x = Math.floor(Math.random() * maxX);
+      obstacle.style.left = x + 'px';
+      obstacle.style.top = '-50px';
+      gameArea.appendChild(obstacle);
+
+      const obstacleObj = {
+        el: obstacle,
+        x: x,
+        y: -50,
+        width: 45,
+        height: 45
+      };
+      obstacles.push(obstacleObj);
+    }
+
+    // Move player by dx (positive right, negative left)
+    function movePlayer(dx) {
+      playerPosX += dx;
+      playerPosX = clamp(playerPosX, 0, gameAreaWidth - player.offsetWidth);
+      player.style.left = playerPosX + 'px';
+    }
+
+    // Check collision between player and obstacle rectangles
+    function isCollision(rect1, rect2) {
+      return !(
+        rect1.x > rect2.x + rect2.width ||
+        rect1.x + rect1.width < rect2.x ||
+        rect1.y > rect2.y + rect2.height ||
+        rect1.y + rect1.height < rect2.y
+      );
+    }
+
+    // Update game state per frame
+    function gameLoop(timestamp) {
+      if (!gameRunning) return;
+
+      // Spawn new obstacles based on interval
+      if (!lastSpawnTime || timestamp - lastSpawnTime > obstacleSpawnInterval) {
+        createObstacle();
+        lastSpawnTime = timestamp;
+        // Gradually increase spawn rate up to a limit
+        if (obstacleSpawnInterval > 700) {
+          obstacleSpawnInterval -= 10;
+        }
+      }
+
+      // Move obstacles downward and check collision / out of screen
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        let ob = obstacles[i];
+        ob.y += obstacleSpeed;
+        ob.el.style.top = ob.y + 'px';
+
+        // Player bounding box
+        const playerBox = {
+          x: playerPosX,
+          y: gameAreaHeight - player.offsetHeight - 20,
+          width: player.offsetWidth,
+          height: player.offsetHeight
+        };
+        // Obstacle bounding box
+        const obBox = {
+          x: ob.x,
+          y: ob.y,
+          width: ob.width,
+          height: ob.height
+        };
+
+        if (isCollision(playerBox, obBox)) {
+          // Remove obstacle
+          gameArea.removeChild(ob.el);
+          obstacles.splice(i, 1);
+          loseLife();
+          continue;
+        }
+
+        // If obstacle out of screen, remove and add score
+        if (ob.y > gameAreaHeight) {
+          gameArea.removeChild(ob.el);
+          obstacles.splice(i, 1);
+          addScore();
+        }
+      }
+
+      // Increase difficulty by speeding obstacles up gradually
+      obstacleSpeed += obstacleSpeedIncrement;
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function addScore() {
+      score++;
+      scoreElem.textContent = score;
+    }
+    function loseLife() {
+      lives--;
+      livesElem.textContent = lives;
+      if (lives <= 0) {
+        endGame();
+      }
+    }
+    function endGame() {
+      gameRunning = false;
+      gameOverElem.style.display = 'block';
+      leftBtn.disabled = true;
+      rightBtn.disabled = true;
+    }
+
+    function resetGame() {
+      // Remove all obstacles
+      obstacles.forEach(ob => {
+        if (gameArea.contains(ob.el)) gameArea.removeChild(ob.el);
+      });
+      obstacles = [];
+      score = 0;
+      lives = 3;
+      scoreElem.textContent = score;
+      livesElem.textContent = lives;
+      obstacleSpeed = obstacleSpeedBase;
+      obstacleSpawnInterval = 1500;
+      playerPosX = (gameAreaWidth - player.offsetWidth) / 2;
+      player.style.left = playerPosX + 'px';
+      gameOverElem.style.display = 'none';
+      leftBtn.disabled = false;
+      rightBtn.disabled = false;
+      gameRunning = true;
+      lastSpawnTime = 0;
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Button control handlers
+    leftBtn.addEventListener('touchstart', e => {
+      e.preventDefault();
+      movePlayer(-playerSpeed);
+    });
+    rightBtn.addEventListener('touchstart', e => {
+      e.preventDefault();
+      movePlayer(playerSpeed);
+    });
+    leftBtn.addEventListener('mousedown', e => {
+      e.preventDefault();
+      movePlayer(-playerSpeed);
+    });
+    rightBtn.addEventListener('mousedown', e => {
+      e.preventDefault();
+      movePlayer(playerSpeed);
+    });
+
+    // Keyboard controls
+    gameArea.addEventListener('keydown', e => {
+      if (!gameRunning) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        movePlayer(-playerSpeed);
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        movePlayer(playerSpeed);
+      }
+    });
+
+    // Make game area focusable for keyboard controls
+    gameArea.setAttribute('tabindex', '0');
+    gameArea.focus();
+
+    // Restart button
+    restartBtn.addEventListener('click', () => {
+      resetGame();
+      gameArea.focus();
+    });
+
+    // Initial game start
+    resetGame();
+  })();
+</script>
+</body>
+</html>
+
+```
