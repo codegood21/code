@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Spam OTP WhatsApp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: linear-gradient(135deg, #46aef7, #0b3c6e);
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 20px;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 30px 40px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  h1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.9rem;
+    letter-spacing: 1.2px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  input[type="tel"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px 0;
+    border: none;
+    background: #ff4757;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:disabled {
+    background: #7a7a7a;
+    cursor: not-allowed;
+  }
+
+  button:hover:not(:disabled) {
+    background: #e84118;
+  }
+
+  .message {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @media screen and (max-width: 400px) {
+    .container {
+      padding: 25px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Spam OTP WhatsApp</h1>
+    <form id="spamForm" autocomplete="off" novalidate>
+      <label for="phone">Nomor WhatsApp (cth: 6281234567890)</label>
+      <input type="tel" id="phone" name="phone" placeholder="Masukkan nomor WhatsApp" pattern="^62\d{8,13}$" required aria-required="true" aria-label="Nomor WhatsApp" inputmode="numeric" />
+      <button type="submit" id="sendButton">Kirim Spam OTP</button>
+    </form>
+    <div id="message" class="message" aria-live="polite" role="alert"></div>
+  </div>
+
+<script>
+(function() {
+  const form = document.getElementById('spamForm');
+  const phoneInput = document.getElementById('phone');
+  const sendButton = document.getElementById('sendButton');
+  const messageEl = document.getElementById('message');
+
+  // Function to validate Indonesian WhatsApp number (starts with 62 and length between 10-15 digits)
+  function isValidPhone(number) {
+    const pattern = /^62\d{8,13}$/;
+    return pattern.test(number);
+  }
+
+  // Simulated spam OTP send function, since no real API available.
+  // This function just fakes delay and returns success/failure randomly.
+  function sendOtpSpam(phone) {
+    // Simulate network delay and response
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // Random success/failure simulation (90% success)
+        if (Math.random() < 0.9) {
+          resolve({ status: 'success', info: 'OTP berhasil dikirim ke ' + phone });
+        } else {
+          reject({status: 'error', error: 'Gagal mengirim OTP. Coba lagi.'});
+        }
+      }, 2000 + Math.random() * 2000);
+    });
+  }
+
+  function setLoading(isLoading) {
+    if (isLoading) {
+      sendButton.disabled = true;
+      sendButton.textContent = 'Mengirim';
+      const spinner = document.createElement('span');
+      spinner.className = 'spinner';
+      spinner.setAttribute('aria-hidden', 'true');
+      sendButton.appendChild(spinner);
+      messageEl.textContent = '';
+    } else {
+      sendButton.disabled = false;
+      sendButton.textContent = 'Kirim Spam OTP';
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const phone = phoneInput.value.trim();
+    if (!isValidPhone(phone)) {
+      messageEl.style.color = '#ff6b6b';
+      messageEl.textContent = 'Nomor WhatsApp tidak valid. Pastikan format dimulai dengan 62 dan diikuti 8-13 digit.';
+      phoneInput.focus();
+      return;
+    }
+
+    setLoading(true);
+    messageEl.style.color = '#fff';
+    messageEl.textContent = 'Mengirim spam OTP ke nomor Anda...';
+
+    try {
+      const result = await sendOtpSpam(phone);
+      messageEl.style.color = '#9bf442';
+      messageEl.textContent = result.info;
+    } catch (error) {
+      messageEl.style.color = '#ff6b6b';
+      messageEl.textContent = error.error || 'Terjadi kesalahan saat mengirim OTP.';
+    } finally {
+      setLoading(false);
+      phoneInput.focus();
+    }
+  });
+
+  // Accessibility: Focus the input on load
+  window.onload = () => {
+    phoneInput.focus();
+  };
+})();
+</script>
+</body>
+</html>
+
+```
