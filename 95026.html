@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Game Top-Up Admin Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #1e1e2f;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  header {
+    background: #292b3e;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: #70cfff;
+    letter-spacing: 1.5px;
+  }
+  nav {
+    display: flex;
+    gap: 20px;
+  }
+  nav button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  nav button:hover, nav button.active {
+    color: #70cfff;
+    background: #2d9cdb33;
+  }
+  main {
+    padding: 20px 30px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+  }
+  .topup-form {
+    background: #292b3e;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .topup-form h2 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #70cfff;
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #a0a0bb;
+  }
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #383a56;
+    color: #eee;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    background: #47506d;
+  }
+  button.submit-btn {
+    width: 100%;
+    padding: 14px 0;
+    background: #4fc3f7;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1a1a2e;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.submit-btn:hover {
+    background: #3ea1d6;
+  }
+  .transactions {
+    background: #292b3e;
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    overflow-x: auto;
+  }
+  .transactions h2 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #70cfff;
+    margin-bottom: 25px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    color: #ddd;
+  }
+  thead tr {
+    background: #3a3c57;
+    text-align: left;
+  }
+  thead th {
+    padding: 12px 15px;
+    font-weight: 600;
+  }
+  tbody tr {
+    border-bottom: 1px solid #444763;
+    transition: background-color 0.3s ease;
+  }
+  tbody tr:hover {
+    background-color: #2e4a75;
+  }
+  tbody td {
+    padding: 12px 15px;
+  }
+  .status-pending {
+    color: #f39c12;
+    font-weight: 600;
+  }
+  .status-completed {
+    color: #27ae60;
+    font-weight: 600;
+  }
+  .status-failed {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    nav {
+      width: 100%;
+      justify-content: space-between;
+    }
+    main {
+      padding: 15px 15px 30px;
+    }
+    .topup-form, .transactions {
+      margin-bottom: 30px;
+      padding: 20px 15px;
+    }
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+    thead tr {
+      display: none;
+    }
+    tbody tr {
+      margin-bottom: 15px;
+      border-bottom: 2px solid #444763;
+      background: #383a56;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    tbody td {
+      padding-left: 50%;
+      position: relative;
+    }
+    tbody td::before {
+      position: absolute;
+      left: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      color: #a0a0bb;
+    }
+    tbody td:nth-of-type(1)::before { content: "Transaction ID"; }
+    tbody td:nth-of-type(2)::before { content: "Username"; }
+    tbody td:nth-of-type(3)::before { content: "Game"; }
+    tbody td:nth-of-type(4)::before { content: "Amount"; }
+    tbody td:nth-of-type(5)::before { content: "Status"; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Top-Up Admin Dashboard</h1>
+  <nav>
+    <button class="active" aria-label="Dashboard">Dashboard</button>
+    <button aria-label="Manage Games">Games</button>
+    <button aria-label="Manage Users">Users</button>
+    <button aria-label="Reports">Reports</button>
+  </nav>
+</header>
+<main>
+  <section class="topup-form" aria-label="Add Game Top-Up Transaction">
+    <h2>Add Top-Up Transaction</h2>
+    <form id="topupForm" autocomplete="off" novalidate>
+      <label for="transactionId">Transaction ID</label>
+      <input type="text" id="transactionId" name="transactionId" placeholder="Enter Transaction ID" required pattern="^[a-zA-Z0-9-_]{4,20}$" />
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Player Username" required minlength="3" maxlength="20" />
+      <label for="game">Game</label>
+      <select id="game" name="game" required>
+        <option value="" disabled selected>Select Game</option>
+        <option value="Mobile Legends">Mobile Legends</option>
+        <option value="PUBG Mobile">PUBG Mobile</option>
+        <option value="Free Fire">Free Fire</option>
+        <option value="Call of Duty">Call of Duty</option>
+        <option value="Clash of Clans">Clash of Clans</option>
+      </select>
+      <label for="amount">Top-Up Amount (USD)</label>
+      <input type="number" id="amount" name="amount" min="1" max="500" placeholder="Enter amount" required />
+      <button type="submit" class="submit-btn" aria-label="Submit Top-Up Transaction">Add Transaction</button>
+    </form>
+  </section>
+  <section class="transactions" aria-label="Top-Up Transactions List">
+    <h2>Recent Transactions</h2>
+    <table aria-describedby="transactionsDesc" role="table">
+      <thead>
+        <tr>
+          <th scope="col">Transaction ID</th>
+          <th scope="col">Username</th>
+          <th scope="col">Game</th>
+          <th scope="col">Amount (USD)</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody id="transactionTableBody">
+        <!-- Transactions displayed here -->
+      </tbody>
+    </table>
+    <p id="transactionsDesc" class="sr-only">List of recent top-up game transactions including their status.</p>
+  </section>
+</main>
+<script>
+  (() => {
+    const form = document.getElementById('topupForm');
+    const tbody = document.getElementById('transactionTableBody');
+
+    // Sample initial transactions to demonstrate UI
+    const initialTransactions = [
+      { id: 'TXN00123', username: 'playerOne', game: 'Mobile Legends', amount: 20, status: 'Completed' },
+      { id: 'TXN00124', username: 'proGamer', game: 'PUBG Mobile', amount: 35, status: 'Pending' },
+      { id: 'TXN00125', username: 'ffhunter', game: 'Free Fire', amount: 15, status: 'Failed' },
+      { id: 'TXN00126', username: 'codmaster', game: 'Call of Duty', amount: 50, status: 'Completed' },
+    ];
+
+    // Status CSS class map
+    const statusClassMap = {
+      'Pending': 'status-pending',
+      'Completed': 'status-completed',
+      'Failed': 'status-failed'
+    };
+
+    // Render transactions in table
+    function renderTransactions(transactions) {
+      tbody.innerHTML = '';
+      if (transactions.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.style.textAlign = 'center';
+        td.style.color = '#888';
+        td.textContent = 'No transactions found.';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+      transactions.forEach(({id, username, game, amount, status}) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${id}</td>
+          <td>${username}</td>
+          <td>${game}</td>
+          <td>${amount.toFixed(2)}</td>
+          <td class="${statusClassMap[status] || ''}">${status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Load initial transactions
+    let transactions = [...initialTransactions];
+    renderTransactions(transactions);
+
+    // Validate form manually for custom messages
+    function validateForm() {
+      if (!form.transactionId.value.trim()) {
+        alert('Transaction ID is required (4-20 characters, letters, numbers, - and _ allowed).');
+        return false;
+      }
+      if (!/^[-_a-zA-Z0-9]{4,20}$/.test(form.transactionId.value.trim())) {
+        alert('Transaction ID must be 4-20 characters: letters, numbers, "-" or "_".');
+        return false;
+      }
+      if (!form.username.value.trim() || form.username.value.trim().length < 3) {
+        alert('Username is required and must be at least 3 characters.');
+        return false;
+      }
+      if (!form.game.value) {
+        alert('Please select a game.');
+        return false;
+      }
+      if (!form.amount.value || isNaN(form.amount.value) || form.amount.value < 1 || form.amount.value > 500) {
+        alert('Amount must be a number between 1 and 500.');
+        return false;
+      }
+      return true;
+    }
+
+    // Add new transaction handler
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateForm()) return;
+
+      const newTransaction = {
+        id: form.transactionId.value.trim(),
+        username: form.username.value.trim(),
+        game: form.game.value,
+        amount: Number(form.amount.value),
+        status: 'Pending'
+      };
+
+      // Check for duplicate transaction ID
+      if (transactions.some(t => t.id.toLowerCase() === newTransaction.id.toLowerCase())) {
+        alert('Transaction ID already exists. Please enter a unique ID.');
+        return;
+      }
+
+      transactions.unshift(newTransaction);
+      if (transactions.length > 10) transactions.pop();
+      renderTransactions(transactions);
+
+      // Reset form
+      form.reset();
+      form.game.selectedIndex = 0;
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
