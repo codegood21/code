@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>YANZY CRASHER</title>
+<style>
+  /* Full screen fixed container */
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden; background: black; color: lime;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  .text {
+    position: absolute;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    font-size: 4vw;
+    opacity: 0.6;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    color: lime;
+    text-shadow:
+       0 0 5px #0f0,
+       0 0 10px #0f0,
+       0 0 20px #0f0,
+       0 0 40px #00ff00;
+  }
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script>
+  const container = document.getElementById('container');
+  const textContent = 'YANZY CRASHER';
+  const maxTexts = 100; // Number of repeated texts to add for max lag
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // Utility to get random integer between min and max inclusive
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // Create text elements scattered and animated with different speeds and directions
+  for (let i = 0; i < maxTexts; i++) {
+    const div = document.createElement('div');
+    div.classList.add('text');
+    div.textContent = textContent;
+
+    // Random starting position (x, y)
+    let x = randomInt(0, screenWidth);
+    let y = randomInt(0, screenHeight);
+
+    div.style.left = x + 'px';
+    div.style.top = y + 'px';
+
+    // Random animation: move horizontally or vertically, speed adjusted so performance drops
+    // Define keyframes with JS to have independent delays and speeds
+    const duration = randomInt(10000, 20000); // long duration to slowly move
+    const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+    const distance = direction === 'horizontal' ? screenWidth : screenHeight;
+
+    const animName = `anim${i}`;
+
+    // Create keyframes style dynamically
+    const styleEl = document.createElement('style');
+    let keyframes;
+    if (direction === 'horizontal') {
+      keyframes = `
+        @keyframes ${animName} {
+          0% { transform: translateX(0); }
+          50% { transform: translateX(${distance}px); }
+          100% { transform: translateX(0); }
+        }
+      `;
+    } else {
+      keyframes = `
+        @keyframes ${animName} {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(${distance}px); }
+          100% { transform: translateY(0); }
+        }
+      `;
+    }
+    styleEl.textContent = keyframes;
+    document.head.appendChild(styleEl);
+
+    div.style.animationName = animName;
+    div.style.animationDuration = duration + 'ms';
+    div.style.animationDelay = (i * 150) + 'ms';
+
+    container.appendChild(div);
+  }
+</script>
+</body>
+</html>
+
+```
