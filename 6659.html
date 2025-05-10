@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Move Satellite</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: radial-gradient(circle at center, #001a33, #000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #container {
+    position: relative;
+    width: 350px;
+    height: 600px;
+    background: #013366;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #0af;
+    overflow: hidden;
+  }
+  #satellite {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/0/09/NOAA-20_satellite.png') no-repeat center/contain;
+    top: 260px;
+    left: 135px;
+    transition: left 0.2s ease, top 0.2s ease;
+  }
+  #controls {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  button {
+    background: #0af;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px #09f;
+    user-select: none;
+  }
+  button:active {
+    background: #08c;
+    box-shadow: 0 2px 4px #06a;
+  }
+  @media (max-width: 400px) {
+    #container {
+      width: 95vw;
+      height: 85vh;
+    }
+    #satellite {
+      width: 60px;
+      height: 60px;
+      left: calc(50% - 30px);
+      top: calc(50% - 30px);
+    }
+    button {
+      margin: 5px 6px;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="container" role="main" aria-label="Satellite movement area">
+    <div id="satellite" aria-label="Satellite" role="img"></div>
+    <div id="controls" role="group" aria-label="Movement controls">
+      <button id="up" aria-label="Move satellite up">↑</button>
+      <button id="left" aria-label="Move satellite left">←</button>
+      <button id="down" aria-label="Move satellite down">↓</button>
+      <button id="right" aria-label="Move satellite right">→</button>
+    </div>
+  </div>
+<script>
+  (function(){
+    const satellite = document.getElementById('satellite');
+    const container = document.getElementById('container');
+    const step = 20;
+
+    // Get numeric position from style "px" value or default
+    function getPosValue(val) {
+      return parseInt(val, 10) || 0;
+    }
+
+    // Move satellite bounded within container
+    function moveSatellite(dx, dy) {
+      const maxLeft = container.clientWidth - satellite.clientWidth;
+      const maxTop = container.clientHeight - satellite.clientHeight;
+
+      let currentLeft = getPosValue(satellite.style.left);
+      let currentTop = getPosValue(satellite.style.top);
+
+      let newLeft = currentLeft + dx;
+      let newTop = currentTop + dy;
+
+      if (newLeft < 0) newLeft = 0;
+      if (newLeft > maxLeft) newLeft = maxLeft;
+      if (newTop < 0) newTop = 0;
+      if (newTop > maxTop) newTop = maxTop;
+
+      satellite.style.left = newLeft + 'px';
+      satellite.style.top = newTop + 'px';
+    }
+
+    // Controls event listeners
+    document.getElementById('up').addEventListener('click', () => moveSatellite(0, -step));
+    document.getElementById('down').addEventListener('click', () => moveSatellite(0, step));
+    document.getElementById('left').addEventListener('click', () => moveSatellite(-step, 0));
+    document.getElementById('right').addEventListener('click', () => moveSatellite(step, 0));
+
+    // Allow arrow keys control for accessibility
+    window.addEventListener('keydown', e => {
+      switch(e.key) {
+        case 'ArrowUp': e.preventDefault(); moveSatellite(0, -step); break;
+        case 'ArrowDown': e.preventDefault(); moveSatellite(0, step); break;
+        case 'ArrowLeft': e.preventDefault(); moveSatellite(-step, 0); break;
+        case 'ArrowRight': e.preventDefault(); moveSatellite(step, 0); break;
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
