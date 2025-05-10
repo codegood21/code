@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Penyedot Saldo</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body, html {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+  }
+  h1 {
+    font-weight: 900;
+    font-size: 2.1rem;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 8px rgba(255,255,255,0.7);
+  }
+  .saldo-display {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 15px 0 30px;
+    letter-spacing: 3px;
+    color: #fff;
+    text-shadow: 0 0 8px #ffd700;
+  }
+  button {
+    background: #ffcc00;
+    border: none;
+    color: #111;
+    font-weight: 700;
+    padding: 15px 25px;
+    width: 100%;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255,204,0,0.6);
+  }
+  button:hover, button:focus {
+    background: #e6b800;
+    outline: none;
+    box-shadow: 0 0 22px #ffc107;
+  }
+  .footer-text {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #eee;
+    text-shadow: none;
+  }
+
+  @media(max-width: 400px) {
+    .container {
+      padding: 25px 30px;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    button {
+      font-size: 1rem;
+      padding: 12px 20px;
+    }
+    .saldo-display {
+      font-size: 2rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Aplikasi Penyedot Saldo">
+  <h1>Saldo Mu Sedot Otomatis!</h1>
+  <div aria-live="polite" aria-atomic="true" class="saldo-display" id="saldoDisplay">Rp 1.000.000</div>
+  <button id="sedotButton" aria-controls="saldoDisplay">Sedot Saldo Sekarang</button>
+  <p class="footer-text">* Hanya untuk hiburan & latihan JavaScript</p>
+</div>
+
+<script>
+  (function(){
+    const saldoDisplay = document.getElementById('saldoDisplay');
+    const sedotButton = document.getElementById('sedotButton');
+
+    let saldo = 1000000;
+    let isSedotRunning = false;
+
+    function formatRupiah(angka) {
+      return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function sedotSaldo() {
+      if (isSedotRunning) return;
+      isSedotRunning = true;
+      sedotButton.disabled = true;
+      sedotButton.textContent = 'Menyedot...';
+
+      const interval = setInterval(() => {
+        let decrement = Math.floor(Math.random() * 50000) + 10000; // 10k to 60k
+        saldo = Math.max(0, saldo - decrement);
+        saldoDisplay.textContent = formatRupiah(saldo);
+
+        if (saldo <= 0) {
+          clearInterval(interval);
+          saldoDisplay.textContent = 'Saldo Habis!';
+          sedotButton.textContent = 'Mulai Ulang';
+          sedotButton.disabled = false;
+          isSedotRunning = false;
+        }
+      }, 500);
+    }
+
+    sedotButton.addEventListener('click', function() {
+      if (saldo <= 0) {
+        saldo = 1000000;
+        saldoDisplay.textContent = formatRupiah(saldo);
+        sedotButton.textContent = 'Sedot Saldo Sekarang';
+      }
+      sedotSaldo();
+    });
+
+  })();
+</script>
+</body>
+</html>
+
+```
