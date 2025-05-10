@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Game Otomatis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #121212;
+    color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+  header {
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: #FFD700;
+    text-shadow: 0 0 6px #ffcc00;
+  }
+  .banner-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .banner-btn {
+    background: #222;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #0077ff;
+    cursor: pointer;
+    overflow: hidden;
+    width: 130px;
+    height: 70px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.3s ease;
+  }
+  .banner-btn:hover {
+    box-shadow: 0 0 16px #00ccff;
+  }
+  .banner-btn img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  main {
+    width: 100%;
+    max-width: 450px;
+    background: #1e1e1e;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #0077ff88;
+    padding: 20px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-size: 1rem;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #ffd700cc;
+  }
+  input[type="text"], input[type="number"], select {
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 20px;
+    background: #00aaff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    text-shadow: 0 0 5px #00ccffaa;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #0088cc;
+  }
+  .info-section {
+    margin-top: 25px;
+    background: #222;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+  .info-highlight {
+    color: #00ffff;
+    font-weight: 700;
+  }
+  .footer {
+    margin-top: 30px;
+    font-size: 0.95rem;
+    color: #666;
+    text-align: center;
+  }
+  @media (max-width: 400px) {
+    main {
+      padding: 15px;
+    }
+    .banner-btn {
+      width: 100px;
+      height: 60px;
+    }
+    button {
+      font-size: 1rem;
+      padding: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Top Up Game Otomatis</h1>
+  <p>Metode TOP UP Aman & Cepat, Otomatis 24 Jam!</p>
+</header>
+
+<div class="banner-container" role="navigation" aria-label="Pilih game untuk top up">
+  <button class="banner-btn" data-game="mobile legends" aria-label="Top Up Mobile Legends">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/4d/Mobile_Legends_icon.png" alt="Mobile Legends" loading="lazy" />
+  </button>
+  <button class="banner-btn" data-game="free fire" aria-label="Top Up Free Fire">
+    <img src="https://upload.wikimedia.org/wikipedia/en/6/6c/Free_Fire_icon.png" alt="Free Fire" loading="lazy" />
+  </button>
+  <button class="banner-btn" data-game="pubg" aria-label="Top Up PUBG">
+    <img src="https://upload.wikimedia.org/wikipedia/en/5/50/PUBG_icon.png" alt="PUBG" loading="lazy" />
+  </button>
+  <button class="banner-btn" data-game="ff" aria-label="Top Up Free Fire">
+    <img src="https://upload.wikimedia.org/wikipedia/en/6/6c/Free_Fire_icon.png" alt="Free Fire" loading="lazy" />
+  </button>
+  <button class="banner-btn" data-game="other" aria-label="Lainnya">
+    <span style="color:#00ccff; font-weight:bold;">Lainnya</span>
+  </button>
+</div>
+
+<main>
+  <form id="topup-form" aria-label="Formulir Top Up Game Otomatis">
+    <label for="game-select">Pilih Game atau Produk</label>
+    <select id="game-select" name="game" required aria-required="true" aria-describedby="game-desc">
+      <optgroup label="Game Top Up">
+        <option value="mobile legends">Mobile Legends</option>
+        <option value="free fire">Free Fire</option>
+        <option value="pubg">PUBG Mobile</option>
+        <option value="codm">Call of Duty Mobile</option>
+        <option value="valorant">Valorant</option>
+        <option value="mlbb">MLBB</option>
+        <option value="among us">Among Us</option>
+        <option value="genshin">Genshin Impact</option>
+      </optgroup>
+      <optgroup label="Produk Pulsa & Paket Data">
+        <option value="pulsa">Pulsa HP</option>
+        <option value="paket_data">Paket Data Internet</option>
+      </optgroup>
+      <optgroup label="E-Wallet Top Up">
+        <option value="dana">DANA</option>
+        <option value="gopay">GoPay</option>
+        <option value="ovo">OVO</option>
+      </optgroup>
+    </select>
+    <div id="game-desc" style="display:none;">Pilih game atau produk yang ingin anda top up.</div>
+
+    <label for="user-id">ID User / Nomor HP / ID Game</label>
+    <input type="text" id="user-id" name="userId" required placeholder="Masukkan ID user atau nomor HP" aria-required="true" autocomplete="off" />
+
+    <label for="amount">Jumlah Diamond / Pulsa / Paket Data</label>
+    <input type="number" id="amount" name="amount" min="1" required placeholder="Masukkan jumlah" aria-required="true" />
+
+    <label for="payment-method">Metode Pembayaran</label>
+    <select id="payment-method" name="paymentMethod" required aria-required="true">
+      <option value="">-- Pilih Metode Pembayaran --</option>
+      <option value="dana">DANA (085659441370)</option>
+      <option value="gopay">GoPay (085880150761)</option>
+      <option value="bank">Transfer Bank</option>
+      <option value="creditcard">Kartu Kredit / Debit</option>
+    </select>
+
+    <button type="submit" aria-live="polite" aria-busy="false" id="pay-button">Proses Top Up Otomatis</button>
+  </form>
+
+  <div class="info-section" id="payment-info" aria-live="polite" style="margin-top: 20px; text-align:center; font-weight: 600; color:#ffda6a;">
+    Silakan pilih game, jumlah, dan metode pembayaran kemudian klik tombol "Proses Top Up Otomatis."
+  </div>
+</main>
+
+<div class="footer" role="contentinfo">
+  &copy; 2024 Top Up Game Otomatis. Semua Hak Cipta Dilindungi.
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('topup-form');
+  const paymentInfo = document.getElementById('payment-info');
+  const payButton = document.getElementById('pay-button');
+
+  // Redirect URLs for different payments simulation
+  const paymentRedirects = {
+    dana: 'https://wa.me/6285659441370?text=Halo%2C%20saya%20ingin%20top%20up',
+    gopay: 'https://gopay.app.link/payment/085880150761',
+  };
+
+  // Simulated diamond providing function (mock)
+  function processTopUp(details) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 2000); // simulate 2 seconds processing delay
+    });
+  }
+
+  payButton.addEventListener('click', async function (e) {
+    e.preventDefault();
+    payButton.disabled = true;
+    payButton.setAttribute('aria-busy', 'true');
+    paymentInfo.textContent = 'Memproses top up Anda... Mohon tunggu.';
+
+    const game = form.game.value;
+    const userId = form.userId.value.trim();
+    const amount = Number(form.amount.value);
+    const paymentMethod = form.paymentMethod.value;
+
+    if (!game || !userId || !amount || !paymentMethod) {
+      paymentInfo.textContent = 'Semua kolom harus diisi dengan benar!';
+      payButton.disabled = false;
+      payButton.setAttribute('aria-busy', 'false');
+      return;
+    }
+
+    // Payment method actions
+    if (paymentMethod === 'dana') {
+      // Redirect to DANA via WhatsApp link with instructions
+      paymentInfo.innerHTML = `
+        Silakan bayar <strong>Rp${amount.toLocaleString('id-ID')}</strong> lewat DANA ke nomor: <span class="info-highlight">085659441370</span>.<br/>
+        Setelah pembayaran, diamond akan masuk otomatis kurang dari 1 menit.<br/>
+        Anda akan diarahkan ke chat WhatsApp untuk konfirmasi pembayaran.
+      `;
+      window.open(paymentRedirects.dana, '_blank');
+      resetForm();
+      return;
+    }
+    if (paymentMethod === 'gopay') {
+      paymentInfo.innerHTML = `
+        Silakan bayar <strong>Rp${amount.toLocaleString('id-ID')}</strong> lewat GoPay ke nomor: <span class="info-highlight">085880150761</span>.<br/>
+        Setelah pembayaran, diamond akan masuk otomatis kurang dari 1 menit.<br/>
+        Anda akan diarahkan ke aplikasi GoPay untuk melakukan pembayaran.
+      `;
+      window.open(paymentRedirects.gopay, '_blank');
+      resetForm();
+      return;
+    }
+    if (paymentMethod === 'bank') {
+      paymentInfo.innerHTML = `
+        Silakan transfer <strong>Rp${amount.toLocaleString('id-ID')}</strong> ke rekening bank kami.<br/>
+        Setelah konfirmasi pembayaran, diamond akan otomatis masuk ke akun Anda.<br/>
+        Hubungi admin untuk konfirmasi: <a href="https://wa.me/6285659441370" target="_blank" rel="noopener noreferrer">WhatsApp DANA</a> / <a href="https://wa.me/6285880150761" target="_blank" rel="noopener noreferrer">WhatsApp GoPay</a>.
+      `;
+      resetForm();
+      return;
+    }
+    if (paymentMethod === 'creditcard') {
+      // Simulate success for credit/debit card
+      const success = await processTopUp({ game, userId, amount, paymentMethod });
+      if (success) {
+        paymentInfo.textContent = `Top up ${game} sebesar ${amount.toLocaleString('id-ID')} berhasil! Diamond atau pulsa masuk otomatis. Terima kasih sudah menggunakan layanan kami.`;
+        resetForm();
+      } else {
+        paymentInfo.textContent = 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.';
+      }
+      return;
+    }
+  });
+
+  function resetForm() {
+    payButton.disabled = false;
+    payButton.setAttribute('aria-busy', 'false');
+    form.reset();
+  }
+
+  // Banner buttons quick fill game select
+  const banners = document.querySelectorAll('.banner-btn');
+  banners.forEach(button => {
+    button.addEventListener('click', () => {
+      const game = button.getAttribute('data-game');
+      if (game === 'other') {
+        alert('Silakan pilih produk yang ingin Anda top up dari daftar.');
+      } else {
+        const gameSelect = document.getElementById('game-select');
+        for (let i=0; i<gameSelect.options.length; i++) {
+          if (gameSelect.options[i].value === game) {
+            gameSelect.selectedIndex = i;
+            gameSelect.focus();
+            break;
+          }
+        }
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
+
+```
