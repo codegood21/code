@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>YANZY ENC - Encrypt & Decrypt</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 3rem;
+    letter-spacing: 0.2em;
+    color: #70ffd9;
+    text-shadow: 0 0 10px #70ffd9, 0 0 20px #70ffd9;
+    margin-bottom: 30px;
+    user-select: none;
+  }
+
+  .container {
+    background: rgba(30, 30, 30, 0.85);
+    border-radius: 15px;
+    box-shadow: 0 0 30px #70ffd9aa;
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+  }
+
+  label {
+    font-weight: 700;
+    color: #70ffd9;
+    display: block;
+    margin-bottom: 8px;
+    user-select: none;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    resize: none;
+    font-size: 1rem;
+    font-family: monospace, monospace;
+    background-color: #121212;
+    color: #70ffd9;
+    box-shadow: inset 0 0 8px #70ffd9aa;
+    transition: box-shadow 0.3s ease;
+  }
+  textarea:focus {
+    outline: none;
+    box-shadow: inset 0 0 12px #70ffd9ff;
+  }
+
+  .buttons {
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  button {
+    background: #70ffd9;
+    border: none;
+    color: #121212;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 50px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    box-shadow: 0 6px #04a89e;
+    transition: background 0.3s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+  button:active {
+    box-shadow: 0 2px #04a89e;
+    transform: translateY(3px);
+  }
+  button:hover {
+    background: #4cd9c3;
+  }
+
+  #output {
+    margin-top: 25px;
+    padding: 15px;
+    min-height: 100px;
+    background: #121212;
+    border-radius: 10px;
+    font-family: monospace, monospace;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    box-shadow: inset 0 0 10px #70ffd9cc;
+    color: #70ffd9;
+  }
+
+  @media (max-width: 450px) {
+    h1 {
+      font-size: 2.2rem;
+      letter-spacing: 0.1em;
+    }
+    .container {
+      max-width: 100%;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      margin: 8px 5px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>YANZY ENC</h1>
+  <div class="container" role="main" aria-label="Encrypt and Decrypt interface">
+    <label for="inputText">Input Text</label>
+    <textarea id="inputText" aria-multiline="true" placeholder="Enter text to encrypt or decrypt..." spellcheck="false"></textarea>
+
+    <div class="buttons">
+      <button id="encryptBtn" aria-label="Encrypt the input text">Encrypt</button>
+      <button id="decryptBtn" aria-label="Decrypt the input text">Decrypt</button>
+      <button id="clearBtn" aria-label="Clear input and output text">Clear</button>
+    </div>
+
+    <label for="output" style="margin-top:20px;">Output</label>
+    <pre id="output" aria-live="polite" aria-atomic="true" tabindex="0" readonly></pre>
+  </div>
+
+  <script>
+    // Simple Caesar cipher shifting letters by key 7 for demo encrypt/decrypt
+    // Only letters a-z, A-Z transformed, others unchanged
+
+    const encryptKey = 7;
+
+    function encrypt(text) {
+      return text.replace(/[a-z]/gi, (char) => {
+        const base = char <= 'Z' ? 65 : 97;
+        return String.fromCharCode((char.charCodeAt(0) - base + encryptKey) % 26 + base);
+      });
+    }
+
+    function decrypt(text) {
+      return text.replace(/[a-z]/gi, (char) => {
+        const base = char <= 'Z' ? 65 : 97;
+        return String.fromCharCode((char.charCodeAt(0) - base + 26 - encryptKey) % 26 + base);
+      });
+    }
+
+    const inputText = document.getElementById('inputText');
+    const output = document.getElementById('output');
+    const encryptBtn = document.getElementById('encryptBtn');
+    const decryptBtn = document.getElementById('decryptBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    encryptBtn.addEventListener('click', () => {
+      let text = inputText.value.trim();
+      if (!text) {
+        output.textContent = '[Please enter text to encrypt]';
+        return;
+      }
+      const encrypted = encrypt(text);
+      output.textContent = encrypted;
+      output.focus();
+    });
+
+    decryptBtn.addEventListener('click', () => {
+      let text = inputText.value.trim();
+      if (!text) {
+        output.textContent = '[Please enter text to decrypt]';
+        return;
+      }
+      const decrypted = decrypt(text);
+      output.textContent = decrypted;
+      output.focus();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      inputText.value = '';
+      output.textContent = '';
+      inputText.focus();
+    });
+  </script>
+</body>
+</html>
+
+```
