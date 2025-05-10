@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Judi Online Slot Zeus Petir</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap');
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: url('https://i.ibb.co/mvLv2w9/zeus-lightning-bg3.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+  }
+  /* Overlay darkening */
+  body::before {
+    content: "";
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.75);
+    z-index: 0;
+  }
+  /* Container */
+  #app {
+    position: relative;
+    z-index: 2;
+    max-width: 390px;
+    height: 600px;
+    margin: auto;
+    margin-top: 15px;
+    border-radius: 20px;
+    background: rgba(11, 19, 29, 0.85);
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.1),
+      inset 0 0 50px rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* Header Background with Greek pattern */
+  header {
+    background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
+    border-bottom: 3px solid #fadf1f;
+    padding: 12px 20px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fadf1f;
+    user-select: none;
+  }
+  /* Form sections */
+  form {
+    flex: 1;
+    padding: 20px 20px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #f0d83a;
+  }
+  input[type="text"], input[type="password"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+    box-shadow: 0 0 10px #fadf1f;
+  }
+  button {
+    padding: 14px;
+    font-weight: 700;
+    font-size: 18px;
+    background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+    color: #222;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
+  }
+  /* Slot machine container */
+  #slot-container {
+    display: none;
+    flex: 1;
+    padding: 10px 20px 0px;
+    background: radial-gradient(circle closest-side, #2a2e36, #0b131d);
+    border-radius: 20px;
+    box-shadow: inset 0 0 25px #ffd700a3;
+    user-select:none;
+    flex-direction: column;
+    align-items: center;
+  }
+  #slot-title {
+    color: #ffd700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  /* Slot reels */
+  #reels {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .reel {
+    background: #111a27;
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    box-shadow:
+      inset 0 0 12px #ffd700cc,
+      0 0 10px #ffd70099;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .reel img {
+    width: 50px;
+    height: 50px;
+    user-select:none;
+  }
+  /* Spin button */
+  #spin-btn {
+    padding: 14px 40px;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #ffec00, #ff9500);
+    color: #111;
+    text-shadow: 1px 1px 0 #772a00;
+    box-shadow: 0px 0px 15px #ffb300cc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  #spin-btn:active {
+    transform: scale(0.96);
+  }
+  /* Result message */
+  #result {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.3rem;
+    min-height: 24px;
+    color: #fadf1f;
+    text-shadow: 0 0 10px #fffb99;
+    user-select:none;
+  }
+  /* Balance display */
+  #balance-container {
+    color: #ffd700;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 15px 0 7px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    user-select:none;
+  }
+  /* Responsive tweaks */
+  @media (max-height: 600px) {
+    #app {
+      height: 100vh;
+      margin-top: 0;
+      border-radius: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="app" role="main" aria-label="Aplikasi Judi Slot Online Zeus Petir">
+  <header>Zeus Petir Slot Online</header>
+
+  <!-- Registration form -->
+  <form id="register-form" aria-label="Formulir Pendaftaran">
+    <label for="reg-username">Username</label>
+    <input type="text" id="reg-username" name="username" maxlength="18" autocomplete="username" required aria-required="true" aria-describedby="reg-username-desc" />
+    <small id="reg-username-desc" style="color:#f0d83a; font-size:0.85rem; margin-bottom:12px; display:block;">
+      Gunakan username unik
+    </small>
+
+    <label for="reg-password">Password</label>
+    <input type="password" id="reg-password" name="password" autocomplete="new-password" required aria-required="true" minlength="6" maxlength="20" />
+
+    <button type="submit" aria-label="Daftar">Daftar Sekarang</button>
+
+    <p style="margin-top:20px; font-size:0.9rem; color:#bbb; text-align:center;">
+      Sudah punya akun? <a href="#" id="go-login" style="color:#fadf1f; cursor:pointer;">Masuk di sini</a>
+    </p>
+  </form>
+
+  <!-- Login form -->
+  <form id="login-form" style="display:none;" aria-label="Formulir Login">
+    <label for="login-username">Username</label>
+    <input type="text" id="login-username" name="login-username" autocomplete="username" required aria-required="true" />
+    <label for="login-password">Password</label>
+    <input type="password" id="login-password" name="login-password" autocomplete="current-password" required aria-required="true" />
+    <button type="submit" aria-label="Masuk">Masuk</button>
+
+    <p style="margin-top:20px; font-size:0.9rem; color:#bbb; text-align:center;">
+      Belum punya akun? <a href="#" id="go-register" style="color:#fadf1f; cursor:pointer;">Daftar di sini</a>
+    </p>
+  </form>
+
+  <!-- Account info form after login -->
+  <form id="account-form" style="display:none;" aria-label="Formulir Nomor Rekening untuk Withdraw">
+    <label for="account-bank">Nomor Rekening Bank</label>
+    <input type="text" id="account-bank" name="account-bank" pattern="[0-9]{10,18}" maxlength="18" autocomplete="off" placeholder="Masukkan nomor rekening" required aria-required="true" />
+    <button type="submit" aria-label="Simpan Nomor Rekening">Simpan Nomor Rekening</button>
+  </form>
+
+  <!-- Slot machine game -->
+  <section id="slot-container" aria-label="Mesin Slot Online Zeus">
+    <div id="balance-container" aria-live="polite" aria-atomic="true" aria-relevant="text">Saldo: 1000 kredit</div>
+    <div id="slot-title" aria-hidden="true">Putar Slot Zeus Petir</div>
+    <div id="reels" aria-live="polite" aria-atomic="true" role="list" aria-label="Reel slot">
+      <div class="reel" role="listitem" aria-label="Simbol slot 1"><img src="" alt="" /></div>
+      <div class="reel" role="listitem" aria-label="Simbol slot 2"><img src="" alt="" /></div>
+      <div class="reel" role="listitem" aria-label="Simbol slot 3"><img src="" alt="" /></div>
+    </div>
+    <button id="spin-btn" type="button" aria-label="Putar Slot">PUTAR</button>
+    <div id="result" role="alert" aria-live="assertive"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  // Symbols used for the slot
+  const symbols = [
+    { name: 'Petir', img: 'https://i.ibb.co/cYqgq8v/lightning-icon.png' }, // lightning bolt
+    { name: 'Piala', img: 'https://i.ibb.co/g9M25J0/trophy-icon.png' },  // trophy
+    { name: 'Bintang', img: 'https://i.ibb.co/ZTjfG8X/star-icon.png' },  // star
+    { name: 'Zeus', img: 'https://i.ibb.co/56qvPTr/zeus-icon.png' },    // zeus face
+    { name: 'Petir Jagat', img: 'https://i.ibb.co/jLDYqYL/thunder-strike.png' } // thunder strike
+  ];
+  // Initial balance
+  let balance = 1000;
+  let loggedInUser = null;
+  let userAccount = null;
+
+  // DOM elements
+  const registerForm = document.getElementById('register-form');
+  const loginForm = document.getElementById('login-form');
+  const goLoginLink = document.getElementById('go-login');
+  const goRegisterLink = document.getElementById('go-register');
+  const accountForm = document.getElementById('account-form');
+  const slotContainer = document.getElementById('slot-container');
+  const reels = document.querySelectorAll('.reel img');
+  const spinBtn = document.getElementById('spin-btn');
+  const resultDisplay = document.getElementById('result');
+  const balanceDisplay = document.getElementById('balance-container');
+
+  // Screen management helpers
+  function showLogin() {
+    registerForm.style.display = 'none';
+    loginForm.style.display = 'flex';
+    accountForm.style.display = 'none';
+    slotContainer.style.display = 'none';
+    resultDisplay.textContent = '';
+  }
+  function showRegister() {
+    registerForm.style.display = 'flex';
+    loginForm.style.display = 'none';
+    accountForm.style.display = 'none';
+    slotContainer.style.display = 'none';
+    resultDisplay.textContent = '';
+  }
+  function showAccountForm() {
+    registerForm.style.display = 'none';
+    loginForm.style.display = 'none';
+    accountForm.style.display = 'flex';
+    slotContainer.style.display = 'none';
+    resultDisplay.textContent = '';
+  }
+  function showSlot() {
+    registerForm.style.display = 'none';
+    loginForm.style.display = 'none';
+    accountForm.style.display = 'none';
+    slotContainer.style.display = 'flex';
+    resultDisplay.textContent = '';
+  }
+
+  // Update balance display
+  function updateBalance() {
+    balanceDisplay.textContent = 'Saldo: ' + balance + ' kredit';
+  }
+
+  // Registration logic (simplified, stored in localStorage)
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const username = e.target.elements['username'].value.trim();
+    const password = e.target.elements['password'].value;
+    if (!username || !password) return alert('Username dan password wajib diisi!');
+    // Check if user exists
+    if (localStorage.getItem('user_' + username)) {
+      alert('Username sudah terdaftar. Silakan masuk.');
+      showLogin();
+      return;
+    }
+    // Store user in localStorage
+    const userData = { username, password, balance: 1000, account: null };
+    localStorage.setItem('user_' + username, JSON.stringify(userData));
+    alert('Pendaftaran berhasil! Silakan masuk.');
+    showLogin();
+  });
+
+  // Login logic
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const username = e.target.elements['login-username'].value.trim();
+    const password = e.target.elements['login-password'].value;
+    if (!username || !password) return alert('Username dan password wajib diisi!');
+    const userData = localStorage.getItem('user_' + username);
+    if (!userData) {
+      alert('Username tidak ditemukan. Silakan daftar terlebih dahulu.');
+      showRegister();
+      return;
+    }
+    const user = JSON.parse(userData);
+    if (user.password !== password) {
+      alert('Password salah.');
+      return;
+    }
+    loggedInUser = username;
+    balance = user.balance || 1000;
+    userAccount = user.account || null;
+    // If no account number, go to account form, else show slot
+    if (!userAccount) {
+      showAccountForm();
+    } else {
+      showSlot();
+      updateBalance();
+    }
+  });
+
+  // Navigation between forms
+  goLoginLink.addEventListener('click', e => {
+    e.preventDefault();
+    showLogin();
+  });
+  goRegisterLink.addEventListener('click', e => {
+    e.preventDefault();
+    showRegister();
+  });
+
+  // Account number form submission
+  accountForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const accNum = e.target.elements['account-bank'].value.trim();
+    if (!/^\d{10,18}$/.test(accNum)) {
+      alert('Nomor rekening harus antara 10 sampai 18 digit angka.');
+      return;
+    }
+    userAccount = accNum;
+    // Save account to localStorage
+    const userDataStr = localStorage.getItem('user_' + loggedInUser);
+    if (userDataStr) {
+      const userData = JSON.parse(userDataStr);
+      userData.account = accNum;
+      userData.balance = balance;
+      localStorage.setItem('user_' + loggedInUser, JSON.stringify(userData));
+    }
+    showSlot();
+    updateBalance();
+  });
+
+  // Slot machine logic
+  function randomIndex() {
+    return Math.floor(Math.random() * symbols.length);
+  }
+
+  function spinSlot() {
+    if (balance < 10) {
+      resultDisplay.textContent = 'Saldo tidak cukup untuk bermain (minimal 10 kredit per putaran)';
+      return;
+    }
+    balance -= 10;
+
+    updateBalance();
+    resultDisplay.textContent = '';
+    spinBtn.disabled = true;
+
+    // Animate slots (fake slot spin effect)
+    let spinCount = 0;
+    const maxSpin = 20;
+    const interval = setInterval(() => {
+      for (let i = 0; i < 3; i++) {
+        const idx = randomIndex();
+        reels[i].src = symbols[idx].img;
+        reels[i].alt = symbols[idx].name;
+      }
+      spinCount++;
+      if (spinCount >= maxSpin) {
+        clearInterval(interval);
+        calculateResult();
+        spinBtn.disabled = false;
+      }
+    }, 70);
+  }
+
+  // Calculate and display result
+  function calculateResult() {
+    // Get final symbols by looking at alt attributes on reels
+    const finalSymbols = Array.from(reels).map(img => img.alt);
+    // Check winning conditions (3 same symbols)
+    const firstSymbol = finalSymbols[0];
+    const win = finalSymbols.every(s => s === firstSymbol);
+    if (win) {
+      // Determine payout based on symbol
+      let payout = 0;
+      switch (firstSymbol) {
+        case 'Zeus': payout = 500; break;
+        case 'Petir Jagat': payout = 250; break;
+        case 'Piala': payout = 150; break;
+        case 'Petir': payout = 100; break;
+        case 'Bintang': payout = 75; break;
+        default: payout = 50;
+      }
+      balance += payout;
+      updateBalance();
+      resultDisplay.textContent = `🎉 JACKPOT! Anda mendapatkan ${payout} kredit dengan 3 x ${firstSymbol}!`;
+    } else if (new Set(finalSymbols).size === 2) {
+      // Two symbols same - small payout
+      const counts = {};
+      finalSymbols.forEach(s => counts[s] = (counts[s] || 0) + 1);
+      const twoSymbol = Object.keys(counts).find(key => counts[key] === 2);
+      let payout = 20;
+      if (twoSymbol === 'Zeus' || twoSymbol === 'Petir Jagat') payout = 50;
+      balance += payout;
+      updateBalance();
+      resultDisplay.textContent = `👍 Anda mendapatkan ${payout} kredit dengan 2 x ${twoSymbol}`;
+    } else {
+      resultDisplay.textContent = 'Coba lagi! Tidak ada kombinasi menang.';
+    }
+    // Save updated balance
+    const userDataStr = localStorage.getItem('user_' + loggedInUser);
+    if (userDataStr) {
+      const userData = JSON.parse(userDataStr);
+      userData.balance = balance;
+      localStorage.setItem('user_' + loggedInUser, JSON.stringify(userData));
+    }
+  }
+
+  spinBtn.addEventListener('click', spinSlot);
+
+  // Start by showing register form
+  showRegister();
+
+})();
+</script>
+</body>
+</html>
+
+```
