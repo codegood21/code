@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Simple Reaction Game</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    height: 600px;
+    max-width: 350px;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    user-select: none;
+  }
+  h1 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.8rem;
+    text-align: center;
+    text-shadow: 0 0 10px #3a1b7a;
+  }
+  #gameArea {
+    background: #2d1a69;
+    border-radius: 15px;
+    padding: 20px;
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #message {
+    font-size: 1.4rem;
+    margin: 20px 0;
+    height: 2rem;
+    text-align: center;
+  }
+  #circle {
+    width: 120px;
+    height: 120px;
+    background: #fbd14b;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #fbd14b;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    margin: 10px 0;
+  }
+  #circle.active {
+    opacity: 1;
+    transform: scale(1);
+    cursor: pointer;
+  }
+  #startButton {
+    background: #764ba2;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #3a1b7a;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  #startButton:active {
+    background: #593591;
+  }
+  #scoreBoard {
+    font-size: 1.1rem;
+    margin-top: 15px;
+  }
+  @media (max-width: 360px) {
+    #circle {
+      width: 100px;
+      height: 100px;
+    }
+    body {
+      height: 580px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Reaction Speed Game</h1>
+  <div id="gameArea" aria-live="polite" aria-atomic="true">
+    <div id="message" role="alert">Press Start to Begin</div>
+    <div id="circle" tabindex="0" aria-label="Click the circle when it appears"></div>
+    <button id="startButton" aria-pressed="false" aria-label="Start game">Start</button>
+    <div id="scoreBoard" aria-live="polite" aria-atomic="true" role="region">Score: 0</div>
+  </div>
+
+<script>
+  (function(){
+    const circle = document.getElementById('circle');
+    const message = document.getElementById('message');
+    const startButton = document.getElementById('startButton');
+    const scoreBoard = document.getElementById('scoreBoard');
+
+    let gameStarted = false;
+    let waitingForClick = false;
+    let timeoutId;
+    let startTime;
+    let score = 0;
+
+    // Ensure game fits on smaller mobile screens
+    function disableScrolling() {
+      document.body.style.overflow = 'hidden';
+    }
+    disableScrolling();
+
+    function resetGame(){
+      score = 0;
+      scoreBoard.textContent = 'Score: ' + score;
+      message.textContent = 'Wait for the circle...';
+      circle.classList.remove('active');
+      waitingForClick = false;
+      gameStarted = true;
+    }
+
+    function showCircle() {
+      circle.classList.add('active');
+      message.textContent = 'Click the circle!';
+      waitingForClick = true;
+      startTime = performance.now();
+    }
+
+    function hideCircle(){
+      circle.classList.remove('active');
+      waitingForClick = false;
+    }
+
+    function randomDelay(min=1000, max=4000){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function startRound(){
+      hideCircle();
+      message.textContent = 'Wait for the circle...';
+      timeoutId = setTimeout(() => {
+        if(gameStarted){
+          showCircle();
+        }
+      }, randomDelay());
+    }
+
+    function endGame(reason){
+      gameStarted = false;
+      waitingForClick = false;
+      hideCircle();
+      message.textContent = reason + ' Final score: ' + score;
+      startButton.textContent = 'Restart';
+      startButton.setAttribute('aria-pressed', 'false');
+    }
+
+    circle.addEventListener('click', () => {
+      if(!gameStarted){
+        return;
+      }
+      if(!waitingForClick){
+        // Clicked too early
+        clearTimeout(timeoutId);
+        endGame('Too early!');
+        return;
+      }
+      // Valid click - measure reaction
+      let reactionTime = performance.now() - startTime;
+      score++;
+      scoreBoard.textContent = 'Score: ' + score;
+      message.textContent = `Reaction time: ${reactionTime.toFixed(0)} ms`;
+      waitingForClick = false;
+      hideCircle();
+      // Start next round after short delay
+      setTimeout(() => {
+        if(gameStarted){
+          startRound();
+        }
+      }, 1000);
+    });
+
+    // Also allow keyboard interaction for accessibility
+    circle.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        circle.click();
+      }
+    });
+
+    startButton.addEventListener('click', () => {
+      if(gameStarted){
+        // Restart game
+        clearTimeout(timeoutId);
+        resetGame();
+        startRound();
+      } else {
+        // Start game
+        resetGame();
+        startRound();
+        startButton.textContent = 'Restart';
+        startButton.setAttribute('aria-pressed', 'true');
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>
+
+```
