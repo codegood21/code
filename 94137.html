@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>DMZKENON</title>
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #container {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+    background-color: #1e1e1e;
+    padding: 24px 16px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #0f0;
+  }
+  h1 {
+    margin-bottom: 20px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #0f0;
+    text-shadow: 0 0 8px #0f0;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #0f0;
+    background: #000;
+    color: #0f0;
+    outline: none;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus {
+    border-color: #7fff7f;
+  }
+  button {
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 14px 0;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #00ff00 0%, #006600 100%);
+    color: #000;
+    cursor: pointer;
+    box-shadow: 0 0 12px 2px #0f0;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #7fff7f 0%, #003300 100%);
+  }
+  #overlay {
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  #overlay img {
+    max-width: 90vw;
+    max-height: 80vh;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px #0f0);
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>DMZKENON</h1>
+    <input id="phoneInput" type="text" placeholder="Masukkan nomormu WhatsApp" pattern="[0-9]*" inputmode="numeric" />
+    <button id="kenonBtn">KENON</button>
+  </div>
+
+  <div id="overlay" style="display:none;">
+    <img src="https://i.postimg.cc/fLxKvJ4T/hacker-mask.png" alt="Hacker Mask" />
+    <audio id="bgMusic" loop>
+      <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+      <source src="https://actions.google.com/sounds/v1/alarms/beep_short.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+<script>
+  const kenonBtn = document.getElementById('kenonBtn');
+  const overlay = document.getElementById('overlay');
+  const bgMusic = document.getElementById('bgMusic');
+  const phoneInput = document.getElementById('phoneInput');
+
+  kenonBtn.addEventListener('click', () => {
+    const phone = phoneInput.value.trim();
+
+    // Simple validation: only digits, not empty
+    if (!phone.match(/^\d+$/)) {
+      alert('Nomor WA harus berupa angka tanpa spasi atau simbol.');
+      return;
+    }
+
+    // Show overlay fullscreen with animation and music loop
+    overlay.style.display = 'flex';
+
+    // Request fullscreen
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+      document.documentElement.msRequestFullscreen();
+    }
+
+    // Play music loop
+    bgMusic.volume = 0.3;
+    bgMusic.play();
+
+    // Loop overlay image animation is done by CSS infinite animation
+  });
+
+  // Clicking overlay will exit fullscreen and hide overlay and pause music
+  overlay.addEventListener('click', () => {
+    bgMusic.pause();
+    overlay.style.display = 'none';
+
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  });
+
+  // Prevent scroll on mobile
+  document.body.addEventListener('touchmove', function(event) {
+    if (overlay.style.display === 'flex') {
+      event.preventDefault();
+    }
+  }, { passive: false });
+</script>
+</body>
+</html>
+
+```
