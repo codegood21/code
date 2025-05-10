@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Panel</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+  }
+  .panel {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(144, 19, 254, 0.4);
+    width: 320px;
+    max-width: 90vw;
+    padding: 20px;
+    box-sizing: border-box;
+    user-select:none;
+  }
+  .panel-header {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+  .panel-content {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  @media (max-width: 400px) {
+    .panel {
+      width: 95vw;
+      padding: 15px;
+    }
+    .panel-header {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .panel-content {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <section class="panel" role="region" aria-label="Information Panel">
+    <h1 class="panel-header">Panel Title</h1>
+    <div class="panel-content">
+      <p>This is a modern panel designed to be fully responsive and mobile friendly.</p>
+      <p>It fits nicely within 350px width and 600px height screens without scroll.</p>
+    </div>
+  </section>
+</body>
+</html>
+
+```
