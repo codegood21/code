@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Warning: Your Files are Encrypted</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+  body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #220000 0%, #330000 80%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ff4444;
+    font-family: 'Anton', sans-serif;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-size: 3.5rem;
+    margin: 0 0 20px 0;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #ff0000;
+  }
+  p {
+    font-size: 1.2rem;
+    margin: 10px 0 40px 0;
+    line-height: 1.4;
+    color: #ff9999;
+    max-width: 480px;
+  }
+  #pin-input {
+    font-family: monospace;
+    font-size: 2rem;
+    letter-spacing: 10px;
+    text-align: center;
+    padding: 10px 15px;
+    width: 150px;
+    border-radius: 8px;
+    border: 2px solid #ff4444;
+    background: #330000;
+    color: #fff;
+    outline: none;
+  }
+  #submit-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 15px #ff4444;
+  }
+  #submit-btn:hover {
+    background: #cc0000;
+  }
+  #message {
+    margin-top: 30px;
+    font-size: 1.3rem;
+    color: #33ff33;
+    font-weight: bold;
+    text-shadow: 0 0 8px #33ff33;
+  }
+  @media (max-width: 380px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1rem;
+      max-width: 280px;
+    }
+    #pin-input {
+      width: 120px;
+      font-size: 1.6rem;
+      letter-spacing: 6px;
+    }
+    #submit-btn {
+      font-size: 1rem;
+      padding: 8px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>YOU'RE HACKED!</h1>
+  <p>Your files are encrypted. To recover your data, enter the PIN below and click Unlock.</p>
+  <input type="password" id="pin-input" maxlength="3" placeholder="___" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+  <button id="submit-btn">Unlock</button>
+  <div id="message"></div>
+<script>
+  (function(){
+    const correctPin = "123";
+    const pinInput = document.getElementById('pin-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const messageDiv = document.getElementById('message');
+
+    function disableInput() {
+      pinInput.disabled = true;
+      submitBtn.disabled = true;
+    }
+
+    submitBtn.addEventListener('click', function() {
+      const enteredPin = pinInput.value.trim();
+      if (enteredPin === correctPin) {
+        messageDiv.textContent = "PIN correct. Your files are unlocked.";
+        messageDiv.style.color = "#33ff33";
+        disableInput();
+      } else {
+        messageDiv.textContent = "Incorrect PIN. Access denied.";
+        messageDiv.style.color = "#ff4444";
+        pinInput.value = "";
+        pinInput.focus();
+      }
+    });
+
+    pinInput.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        submitBtn.click();
+      }
+    });
+
+    // Focus the input on load and prevent copying/pasting
+    pinInput.focus();
+    pinInput.addEventListener('copy', e => e.preventDefault());
+    pinInput.addEventListener('paste', e => e.preventDefault());
+  })();
+</script>
+</body>
+</html>
+
+```
