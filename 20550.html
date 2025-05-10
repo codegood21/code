@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>PornHub Clone</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #0f0f0f;
+    color: #f5f5f5;
+    overflow-x: hidden;
+  }
+  header {
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ff9900;
+    letter-spacing: 2px;
+    user-select: none;
+    cursor: pointer;
+  }
+  .logo span {
+    color: #fff;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  nav a {
+    text-decoration: none;
+    color: #d0d0d0;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background-color 0.25s ease;
+  }
+  nav a:hover {
+    background-color: #222;
+    color: #ff9900;
+  }
+  .search-bar {
+    flex: 1;
+    max-width: 320px;
+    margin-left: 20px;
+    position: relative;
+  }
+  .search-bar input[type="search"] {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border-radius: 20px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    background-color: #222;
+    color: #eee;
+    transition: background-color 0.3s ease;
+  }
+  .search-bar input[type="search"]::placeholder {
+    color: #bbb;
+  }
+  .search-bar button {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    color: #ff9900;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  .section-header {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    border-left: 5px solid #ff9900;
+    padding-left: 8px;
+  }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+    gap: 14px;
+  }
+  .video-card {
+    background: #181818;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .video-card:hover {
+    transform: scale(1.05);
+  }
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+  .video-info {
+    padding: 10px;
+  }
+  .video-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .video-meta {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    justify-content: space-between;
+  }
+  .video-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .video-meta svg {
+    width: 12px;
+    height: 12px;
+    fill: #ff9900;
+  }
+  footer {
+    margin-top: 40px;
+    padding: 16px 20px;
+    background-color: #111;
+    color: #666;
+    text-align: center;
+    font-size: 12px;
+    user-select: none;
+  }
+  @media screen and (max-width: 600px) {
+    header {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    nav {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .search-bar {
+      max-width: 100%;
+      margin-left: 0;
+      order: 3;
+      width: 100%;
+    }
+    main {
+      padding: 12px 8px;
+      max-width: 100%;
+    }
+    .video-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" tabindex="0">
+    <span>Porn</span>Hub
+  </div>
+  <nav aria-label="Primary navigation">
+    <a href="#" tabindex="0">Home</a>
+    <a href="#" tabindex="0">Videos</a>
+    <a href="#" tabindex="0">Categories</a>
+    <a href="#" tabindex="0">Live Cams</a>
+    <a href="#" tabindex="0">Pornstars</a>
+    <a href="#" tabindex="0">Premium</a>
+  </nav>
+  <form class="search-bar" role="search" aria-label="Video search" onsubmit="event.preventDefault(); alert('Search feature coming soon!');">
+    <input type="search" placeholder="Search videos, categories, users..." aria-label="Search videos" />
+    <button type="submit" aria-label="Search videos">&#128270;</button>
+  </form>
+</header>
+<main>
+  <section aria-labelledby="trending-videos">
+    <h2 class="section-header" id="trending-videos">Trending Videos</h2>
+    <div class="video-grid" role="list">
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Video: Summer Fun at the Beach, 1 million views, duration 10 minutes">
+        <img src="https://dummyimage.com/320x180/222/ff9900&text=Video+1" alt="Thumbnail Summer Fun at the Beach"/>
+        <div class="video-info">
+          <div class="video-title">Summer Fun at the Beach</div>
+          <div class="video-meta">
+            <span title="Views">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+              1M
+            </span>
+            <span title="Duration">10:00</span>
+          </div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Video: Night Party Madness, 850K views, duration 8 minutes 30 seconds">
+        <img src="https://dummyimage.com/320x180/222/ffaa00&text=Video+2" alt="Thumbnail Night Party Madness"/>
+        <div class="video-info">
+          <div class="video-title">Night Party Madness</div>
+          <div class="video-meta">
+            <span title="Views">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+              850K
+            </span>
+            <span title="Duration">8:30</span>
+          </div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Video: Yoga at Sunrise, 940K views, duration 11 minutes">
+        <img src="https://dummyimage.com/320x180/222/ff7700&text=Video+3" alt="Thumbnail Yoga at Sunrise"/>
+        <div class="video-info">
+          <div class="video-title">Yoga at Sunrise</div>
+          <div class="video-meta">
+            <span title="Views">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+              940K
+            </span>
+            <span title="Duration">11:00</span>
+          </div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Video: City Nights, 780K views, duration 12 minutes 15 seconds">
+        <img src="https://dummyimage.com/320x180/222/ff6600&text=Video+4" alt="Thumbnail City Nights"/>
+        <div class="video-info">
+          <div class="video-title">City Nights</div>
+          <div class="video-meta">
+            <span title="Views">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+              780K
+            </span>
+            <span title="Duration">12:15</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section aria-labelledby="categories" style="margin-top: 40px;">
+    <h2 class="section-header" id="categories">Categories</h2>
+    <div class="video-grid" role="list">
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Category: Amateur">
+        <img src="https://dummyimage.com/320x180/444/ff9900&text=Amateur" alt="Category Amateur"/>
+        <div class="video-info">
+          <div class="video-title">Amateur</div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Category: Lesbian">
+        <img src="https://dummyimage.com/320x180/666/ff7700&text=Lesbian" alt="Category Lesbian"/>
+        <div class="video-info">
+          <div class="video-title">Lesbian</div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Category: MILF">
+        <img src="https://dummyimage.com/320x180/555/ffaa00&text=MILF" alt="Category MILF"/>
+        <div class="video-info">
+          <div class="video-title">MILF</div>
+        </div>
+      </article>
+      <article class="video-card" role="listitem" tabindex="0" aria-label="Category: VR">
+        <img src="https://dummyimage.com/320x180/333/ff6600&text=VR" alt="Category VR"/>
+        <div class="video-info">
+          <div class="video-title">VR</div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+<footer>
+  &copy; 2024 PornHub Clone - Demo Site - No real adult content
+</footer>
+</body>
+</html>
+
+```
