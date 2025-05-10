@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Free Fire Claim Item</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #000000, #1b2735);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .container {
+    background: #121212cc;
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+  h1 {
+    text-align: center;
+    color: #ffd700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #ffd700;
+  }
+  label {
+    display: block;
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 600;
+    color: #ffd700;
+  }
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #ffcc00, #ff9900);
+    color: #1b2735;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ffcc0099;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #ffdd33, #ffaa33);
+  }
+  .result {
+    margin-top: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    background: #222;
+    color: #fafafa;
+    min-height: 3rem;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #666;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 0.5rem;
+    }
+    .container {
+      padding: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Free Fire Claim Item Form">
+  <h1>Claim Free Fire Item</h1>
+  <form id="claimForm" aria-describedby="formInstruction">
+    <div id="formInstruction" style="font-size:0.9rem; margin-bottom: 1rem; color:#bbb;">Enter your Free Fire User ID and the item code to claim special rewards.</div>
+    <label for="userId">Free Fire User ID</label>
+    <input
+      type="number"
+      id="userId"
+      name="userId"
+      pattern="[0-9]*"
+      inputmode="numeric"
+      minlength="6"
+      maxlength="12"
+      required
+      aria-required="true"
+      autocomplete="off"
+      placeholder="Example: 123456789"
+      aria-describedby="userIdHelp"
+    />
+    <div id="userIdHelp" style="font-size: 0.75rem; color: #888;">Your numeric Free Fire player ID (6-12 digits).</div>
+
+    <label for="itemCode">Item Code</label>
+    <input
+      type="text"
+      id="itemCode"
+      name="itemCode"
+      minlength="4"
+      maxlength="10"
+      required
+      aria-required="true"
+      spellcheck="false"
+      autocomplete="off"
+      placeholder="Example: FFXPDR"
+      aria-describedby="itemCodeHelp"
+      pattern="[A-Za-z0-9]+"
+    />
+    <div id="itemCodeHelp" style="font-size: 0.75rem; color: #888;">Enter the code for the item you want to claim.</div>
+
+    <button type="submit" aria-label="Claim your Free Fire item">Claim Item</button>
+  </form>
+  <div aria-live="polite" class="result" id="result" role="alert"></div>
+  <div class="footer" aria-label="Disclaimer">
+    This is a demo claim simulator. No real item will be granted.
+  </div>
+</div>
+
+<script>
+  (function() {
+    const form = document.getElementById("claimForm");
+    const result = document.getElementById("result");
+
+    // Simulated "claim" function with dummy logic
+    function claimItem(userId, itemCode) {
+      // Sample fake item database
+      const validItemCodes = ["FFXPDR", "GOLD99", "SKIN20", "DRAGON", "KARAMA"];
+      // Simulate claim validity
+      if (!validItemCodes.includes(itemCode.toUpperCase())) {
+        return { success: false, message: "Invalid item code." };
+      }
+      if (userId.length < 6 || userId.length > 12) {
+        return { success: false, message: "User ID must be 6 to 12 digits." };
+      }
+      return { success: true, message: `Congratulations! Item ${itemCode.toUpperCase()} claimed for user ${userId}.` };
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const userIdInput = form.userId.value.trim();
+      const itemCodeInput = form.itemCode.value.trim();
+
+      if (!userIdInput || !itemCodeInput) {
+        result.textContent = "Please fill in all required fields.";
+        result.style.color = "#f44336";
+        return;
+      }
+
+      // Validate numeric userId
+      if (!/^\d{6,12}$/.test(userIdInput)) {
+        result.textContent = "User ID must be a numeric value between 6 and 12 digits.";
+        result.style.color = "#f44336";
+        return;
+      }
+
+      // Validate itemCode alphanumeric
+      if (!/^[A-Za-z0-9]+$/.test(itemCodeInput)) {
+        result.textContent = "Item code must be alphanumeric characters only.";
+        result.style.color = "#f44336";
+        return;
+      }
+
+      const claimResult = claimItem(userIdInput, itemCodeInput);
+      if (claimResult.success) {
+        result.style.color = "#00e676";
+        form.reset();
+      } else {
+        result.style.color = "#f44336";
+      }
+      result.textContent = claimResult.message;
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
