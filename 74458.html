@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Judi Online Otomatis - Deposit & Withdraw</title>
+<style>
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  #app {
+    background: #0a1f44cc;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 360px;
+    padding: 30px 25px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  }
+  h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .balance {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    background: #305080;
+    padding: 15px;
+    border-radius: 12px;
+    user-select: none;
+    letter-spacing: 0.7px;
+  }
+  .form-section {
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    margin-bottom: 9px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #a5c1f1;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    color: #0a1f44;
+  }
+  button {
+    width: 100%;
+    padding: 14px 0;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+  }
+  button.deposit {
+    background: #4CAF50;
+    color: white;
+    margin-bottom: 15px;
+  }
+  button.deposit:hover {
+    background: #42943f;
+  }
+  button.withdraw {
+    background: #f44336;
+    color: white;
+  }
+  button.withdraw:hover {
+    background: #ba3225;
+  }
+  .message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    min-height: 22px;
+    user-select:none;
+  }
+  .message.success {
+    color: #b0f2a1;
+  }
+  .message.error {
+    color: #ff9a9a;
+  }
+  /* Mobile fit */
+  @media (max-width: 400px) {
+    #app {
+      max-width: 100%;
+      padding: 25px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="app" role="main" aria-label="Aplikasi judi online otomatis dengan deposit dan withdraw">
+    <h1>Judi Online Otomatis</h1>
+    <div class="balance" aria-live="polite" aria-atomic="true">
+      Saldo Anda: <span id="balance">Rp 1.000.000</span>
+    </div>
+    <div class="form-section">
+      <label for="depositAmount">Jumlah Deposit (Rp):</label>
+      <input type="number" id="depositAmount" min="10000" step="1000" placeholder="Minimal 10.000" aria-describedby="depositHelp" inputmode="numeric" />
+      <button class="deposit" id="depositBtn" aria-label="Deposit saldo">Deposit</button>
+    </div>
+    <div class="form-section">
+      <label for="withdrawAmount">Jumlah Withdraw (Rp):</label>
+      <input type="number" id="withdrawAmount" min="10000" step="1000" placeholder="Minimal 10.000" aria-describedby="withdrawHelp" inputmode="numeric" />
+      <button class="withdraw" id="withdrawBtn" aria-label="Withdraw saldo">Withdraw</button>
+    </div>
+    <div role="alert" aria-live="assertive" id="message" class="message" aria-atomic="true"></div>
+  </div>
+<script>
+(() => {
+  const balanceSpan = document.getElementById('balance');
+  const depositInput = document.getElementById('depositAmount');
+  const withdrawInput = document.getElementById('withdrawAmount');
+  const depositBtn = document.getElementById('depositBtn');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const messageDiv = document.getElementById('message');
+
+  // Use localStorage key for balance persistence
+  const BALANCE_KEY = 'online_judi_balance';
+
+  // Initialize balance: default 1,000,000 or loaded from localStorage
+  let balance = 1000000;
+  const storedBalance = localStorage.getItem(BALANCE_KEY);
+  if (storedBalance !== null && !isNaN(storedBalance)) {
+    balance = parseInt(storedBalance, 10);
+  }
+
+  function updateBalanceDisplay() {
+    balanceSpan.textContent = `Rp ${balance.toLocaleString('id-ID')}`;
+  }
+
+  function showMessage(msg, isSuccess=true) {
+    messageDiv.textContent = msg;
+    if(isSuccess) {
+      messageDiv.classList.remove('error');
+      messageDiv.classList.add('success');
+    } else {
+      messageDiv.classList.remove('success');
+      messageDiv.classList.add('error');
+    }
+  }
+
+  function clearInputs() {
+    depositInput.value = '';
+    withdrawInput.value = '';
+  }
+
+  function saveBalance() {
+    localStorage.setItem(BALANCE_KEY, balance.toString());
+  }
+
+  // Deposit handler
+  depositBtn.addEventListener('click', () => {
+    let amount = parseInt(depositInput.value, 10);
+    if (isNaN(amount) || amount < 10000) {
+      showMessage('Minimal deposit adalah Rp 10.000', false);
+      return;
+    }
+    // Add amount to balance
+    balance += amount;
+    saveBalance();
+    updateBalanceDisplay();
+    showMessage(`Deposit Rp ${amount.toLocaleString('id-ID')} berhasil ditambahkan.`);
+    clearInputs();
+  });
+
+  // Withdraw handler
+  withdrawBtn.addEventListener('click', () => {
+    let amount = parseInt(withdrawInput.value, 10);
+    if (isNaN(amount) || amount < 10000) {
+      showMessage('Minimal withdraw adalah Rp 10.000', false);
+      return;
+    }
+    if (amount > balance) {
+      showMessage('Saldo tidak cukup untuk withdraw ini.', false);
+      return;
+    }
+    // Subtract amount from balance
+    balance -= amount;
+    saveBalance();
+    updateBalanceDisplay();
+    showMessage(`Withdraw Rp ${amount.toLocaleString('id-ID')} berhasil diproses.`);
+    clearInputs();
+  });
+
+  // Initialize display at page load
+  updateBalanceDisplay();
+})();
+</script>
+</body>
+</html>
+
+```
