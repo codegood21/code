@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Van AI - Your Smart AI Assistant</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #4a90e2, #50e3c2);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+  }
+  header {
+    padding: 16px;
+    text-align: center;
+    background: rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 10px;
+    overflow-y: auto;
+  }
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 8px;
+  }
+  .message {
+    max-width: 80%;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+  }
+  .user {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.12);
+  }
+  .ai {
+    background: rgba(0,0,0,0.3);
+    color: #e0f7f9;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.1);
+  }
+  form {
+    display: flex;
+    padding: 0 10px 12px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    user-select: none;
+  }
+  input[type="text"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    border-radius: 8px 0 0 8px;
+    padding: 10px 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    user-select: text;
+  }
+  input[type="text"]::placeholder {
+    color: #999;
+  }
+  button {
+    background: #00c9a7;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0 16px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button:active {
+    background-color: #009970;
+  }
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
+    }
+    .message {
+      max-width: 90%;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Van AI</h1>
+</header>
+<main>
+  <div id="chat" role="log" aria-live="polite"></div>
+  <form id="input-form" aria-label="Send message to Van AI">
+    <input type="text" id="user-input" placeholder="Ask me anything..." autocomplete="off" required aria-required="true" />
+    <button type="submit" aria-label="Send">Send</button>
+  </form>
+</main>
+<script>
+  const chat = document.getElementById('chat');
+  const form = document.getElementById('input-form');
+  const input = document.getElementById('user-input');
+
+  // Simple AI reply logic with keyword matching and fallback
+  function getVanAiResponse(message) {
+    const msg = message.toLowerCase().trim();
+    if (!msg) return "I'm here to help you anytime!";
+    if (msg.includes('hello') || msg.includes('hi')) {
+      return "Hello! How can I assist you today?";
+    }
+    if (msg.includes('how are you')) {
+      return "I'm just a smart AI, so always ready to help!";
+    }
+    if (msg.includes('your name')) {
+      return "My name is Van AI, your personal AI assistant.";
+    }
+    if (msg.includes('weather')) {
+      return "I can't check the actual weather, but it's always a good day to learn something new!";
+    }
+    if (msg.includes('joke')) {
+      return "Why don't scientists trust atoms? Because they make up everything!";
+    }
+    if (msg.includes('help') || msg.includes('assist') || msg.includes('support')) {
+      return "I'm here to help you! Just type your questions or commands.";
+    }
+    if (msg.includes('thank')) {
+      return "You're welcome! Feel free to ask me anything else.";
+    }
+    return "That's interesting! Tell me more or ask something else.";
+  }
+
+  function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.classList.add('message', sender);
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const userText = input.value.trim();
+    if (!userText) return;
+    addMessage(userText, 'user');
+    input.value = '';
+    setTimeout(() => {
+      const aiReply = getVanAiResponse(userText);
+      addMessage(aiReply, 'ai');
+    }, 600);
+  });
+
+  // Greet user on page load
+  window.onload = () => {
+    addMessage("Hi! I'm Van AI, your smart assistant. Ask me anything.", 'ai');
+    input.focus();
+  };
+</script>
+</body>
+</html>
+
+```
