@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no" />
+<title>Beli Otomatis Keren</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: linear-gradient(135deg, #2a2a72, #009ffd);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(255,255,255,0.3);
+  }
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  button {
+    flex: 1 1 120px;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0F0F0F;
+    background: #00e676;
+    border: none;
+    border-radius: 15px;
+    box-shadow:
+      0 6px #00a651,
+      0 0 15px 3px #00e676;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.1s ease,
+      background 0.3s ease;
+    text-align: center;
+  }
+  button:hover {
+    background: #00a651;
+    box-shadow:
+      0 10px #007534,
+      0 0 20px 5px #00e676;
+  }
+  button:active {
+    transform: translateY(3px);
+    box-shadow:
+      0 3px #007534;
+  }
+  .status {
+    margin-top: 32px;
+    font-size: 1rem;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    min-height: 48px;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+  @media (max-width: 400px){
+    h1 {
+      font-size: 2rem;
+    }
+    button {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Beli Otomatis Keren</h1>
+<div class="buttons">
+  <button id="orderBtn" aria-label="Click disini untuk memesan">Click disini untuk memesan</button>
+  <button id="bugBtn" aria-label="Click disini untuk laporkan bug">Click disini untuk laporkan bug</button>
+  <button id="profileBtn" aria-label="Click disini untuk melihat saya">Click disini untuk melihat saya</button>
+</div>
+<div class="status" id="statusMessage" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+  // Custom cool random animation for button clicks
+  function animateButton(button) {
+    const sparks = 12;
+    const rect = button.getBoundingClientRect();
+    for(let i=0; i<sparks; i++){
+      const span = document.createElement('span');
+      span.style.position = 'fixed';
+      span.style.background = 'hsl(' + (Math.random()*360) + ', 100%, 70%)';
+      span.style.borderRadius = '50%';
+      span.style.pointerEvents = 'none';
+      const size = Math.random() * 8 + 8;
+      span.style.width = size + 'px';
+      span.style.height = size + 'px';
+      span.style.left = (rect.left + rect.width/2) + 'px';
+      span.style.top = (rect.top + rect.height/2) + 'px';
+      span.style.zIndex = 1000;
+      document.body.appendChild(span);
+      const angle = (Math.PI * 2 / sparks) * i;
+      const dist = 60 + Math.random() * 40;
+      span.animate([
+        { transform: 'translate(0,0)', opacity: 1 },
+        { transform: 'translate(' + (Math.cos(angle)*dist) + 'px,' + (Math.sin(angle)*dist) + 'px)', opacity: 0 }
+      ], {
+        duration: 700 + Math.random()*300,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        fill: 'forwards'
+      });
+      setTimeout(() => span.remove(), 1000);
+    }
+  }
+
+  const status = document.getElementById('statusMessage');
+  const orderBtn = document.getElementById('orderBtn');
+  const bugBtn = document.getElementById('bugBtn');
+  const profileBtn = document.getElementById('profileBtn');
+
+  // Helper to update status message with fade effect
+  function updateStatus(text) {
+    status.style.opacity = 0;
+    setTimeout(() => {
+      status.textContent = text;
+      status.style.opacity = 1;
+    }, 200);
+  }
+
+  // Simulated order process with loading and result
+  orderBtn.addEventListener('click', () => {
+    animateButton(orderBtn);
+    updateStatus('Memesan otomatis... tunggu sebentar...');
+    orderBtn.disabled = true;
+    bugBtn.disabled = true;
+    profileBtn.disabled = true;
+    setTimeout(() => {
+      updateStatus('Pesanan berhasil dikirimkan! Terima kasih sudah menggunakan layanan kami.');
+      orderBtn.disabled = false;
+      bugBtn.disabled = false;
+      profileBtn.disabled = false;
+    }, 2500);
+  });
+
+  // Bug report click with a prompt and confirmation
+  bugBtn.addEventListener('click', () => {
+    animateButton(bugBtn);
+    setTimeout(() => {
+      const bug = prompt('Mohon tuliskan detail bug yang Anda ingin laporkan:');
+      if(bug && bug.trim().length >= 5) {
+        updateStatus('Terima kasih atas laporan bug Anda. Kami akan segera menindaklanjuti.');
+      } else if (bug !== null) {
+        updateStatus('Laporan bug terlalu singkat. Coba lagi dengan info lebih lengkap.');
+      } else {
+        updateStatus('Laporan bug dibatalkan.');
+      }
+    }, 200);
+  });
+
+  // Profile button - showing a cool message to simulate " melihat saya "
+  profileBtn.addEventListener('click', () => {
+    animateButton(profileBtn);
+    updateStatus('Halo! Saya di sini siap membantu Anda dengan pembelian otomatis yang keren!');
+  });
+</script>
+</body>
+</html>
+
+```
