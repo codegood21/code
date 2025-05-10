@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Device Key Lock</title>
+<style>
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    color: #fff;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+  }
+  #lock-container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px 30px;
+    width: 320px;
+    max-width: 90vw;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #lock-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+    user-select: none;
+  }
+  #pin-display {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .pin-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    margin: 0 8px;
+    background: transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  .pin-dot.filled {
+    background: #fff;
+    border-color: #fff;
+  }
+  #message {
+    font-size: 0.9rem;
+    min-height: 20px;
+    margin-bottom: 10px;
+    height: 20px;
+    user-select: none;
+  }
+  #keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+  }
+  button.key {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 50%;
+    padding: 20px 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    transition: background-color 0.2s ease;
+    user-select: none;
+  }
+  button.key:active {
+    background: #fff;
+    color: #764ba2;
+  }
+  button.key:focus {
+    outline: none;
+    box-shadow: 0 0 8px #fff;
+  }
+  button.key.empty {
+    background: transparent;
+    pointer-events: none;
+  }
+  #bottom-row {
+    grid-column: span 3;
+    display: flex;
+    justify-content: space-between;
+  }
+  button#btn-clear {
+    background: #e74c3c;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button#btn-clear:active {
+    background: #c0392b;
+  }
+  button#btn-clear:focus {
+    outline: none;
+    box-shadow: 0 0 8px #e74c3c;
+  }
+
+  @media (max-width: 400px) {
+    #lock-container {
+      width: 280px;
+      padding: 15px 20px;
+    }
+    button.key {
+      padding: 16px 0;
+      font-size: 1.1rem;
+    }
+    .pin-dot {
+      width: 16px;
+      height: 16px;
+      margin: 0 6px;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="lock-container">
+  <h1 id="lock-title">Device Key Lock</h1>
+  <div id="pin-display" aria-label="PIN code entry" role="group">
+    <div class="pin-dot" aria-hidden="true"></div>
+    <div class="pin-dot" aria-hidden="true"></div>
+    <div class="pin-dot" aria-hidden="true"></div>
+    <div class="pin-dot" aria-hidden="true"></div>
+  </div>
+  <div id="message" aria-live="polite" aria-atomic="true"></div>
+  <div id="keypad" role="application" aria-label="Numeric keypad">
+    <button class="key" data-key="1" type="button" aria-label="Number 1">1</button>
+    <button class="key" data-key="2" type="button" aria-label="Number 2">2</button>
+    <button class="key" data-key="3" type="button" aria-label="Number 3">3</button>
+    <button class="key" data-key="4" type="button" aria-label="Number 4">4</button>
+    <button class="key" data-key="5" type="button" aria-label="Number 5">5</button>
+    <button class="key" data-key="6" type="button" aria-label="Number 6">6</button>
+    <button class="key" data-key="7" type="button" aria-label="Number 7">7</button>
+    <button class="key" data-key="8" type="button" aria-label="Number 8">8</button>
+    <button class="key" data-key="9" type="button" aria-label="Number 9">9</button>
+    <button class="key empty" aria-hidden="true" tabindex="-1" disabled></button>
+    <button class="key" data-key="0" type="button" aria-label="Number 0">0</button>
+    <button class="key empty" aria-hidden="true" tabindex="-1" disabled></button>
+  </div>
+  <div id="bottom-row">
+    <button id="btn-clear" type="button" aria-label="Clear PIN">Clear</button>
+  </div>
+</div>
+<script>
+  (() => {
+    const pinLength = 4;
+    const correctPin = "1234";
+    const pinDisplayDots = document.querySelectorAll('.pin-dot');
+    const messageEl = document.getElementById('message');
+    const keys = document.querySelectorAll('button.key');
+    const btnClear = document.getElementById('btn-clear');
+
+    let currentPin = '';
+
+    function updatePinDisplay() {
+      pinDisplayDots.forEach((dot, idx) => {
+        dot.classList.toggle('filled', idx < currentPin.length);
+      });
+    }
+
+    function showMessage(text, isError=false) {
+      messageEl.textContent = text;
+      messageEl.style.color = isError ? '#e74c3c' : '#2ecc71';
+    }
+
+    function clearPin() {
+      currentPin = '';
+      updatePinDisplay();
+      messageEl.textContent = '';
+    }
+
+    function lockScreen() {
+      // Disable all keys when locked
+      keys.forEach(k => k.disabled = true);
+      btnClear.disabled = true;
+      showMessage("Device is locked! Access denied.", true);
+    }
+
+    function handleKeyInput(key) {
+      if(currentPin.length >= pinLength) return;
+      currentPin += key;
+      updatePinDisplay();
+      showMessage('');
+      if(currentPin.length === pinLength) {
+        setTimeout(() => {
+          if(currentPin === correctPin) {
+            showMessage("Device unlocked successfully!");
+            currentPin = '';
+            updatePinDisplay();
+          } else {
+            showMessage("Incorrect PIN! Device locked.", true);
+            lockScreen();
+          }
+        }, 300);
+      }
+    }
+
+    keys.forEach(key => {
+      key.addEventListener('click', () => {
+        if(!key.disabled) handleKeyInput(key.dataset.key);
+      });
+    });
+
+    btnClear.addEventListener('click', () => {
+      if(!btnClear.disabled) clearPin();
+    });
+
+    // Accessibility: handle keyboard input for keypad
+    document.addEventListener('keydown', (e) => {
+      if(e.isComposing || e.repeat) return;
+
+      if(e.key >= '0' && e.key <= '9') {
+        if(keys[0].disabled) return; // locked
+        handleKeyInput(e.key);
+      } else if(e.key === 'Backspace' || e.key === 'Delete') {
+        clearPin();
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>
+
+```
