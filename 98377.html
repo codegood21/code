@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ardiansyah Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: #0f2027;  /* fallback for old browsers */
+    background: linear-gradient(135deg, #2c5364, #203a43, #0f2027);
+    font-family: 'Poppins', sans-serif;
+    color: #e0e6e9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 16px;
+  }
+  .container {
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 16px;
+    padding: 30px 40px;
+    max-width: 340px;
+    width: 100%;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  h1 {
+    font-weight: 600;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-shadow: 1px 1px 5px #1de9b6;
+  }
+  .product {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0,114,255,0.6);
+    cursor: default;
+    transition: transform 0.2s ease;
+  }
+  .product:hover {
+    transform: translateY(-4px);
+  }
+  .product-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #e0f7fa;
+    text-shadow: 1px 1px 8px #00e5ff;
+  }
+  .price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #00ffe7;
+    text-shadow: 0 0 5px #00ffe7, 0 0 10px #00ffe7;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 12px;
+    }
+    .container {
+      padding: 24px 20px;
+      max-width: 100%;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    .product-name {
+      font-size: 1.2rem;
+    }
+    .price {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Produk Ardiansyah Store">
+    <h1>Ardiansyah Store</h1>
+    <div class="product" tabindex="0" aria-describedby="desc1">
+      <div class="product-name">Panel Pterodactyl</div>
+      <div class="price" id="desc1">Rp 10.000</div>
+    </div>
+    <div class="product" tabindex="0" aria-describedby="desc2">
+      <div class="product-name">VPS DigitalOcean</div>
+      <div class="price" id="desc2">Rp 100.000</div>
+    </div>
+  </div>
+</body>
+</html>
+
+```
