@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Webb DDoS Dark</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    background: #0a0a0a;
+    color: #0ff; 
+    font-family: 'Orbitron', monospace, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+  header {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background: linear-gradient(90deg, #00f0ff, #004057);
+    box-shadow: 0 0 10px #00f0ffcc;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    letter-spacing: 0.15em;
+    color: #00f0ff;
+    text-shadow: 0 0 8px #00f0ffaa;
+  }
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  .attack-form {
+    background: #111;
+    border: 1px solid #00f0ff44;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #00f0ff88;
+  }
+  .attack-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #00ffffdd;
+  }
+  .attack-form input[type="text"],
+  .attack-form input[type="number"] {
+    width: 100%;
+    padding: 8px 6px;
+    margin-bottom: 1rem;
+    background: #222;
+    border: 1px solid #005966;
+    border-radius: 4px;
+    color: #0ff;
+    font-family: monospace;
+    font-size: 1rem;
+    outline-offset: 2px;
+    outline-color: #00ffffaa;
+  }
+  .attack-form input::-webkit-inner-spin-button, 
+  .attack-form input::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0; 
+  }
+  .attack-form button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0ff;
+    background: #004d66;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    box-shadow: 0 0 8px #00ffffaa;
+    transition: background 0.3s ease;
+  }
+  .attack-form button:hover {
+    background: #00f0ff;
+    color: #000;
+  }
+  .status {
+    margin-top: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    height: 80px;
+    overflow-y: auto;
+    background: #001518;
+    border: 1px solid #00ccff66;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 6px #00aaff88;
+  }
+  footer {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: #007f99aa;
+    text-align: center;
+    background: #000a0f;
+    box-shadow: inset 0 1px 0 #002233;
+  }
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #001518;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #00ccff88;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00ffffcc;
+  }
+  /* Mobile optimizations */
+  @media (max-width: 400px) {
+    main {
+      max-width: 100%;
+      padding: 0.5rem;
+    }
+    header h1 {
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+    }
+    .attack-form button {
+      font-size: 0.95rem;
+      padding: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>WEBB DDoS DARK</h1>
+</header>
+<main>
+  <form class="attack-form" id="ddosForm" autocomplete="off" spellcheck="false">
+    <label for="targetIp">Target IP/Domain</label>
+    <input id="targetIp" name="targetIp" type="text" placeholder="e.g. 123.45.67.89 or example.com" required pattern="^[a-zA-Z0-9\.\-]+$" inputmode="text" autocapitalize="none" />
+    <label for="packets">Number of Packets (1 - 10000)</label>
+    <input id="packets" name="packets" type="number" min="1" max="10000" value="100" required />
+    <button type="submit">Launch Attack</button>
+  </form>
+  <div class="status" id="status" aria-live="polite"></div>
+</main>
+<footer>
+  &copy; 2024 Webb DDoS Dark - Use responsibly
+</footer>
+<script>
+  (function(){
+    const form = document.getElementById('ddosForm');
+    const status = document.getElementById('status');
+    function addStatusLine(text) {
+      const line = document.createElement('div');
+      line.textContent = text;
+      status.appendChild(line);
+      status.scrollTop = status.scrollHeight;
+    }
+    function validateIpDomain(value) {
+      // Simple regex to allow IP v4 or basic domain pattern (no punycode support)
+      const ipPattern = /^(?:(?:25[0-5]|2[0-4]\d|1?\d{1,2})(?:\.(?!$)|$)){4}$/;
+      const domainPattern = /^[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}$/;
+      return ipPattern.test(value) || domainPattern.test(value);
+    }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      status.textContent = '';
+      const target = form.targetIp.value.trim();
+      const packets = parseInt(form.packets.value, 10);
+      if(!validateIpDomain(target)) {
+        addStatusLine('Invalid target IP or domain.');
+        return;
+      }
+      if(isNaN(packets) || packets < 1 || packets > 10000) {
+        addStatusLine('Packets must be a number between 1 and 10000.');
+        return;
+      }
+      addStatusLine(`Starting attack on ${target} with ${packets} packets...`);
+      // Simulating attack progress
+      let sent = 0;
+      const attackInterval = setInterval(() => {
+        sent += Math.min(50, packets - sent);
+        addStatusLine(`Sent ${sent} / ${packets} packets...`);
+        if (sent >= packets) {
+          clearInterval(attackInterval);
+          addStatusLine('Attack complete.');
+        }
+      }, 300);
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
