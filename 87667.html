@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jualan Aplikasi Premium</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+  }
+  p.subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #d1d1d1;
+  }
+  .price-tag {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ffdd57;
+    text-shadow: 0 0 6px #ffdd57;
+  }
+  .btn-buy {
+    background-color: #25d366;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 8px 15px rgba(37, 211, 102, 0.4);
+    user-select: none;
+  }
+  .btn-buy:hover,
+  .btn-buy:focus {
+    background-color: #1ebe57;
+    outline: none;
+  }
+  .btn-buy:active {
+    transform: scale(0.96);
+  }
+  footer {
+    margin-top: 40px;
+    font-size: 0.8rem;
+    color: #bbb;
+    user-select: none;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 20px;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    .price-tag {
+      font-size: 1.3rem;
+    }
+    .btn-buy {
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Aplikasi Premium</h1>
+    <p class="subtitle">Dapatkan aplikasi premium terbaik dengan fitur lengkap!</p>
+    <div class="price-tag">Rp 199.000,-</div>
+    <button class="btn-buy" aria-label="Beli sekarang di WhatsApp" onclick="window.location.href='https://wa.me/62858801507610?text=Saya%20ingin%20membeli%20aplikasi%20premium'">
+      Beli Sekarang
+    </button>
+    <footer>Hubungi kami melalui WhatsApp untuk info dan pembelian</footer>
+  </div>
+</body>
+</html>
+
+```
