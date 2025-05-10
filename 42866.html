@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>QRIS All Pay - Pembayaran Mudah Tanpa KTP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 12px;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    max-width: 360px;
+    width: 100%;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 2em;
+    font-weight: 400;
+    font-size: 1rem;
+  }
+  .input-group {
+    margin-bottom: 1.5em;
+    text-align: left;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4em;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #e0d9fb;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  input[type="number"]:focus {
+    box-shadow: 0 0 8px #a087f0;
+    background: #f8f7ff;
+    color: #333;
+  }
+  button {
+    background: #a087f0;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px #7c66d9;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #7c66d9;
+  }
+  .qris-section {
+    margin-top: 2em;
+    text-align: center;
+  }
+  .qris-code {
+    margin-top: 1em;
+    max-width: 290px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .qris-code img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  .info-text {
+    font-size: 0.9rem;
+    margin-top: 1em;
+    color: #e0d9fbcc;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 24px 18px;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>QRIS All Pay</h1>
+    <p>Bayar cepat tanpa KTP, cukup masukan nominal dan bayar via QRIS All Pay.</p>
+    <form id="payment-form" aria-label="Form pembayaran QRIS All Pay">
+      <div class="input-group">
+        <label for="amount">Jumlah Pembayaran (Rp)</label>
+        <input type="number" id="amount" name="amount" min="1000" step="1000" placeholder="Masukkan jumlah minimal Rp 1,000" required aria-required="true" />
+      </div>
+      <button type="submit" aria-label="Buat QRIS untuk pembayaran">Buat QRIS</button>
+    </form>
+    <section class="qris-section" id="qris-section" aria-live="polite" aria-atomic="true" style="display:none;">
+      <h2>Scan QRIS untuk Bayar</h2>
+      <div class="qris-code" id="qris-code"></div>
+      <p class="info-text">Gunakan aplikasi QRIS atau dompet digital yang mendukung All Pay untuk melakukan pembayaran.</p>
+    </section>
+  </div>
+
+<script>
+  // This demo uses a static QRIS rendering simulation using QRCode.js
+  // CDN QRCode library
+  function loadQRCodeLib(callback) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js';
+    script.onload = callback;
+    document.head.appendChild(script);
+  }
+
+  function validateAmount(value) {
+    const num = Number(value);
+    return Number.isInteger(num) && num >= 1000;
+  }
+
+  function generateQRText(amount) {
+    // Generate a dummy QRIS payment string (In real app, this would come from a payment API)
+    // This string follows simplified QRIS format just for demo
+    const merchantId = "123456789012345";
+    const paymentInfo = `00020101021129370016A00000067701011101130066${merchantId}520458125303840540${amount}5802ID5913Pembayaran All Pay6009Jakarta61051234562070503***6304`;
+    // Append a dummy checksum for demo purpose
+    return paymentInfo + "ABCD";
+  }
+
+  function clearQRSection() {
+    const section = document.getElementById('qris-section');
+    section.style.display = 'none';
+    const qrCodeContainer = document.getElementById('qris-code');
+    qrCodeContainer.innerHTML = '';
+  }
+
+  function showQR(text) {
+    const qrCodeContainer = document.getElementById('qris-code');
+    qrCodeContainer.innerHTML = '';
+    QRCode.toCanvas(text, {width: 280, margin: 2}, function (error, canvas) {
+      if (error) {
+        qrCodeContainer.textContent = 'Gagal membuat QR Code.';
+        return;
+      }
+      qrCodeContainer.appendChild(canvas);
+      document.getElementById('qris-section').style.display = 'block';
+    });
+  }
+
+  document.getElementById('payment-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const amountInput = document.getElementById('amount');
+    const amount = amountInput.value.trim();
+
+    if (!validateAmount(amount)) {
+      alert('Masukkan jumlah pembayaran minimal Rp 1,000 dan harus bilangan bulat.');
+      amountInput.focus();
+      clearQRSection();
+      return;
+    }
+
+    const qrisText = generateQRText(amount);
+    showQR(qrisText);
+  });
+
+  loadQRCodeLib(() => {
+    // Library loaded, ready for use
+  });
+</script>
+</body>
+</html>
+
+```
