@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Responsive Cool App</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    width: 95vw;
+    max-width: 360px;
+    max-height: 600px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    text-shadow: 1px 1px 8px rgba(0,0,0,0.3);
+  }
+  p.subtitle {
+    text-align: center;
+    margin: 0 0 2rem;
+    font-weight: 400;
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+  }
+  button.cta-btn {
+    background: #ff5e57;
+    border: none;
+    border-radius: 48px;
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px #ff5e57aa;
+  }
+  button.cta-btn:hover,
+  button.cta-btn:focus {
+    background-color: #ff3b30;
+    box-shadow: 0 6px 20px #ff3b30cc;
+    outline: none;
+  }
+  @media (max-width: 420px) {
+    .container {
+      max-width: 90vw;
+      max-height: 600px;
+      padding: 1.5rem;
+    }
+    h1 {
+      font-size: 1.75rem;
+    }
+    p.subtitle {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    button.cta-btn {
+      font-size: 1.1rem;
+      padding: 0.85rem 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Welcome to Cool App</h1>
+    <p class="subtitle">Experience responsive design on any device.</p>
+    <button class="cta-btn" aria-label="Get Started">
+      Get Started
+    </button>
+  </div>
+<script>
+  const btn = document.querySelector('button.cta-btn');
+  btn.addEventListener('click', () => {
+    alert('Welcome to the Cool App! Let’s get started!');
+  });
+</script>
+</body>
+</html>
+
+```
