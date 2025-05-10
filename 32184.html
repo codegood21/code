@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloader Video TikTok</title>
+</head>
+<body>
+    <h1>Downloader Video TikTok</h1>
+    <form id="downloadForm">
+        <label for="videoUrl">Masukkan URL TikTok:</label>
+        <input type="text" id="videoUrl" placeholder="https://vt.tiktok.com/" required>
+        <button type="submit">Download</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('downloadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('videoUrl').value;
+            // Logika untuk mendownload video TikTok akan ditambahkan di sini
+            document.getElementById('result').innerText = 'Fitur download sedang dalam pengembangan.';
+        });
+    </script>
+</body>
+</html>
+```
