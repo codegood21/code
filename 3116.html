@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Jual Beli Akun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  :root {
+    --bg-dark: #121212;
+    --bg-darker: #0d0d0d;
+    --primary: #0c84ff;
+    --secondary: #18a999;
+    --text-light: #f0f0f0;
+    --text-muted: #a0a0a0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--bg-darker);
+    padding: 1rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.6);
+  }
+
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 1.8rem;
+    color: var(--primary);
+  }
+
+  main {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    max-width: 450px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  section {
+    margin-bottom: 2.5rem;
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow:
+      0 5px 15px rgb(12 132 255 / 0.3),
+      inset 0 0 8px rgb(12 132 255 / 0.2);
+    animation: fadeInUp 0.7s ease forwards;
+  }
+
+  section:nth-child(1) {
+    animation-delay: 0.15s;
+  }
+  section:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  section:nth-child(3) {
+    animation-delay: 0.45s;
+  }
+  section:nth-child(4) {
+    animation-delay: 0.6s;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--secondary);
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 0.4rem;
+    letter-spacing: 0.4px;
+  }
+
+  .contact-links, .products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  a.button-link {
+    display: flex;
+    align-items: center;
+    background: var(--primary);
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow:
+      0 4px 12px rgb(12 132 255 / 0.6);
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  a.button-link:hover, a.button-link:focus {
+    background: var(--secondary);
+    transform: translateY(-3px);
+    box-shadow:
+      0 6px 20px rgb(24 169 153 / 0.8);
+    outline: none;
+  }
+
+  a.button-link svg {
+    margin-right: 0.6rem;
+  }
+
+  .product-card {
+    background: #292929;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow:
+      inset 0 0 8px rgb(24 169 153 / 0.3);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .product-card:hover {
+    box-shadow:
+      0 8px 20px rgb(24 169 153 / 0.8),
+      inset 0 0 12px rgb(24 169 153 / 0.6);
+  }
+
+  .product-name {
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 0.25rem 0;
+    color: var(--primary);
+    letter-spacing: 0.3px;
+  }
+
+  .product-description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0 0 0.6rem 0;
+    min-height: 40px;
+  }
+
+  .product-price {
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: 1.1rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1rem 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: var(--bg-darker);
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Icons */
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 600px) {
+    main {
+      padding: 1rem;
+      max-width: 100%;
+    }
+    section {
+      margin-bottom: 1.8rem;
+      padding: 1rem;
+    }
+    a.button-link {
+      padding: 0.55rem 0.9rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Jual Beli Akun</h1>
+</header>
+<main>
+  <section>
+    <h2>Kontak & Sosial Media</h2>
+    <div class="contact-links">
+      <a class="button-link" href="https://wa.me/6281234567890" target="_blank" rel="noopener" aria-label="Chat via WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.476A11.825 11.825 0 0012 0C5.372 0 0 5.372 0 12c0 2.115.553 4.193 1.604 6.026L0 24l6.298-1.603A11.917 11.917 0 0012 24c6.627 0 12-5.372 12-12a11.815 11.815 0 00-3.48-8.524zM12 22.07a9.932 9.932 0 01-5.113-1.431l-.366-.22-3.742.952.978-3.635-.245-.37A9.94 9.94 0 012 12C2 6.486 6.485 2 12 2c3.176 0 6.146 1.38 8.184 3.814A9.945 9.945 0 0122 12c0 5.514-4.486 10.07-10 10.07z"></path><path d="M16.19 13.267c-.273-.135-1.614-.8-1.864-.893-.25-.093-.43-.135-.609.136-.182.27-.7.894-.857 1.077-.156.182-.312.203-.584.068-.273-.136-1.15-.424-2.19-1.36-.81-.722-1.355-1.61-1.512-1.88-.156-.271-.017-.418.119-.553.122-.122.273-.323.41-.484.136-.16.182-.27.273-.45.091-.182.045-.34-.022-.476-.068-.136-.608-1.467-.833-2.005-.218-.527-.44-.456-.609-.464l-.52-.009c-.182 0-.476.068-.726.34s-.952.93-.952 2.266.975 2.626 1.11 2.806c.136.182 1.917 2.908 4.646 4.08.65.28 1.157.447 1.552.572.65.206 1.243.177 1.71.108.522-.076 1.614-.66 1.84-1.298.227-.638.227-1.183.159-1.298-.068-.114-.25-.182-.524-.318z"></path></svg>
+        WhatsApp
+      </a>
+      <a class="button-link" href="https://chat.whatsapp.com/yourgroupinvite" target="_blank" rel="noopener" aria-label="Join WhatsApp Group">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.47a9 9 0 11-16.7-5.92L3 18l5.53-1.32a9.025 9.025 0 0112.47-2.21zM12 0c6.627 0 12 5.373 12 12a12 12 0 01-3.332 8.284L24 24l-3.716-3.708A11.927 11.927 0 0112 24 12 12 0 1112 0zM12 6a6 6 0 106 6 6.007 6.007 0 00-6-6z"></path></svg>
+        Grup WA
+      </a>
+      <a class="button-link" href="https://t.me/username" target="_blank" rel="noopener" aria-label="Contact on Telegram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.372 0 0 5.373 0 12c0 5.897 4.099 10.791 9.496 11.735.693.13.947-.3.947-.667 0-.329-.012-1.201-.018-2.358-3.865.84-4.683-1.863-4.683-1.863-.631-1.603-1.54-2.03-1.54-2.03-1.258-.86.097-.844.097-.844 1.39.1 2.12 1.425 2.12 1.425 1.236 2.117 3.243 1.505 4.034 1.152.126-.9.482-1.505.876-1.85-3.086-.352-6.327-1.544-6.327-6.868 0-1.517.537-2.757 1.417-3.73-.142-.352-.615-1.766.136-3.682 0 0 1.155-.37 3.784 1.423a13.23 13.23 0 013.443-.463c1.168.005 2.346.158 3.443.463 2.627-1.793 3.78-1.423 3.78-1.423.753 1.916.28 3.33.138 3.682.882.973 1.418 2.213 1.418 3.73 0 5.338-3.245 6.512-6.342 6.857.496.426.938 1.268.938 2.557 0 1.846-.017 3.336-.017 3.79 0 .372.25.807.954.669C19.902 22.79 24 17.894 24 12c0-6.627-5.373-12-12-12z"></path></svg>
+        Telegram
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Produk Akun</h2>
+    <div class="products-list">
+      <div class="product-card" tabindex="0" aria-label="Akun Game Mobile Legends - Harga Rp150.000">
+        <p class="product-name">Akun Game Mobile Legends</p>
+        <p class="product-description">Level tinggi, banyak skin, cocok buat push rank</p>
+        <p class="product-price">Rp150.000</p>
+      </div>
+      <div class="product-card" tabindex="0" aria-label="Akun Netflix Premium - Harga Rp250.000">
+        <p class="product-name">Akun Netflix Premium</p>
+        <p class="product-description">Akun premium tanpa iklan, multi device support</p>
+        <p class="product-price">Rp250.000</p>
+      </div>
+      <div class="product-card" tabindex="0" aria-label="Akun Spotify Family - Harga Rp120.000">
+        <p class="product-name">Akun Spotify Family</p>
+        <p class="product-description">Dapat digunakan untuk 6 orang, kualitas audio HD</p>
+        <p class="product-price">Rp120.000</p>
+      </div>
+      <div class="product-card" tabindex="0" aria-label="Akun Lainnya Custom Request">
+        <p class="product-name">Akun Lainnya</p>
+        <p class="product-description">Hubungi kami untuk request akun lainnya sesuai kebutuhan</p>
+        <p class="product-price">Custom Harga</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Jual Beli Akun - Semua Hak Dilindungi
+</footer>
+</body>
+</html>
+
+```
