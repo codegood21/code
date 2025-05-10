@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>WARNING: Your files have been encrypted!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+  body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at center, #1a0000 0%, #4d0000 100%);
+    color: #ff4c4c;
+    font-family: 'Orbitron', monospace, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.25em;
+    text-shadow: 0 0 15px #ff0000;
+  }
+  h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.6em;
+    text-shadow: 0 0 10px #ff3333;
+  }
+  .message {
+    max-width: 320px;
+    background: rgba(30,0,0,0.85);
+    padding: 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #ff0000;
+    line-height: 1.5;
+  }
+  .instructions {
+    font-size: 0.9rem;
+    margin-top: 1em;
+    color: #ffa1a1;
+  }
+  .btn-copy {
+    margin-top: 1em;
+    background: #880000;
+    border: none;
+    padding: 0.8em 1.4em;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    font-family: 'Orbitron', monospace, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn-copy:hover,
+  .btn-copy:focus {
+    background: #bb1111;
+    outline: none;
+  }
+  .footer {
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: #510000;
+    padding: 8px 0;
+    user-select: text;
+  }
+</style>
+</head>
+<body>
+  <h1>! WARNING !</h1>
+  <h2>Your files have been encrypted</h2>
+  <div class="message" aria-live="polite">
+    All your important files have been encrypted using a strong algorithm.<br />
+    To recover your files, you must pay the ransom.<br />
+    <strong>Contact us via:</strong><br />
+    <code id="contact-email">example@securemail.com</code><br />
+    <button class="btn-copy" id="copy-btn" aria-label="Copy contact email to clipboard">Copy Email</button>
+    <p class="instructions">Send exactly 1 Bitcoin to the wallet address we will provide after contact.<br />
+    After payment, send payment proof to the email above.<br />
+    You will receive decryption instructions then.</p>
+  </div>
+  <div class="footer">&copy; 2024 SECURE RANSOMWARE SIMULATION</div>
+<script>
+  const copyBtn = document.getElementById('copy-btn');
+  const contactEmail = document.getElementById('contact-email');
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(contactEmail.textContent).then(() => {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Email';
+      }, 2000);
+    });
+  });
+
+  // Disable context menu to simulate ransomware restriction
+  window.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Block common keyboard shortcuts (Ctrl+S, Ctrl+P, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+W, etc)
+  window.addEventListener('keydown', e => {
+    if (e.ctrlKey) {
+      const blockedKeys = ['s','p','c','v','x','w','a','r','t','z','y'];
+      if (blockedKeys.includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    }
+    // Disable F12 (dev tools)
+    if (e.key === 'F12') {
+      e.preventDefault();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
