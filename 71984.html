@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMZH4CK Login</title>
+    <script>
+        function validateLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            if ((username === "elztester" && password === "elztester") || 
+                (username === "admin" && password === "admin")) {
+                window.location.href = "https://deemzetddos.netlify.app";
+            } else {
+                alert("Username atau Password salah!");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Login DMZH4CK</h2>
+    <form onsubmit="event.preventDefault(); validateLogin();">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+```
