@@ -1,0 +1,43 @@
+case 'createcode': {
+ if (!text) {
+ return m.reply(
+ `*Contoh penggunaan:*\n` +
+ `.createcode Fungsi untuk menghitung luas segitiga|Python`
+ );
+ }
+
+ let [prompt, language] = text.split("|").map(v => v.trim());
+
+ if (!prompt || !language) {
+ return m.reply(
+ `*Format salah!*\nGunakan format seperti ini:\n` +
+ `.createcode <prompt>|<bahasa>\n\n` +
+ `Contoh:\n.codegen Cek bilangan prima|JavaScript`
+ );
+ }
+
+ try {
+ const payload = {
+ customInstructions: prompt,
+ outputLang: language
+ };
+
+ const { data } = await axios.post("https://www.codeconvert.ai/api/generate-code", payload);
+
+ if (!data || typeof data !== "string") {
+ return m.reply("Gagal mengambil hasil dari API.");
+ }
+
+ m.reply(
+ `*Kode Hasil (${language}):*\n` +
+ "```" + language.toLowerCase() + "\n" +
+ data.trim() +
+ "\n```"
+ );
+
+ } catch (error) {
+ console.error(error);
+ m.reply("Terjadi kesalahan saat memproses permintaan.");
+ }
+};
+break
