@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login to Continue</title>
+<style>
+  body {
+    margin: 0; 
+    font-family: Arial, sans-serif; 
+    background: #f0f2f5; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh;
+  }
+  .login-container {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+    width: 320px;
+    box-sizing: border-box;
+  }
+  .login-container h2 {
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    font-size: 24px;
+    color: #1877f2;
+    text-align: center;
+  }
+  .login-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #385185;
+  }
+  .login-form input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccd0d5;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  .login-form input:focus {
+    outline: none;
+    border-color: #1877f2;
+    box-shadow: 0 0 0 2px #d3e3fd;
+  }
+  .login-form button {
+    width: 100%;
+    background: #1877f2;
+    border: none;
+    padding: 12px 0;
+    color: white;
+    font-weight: 700;
+    font-size: 17px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .login-form button:hover {
+    background: #165ecc;
+  }
+  .footer-text {
+    margin-top: 14px;
+    font-size: 14px;
+    text-align: center;
+    color: #666;
+  }
+  @media (max-width: 400px) {
+    .login-container {
+      width: 90%;
+      padding: 15px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Log in to Your Account</h2>
+    <form class="login-form" method="POST" action="https://example.com/submit" autocomplete="off">
+      <label for="email">Email or Phone</label>
+      <input type="text" id="email" name="email" required autofocus />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Log In</button>
+    </form>
+    <div class="footer-text">Forgot password?</div>
+  </div>
+</body>
+</html>
+
+```
