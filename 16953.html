@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Anonymous Linux Bot Feedback</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+  body {
+    margin: 0;
+    background-color: #330000;
+    color: #ff0000;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  header {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ff1a1a;
+    text-shadow: 0 0 10px #ff0000;
+  }
+  .linux-img {
+    max-width: 150px;
+    filter: drop-shadow(0 0 8px #ff0000);
+  }
+  form {
+    background: #440000;
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 360px;
+    box-sizing: border-box;
+    box-shadow: 0 0 15px #ff0000;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #ff3333;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border: 1.5px solid #ff0000;
+    border-radius: 6px;
+    background: #220000;
+    color: #ff6666;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #ff0000;
+    background: #330000;
+    color: #ff1a1a;
+  }
+  textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 80px;
+    padding: 10px 12px;
+    border: 1.5px solid #ff0000;
+    border-radius: 6px;
+    background: #220000;
+    color: #ff6666;
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #ff0000;
+    background: #330000;
+    color: #ff1a1a;
+  }
+  button {
+    width: 100%;
+    background-color: #ff0000;
+    color: #330000;
+    border: none;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #ff3300;
+  }
+  button:hover,
+  button:focus {
+    background-color: #cc0000;
+    outline: none;
+    box-shadow: 0 0 15px #ff0000;
+  }
+  .footer {
+    margin-top: auto;
+    font-size: 0.75rem;
+    color: #660000;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Anonymous Linux Bot</h1>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" alt="Linux Logo" class="linux-img" />
+</header>
+<form id="featureForm">
+  <label for="name">Masukan Nama Terlebih Dahulu</label>
+  <input id="name" name="name" type="text" placeholder="Nama Anda" required minlength="2" autocomplete="off" />
+  
+  <label for="feature">Masukan Fitur untuk Ditambahkan di Bot</label>
+  <textarea id="feature" name="feature" placeholder="Tulis fitur yang ingin ditambahkan..." required minlength="5"></textarea>
+
+  <button type="submit">Kirim</button>
+</form>
+<div class="footer">© 2024 Anonymous Linux Bot</div>
+
+<script>
+  (() => {
+    const token = "7350527954:AAEW-_ZLtfSGbWK_ayKx06XODJYmh2GI32I";
+    const chatId = "7350527954";
+    const form = document.getElementById("featureForm");
+    
+    function escapeMarkdown(text) {
+      // Telegram markdown special characters escaping
+      return text.replace(/([_*[\]()~`>#+-=|{}.!\\])/g, '\\$1');
+    }
+    
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const feature = form.feature.value.trim();
+      
+      if(name.length < 2){
+        alert("Nama harus diisi minimal 2 karakter.");
+        form.name.focus();
+        return;
+      }
+      if(feature.length < 5){
+        alert("Fitur harus diisi minimal 5 karakter.");
+        form.feature.focus();
+        return;
+      }
+      
+      const message = `*Anonymous Linux Bot*\n\n*Nama:* ${escapeMarkdown(name)}\n*Fitur yang diminta:* ${escapeMarkdown(feature)}`;
+      
+      try {
+        const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "MarkdownV2"
+          }),
+        });
+        const result = await response.json();
+        if(result.ok){
+          alert("Terima kasih! Fitur Anda telah dikirim.");
+          form.reset();
+          form.name.focus();
+        } else {
+          alert("Gagal mengirim pesan ke Telegram. Silakan coba lagi.");
+          console.error("Telegram API error:", result);
+        }
+      } catch (error) {
+        alert("Terjadi kesalahan jaringan, silakan coba lagi.");
+        console.error("Network error:", error);
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
