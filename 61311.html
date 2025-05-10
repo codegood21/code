@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ulang Tahun Keren</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 15px;
+  }
+  .container {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 25px;
+    box-shadow:
+      0 10px 20px rgba(0,0,0,0.1),
+      0 6px 6px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    overflow: visible;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+  }
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: 2px solid #ddd;
+    margin-bottom: 15px;
+    outline-offset: 2px;
+    transition: border-color 0.25s ease;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    border-color: #ff7b00;
+  }
+
+  button {
+    background: linear-gradient(45deg, #ff5e62, #ff9966);
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 14px 25px;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow:
+      0 4px 10px rgba(255, 94, 98, 0.5);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    user-select: none;
+    outline: none;
+  }
+  button:hover {
+    box-shadow:
+      0 8px 20px rgba(255, 94, 98, 0.7);
+    transform: scale(1.05);
+  }
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .greeting {
+    margin-top: 30px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ff5e62;
+    min-height: 56px;
+    letter-spacing: 1.4px;
+    text-shadow:
+      0 0 5px rgba(255, 94, 98, 0.7);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .greeting.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Realistic confetti animation */
+  .confetti-wrapper {
+    position: fixed;
+    pointer-events: none;
+    top: 0; left: 0; width: 100%; height: 100%;
+    overflow: visible;
+    z-index: 9999;
+  }
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 12px;
+    background-color: #ff5e62;
+    opacity: 0.9;
+    border-radius: 50% / 35%;
+    will-change: transform, opacity;
+    animation-timing-function: ease-out;
+  }
+  .confetti:nth-child(2n) {
+    background-color: #ff9966;
+    border-radius: 35% / 50%;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Ucapan Selamat Ulang Tahun</h1>
+    <form id="birthdayForm" autocomplete="off" aria-label="Form input ucapan ulang tahun">
+      <label for="nameInput">Nama:</label>
+      <input id="nameInput" name="name" type="text" placeholder="Masukkan nama" required aria-required="true" />
+
+      <label for="ageInput">Umur:</label>
+      <input id="ageInput" name="age" type="number" placeholder="Masukkan umur" min="0" max="120" required aria-required="true" />
+
+      <button type="submit" aria-label="Tampilkan ucapan selamat ulang tahun">Ucapan Keren!</button>
+    </form>
+    <div id="greeting" class="greeting" aria-live="polite" aria-atomic="true"></div>
+  </div>
+  
+  <div class="confetti-wrapper" id="confettiWrapper" aria-hidden="true"></div>
+
+<script>
+  const form = document.getElementById('birthdayForm');
+  const greetingEl = document.getElementById('greeting');
+  const confettiWrapper = document.getElementById('confettiWrapper');
+
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  // Create confetti piece
+  function createConfettiPiece() {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+
+    // Random size
+    const size = randomRange(7, 12);
+    confetti.style.width = size + 'px';
+    confetti.style.height = size * 1.2 + 'px';
+
+    // Random position along the width
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+
+    // Random initial rotation
+    const rotate = randomRange(0, 360);
+    confetti.style.transform = `rotate(${rotate}deg)`;
+
+    // Animation duration and delay
+    const duration = randomRange(3000, 5000);
+    confetti.style.animationName = 'confettiFall';
+    confetti.style.animationDuration = duration + 'ms';
+    confetti.style.animationTimingFunction = 'ease-out';
+
+    // Falling animation using Web Animations API for realism
+    const animation = confetti.animate([
+      { transform: `translateY(0) rotate(${rotate}deg)`, opacity: 1 },
+      { transform: `translateY(${window.innerHeight + 40}px) rotate(${rotate + 360}deg)`, opacity: 0 }
+    ], {
+      duration: duration,
+      iterations: 1,
+      easing: 'ease-out'
+    });
+
+    animation.onfinish = () => {
+      confettiWrapper.removeChild(confetti);
+    };
+
+    confettiWrapper.appendChild(confetti);
+  }
+
+  // Trigger multiple confetti pieces
+  function launchConfetti(amount = 40) {
+    for (let i = 0; i < amount; i++) {
+      setTimeout(createConfettiPiece, i * 70);
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const age = form.age.value.trim();
+
+    if (!name || !age || isNaN(age) || age < 0 || age > 120) {
+      greetingEl.textContent = 'Mohon isi nama dan umur dengan benar.';
+      greetingEl.classList.add('show');
+      return;
+    }
+
+    greetingEl.textContent = `Selamat ulang tahun ${name}! Semoga di usia ${age} tahun ini, semua impianmu tercapai dan kebahagiaan selalu menyertai! 🎉`;
+    greetingEl.classList.add('show');
+
+    launchConfetti(50);
+  });
+</script>
+
+</body>
+</html>
+
+```
