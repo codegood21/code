@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ucapan Selamat Ulang Tahun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    padding: 30px 25px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  h1 {
+    font-size: 2.25rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  input[type="text"], input[type="number"] {
+    width: 80%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #fda085;
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    outline: none;
+  }
+  input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #f6d365;
+  }
+  #wish {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fda085;
+    min-height: 60px;
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #fda085;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(253, 160, 133, 0.5);
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background-color: #f6d365;
+    box-shadow: 0 12px 20px rgba(246, 211, 101, 0.7);
+    transform: translateY(-3px);
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 20px 15px;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Ucapan Selamat Ulang Tahun">
+    <h1>Ucapan Selamat Ulang Tahun</h1>
+    <input type="text" id="nameInput" placeholder="Masukkan Nama" aria-label="Masukkan Nama" />
+    <input type="number" id="ageInput" placeholder="Masukkan Umur" min="0" max="120" aria-label="Masukkan Umur" />
+    <div id="wish" aria-live="polite" aria-atomic="true"></div>
+    <button id="btnWish" aria-label="Tampilkan ucapan selamat ulang tahun">Buat Ucapan</button>
+  </div>
+<script>
+  const nameInput = document.getElementById('nameInput');
+  const ageInput = document.getElementById('ageInput');
+  const wish = document.getElementById('wish');
+  const btnWish = document.getElementById('btnWish');
+
+  function createWish(name, age) {
+    if (!name.trim()) {
+      return 'Mohon masukkan nama yang valid.';
+    }
+    if (isNaN(age) || age < 0 || age > 120) {
+      return 'Mohon masukkan umur yang valid (0-120).';
+    }
+    return `Selamat ulang tahun, ${name}! Semoga di umur ${age} tahun ini, semua impianmu menjadi kenyataan dan kebahagiaan selalu menyertaimu. 🎉🎂`;
+  }
+
+  btnWish.addEventListener('click', () => {
+    const name = nameInput.value;
+    const age = parseInt(ageInput.value, 10);
+    wish.textContent = createWish(name, age);
+  });
+
+  // Enable pressing Enter on either input to trigger the button
+  [nameInput, ageInput].forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        btnWish.click();
+      }
+    });
+  });
+</script>
+</body>
+</html>
+
+```
