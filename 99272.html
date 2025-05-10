@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Admin Dashboard - Judi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #121212;
+    color: #f0f0f0;
+  }
+  header {
+    background: #1f1f1f;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #f39c12;
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+  }
+  nav a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+  nav a:hover {
+    background: #f39c12;
+    color: #121212;
+  }
+  main {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height: calc(100vh - 72px);
+  }
+  aside {
+    background: #1b1b1b;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  aside h2 {
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-bottom: 2px solid #f39c12;
+    padding-bottom: 0.5rem;
+  }
+  aside ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+  }
+  aside ul li {
+    margin-bottom: 0.75rem;
+  }
+  aside ul li a {
+    color: #ccc;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+  aside ul li a:hover, aside ul li a.active {
+    background: #f39c12;
+    color: #121212;
+  }
+  section.dashboard-content {
+    padding: 2rem;
+    background: #222;
+    overflow-y: auto;
+  }
+  section.dashboard-content h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #f39c12;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 1.5rem;
+  }
+  .stat-card {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(243,156,18,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #f39c12;
+  }
+  .stat-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+  .stat-card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1a1a1a;
+    color: #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  table thead {
+    background: #333;
+  }
+  table thead th {
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #f39c12;
+  }
+  table tbody tr {
+    border-bottom: 1px solid #444;
+    transition: background 0.3s;
+  }
+  table tbody tr:hover {
+    background: #f39c12;
+    color: #121212;
+    cursor: pointer;
+  }
+  table tbody td {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    main {
+      display: block;
+      height: auto;
+    }
+    aside {
+      padding: 1rem;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+    }
+    aside ul {
+      flex-direction: row;
+      display: flex;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+    aside ul li {
+      margin-bottom: 0;
+    }
+    section.dashboard-content {
+      padding: 1rem;
+    }
+    .stats-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+  }
+  @media (max-width: 350px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Judi Admin Dashboard</h1>
+    <nav>
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Users</a>
+      <a href="#">Games</a>
+      <a href="#">Reports</a>
+      <a href="#">Settings</a>
+    </nav>
+  </header>
+  <main>
+    <aside>
+      <h2>Menu</h2>
+      <ul>
+        <li><a href="#" class="active">Overview</a></li>
+        <li><a href="#">User Management</a></li>
+        <li><a href="#">Game Settings</a></li>
+        <li><a href="#">Financial Reports</a></li>
+        <li><a href="#">Support Tickets</a></li>
+      </ul>
+    </aside>
+    <section class="dashboard-content">
+      <h2>Overview</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Bets</h3>
+          <p>12,456</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Users</h3>
+          <p>3,789</p>
+        </div>
+        <div class="stat-card">
+          <h3>Active Games</h3>
+          <p>14</p>
+        </div>
+        <div class="stat-card">
+          <h3>Revenue (Today)</h3>
+          <p>$8,540</p>
+        </div>
+      </div>
+
+      <h2>Recent Bets</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Bet ID</th>
+            <th>User</th>
+            <th>Game</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#B12345</td>
+            <td>john_doe</td>
+            <td>Roulette</td>
+            <td>$50</td>
+            <td>Won</td>
+            <td>10:23 AM</td>
+          </tr>
+          <tr>
+            <td>#B12346</td>
+            <td>jane_smith</td>
+            <td>Slots</td>
+            <td>$20</td>
+            <td>Lost</td>
+            <td>10:21 AM</td>
+          </tr>
+          <tr>
+            <td>#B12347</td>
+            <td>gamer_king</td>
+            <td>Poker</td>
+            <td>$100</td>
+            <td>Pending</td>
+            <td>10:20 AM</td>
+          </tr>
+          <tr>
+            <td>#B12348</td>
+            <td>luckystar</td>
+            <td>Baccarat</td>
+            <td>$75</td>
+            <td>Won</td>
+            <td>10:18 AM</td>
+          </tr>
+          <tr>
+            <td>#B12349</td>
+            <td>casino_queen</td>
+            <td>Blackjack</td>
+            <td>$60</td>
+            <td>Lost</td>
+            <td>10:15 AM</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
+
+```
