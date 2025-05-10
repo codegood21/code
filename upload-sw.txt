@@ -1,0 +1,47 @@
+case 'upsw': {
+ if (!text) return reply('❌ Masukkan teks atau kirim media dengan perintah.\nContoh: .upsw Halo semua!');
+
+ try {
+ reply('⏳ Sedang mengunggah story, tunggu sebentar...');
+
+ const args = text.split(" ");
+ const jids = args.filter((id) => id.endsWith("@g.us"));
+ const caption = args.filter((id) => !id.endsWith("@g.us")).join(" ").trim();
+ const silent = command === 'upsw-notag'; // Check if the command is 'upsw-notag'
+
+ if (q.isMedia) {
+ const buffer = await q.download();
+ let uploadType;
+
+ if (/audio/i.test(q.type)) {
+ uploadType = { audio: buffer };
+ } else if (/image/i.test(q.type)) {
+ uploadType = { image: buffer, caption };
+ } else if (/video/i.test(q.type)) {
+ uploadType = { video: buffer, caption };
+ } else {
+ return reply('❌ Jenis media tidak didukung.');
+ }
+
+ if (jids.length) {
+ await sock.uploadStory(jids, uploadType, { silent });
+ return reply(`✅ Story berhasil diunggah ke ${jids.length} grup.${silent ? ' (Tanpa tag)' : ''}`);
+ } else {
+ await sock.sendMessage("status@broadcast", uploadType);
+ return reply(`✅ Story berhasil diunggah ke semua kontak.${silent ? ' (Tanpa tag)' : ''}`);
+ }
+ } else {
+ if (jids.length) {
+ await sock.uploadStory(jids, { text: caption }, { silent });
+ return reply(`✅ Story teks berhasil diunggah ke ${jids.length} grup.${silent ? ' (Tanpa tag)' : ''}`);
+ } else {
+ await sock.sendMessage("status@broadcast", { text: caption });
+ return reply(`✅ Story teks berhasil diunggah ke semua kontak.${silent ? ' (Tanpa tag)' : ''}`);
+ }
+ }
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat mengunggah story!');
+ }
+}
+break;
