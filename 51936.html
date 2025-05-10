@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>YANZY AI - Super Pintar</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body, html {
+    height: 100%;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  #app {
+    background: rgba(30,30,40,0.85);
+    border-radius: 20px;
+    max-width: 350px;
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0 0 40px #5a4d9b88;
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* fixed height for mobile */
+  }
+  h1 {
+    font-weight: 900;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #53e3a6, #63b9f4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    user-select: none;
+  }
+  h2 {
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #bbb;
+  }
+  textarea {
+    flex-grow: 1;
+    resize: none;
+    font-size: 1rem;
+    padding: 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #2f2c44;
+    color: #d9d9d9;
+    box-shadow: inset 0 0 10px #00000066;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    outline-offset: 2px;
+  }
+  textarea::placeholder {
+    color: #8a8a9f;
+    font-style: italic;
+  }
+  #controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  button {
+    background: linear-gradient(45deg, #5adb96, #4a99f6);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    color: #f2f2f2;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 5px 18px #3a9fdaaa;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:active {
+    box-shadow: inset 0 3px 5px #2c7fc0cc;
+  }
+  button:disabled {
+    background: #677284aa;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  #response {
+    margin-top: 20px;
+    padding: 15px;
+    background: #281e4a;
+    border-radius: 15px;
+    overflow-y: auto;
+    color: #a6d5fa;
+    font-size: 1rem;
+    line-height: 1.4;
+    height: 140px;
+    user-select: text;
+  }
+  @media (max-width: 400px) {
+    #app {
+      padding: 20px;
+      height: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="app" role="main" aria-label="YANZY AI Super Pintar Chatbot">
+    <h1>YANZY AI</h1>
+    <h2>Super Pintar AI Chat Assistant</h2>
+    <textarea id="input" rows="6" placeholder="Tulis pertanyaan atau perintahmu di sini..." aria-label="Input pertanyaan atau perintah"></textarea>
+    <div id="controls">
+      <button id="submitBtn" aria-label="Kirim pertanyaan">Tanya YANZY</button>
+      <button id="clearBtn" aria-label="Bersihkan input dan jawaban">Bersihkan</button>
+    </div>
+    <div id="response" aria-live="polite" aria-atomic="true" role="region"></div>
+  </div>
+<script>
+  (function(){
+    const input = document.getElementById('input');
+    const submitBtn = document.getElementById('submitBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const response = document.getElementById('response');
+    // Simulate a "super pintar" AI with some fun preset replies and random smart quotes
+    const smartReplies = [
+      "Tentu, saya bisa bantu menjelaskan itu!",
+      "Mari kita uraikan masalah ini bersama.",
+      "Ada banyak cara untuk menyelesaikan hal ini, coba cara berikut...",
+      "Ini solusi yang sudah banyak dipakai dan terbukti efektif:",
+      "Coba pendekatan ini dan lihat hasilnya.",
+      "Saya yakin kamu akan suka dengan jawaban ini!",
+      "Analisis saya tentang pertanyaanmu:",
+      "Berikut insight yang relevan dan terbaru.",
+      "Ini sedikit tambahan informasi pintar untukmu.",
+      "Permintaanmu sedang saya kerjakan sebaik mungkin."
+    ];
+    // A tiny AI mock function with delay to simulate thinking
+    function yanzyAIAnswer(query) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          let baseReply = smartReplies[Math.floor(Math.random() * smartReplies.length)];
+          let enhancedReply = baseReply + " (Ini jawaban otomatis yang dibuat untuk demo.)";
+          resolve(enhancedReply);
+        }, 1200 + Math.random()*1400);
+      });
+    }
+    function setLoading(state) {
+      submitBtn.disabled = state;
+      if(state) {
+        submitBtn.textContent = "Memproses...";
+      } else {
+        submitBtn.textContent = "Tanya YANZY";
+      }
+    }
+
+    submitBtn.addEventListener('click', async () => {
+      const userQuery = input.value.trim();
+      if(!userQuery) {
+        response.textContent = "Silakan tulis pertanyaan atau perintah terlebih dahulu.";
+        return;
+      }
+      setLoading(true);
+      response.textContent = "... YANZY AI sedang berpikir ...";
+      try {
+        const answer = await yanzyAIAnswer(userQuery);
+        response.textContent = answer;
+      } catch (error) {
+        response.textContent = "Maaf, terjadi kesalahan dalam proses jawaban.";
+      }
+      setLoading(false);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = "";
+      response.textContent = "";
+      input.focus();
+      setLoading(false);
+    });
+
+    // Allow Enter key to send question (Shift+Enter for newline)
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitBtn.click();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
