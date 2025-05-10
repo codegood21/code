@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>QRIS All Payment - E-Wallet Cashout</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0057FF, #00C6FF);
+    color: #fff;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    height: 100vh;
+    padding: 1rem;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 360px;
+    padding: 2rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+  p.subtitle {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: #d0e9ff;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+  }
+  select, input[type="number"] {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    outline: none;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    transition: background 0.3s ease;
+  }
+  select:focus, input[type="number"]:focus {
+    background: rgba(255,255,255,0.35);
+  }
+  button {
+    width: 100%;
+    padding: 1rem;
+    background: #00ffb8;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #00331a;
+    cursor: pointer;
+    box-shadow: 0 6px 15px #00ffb850;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover {
+    background: #00cca0;
+    box-shadow: 0 6px 18px #00cca080;
+  }
+  .result {
+    margin-top: 2rem;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    padding: 1rem;
+    user-select: text;
+    word-wrap: break-word;
+    font-size: 1rem;
+  }
+  .qrcode {
+    display: block;
+    margin: 1rem auto;
+    max-width: 220px;
+    max-height: 220px;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="QRIS Payment System">
+    <h1>QRIS All Payment</h1>
+    <p class="subtitle">Bayar menggunakan semua eWallet, dan cairkan ke pilihan eWallet kamu.</p>
+    <form id="paymentForm" aria-describedby="formDesc">
+      <label for="payment-method">Pilih Metode Pembayaran QRIS:</label>
+      <select id="payment-method" name="paymentMethod" required aria-required="true" aria-label="Metode Pembayaran QRIS">
+        <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+        <option value="ovo">OVO</option>
+        <option value="dana">DANA</option>
+        <option value="gopay">GoPay</option>
+        <option value="linkaja">LinkAja</option>
+        <option value="shopeepay">ShopeePay</option>
+        <option value="bri-ebr">BRI e-BR</option>
+        <option value="bca-klikpay">BCA KlikPay</option>
+        <option value="mandiri-ecash">Mandiri Ecash</option>
+      </select>
+
+      <label for="amount">Jumlah Pembayaran (Rp):</label>
+      <input type="number" id="amount" name="amount" min="1000" step="1000" placeholder="e.g. 10000" required aria-required="true" aria-label="Jumlah Pembayaran dalam Rupiah" />
+
+      <label for="cashout-ewallet">Pilih E-Wallet Pencairan:</label>
+      <select id="cashout-ewallet" name="cashoutEwallet" required aria-required="true" aria-label="E-Wallet Pencairan">
+        <option value="" disabled selected>-- Pilih E-Wallet Pencairan --</option>
+        <option value="ovo">OVO</option>
+        <option value="dana">DANA</option>
+        <option value="gopay">GoPay</option>
+        <option value="linkaja">LinkAja</option>
+        <option value="shopeepay">ShopeePay</option>
+      </select>
+
+      <button type="submit" aria-label="Generate QRIS and Simulate Payout">Buat & Cairkan</button>
+    </form>
+    <section id="result-section" aria-live="polite" aria-atomic="true" style="display:none;">
+      <div class="result" id="result-text"></div>
+      <img id="qrcode-image" alt="Kode QR Pembayaran" class="qrcode" />
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-yJYyzsQMtfoCwePbwU+3gRdTaz2rSMLIPcofocasXLbJZKAxnutfflNluIl3cJzYSxlWpTIYa5fMdAFSDDqfeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    (() => {
+      const form = document.getElementById('paymentForm');
+      const resultSection = document.getElementById('result-section');
+      const resultText = document.getElementById('result-text');
+      const qrcodeImage = document.getElementById('qrcode-image');
+
+      // Function to create a mock QRIS payment payload string
+      function createMockQrisPayload(method, amount, id = '12345678') {
+        // This string format is for simulation only and does not reflect real QRIS payload spec
+        return `QRIS|${method.toUpperCase()}|ID:${id}|AMT:${amount}|PAY`;
+      }
+
+      // Function to simulate payout success message
+      function simulatePayout(cashoutWallet, amount) {
+        return `Berhasil mencairkan Rp${amount.toLocaleString('id-ID')} ke eWallet ${cashoutWallet.toUpperCase()}.`;
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const paymentMethod = form['paymentMethod'].value;
+        const amount = parseInt(form['amount'].value, 10);
+        const cashoutWallet = form['cashoutEwallet'].value;
+
+        if (!paymentMethod || !amount || amount < 1000 || !cashoutWallet) {
+          alert('Mohon isi semua data dengan benar.');
+          return;
+        }
+
+        // Generate mock QRIS payload text
+        const payload = createMockQrisPayload(paymentMethod, amount);
+
+        // Generate QR code of payload
+        const qr = new QRious({
+          value: payload,
+          size: 220,
+          backgroundAlpha: 0,
+          foreground: '#00447c'
+        });
+
+        qrcodeImage.src = qr.toDataURL();
+        qrcodeImage.alt = `Kode QR pembayaran ${paymentMethod.toUpperCase()} senilai Rp${amount.toLocaleString('id-ID')}`;
+
+        // Show success message for payout
+        const payoutMessage = simulatePayout(cashoutWallet, amount);
+
+        resultText.textContent = `Kode QR pembayaran berhasil dibuat.\nPayload:\n${payload}\n\n${payoutMessage}`;
+        resultSection.style.display = 'block';
+        resultSection.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
+
+```
