@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Payment Methods</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0; padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .payment-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 350px;
+    max-width: 100%;
+    padding: 30px 25px;
+    box-sizing: border-box;
+  }
+  .payment-container h2 {
+    margin: 0 0 20px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+  }
+  .method {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    transition: border-color 0.3s ease;
+    cursor: pointer;
+    background: #fafafa;
+  }
+  .method:hover {
+    border-color: #007bff;
+    background: #e9f0ff;
+  }
+  .method img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-right: 15px;
+  }
+  .method-info {
+    flex: 1;
+  }
+  .method-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #222;
+  }
+  .method-phone {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 3px;
+  }
+  .instructions {
+    background: #edf2fb;
+    border-radius: 8px;
+    padding: 15px 20px;
+    color: #333;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    margin-top: 10px;
+    display: none;
+  }
+  @media (max-width: 400px) {
+    .payment-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="payment-container">
+  <h2>Payment Methods</h2>
+  <div class="method" data-method="ovo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/OVO_Indonesia_logo.svg" alt="OVO Logo" />
+    <div class="method-info">
+      <div class="method-name">OVO</div>
+      <div class="method-phone">081999424621</div>
+    </div>
+  </div>
+  <div class="instructions" id="ovo-instructions">
+    <strong>OVO Payment:</strong>  
+    Use your OVO app to transfer funds to 081999424621. Please ensure the recipient name matches before confirming payment.
+  </div>
+
+  <div class="method" data-method="dana">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/DANA_Logo.svg" alt="DANA Logo" />
+    <div class="method-info">
+      <div class="method-name">DANA</div>
+      <div class="method-phone">081999424621</div>
+    </div>
+  </div>
+  <div class="instructions" id="dana-instructions">
+    <strong>DANA Payment:</strong>  
+    Open your DANA app and transfer to 081999424621. Confirm the account name before completing the payment.
+  </div>
+
+  <div class="method" data-method="gopay">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Logo_Go-Pay.svg" alt="GoPay Logo" />
+    <div class="method-info">
+      <div class="method-name">GoPay</div>
+      <div class="method-phone">081999424621</div>
+    </div>
+  </div>
+  <div class="instructions" id="gopay-instructions">
+    <strong>GoPay Payment:</strong>  
+    Use the GoPay app to send payment to 081999424621. Double-check the recipient before confirming.
+  </div>
+</div>
+
+<script>
+  const methods = document.querySelectorAll('.method');
+  methods.forEach(method => {
+    method.addEventListener('click', () => {
+      // Hide all instructions
+      document.querySelectorAll('.instructions').forEach(instr => instr.style.display = 'none');
+      // Show the related instructions
+      const selected = method.getAttribute('data-method');
+      const instrElem = document.getElementById(selected + '-instructions');
+      if (instrElem) {
+        instrElem.style.display = 'block';
+      }
+      // Scroll to instructions smoothly (mobile user friendly)
+      instrElem.scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
+  });
+</script>
+</body>
+</html>
+
+```
