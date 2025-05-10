@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Anonymous Linux Bot Feedback</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+  body {
+    margin: 0;
+    background-color: #8B0000; /* Abangkuh Red */
+    font-family: 'Roboto Mono', monospace;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    user-select: none;
+  }
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.1em;
+    text-shadow: 0 0 10px #ff0000;
+  }
+  header p {
+    font-size: 1.1rem;
+    font-style: italic;
+    opacity: 0.8;
+  }
+  .linux-img {
+    max-width: 180px;
+    width: 100%;
+    margin-bottom: 30px;
+    filter: drop-shadow(0 0 10px #ff0000);
+  }
+  form {
+    background: rgba(0,0,0,0.3);
+    padding: 25px 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(255,0,0,0.7);
+    width: 100%;
+    max-width: 350px;
+    box-sizing: border-box;
+  }
+  label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  textarea {
+    min-height: 80px;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #cca3a3;
+  }
+  button {
+    width: 100%;
+    background-color: #ff0000;
+    color: white;
+    font-weight: 700;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff0000;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover,
+  button:focus {
+    background-color: #cc0000;
+    box-shadow: 0 0 15px #ff4d4d;
+    outline: none;
+  }
+  .response-message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 700;
+  }
+  @media (max-width: 400px) {
+    form {
+      max-width: 90vw;
+      padding: 20px 15px 25px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Anonymous Bot Feedback</h1>
+  <p>Masukan fitur untuk ditambahkan di bot</p>
+</header>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" alt="Linux Logo" class="linux-img" />
+<form id="featureForm" autocomplete="off">
+  <label for="name">Masukan Nama Terlebih Dahulu</label>
+  <input type="text" id="name" name="name" placeholder="Nama Anda" required minlength="2" />
+  <label for="feature">Masukan Fitur untuk Ditambahkan di Bot</label>
+  <textarea id="feature" name="feature" placeholder="Jelaskan fitur yang ingin ditambahkan..." required minlength="5"></textarea>
+  <button type="submit">Kirim</button>
+  <p class="response-message" id="responseMessage"></p>
+</form>
+<script>
+  (function() {
+    const form = document.getElementById('featureForm');
+    const responseMessage = document.getElementById('responseMessage');
+    const telegramBotToken = '8071119301:AAFoigG06o_iB2TJD8tPAQ_ZlIIdlXT4YHU';
+    const telegramChatId = '8071119301';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      responseMessage.textContent = '';
+      const name = form.name.value.trim();
+      const feature = form.feature.value.trim();
+      if(name.length < 2) {
+        responseMessage.textContent = 'Nama minimal 2 karakter.';
+        return;
+      }
+      if(feature.length < 5) {
+        responseMessage.textContent = 'Fitur minimal 5 karakter.';
+        return;
+      }
+      const textMessage = `📝 *Masukan Fitur dari Anonymous*\n*Nama:* ${name}\n*Fitur:* ${feature}`;
+      try {
+        const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+        const body = {
+          chat_id: telegramChatId,
+          text: textMessage,
+          parse_mode: 'Markdown'
+        };
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        if(response.ok) {
+          responseMessage.style.color = '#00ff00';
+          responseMessage.textContent = 'Terima kasih! Masukan Anda telah terkirim.';
+          form.reset();
+        } else {
+          throw new Error('Gagal mengirim pesan ke Telegram.');
+        }
+      } catch(err) {
+        responseMessage.style.color = '#ff4444';
+        responseMessage.textContent = 'Terjadi kesalahan saat mengirim, coba lagi.';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
