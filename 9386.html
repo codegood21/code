@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Panel PTRODACTYL - Ardiansyah Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 600px;
+    max-width: 100vw;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(0,0,0,0.6);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 375px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    padding: 24px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  header p {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #b7b9cc;
+    margin: 0;
+  }
+  .panel {
+    background: #2a2e43;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .panel-section {
+    background: #3e4163;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.25);
+  }
+  .panel-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #555a9e;
+    padding-bottom: 6px;
+  }
+  label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  select:focus {
+    background-color: #494f7d;
+    color: #fff;
+  }
+  button {
+    cursor: pointer;
+    background: #6c63ff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.6);
+    user-select: none;
+  }
+  button:hover,
+  button:focus {
+    background-color: #5751d9;
+  }
+  .status {
+    margin-top: 16px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #4052a4;
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 40px;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 16px;
+      max-width: 100%;
+    }
+    header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Panel PTRODACTYL - Ardiansyah Store">
+  <header>
+    <h1>Panel PTRODACTYL</h1>
+    <p>Ardiansyah Store Admin Panel</p>
+  </header>
+  <section class="panel" aria-live="polite">
+    <form id="ptrodactylForm" novalidate>
+      <div class="panel-section">
+        <h2>Informasi Produk</h2>
+        <label for="productName">Nama Produk</label>
+        <input type="text" id="productName" name="productName" placeholder="Masukkan nama produk" required aria-required="true" />
+        <label for="productCategory">Kategori Produk</label>
+        <select id="productCategory" name="productCategory" required aria-required="true">
+          <option value="" disabled selected>Pilih kategori</option>
+          <option value="elektronik">Elektronik</option>
+          <option value="pakaian">Pakaian</option>
+          <option value="makanan">Makanan</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="panel-section">
+        <h2>Stok & Harga</h2>
+        <label for="stock">Stok Tersedia</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="stock" name="stock" placeholder="Jumlah stok" required aria-required="true" />
+        <label for="price">Harga (Rp)</label>
+        <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="price" name="price" placeholder="Harga produk" required aria-required="true" />
+      </div>
+      <div class="panel-section">
+        <h2>Kontak & Aktivasi</h2>
+        <label for="contactEmail">Email Kontak</label>
+        <input type="email" id="contactEmail" name="contactEmail" placeholder="example@domain.com" />
+        <label for="activate">Status Produk</label>
+        <select id="activate" name="activate">
+          <option value="active" selected>Aktif</option>
+          <option value="inactive">Nonaktif</option>
+        </select>
+      </div>
+      <button type="submit" aria-label="Simpan Data Produk">Simpan</button>
+      <div role="alert" class="status" aria-live="assertive" id="statusMessage"></div>
+    </form>
+  </section>
+</div>
+<script>
+  (function() {
+    const form = document.getElementById('ptrodactylForm');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function validateNumberInput(input) {
+      return /^[0-9]+$/.test(input);
+    }
+    function formatPrice(value) {
+      // Format to currency format: 1.000.000 etc
+      return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    // Price input formatting on input
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', function(e) {
+      const cursorPos = this.selectionStart;
+      const originalLength = this.value.length;
+      this.value = formatPrice(this.value);
+      const newLength = this.value.length;
+      this.selectionEnd = cursorPos + (newLength - originalLength);
+    });
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      statusMessage.textContent = '';
+      // Validate required fields
+      const productName = form.productName.value.trim();
+      const productCategory = form.productCategory.value;
+      const stock = form.stock.value.trim();
+      const price = form.price.value.trim();
+
+      if (!productName) {
+        statusMessage.textContent = 'Nama produk wajib diisi.';
+        form.productName.focus();
+        return;
+      }
+      if (!productCategory) {
+        statusMessage.textContent = 'Kategori produk harus dipilih.';
+        form.productCategory.focus();
+        return;
+      }
+      if (!stock || !validateNumberInput(stock)) {
+        statusMessage.textContent = 'Stok harus diisi dengan angka valid.';
+        form.stock.focus();
+        return;
+      }
+      if (!price) {
+        statusMessage.textContent = 'Harga produk wajib diisi.';
+        form.price.focus();
+        return;
+      }
+      // All validations passed - simulate save action
+      statusMessage.textContent = 'Menyimpan data produk...';
+      // Fake delay to simulate saving
+      setTimeout(() => {
+        statusMessage.textContent = 'Data produk berhasil disimpan!';
+        form.reset();
+        form.productCategory.selectedIndex = 0;
+        form.activate.value = 'active';
+      }, 1200);
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
