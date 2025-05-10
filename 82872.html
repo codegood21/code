@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Portofolio Bahasa Pemrograman</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-weight: 600;
+    font-size: 2.8rem;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    color: #ffe066;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+
+  header p {
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #f0e68c;
+  }
+
+  main {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+  }
+
+  section {
+    margin-bottom: 30px;
+  }
+
+  section:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ffe066;
+    padding-bottom: 8px;
+  }
+
+  .language-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    cursor: default;
+  }
+
+  .language-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(255, 224, 102, 0.6);
+  }
+
+  .language-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .language-icon {
+    height: 48px;
+    width: 48px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+  }
+
+  .language-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fffacd;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  .language-description {
+    font-weight: 300;
+    line-height: 1.45;
+    font-size: 1rem;
+    color: #e6e6e6;
+  }
+
+  footer {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #ddd;
+    text-align: center;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    main {
+      padding: 20px;
+    }
+
+    .language-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .language-icon {
+      margin-bottom: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Portofolio Bahasa Pemrograman</h1>
+  <p>Kumpulan keahlian dan pengalaman saya dalam berbagai bahasa pemrograman modern.</p>
+</header>
+<main>
+  <section>
+    <h2>JavaScript</h2>
+    <div class="language-card">
+      <div class="language-header">
+        <img class="language-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript logo" />
+        <h3 class="language-title">JavaScript</h3>
+      </div>
+      <p class="language-description">
+        Bahasa pemrograman yang sangat populer untuk pengembangan web interaktif. Saya menggunakan JavaScript untuk membangun berbagai aplikasi web front-end dan back-end dengan Node.js, serta integrasi API dan automasi.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Python</h2>
+    <div class="language-card">
+      <div class="language-header">
+        <img class="language-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo" />
+        <h3 class="language-title">Python</h3>
+      </div>
+      <p class="language-description">
+        Bahasa yang sangat kuat dan serbaguna, ideal untuk pengembangan aplikasi, scripting, analisis data, dan machine learning. Saya memiliki pengalaman membangun aplikasi dengan Flask dan melakukan pemrosesan data dengan Pandas dan NumPy.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Go</h2>
+    <div class="language-card">
+      <div class="language-header">
+        <img class="language-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="Go logo" />
+        <h3 class="language-title">Go (Golang)</h3>
+      </div>
+      <p class="language-description">
+        Bahasa pemrograman yang dikembangkan Google untuk performa tinggi dan kemudahan pemrograman sistem. Saya menggunakan Go untuk membangun aplikasi server yang scalable dan microservices yang responsif.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rust</h2>
+    <div class="language-card">
+      <div class="language-header">
+        <img class="language-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" alt="Rust logo" />
+        <h3 class="language-title">Rust</h3>
+      </div>
+      <p class="language-description">
+        Bahasa sistem modern yang fokus pada performa dan keamanan memori. Saya bereksperimen dengan Rust untuk mengembangkan kode-kode yang cepat dan aman, khususnya untuk aplikasi yang membutuhkan manajemen memori yang ketat.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>HTML &amp; CSS</h2>
+    <div class="language-card">
+      <div class="language-header">
+        <img class="language-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5 logo" />
+        <img class="language-icon" style="width:40px; height:40px; margin-left:8px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3 logo" />
+        <h3 class="language-title">HTML &amp; CSS</h3>
+      </div>
+      <p class="language-description">
+        Pondasi dari semua halaman web modern. Saya mahir dalam membuat desain responsif, antarmuka yang menarik dan mudah digunakan, dengan tata letak modern yang kompatibel di berbagai perangkat.
+      </p>
+    </div>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Portofolio Bahasa Pemrograman - Dibuat dengan penuh semangat dan teknologi terkini.
+</footer>
+</body>
+</html>
+
+```
