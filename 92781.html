@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Toko Aplikasi Premium</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background-color: rgba(0,0,0,0.3);
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  main {
+    flex: 1;
+    padding: 1rem 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 1.5rem;
+  }
+  .product-card {
+    background: rgba(255 255 255 / 0.1);
+    border-radius: 12px;
+    padding: 1rem 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transition: background 0.3s ease;
+  }
+  .product-card:hover {
+    background: rgba(255 255 255 / 0.18);
+  }
+  .product-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  }
+  .product-info {
+    margin-top: 0.8rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #ffecb3;
+  }
+  .product-description {
+    font-size: 0.9rem;
+    flex-grow: 1;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    color: #d3d3d3;
+  }
+  .product-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #f9a825;
+    margin-bottom: 1rem;
+  }
+  .buy-button {
+    background: #f9a825;
+    border: none;
+    color: #333;
+    font-weight: 700;
+    padding: 0.8rem 1.2rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 8px rgba(255,168,0,0.7);
+    text-align: center;
+    user-select: none;
+  }
+  .buy-button:hover,
+  .buy-button:focus {
+    background-color: #c17900;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    background-color: rgba(0,0,0,0.3);
+    font-size: 0.9rem;
+    color: #eee;
+    user-select: none;
+  }
+  /* Responsive for small screen */
+  @media (max-width: 400px){
+    .product-price {
+      font-size: 1rem;
+    }
+    .product-card {
+      padding: 0.8rem 0.8rem 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Aplikasi Premium Store</h1>
+</header>
+<main>
+  <div class="product-list" id="productList">
+    <!-- Product cards will be injected here -->
+  </div>
+</main>
+<footer>© 2024 Toko Aplikasi Premium. All rights reserved.</footer>
+
+<script>
+  const products = [
+    {
+      id: 'app001',
+      title: 'PhotoMaster Pro',
+      description: 'Aplikasi edit foto premium dengan fitur AI canggih dan filter eksklusif.',
+      price: 149000,
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=70'
+    },
+    {
+      id: 'app002',
+      title: 'TaskMaster Ultra',
+      description: 'Manajemen tugas terbaik dengan integrasi kalender dan pengingat pintar.',
+      price: 99000,
+      image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=70'
+    },
+    {
+      id: 'app003',
+      title: 'FitLife Tracker',
+      description: 'Aplikasi pelacak kesehatan dan kebugaran dengan analisis harian personal.',
+      price: 129000,
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=70'
+    },
+    {
+      id: 'app004',
+      title: 'LearnLang Pro',
+      description: 'Belajar bahasa asing dengan metode interaktif dan pelajaran khusus.',
+      price: 119000,
+      image: 'https://images.unsplash.com/photo-1525186402429-29f5c43e8b7b?auto=format&fit=crop&w=600&q=70'
+    },
+    {
+      id: 'app005',
+      title: 'MindfulMeditate Plus',
+      description: 'Panduan meditasi dengan suara alam dan teknik mindfulness.',
+      price: 89000,
+      image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=70'
+    }
+  ];
+
+  function formatPrice(amount) {
+    return 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    const img = document.createElement('img');
+    img.className = 'product-image';
+    img.src = product.image;
+    img.alt = product.title;
+
+    const info = document.createElement('div');
+    info.className = 'product-info';
+
+    const title = document.createElement('h2');
+    title.className = 'product-title';
+    title.textContent = product.title;
+
+    const desc = document.createElement('p');
+    desc.className = 'product-description';
+    desc.textContent = product.description;
+
+    const price = document.createElement('div');
+    price.className = 'product-price';
+    price.textContent = formatPrice(product.price);
+
+    const buyBtn = document.createElement('button');
+    buyBtn.className = 'buy-button';
+    buyBtn.textContent = 'Beli Sekarang';
+    buyBtn.onclick = () => {
+      alert(`Terima kasih telah membeli ${product.title} dengan harga ${formatPrice(product.price)}.\n\n` +
+            'Silakan melanjutkan ke pembayaran melalui transfer bank atau e-wallet.\n' +
+            'Konfirmasi pembayaran akan dikirimkan melalui email.');
+    };
+
+    info.appendChild(title);
+    info.appendChild(desc);
+    info.appendChild(price);
+    info.appendChild(buyBtn);
+
+    card.appendChild(img);
+    card.appendChild(info);
+
+    return card;
+  }
+
+  const productList = document.getElementById('productList');
+  products.forEach(product => {
+    const card = createProductCard(product);
+    productList.appendChild(card);
+  });
+</script>
+</body>
+</html>
+
+```
