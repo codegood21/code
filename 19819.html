@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Adu Pukulan 2 Player</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Patrick Hand', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    user-select: none;
+  }
+  h1 {
+    margin-bottom: 10px;
+    color: #4a2c00;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.15);
+  }
+  #game-area {
+    background: #fff9e7;
+    border: 3px solid #f8b500;
+    border-radius: 12px;
+    box-shadow: 3px 3px 8px #ae8400cc;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  .player {
+    flex: 0 0 48%;
+    background: #ffd54f;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: inset 2px 2px 8px #b38600;
+    padding: 15px;
+    user-select: none;
+  }
+  .player h2 {
+    margin: 0 0 10px;
+    color: #4a2c00;
+    font-size: 1.8em;
+  }
+  .hit-box {
+    background: #fbbf24;
+    border-radius: 8px;
+    width: 100%;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 2.5em;
+    color: #663c00;
+    text-shadow: 1px 1px 3px #553300cc;
+    box-shadow: inset 0 3px 15px #fbbf2455;
+  }
+  .hit-button {
+    background: #ff9800;
+    color: #4a2c00;
+    font-weight: bold;
+    font-size: 22px;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0 5px #b26a00;
+    user-select: none;
+    transition: background-color 0.2s ease, box-shadow 0.1s ease;
+  }
+  .hit-button:active {
+    background: #e67e00;
+    box-shadow: 0 2px #7a4600;
+    transform: translateY(2px);
+  }
+  #scoreboard {
+    width: 100%;
+    background: #f8b500cc;
+    border-radius: 12px;
+    box-shadow: 3px 3px 10px #ae8400cc;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    color: #4a2c00;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #fff5b1;
+  }
+  #result-message {
+    margin-top: 15px;
+    font-size: 1.4em;
+    color: #4a2c00;
+    height: 40px;
+    text-align: center;
+    min-height: 40px;
+    user-select: none;
+    text-shadow: 1px 1px 3px #fff8c3;
+  }
+  #reset-button {
+    margin-top: auto;
+    background: #f57c00;
+    color: #fff9e7;
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px #bb5800;
+    font-weight: 700;
+    user-select: none;
+    transition: background-color 0.3s ease, box-shadow 0.1s ease;
+  }
+  #reset-button:active {
+    background: #b25a00;
+    box-shadow: 0 2px #733c00;
+    transform: translateY(2px);
+  }
+  @media (max-width: 370px) {
+    #game-area {
+      flex-direction: column;
+      gap: 15px;
+      height: 300px;
+    }
+    .player {
+      width: 100% !important;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Adu Pukulan 2 Player</h1>
+<div id="game-area" role="main" aria-label="Game area with player controls and scores">
+  <section id="player1" class="player" aria-label="Player 1 controls and status">
+    <h2>Player 1</h2>
+    <div class="hit-box" id="hit1" aria-live="polite">✊</div>
+    <button class="hit-button" id="btn1" aria-pressed="false" aria-label="Player 1 Hit Button">Pukul</button>
+  </section>
+  <section id="player2" class="player" aria-label="Player 2 controls and status">
+    <h2>Player 2</h2>
+    <div class="hit-box" id="hit2" aria-live="polite">✊</div>
+    <button class="hit-button" id="btn2" aria-pressed="false" aria-label="Player 2 Hit Button">Pukul</button>
+  </section>
+</div>
+<div id="scoreboard" role="region" aria-live="polite" aria-atomic="true">
+  <div>Score P1: <span id="score1">0</span></div>
+  <div>Score P2: <span id="score2">0</span></div>
+</div>
+<div id="result-message" role="alert" aria-live="assertive" aria-atomic="true"></div>
+<button id="reset-button" aria-label="Reset Game">Reset</button>
+
+<script>
+(() => {
+  const hitBox1 = document.getElementById("hit1");
+  const hitBox2 = document.getElementById("hit2");
+  const btn1 = document.getElementById("btn1");
+  const btn2 = document.getElementById("btn2");
+  const score1El = document.getElementById("score1");
+  const score2El = document.getElementById("score2");
+  const resultMessage = document.getElementById("result-message");
+  const resetButton = document.getElementById("reset-button");
+
+  let score1 = 0;
+  let score2 = 0;
+  let player1Hit = null;
+  let player2Hit = null;
+  let roundActive = false;
+
+  const hits = ["✊", "✋", "✌️"]; // Rock, Paper, Scissors emoji
+  // Rock beats Scissors, Scissors beats Paper, Paper beats Rock
+  const winMap = {
+    "✊": "✌️",
+    "✋": "✊",
+    "✌️": "✋"
+  };
+
+  function getRandomHit() {
+    return hits[Math.floor(Math.random() * hits.length)];
+  }
+
+  function decideWinner(p1hit, p2hit) {
+    if (p1hit === p2hit) return 0; // tie
+    if (winMap[p1hit] === p2hit) return 1; // player 1 wins
+    else return 2; // player 2 wins
+  }
+
+  function updateScoreboard() {
+    score1El.textContent = score1;
+    score2El.textContent = score2;
+  }
+
+  function showResult(text) {
+    resultMessage.textContent = text;
+  }
+
+  function resetGame() {
+    score1 = 0;
+    score2 = 0;
+    player1Hit = null;
+    player2Hit = null;
+    roundActive = false;
+    hitBox1.textContent = "✊";
+    hitBox2.textContent = "✊";
+    updateScoreboard();
+    showResult("");
+    btn1.disabled = false;
+    btn2.disabled = false;
+    btn1.setAttribute('aria-pressed', 'false');
+    btn2.setAttribute('aria-pressed', 'false');
+  }
+
+  function playerHit(player) {
+    if (roundActive) return; // do nothing if round in progress
+
+    if (player === 1 && !player1Hit) {
+      const hit = getRandomHit();
+      player1Hit = hit;
+      hitBox1.textContent = hit;
+      btn1.setAttribute('aria-pressed', 'true');
+      btn2.disabled = false;
+    } else if (player === 2 && !player2Hit) {
+      const hit = getRandomHit();
+      player2Hit = hit;
+      hitBox2.textContent = hit;
+      btn2.setAttribute('aria-pressed', 'true');
+      btn1.disabled = false;
+    }
+
+    // Check if both players have hit
+    if (player1Hit && player2Hit) {
+      roundActive = true;
+      btn1.disabled = true;
+      btn2.disabled = true;
+
+      setTimeout(() => {
+        const winner = decideWinner(player1Hit, player2Hit);
+        if (winner === 0) {
+          showResult("Seri! Ayo coba lagi!");
+        } else if (winner === 1) {
+          showResult("Player 1 Menang!");
+          score1++;
+        } else {
+          showResult("Player 2 Menang!");
+          score2++;
+        }
+        updateScoreboard();
+        player1Hit = null;
+        player2Hit = null;
+        roundActive = false;
+        btn1.disabled = false;
+        btn2.disabled = false;
+        btn1.setAttribute('aria-pressed', 'false');
+        btn2.setAttribute('aria-pressed', 'false');
+        hitBox1.textContent = "✊";
+        hitBox2.textContent = "✊";
+      }, 800);
+    }
+  }
+
+  btn1.addEventListener("click", () => playerHit(1));
+  btn2.addEventListener("click", () => playerHit(2));
+  resetButton.addEventListener("click", resetGame);
+
+  // Initialize game on load
+  resetGame();
+})();
+</script>
+</body>
+</html>
+
+```
