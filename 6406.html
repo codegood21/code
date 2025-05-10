@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Responsive Cool App</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 24px;
+    width: 320px;
+    max-width: 90vw;
+    text-align: center;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  p {
+    font-weight: 400;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+  button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border-radius: 36px;
+    border: none;
+    background: #ff7e5f;
+    background-image: linear-gradient(45deg, #ff7e5f 0%, #feb47b 100%);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 126, 95, 0.5);
+    user-select: none;
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  @media (max-width: 600px) {
+    body {
+      padding: 12px;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 100vw;
+      padding: 16px;
+      border-radius: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 0.9rem;
+    }
+    button {
+      width: 100%;
+      font-size: 1.1rem;
+      padding: 14px 0;
+      border-radius: 28px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Cool responsive app container">
+    <h1>Welcome to the Cool App!</h1>
+    <p>Enjoy a great experience with modern style and full mobile responsiveness. Try clicking the button below!</p>
+    <button id="actionButton" aria-pressed="false" aria-label="Click me button">Click Me</button>
+  </div>
+<script>
+  const button = document.getElementById('actionButton');
+  button.addEventListener('click', () => {
+    alert('You clicked the button! Awesome!');
+    button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+  });
+</script>
+</body>
+</html>
+
+```
