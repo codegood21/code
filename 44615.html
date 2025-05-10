@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Riski AI - Asisten Pintar Bahasa Indonesia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 15px 40px;
+  }
+  header {
+    margin-top: 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+  }
+  header p {
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #dcdde1cc;
+  }
+  main {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+  }
+  #chat {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    color: #f1f1f1;
+  }
+  .message {
+    margin-bottom: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  .message.user {
+    text-align: right;
+    font-weight: 600;
+  }
+  .message.bot {
+    text-align: left;
+    font-weight: 400;
+  }
+  footer {
+    padding: 15px 20px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    gap: 10px;
+  }
+  input#userInput {
+    flex-grow: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    outline: none;
+  }
+  button#sendBtn {
+    background: #38b6ff;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 0 18px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  button#sendBtn:hover, button#sendBtn:focus {
+    background: #1e90ff;
+  }
+  @media (max-width: 400px) {
+    main {
+      height: 380px;
+      max-width: 100%;
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Riski AI</h1>
+  <p>Asisten pintar menggunakan Bahasa Indonesia</p>
+</header>
+<main>
+  <div id="chat" aria-live="polite" aria-label="Obrolan dengan Riski AI"></div>
+  <footer>
+    <input type="text" id="userInput" aria-label="Masukkan pesan" placeholder="Tulis pesan Anda..." autocomplete="off" />
+    <button id="sendBtn" aria-label="Kirim pesan">Kirim</button>
+  </footer>
+</main>
+<script>
+  (() => {
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Cerdas sederhana berdasarkan keyword yg umum, bisa dikembangkan
+    function riskiReply(message) {
+      const msg = message.toLowerCase();
+      if (msg.includes('halo') || msg.includes('hi') || msg.includes('hai')) return 'Halo! Ada yang bisa saya bantu?';
+      if (msg.includes('apa kabar')) return 'Saya baik, terima kasih sudah bertanya! Bagaimana dengan Anda?';
+      if (msg.includes('siapa kamu')) return 'Saya Riski AI, asisten pintar yang siap membantu Anda dengan bahasa Indonesia.';
+      if (msg.includes('terima kasih') || msg.includes('makasih')) return 'Sama-sama! Jangan ragu untuk bertanya lagi.';
+      if (msg.includes('cuaca')) return 'Maaf, saya belum bisa memberikan info cuaca saat ini.';
+      if (msg.includes('nama kamu siapa')) return 'Nama saya Riski AI, senang bertemu dengan Anda.';
+      if (msg.includes('bantu saya')) return 'Tentu, silakan beri tahu saya bagaimana saya bisa membantu Anda.';
+      if (msg.includes('selamat pagi')) return 'Selamat pagi! Semoga hari Anda menyenangkan.';
+      if (msg.includes('selamat malam')) return 'Selamat malam! Semoga istirahat Anda nyenyak.';
+      if (msg.includes('apa itu riski ai')) return 'Riski AI adalah asisten virtual yang dibuat untuk membantu Anda dengan bahasa Indonesia secara cerdas.';
+      return "Maaf, saya belum mengerti. Bisa dijelaskan lebih lanjut?";
+    }
+
+    function appendMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.textContent = text;
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function processUserInput() {
+      const message = input.value.trim();
+      if (!message) return;
+      appendMessage(message, 'user');
+      input.value = '';
+      // Simulasi pemrosesan cerdas dengan delay
+      setTimeout(() => {
+        const reply = riskiReply(message);
+        appendMessage(reply, 'bot');
+      }, 600);
+    }
+
+    sendBtn.addEventListener('click', processUserInput);
+    input.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        processUserInput();
+      }
+    });
+
+    // Sambut user awal
+    appendMessage('Halo! Saya Riski AI, asisten pintar Anda. Silakan tulis sesuatu untuk memulai.', 'bot');
+  })();
+</script>
+</body>
+</html>
+
+```
