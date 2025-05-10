@@ -1,0 +1,28 @@
+case 'text2mp3': {
+ if (!text) return reply('❌ Masukkan teks yang ingin diubah menjadi audio.\nContoh: .text2mp3 Hai bro, nama gw Bagus');
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/tts/google?text=${encodeURIComponent(text)}&target=id`;
+
+ let audioBuffer = await axios.get(apiUrl, { responseType: 'arraybuffer' })
+ .then(res => res.data)
+ .catch(err => {
+ console.error('Error mengambil audio:', err);
+ return null;
+ });
+
+ if (!audioBuffer) return reply('❌ Gagal mengunduh audio.');
+
+ await conn.sendMessage(m.chat, { 
+ audio: audioBuffer, 
+ mimetype: 'audio/mpeg', 
+ fileName: `text-to-music.mp3` 
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error('Error utama:', err);
+ reply('❌ Terjadi kesalahan, coba lagi nanti.');
+ }
+ break;
+}
