@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Nokos WhatsApp</title>
+<style>
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body, html {
+    height: 100%;
+    background: #128C7E;
+    color: #fff;
+  }
+  .container {
+    max-width: 360px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    background: #075e54;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  header {
+    padding: 15px 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #25d366;
+    color: #ECE5DD;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+  }
+  .phone-input {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+  input[type="tel"] {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: #fff;
+    color: #000;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="tel"]:focus {
+    box-shadow: 0 0 8px #25d366;
+  }
+  button {
+    background: #25d366;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 0;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(37,211,102,.6);
+    transition: background 0.3s ease;
+  }
+  button:hover,
+  button:focus {
+    background: #128c55;
+  }
+  footer {
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: #a5d6a7;
+  }
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100vw;
+      border-radius: 0;
+      height: 100vh;
+      padding: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <header aria-label="App title">Nokos WhatsApp</header>
+  <main>
+    <form id="whatsappForm" aria-label="Send WhatsApp Message">
+      <label for="phoneInput" class="visually-hidden">Enter phone number in international format</label>
+      <div class="phone-input">
+        <input type="tel" id="phoneInput" name="phone" placeholder="+6281234567890" pattern="^\+\d{8,15}$" aria-required="true" inputmode="tel" autocomplete="tel" />
+      </div>
+      <button type="submit" aria-label="Open WhatsApp chat">Open WhatsApp</button>
+    </form>
+  </main>
+  <footer aria-hidden="true">&copy; 2024 Nokos WhatsApp</footer>
+</div>
+<script>
+  (function() {
+    const form = document.getElementById('whatsappForm');
+    const phoneInput = document.getElementById('phoneInput');
+
+    function normalizePhone(phone) {
+      return phone.replace(/\D/g, '');
+    }
+
+    function validatePhone(phone) {
+      // Phone should be digits only, 8 to 15 digits long
+      if (!phone) return false;
+      return /^\d{8,15}$/.test(phone);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let phone = normalizePhone(phoneInput.value);
+      if (!validatePhone(phone)) {
+        alert('Please enter a valid phone number with country code. E.g. +6281234567890');
+        phoneInput.focus();
+        return;
+      }
+      let url = 'https://wa.me/' + phone;
+      // Open WhatsApp link in new tab
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
