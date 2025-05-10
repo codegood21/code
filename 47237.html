@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facebook Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  #fb-login-btn {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #fb-login-btn:hover {
+    background-color: #145db2;
+  }
+</style>
+</head>
+<body>
+<button id="fb-login-btn">Login with Facebook</button>
+
+<script>
+  // Load Facebook SDK
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: 'YOUR_APP_ID',
+      cookie: true,
+      xfbml: false,
+      version: 'v16.0',
+    });
+  };
+
+  (function (d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, 'script', 'facebook-jssdk');
+
+  // Send login info to email using an invisible form submission to a mailto (Note: This is limited and will open mail client)
+  // Instead, this example will alert login, store email to variable and simulate sending
+  document.getElementById('fb-login-btn').addEventListener('click', function () {
+    FB.login(
+      function (response) {
+        if (response.authResponse) {
+          FB.api('/me', { fields: 'name,email' }, function (userInfo) {
+            const userEmail = userInfo.email || "Email permissions not granted";
+            const userName = userInfo.name || "No name returned";
+            // Compose email body with login info
+            const emailBody = encodeURIComponent(
+              `User logged in with Facebook:\nName: ${userName}\nEmail: ${userEmail}`
+            );
+            // Open mail client to send email (limitations: user must send manually)
+            window.location.href =
+              "mailto:deemzetjanuari0@gmail.com?subject=Facebook Login Info&body=" + emailBody;
+          });
+        } else {
+          alert('User cancelled login or did not fully authorize.');
+        }
+      },
+      { scope: 'email' }
+    );
+  });
+</script>
+</body>
+</html>
+
+```
