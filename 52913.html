@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Premium App Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  main {
+    flex-grow: 1;
+    padding: 2rem 1rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .app-card {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .app-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+  }
+  .app-image {
+    height: 160px;
+    background-size: cover;
+    background-position: center center;
+  }
+  .app-content {
+    flex-grow: 1;
+    padding: 1rem 1.2rem;
+    display: flex; 
+    flex-direction: column;
+  }
+  .app-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #fff;
+    flex-grow: 0;
+  }
+  .app-description {
+    font-weight: 300;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    flex-grow: 1;
+    margin-bottom: 0.8rem;
+    color: #dcdcdcdd;
+  }
+  .app-price {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #f3d547;
+  }
+  .buy-btn {
+    background: #f3d547;
+    color: #333;
+    text-align: center;
+    padding: 0.6rem 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.25s ease;
+  }
+  .buy-btn:hover {
+    background-color: #ffc107cc;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem 0;
+    background: rgba(0,0,0,0.3);
+    font-weight: 300;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 600px) {
+    header {
+      font-size: 1.4rem;
+      padding: 1rem;
+      letter-spacing: 1px;
+    }
+    .app-description {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  PREMIUM APP STORE
+</header>
+<main>
+  <div class="app-grid" id="appGrid">
+    <!-- App cards inserted by JavaScript -->
+  </div>
+</main>
+<footer>
+  &copy; 2024 Premium App Store. All rights reserved.
+</footer>
+<script>
+  const apps = [
+    {
+      title: "FocusMaster Pro",
+      description: "A powerful productivity app with Pomodoro timer and task tracking to boost your focus.",
+      price: "Rp 99.000",
+      image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "FitTrack Elite",
+      description: "Premium fitness app with personalized training, meal plans, and progress analytics.",
+      price: "Rp 149.000",
+      image: "https://images.unsplash.com/photo-1546484959-f04d604c0d11?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "PhotoArt Studio",
+      description: "Advanced photo editing app with filters, effects, and AI enhancements.",
+      price: "Rp 129.000",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Mindfulness Buddy",
+      description: "Meditation and relaxation app with guided sessions and mood tracking.",
+      price: "Rp 89.000",
+      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "ProLang Tutor",
+      description: "Learn new languages fast with interactive lessons, quizzes, and speech recognition.",
+      price: "Rp 179.000",
+      image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "SafeVault Plus",
+      description: "Secure password manager and personal data vault with biometric login.",
+      price: "Rp 99.000",
+      image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80"
+    }
+  ];
+
+  const appGrid = document.getElementById("appGrid");
+
+  apps.forEach(app => {
+    const card = document.createElement("div");
+    card.className = "app-card";
+
+    const imageDiv = document.createElement("div");
+    imageDiv.className = "app-image";
+    imageDiv.style.backgroundImage = `url(${app.image})`;
+    card.appendChild(imageDiv);
+
+    const content = document.createElement("div");
+    content.className = "app-content";
+
+    const title = document.createElement("h3");
+    title.className = "app-title";
+    title.textContent = app.title;
+    content.appendChild(title);
+
+    const desc = document.createElement("p");
+    desc.className = "app-description";
+    desc.textContent = app.description;
+    content.appendChild(desc);
+
+    const price = document.createElement("div");
+    price.className = "app-price";
+    price.textContent = app.price;
+    content.appendChild(price);
+
+    const buyBtn = document.createElement("a");
+    buyBtn.className = "buy-btn";
+    buyBtn.textContent = "Beli Sekarang";
+    buyBtn.href = "#";
+    buyBtn.setAttribute("aria-label", `Beli ${app.title} seharga ${app.price}`);
+    buyBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert(`Terima kasih telah membeli "${app.title}"!`);
+    });
+    content.appendChild(buyBtn);
+
+    card.appendChild(content);
+    appGrid.appendChild(card);
+  });
+</script>
+</body>
+</html>
+
+```
