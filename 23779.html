@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Login with WhatsApp OTP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
+  }
+  .container {
+    background: white;
+    color: #000;
+    border-radius: 12px;
+    max-width: 360px;
+    width: 100%;
+    padding: 30px 25px 40px 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  h2 {
+    margin-bottom: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: #128C7E;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="tel"], input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="tel"]:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #25D366;
+  }
+  button {
+    width: 100%;
+    margin-top: 20px;
+    background: #25D366;
+    border: none;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #128C7E;
+  }
+  button:disabled {
+    background: #a7dabb;
+    cursor: default;
+  }
+  .message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .hidden {
+    display: none;
+  }
+  .otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .otp-inputs input {
+    width: 48px;
+    height: 52px;
+    font-size: 32px;
+    text-align: center;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  .otp-inputs input:focus {
+    border-color: #25D366;
+    outline: none;
+  }
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100%;
+    }
+    .otp-inputs input {
+      width: 40px;
+      height: 48px;
+      font-size: 28px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-labelledby="loginTitle">
+    <h2 id="loginTitle">Login with WhatsApp OTP</h2>
+    <form id="loginForm" autocomplete="off" novalidate>
+      <label for="phone">WhatsApp Number</label>
+      <input type="tel" id="phone" name="phone" inputmode="tel" pattern="[0-9]{10,15}" placeholder="e.g. 6281234567890" aria-describedby="phoneHelp" required />
+      <small id="phoneHelp" style="color: #666; font-size:14px;">Include country code without + sign</small>
+      <button type="submit" id="sendOtpBtn" aria-label="Send OTP to WhatsApp Number">Send OTP</button>
+    </form>
+
+    <form id="otpForm" class="hidden" autocomplete="off" novalidate>
+      <label for="otp" id="otpLabel">Enter OTP</label>
+      <div class="otp-inputs" role="group" aria-labelledby="otpLabel">
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 1" required />
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 2" required />
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 3" required />
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 4" required />
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 5" required />
+        <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" class="otp-input" aria-label="OTP digit 6" required />
+      </div>
+      <button type="submit" id="verifyOtpBtn" aria-label="Verify OTP">Verify OTP</button>
+    </form>
+
+    <div id="message" class="message" role="alert" aria-live="assertive"></div>
+  </div>
+
+<script>
+  (function() {
+    const loginForm = document.getElementById('loginForm');
+    const phoneInput = document.getElementById('phone');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpForm = document.getElementById('otpForm');
+    const otpInputs = otpForm.querySelectorAll('.otp-input');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const messageDiv = document.getElementById('message');
+    let generatedOtp = null;
+    let otpTimeoutId = null;
+
+    function showMessage(text, isError = false) {
+      messageDiv.textContent = text;
+      messageDiv.style.color = isError ? '#d93025' : '#128C7E';
+    }
+
+    function clearMessage() {
+      messageDiv.textContent = '';
+    }
+
+    function generateOtp() {
+      let otp = '';
+      for(let i=0; i<6; i++) {
+        otp += Math.floor(Math.random() * 10).toString();
+      }
+      return otp;
+    }
+
+    function resetOtpInputs() {
+      otpInputs.forEach(input => {
+        input.value = '';
+      });
+      otpInputs[0].focus();
+    }
+
+    function enableSendBtn(enable) {
+      sendOtpBtn.disabled = !enable;
+    }
+
+    function enableVerifyBtn(enable) {
+      verifyOtpBtn.disabled = !enable;
+    }
+
+    function isPhoneValid(phone) {
+      const regex = /^[0-9]{10,15}$/;
+      return regex.test(phone);
+    }
+
+    phoneInput.addEventListener('input', () => {
+      clearMessage();
+      enableSendBtn(isPhoneValid(phoneInput.value.trim()));
+    });
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      clearMessage();
+      const phone = phoneInput.value.trim();
+      if (!isPhoneValid(phone)) {
+        showMessage('Please enter a valid WhatsApp number with country code (10-15 digits).', true);
+        return;
+      }
+      generatedOtp = generateOtp();
+      // Simulate sending OTP via WhatsApp (for demo)
+      showMessage(`OTP sent to WhatsApp number: +${phone}. OTP: ${generatedOtp}`, false);
+      loginForm.classList.add('hidden');
+      otpForm.classList.remove('hidden');
+      resetOtpInputs();
+      enableVerifyBtn(false);
+
+      // OTP expiration after 3 minutes
+      if(otpTimeoutId) clearTimeout(otpTimeoutId);
+      otpTimeoutId = setTimeout(() => {
+        generatedOtp = null;
+        showMessage("OTP expired. Please login again.", true);
+        otpForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+      }, 180000);
+    });
+
+    otpForm.addEventListener('input', () => {
+      // Move focus automatically
+      otpInputs.forEach((input, i) => {
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if(input.value.length === 1 && i < otpInputs.length - 1) {
+          otpInputs[i+1].focus();
+        }
+      });
+      let allFilled = Array.from(otpInputs).every(input => input.value.length === 1);
+      enableVerifyBtn(allFilled);
+      clearMessage();
+    });
+
+    otpForm.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!generatedOtp) {
+        showMessage("No OTP generated or OTP expired. Please login again.", true);
+        otpForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        return;
+      }
+      const enteredOtp = Array.from(otpInputs).map(i => i.value).join('');
+      if (enteredOtp === generatedOtp) {
+        showMessage("Login successful! Welcome!", false);
+        // Reset forms after successful login
+        generatedOtp = null;
+        otpForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        loginForm.reset();
+        resetOtpInputs();
+        enableSendBtn(false);
+        enableVerifyBtn(false);
+        if(otpTimeoutId) clearTimeout(otpTimeoutId);
+      } else {
+        showMessage("Invalid OTP. Please try again.", true);
+        resetOtpInputs();
+      }
+    });
+
+    // Initialize
+    enableSendBtn(false);
+    enableVerifyBtn(false);
+  })();
+</script>
+</body>
+</html>
+
+```
