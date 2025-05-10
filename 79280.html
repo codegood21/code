@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bintang Interaktif</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f0e4f7, #c1dff0);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .star {
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    fill: #f5d742;
+    filter: drop-shadow(0 0 5px #f5d74299);
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .star:hover {
+    transform: scale(1.1) rotate(10deg);
+    filter: drop-shadow(0 0 12px #f5d742cc);
+  }
+</style>
+</head>
+<body>
+<svg class="star" viewBox="0 0 64 64" onclick="alert('HBD AYKAAA ><')"
+    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bintang">
+  <polygon points="32 2 39.09 23.26 61 23.27 42 37.74 49.18 59 32 45.77 14.82 59 22 37.74 3 23.27 24.91 23.26 32 2"/>
+</svg>
+<script>
+  // Accessibility: allow keyboard activation
+  const star = document.querySelector('.star');
+  star.setAttribute('tabindex', '0');
+  star.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      alert('HBD AYKAAA ><');
+    }
+  });
+</script>
+</body>
+</html>
+
+```
