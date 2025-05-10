@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Road to Wealth - Your Path to Success</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 0.2em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  h2 {
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom: 1.5em;
+    font-size: 1.5rem;
+    text-align: center;
+    max-width: 380px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+  }
+  button {
+    background: #f39c12;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 15px 35px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.6);
+    width: 260px;
+  }
+  button:hover, button:focus {
+    background: #e67e22;
+    outline: none;
+  }
+  #result {
+    margin-top: 2em;
+    font-size: 1.3rem;
+    max-width: 380px;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    min-height: 60px;
+  }
+  footer {
+    margin-top: auto;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+  /* Responsive for small screens */
+  @media (max-width: 400px) {
+    h1 {
+      font-size: 2.2rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      max-width: 300px;
+    }
+    button {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>💰 Fast Track to Wealth 💰</h1>
+<h2>Click the button for your personalized success tip to get rich faster!</h2>
+<button id="getTipBtn" aria-label="Get a wealth tip">Show Me the Way!</button>
+<div id="result" aria-live="polite"></div>
+<footer>© 2024 Wealth Builder. Your journey starts here.</footer>
+
+<script>
+  const tips = [
+    "Invest early and consistently - compound interest is your best friend.",
+    "Diversify your income streams to build financial security.",
+    "Save at least 20% of your income monthly, no matter what.",
+    "Learn about stock markets and consider low-cost index funds.",
+    "Avoid debt on things that lose value; use credit wisely.",
+    "Build skills that are in high demand to increase your earning power.",
+    "Network with successful people; your circle influences your net worth.",
+    "Set clear financial goals and track your progress regularly.",
+    "Automate your savings and investments for steady growth.",
+    "Reinvest your earnings to accelerate wealth growth.",
+    "Create a budget and stick to it to control your spending.",
+    "Start a side hustle that aligns with your passions and skills.",
+    "Continuously educate yourself about personal finance and investing.",
+    "Leverage technology and apps to manage money efficiently.",
+    "Stay patient and disciplined; wealth grows over time, not overnight."
+  ];
+
+  const button = document.getElementById('getTipBtn');
+  const result = document.getElementById('result');
+
+  button.addEventListener('click', () => {
+    const randomIndex = Math.floor(Math.random() * tips.length);
+    result.textContent = tips[randomIndex];
+  });
+</script>
+</body>
+</html>
+
+```
