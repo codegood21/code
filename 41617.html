@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Judi Online Modern</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Poppins', sans-serif;
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+    user-select: none;
+  }
+  header {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff4e50;
+    width: 100%;
+  }
+  header h1 {
+    margin: 10px 0 0 0;
+    font-size: 1.6em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ff4e50;
+  }
+  header p {
+    margin: 5px 0 10px 0;
+    font-weight: 400;
+    font-size: 0.9em;
+    color: #ffd6d6;
+  }
+  main {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .balance-container {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    background: #ff4e50;
+    border-radius: 8px;
+    padding: 8px 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    box-shadow: 0 0 8px #ff4e50;
+  }
+  .game-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    user-select: none;
+  }
+  .game-title {
+    font-weight: 700;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #ff6f61;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .bet-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .bet-controls button {
+    background: #ff4e50;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1em;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .bet-controls button:active {
+    background-color: #e04040;
+  }
+  .bet-display {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #ffd6d6;
+  }
+  .slot-reels {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .reel {
+    background: #203a43;
+    border-radius: 8px;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    font-weight: 900;
+    color: #ff4e50;
+    text-shadow: 0 0 8px #ff4e50;
+    user-select: none;
+  }
+  .result-message {
+    font-weight: 700;
+    font-size: 1.1em;
+    text-align: center;
+    margin-bottom: 15px;
+    min-height: 30px;
+    color: #ffd6d6;
+  }
+  .spin-button {
+    background: #ff4e50;
+    border: none;
+    width: 100%;
+    padding: 15px 0;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.3em;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 10px #ff4e50;
+    transition: background-color 0.3s ease;
+  }
+  .spin-button:active {
+    background-color: #e04040;
+  }
+  footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.75em;
+    color: #999;
+    padding: 10px;
+  }
+
+  /* Mobile Optimization */
+  @media (max-width: 350px) {
+    body {
+      padding: 10px 8px;
+      max-width: 350px;
+      min-height: 600px;
+    }
+    .reel {
+      width: 60px;
+      height: 60px;
+      font-size: 1.7em;
+    }
+    .spin-button {
+      font-size: 1.1em;
+      padding: 12px 0;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Judi Slot Online</h1>
+  <p>Selamat datang! Coba keberuntunganmu.</p>
+</header>
+<main>
+  <div class="balance-container" id="balance">Saldo: Rp 1.000.000</div>
+  <section class="game-container" aria-label="Game Mesin Slot">
+    <div class="game-title">Mesin Slot</div>
+    <div class="bet-controls" role="group" aria-label="Kontrol taruhan">
+      <button id="bet-decrease" aria-label="Kurangi taruhan">-</button>
+      <button id="bet-increase" aria-label="Tambah taruhan">+</button>
+    </div>
+    <div class="bet-display" id="bet-display" aria-live="polite" aria-atomic="true">Taruhan: Rp 50.000</div>
+    <div class="slot-reels" aria-live="polite" aria-atomic="true" aria-relevant="additions">
+      <div class="reel" id="reel1">❓</div>
+      <div class="reel" id="reel2">❓</div>
+      <div class="reel" id="reel3">❓</div>
+    </div>
+    <div class="result-message" id="result-message" aria-live="assertive" aria-atomic="true"></div>
+    <button class="spin-button" id="spin-button" aria-label="Putar mesin slot">Putar</button>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Judi Online
+</footer>
+<script>
+  (function() {
+    'use strict';
+
+    const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '7️⃣', '💎'];
+    const symbolWeights = [20, 20, 20, 15, 10, 8, 7]; // relative weights for probability
+    // Generate a weighted random symbol
+    function weightedRandomSymbol() {
+      const totalWeight = symbolWeights.reduce((a,b) => a+b, 0);
+      let r = Math.random() * totalWeight;
+      for (let i = 0; i < symbols.length; i++) {
+        if (r < symbolWeights[i]) return symbols[i];
+        r -= symbolWeights[i];
+      }
+      return symbols[symbols.length-1];
+    }
+
+    const balanceEl = document.getElementById('balance');
+    const betDisplayEl = document.getElementById('bet-display');
+    const reelEls = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+    const resultMessageEl = document.getElementById('result-message');
+    const spinButtonEl = document.getElementById('spin-button');
+    const betIncreaseBtn = document.getElementById('bet-increase');
+    const betDecreaseBtn = document.getElementById('bet-decrease');
+
+    let balance = 1000000;
+    let bet = 50000;
+    const minBet = 10000;
+    const maxBet = 500000;
+
+    function formatRupiah(number) {
+      return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function updateDisplay() {
+      balanceEl.textContent = `Saldo: ${formatRupiah(balance)}`;
+      betDisplayEl.textContent = `Taruhan: ${formatRupiah(bet)}`;
+    }
+
+    function checkWin(reels) {
+      // Simple rules:
+      // 3 of the same symbol = jackpot
+      // 2 of the same symbol = small win
+      // 7️⃣ and 💎 can act as wildcards for 2 matches but not jackpot
+      if (reels[0] === reels[1] && reels[1] === reels[2]) {
+        return { multiplier: 5, msg: `Jackpot! 3x ${reels[0]}!` }; // 5x bet payout
+      }
+      // Check for two matches ignoring wildcards
+      const counts = {};
+      reels.forEach(r => counts[r] = (counts[r] || 0) + 1);
+      for (const sym in counts) {
+        if (sym !== '7️⃣' && sym !== '💎' && counts[sym] >= 2) {
+          return { multiplier: 2, msg: `Menang! 2x ${sym}!` }; // 2x bet payout
+        }
+      }
+      // Check for wildcard 2 matches
+      // If two symbols + one wildcard
+      let wildCount = reels.filter(s => (s === '7️⃣' || s === '💎')).length;
+      if (wildCount === 1) {
+        const nonWilds = reels.filter(s => s !== '7️⃣' && s !== '💎');
+        if (nonWilds.length === 2 && nonWilds[0] === nonWilds[1]) {
+          return { multiplier: 2, msg: `Menang dengan wildcard! 2x ${nonWilds[0]}!` };
+        }
+      }
+
+      return { multiplier: 0, msg: "Coba lagi!" };
+    }
+
+    function spin() {
+      if (bet > balance) {
+        resultMessageEl.textContent = 'Saldo tidak cukup untuk taruhan ini.';
+        return;
+      }
+      balance -= bet;
+      updateDisplay();
+
+      spinButtonEl.disabled = true;
+      betIncreaseBtn.disabled = true;
+      betDecreaseBtn.disabled = true;
+      resultMessageEl.textContent = 'Memutar...';
+
+      // Animate reels with random symbols for 1.5 seconds
+      let animationCount = 20;
+      let interval = setInterval(() => {
+        reelEls.forEach(reel => {
+          reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        });
+        animationCount--;
+        if (animationCount <= 0) {
+          clearInterval(interval);
+          // Final spin result
+          const finalReels = [weightedRandomSymbol(), weightedRandomSymbol(), weightedRandomSymbol()];
+          reelEls.forEach((reel, i) => {
+            reel.textContent = finalReels[i];
+          });
+
+          // Check if player wins
+          const winInfo = checkWin(finalReels);
+          if (winInfo.multiplier > 0) {
+            const winAmount = bet * winInfo.multiplier;
+            balance += winAmount;
+            resultMessageEl.textContent = `${winInfo.msg} Kamu menang ${formatRupiah(winAmount)}!`;
+          } else {
+            resultMessageEl.textContent = winInfo.msg;
+          }
+          updateDisplay();
+
+          spinButtonEl.disabled = false;
+          betIncreaseBtn.disabled = false;
+          betDecreaseBtn.disabled = false;
+        }
+      }, 75);
+    }
+
+    betIncreaseBtn.addEventListener('click', () => {
+      if (bet + minBet <= maxBet && bet + minBet <= balance) {
+        bet += minBet;
+        updateDisplay();
+      }
+    });
+
+    betDecreaseBtn.addEventListener('click', () => {
+      if (bet - minBet >= minBet) {
+        bet -= minBet;
+        updateDisplay();
+      }
+    });
+
+    spinButtonEl.addEventListener('click', () => {
+      spin();
+    });
+
+    updateDisplay();
+
+  })();
+</script>
+</body>
+</html>
+
+```
