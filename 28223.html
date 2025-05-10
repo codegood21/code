@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>DDoS Attacker Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1c1c1c, #222831);
+    color: #eeeeee;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #container {
+    width: 90vw;
+    max-width: 380px;
+    background: #222831;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    padding: 30px 25px;
+    position: relative;
+    overflow: hidden;
+  }
+  h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #00adb5;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  label {
+    display: block;
+    margin: 15px 0 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    background: #393e46;
+    border: none;
+    border-radius: 8px;
+    color: #eeeeee;
+    font-size: 1rem;
+  }
+  input::placeholder {
+    color: #888888;
+  }
+  button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background: #00adb5;
+    color: #eeeeee;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #009896;
+  }
+  #errorMessage {
+    height: 20px;
+    margin-top: 12px;
+    color: #ff5050;
+    font-weight: 600;
+    text-align: center;
+  }
+  #ddosPanel {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+  }
+  #ddosPanel.active {
+    opacity: 1;
+    max-height: 600px;
+  }
+  #ddosPanel h3 {
+    color: #00adb5;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  #ddosPanel form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #ddosPanel label {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  #ddosPanel select, #ddosPanel input[type="url"], #ddosPanel input[type="number"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    background: #393e46;
+    color: #eeeeee;
+  }
+  #ddosPanel button.attackBtn {
+    margin-top: 20px;
+    background: #ff3f3f;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  #ddosPanel button.attackBtn:hover {
+    background: #e83737;
+  }
+  #attackLog {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    background: #222831;
+    border-radius: 8px;
+    padding: 10px;
+    max-height: 180px;
+    overflow-y: auto;
+    color: #00ff95;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+  /* Scrollbar */
+  #attackLog::-webkit-scrollbar {
+    width: 8px;
+  }
+  #attackLog::-webkit-scrollbar-thumb {
+    background: #00adb5;
+    border-radius: 6px;
+  }
+  #attackLog::-webkit-scrollbar-track {
+    background: #222831;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #555555;
+  }
+  .footer a {
+    color: #00adb5;
+    text-decoration: none;
+  }
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 400px) {
+    #container {
+      max-width: 100vw;
+      border-radius: 0;
+      height: 100vh;
+      padding: 20px;
+      box-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <div id="loginPanel">
+      <h2>Login to DDoS Attacker</h2>
+      <label for="username">Username</label>
+      <input type="text" id="username" autocomplete="username" placeholder="Enter username" />
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" placeholder="Enter password" />
+      <button id="loginBtn" aria-label="Login button">Login</button>
+      <div id="errorMessage" role="alert" aria-live="assertive"></div>
+    </div>
+
+    <div id="ddosPanel" aria-hidden="true">
+      <h3>DDoS Attacker Panel</h3>
+
+      <form id="ddosForm" aria-label="DDoS attack configuration form">
+        <label for="targetUrl">Target URL</label>
+        <input type="url" id="targetUrl" placeholder="https://example.com" required />
+        <label for="attackMethod">Attack Method</label>
+        <select id="attackMethod" required>
+          <option value="flood">Flood</option>
+          <option value="syn">SYN Flood</option>
+          <option value="udp">UDP Flood</option>
+          <option value="http">HTTP Flood</option>
+        </select>
+        <label for="attackDuration">Duration (seconds)</label>
+        <input type="number" id="attackDuration" min="5" max="300" value="30" required />
+        <button type="submit" class="attackBtn">Start Attack</button>
+      </form>
+
+      <div id="attackLog" aria-live="polite" aria-atomic="true" aria-relevant="additions"></div>
+      <div class="footer">Plans required to use attacks <br/>To buy: <a href="https://t.me/DimzSelole" target="_blank" rel="noopener">t.me/DimzSelole</a></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  'use strict';
+
+  const adminCredentials = { username: 'deemzet', password: 'admin' };
+
+  // Simulated users who have bought plan
+  const usersWithPlan = new Set();
+
+  // Save login status & plan in sessionStorage for persistence during the session
+  const session = {
+    currentUser: null,
+    hasPlan: false,
+  };
+
+  const loginPanel = document.getElementById('loginPanel');
+  const ddosPanel = document.getElementById('ddosPanel');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMessage = document.getElementById('errorMessage');
+
+  const targetUrlInput = document.getElementById('targetUrl');
+  const attackMethodSelect = document.getElementById('attackMethod');
+  const attackDurationInput = document.getElementById('attackDuration');
+  const ddosForm = document.getElementById('ddosForm');
+  const attackLog = document.getElementById('attackLog');
+
+  function showError(message) {
+    errorMessage.textContent = message;
+  }
+
+  function clearError() {
+    errorMessage.textContent = '';
+  }
+
+  function fadeOutLoginPanel() {
+    loginPanel.style.transition = 'opacity 0.7s ease';
+    loginPanel.style.opacity = '0';
+    setTimeout(() => {
+      loginPanel.style.display = 'none';
+      ddosPanel.style.display = 'block';
+      ddosPanel.style.opacity = '0';
+      ddosPanel.style.maxHeight = '0px';
+      ddosPanel.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        ddosPanel.classList.add('active');
+      }, 20);
+    }, 700);
+  }
+
+  // Login check function
+  function login(username, password) {
+    clearError();
+    if (!username) {
+      showError('Account not found');
+      return false;
+    }
+    if (username === adminCredentials.username) {
+      if (password === adminCredentials.password) {
+        session.currentUser = username;
+        session.hasPlan = true; // Admin always has access
+        return true;
+      } else {
+        showError('Wrong password!');
+        return false;
+      }
+    } else {
+      // For non-admin users, simulate account lookup:
+      // For simplicity, only allow user "user" with password "pass" who doesn't have a plan initially
+      // Users other than "user" are considered non-existent
+      if (username === 'user') {
+        if (password === 'pass') {
+          session.currentUser = username;
+          // Check if user bought plan
+          session.hasPlan = usersWithPlan.has(username);
+          return true;
+        } else {
+          showError('Wrong password!');
+          return false;
+        }
+      } else {
+        showError('Account not found');
+        return false;
+      }
+    }
+  }
+
+  loginBtn.addEventListener('click', () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (login(username, password)) {
+      fadeOutLoginPanel();
+    }
+  });
+
+  // Allow pressing enter to login
+  [usernameInput, passwordInput].forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        loginBtn.click();
+      }
+    });
+  });
+
+  // Simulate attack process
+  let attackInterval = null;
+  let attackTimeout = null;
+
+  function logAttack(message) {
+    let time = new Date().toLocaleTimeString();
+    attackLog.textContent += `[${time}] ${message}\n`;
+    attackLog.scrollTop = attackLog.scrollHeight;
+  }
+
+  ddosForm.addEventListener('submit', event => {
+    event.preventDefault();
+
+    if (!session.currentUser) {
+      alert('You must be logged in!');
+      return;
+    }
+
+    if (!session.hasPlan) {
+      alert('You need to purchase a plan to use this feature.\nRedirecting you to purchase page.');
+      window.open('https://t.me/DimzSelole', '_blank', 'noopener');
+      return;
+    }
+
+    const target = targetUrlInput.value.trim();
+    const method = attackMethodSelect.value;
+    let duration = parseInt(attackDurationInput.value, 10);
+    if (!target || !method || isNaN(duration) || duration < 5 || duration > 300) {
+      alert('Please fill all fields correctly. Duration must be between 5 and 300 seconds.');
+      return;
+    }
+
+    if (attackInterval) {
+      alert('An attack is already running. Please wait.');
+      return;
+    }
+
+    logAttack(`Starting ${method} attack on ${target} for ${duration} seconds...`);
+
+    let elapsed = 0;
+    attackInterval = setInterval(() => {
+      elapsed++;
+      logAttack(`Sent attack packet #${elapsed} using ${method} method.`);
+    }, 1000);
+
+    attackTimeout = setTimeout(() => {
+      clearInterval(attackInterval);
+      attackInterval = null;
+      logAttack(`Attack on ${target} finished after ${duration} seconds.`);
+    }, duration * 1000);
+  });
+
+})();
+</script>
+</body>
+</html>
+
+```
