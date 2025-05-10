@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=0" />
+<title>Free VPS Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    user-select: none;
+  }
+  #vps-container {
+    background: #111c24;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 0 20px #0af;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  form {
+    width: 100%;
+    margin-top: 10px;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background-color: #00bcd4;
+    color: #111c24;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  button:hover {
+    background-color: #0097a7;
+  }
+  #message {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    height: 1.2em;
+    text-align: center;
+    color: #f44336;
+  }
+  #vps-info {
+    margin-top: 10px;
+    background: #0a1a26;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    color: #a0d8f7;
+    min-height: 140px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+  }
+  #footer {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: #555;
+    user-select: none;
+  }
+  @media (max-width: 600px) {
+    #vps-container {
+      width: 90vw;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="vps-container" role="main" aria-label="Free VPS Simulator">
+  <h1>Free VPS Login</h1>
+  <div id="message" aria-live="polite"></div>
+  <form id="login-form" aria-label="Login Form">
+    <input type="text" id="username" name="username" autocomplete="username" placeholder="Username" aria-required="true" />
+    <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Password" aria-required="true" />
+    <button type="submit">Login</button>
+  </form>
+  <pre id="vps-info" tabindex="0" aria-live="polite" hidden></pre>
+  <div id="footer">Powered by rijalganzz</div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const loginForm = document.getElementById('login-form');
+  const messageEl = document.getElementById('message');
+  const vpsInfoEl = document.getElementById('vps-info');
+  const VPS_USERNAME = 'user';
+  const VPS_PASSWORD = 'rijalganzz123';
+  let isLoggedIn = false;
+
+  const vpsState = {
+    cpu: 4,
+    ram: 16,
+    storage: 50, // GB
+    installedPackages: [],
+  };
+
+  function showMessage(msg, isError = true) {
+    messageEl.textContent = msg;
+    messageEl.style.color = isError ? '#f44336' : '#4caf50';
+  }
+
+  function clearMessage() {
+    messageEl.textContent = '';
+  }
+
+  function updateVPSInfo() {
+    const infoLines = [];
+    infoLines.push(`VPS Status: ${isLoggedIn ? 'Logged In' : 'Logged Out'}`);
+    infoLines.push(`CPU Cores: ${vpsState.cpu}`);
+    infoLines.push(`RAM (GB): ${vpsState.ram}`);
+    infoLines.push(`Storage (GB): ${vpsState.storage}`);
+    infoLines.push('');
+    infoLines.push('Installed Packages:');
+    if (vpsState.installedPackages.length === 0) {
+      infoLines.push(' - None');
+    } else {
+      vpsState.installedPackages.forEach(pkg => {
+        infoLines.push(` - ${pkg}`);
+      });
+    }
+    infoLines.push('');
+    infoLines.push('Type commands below. Available: install [package], logout');
+    infoLines.push('Example: install nginx');
+
+    vpsInfoEl.textContent = infoLines.join('\n');
+  }
+
+  function handleCommand(command) {
+    command = command.trim();
+    if (!command) return;
+
+    const args = command.split(' ');
+    const baseCmd = args[0].toLowerCase();
+
+    if (baseCmd === 'install') {
+      if (args.length < 2) {
+        appendToVPSOutput('Usage: install [package]');
+        return;
+      }
+      const pkgName = args.slice(1).join(' ');
+      if (vpsState.installedPackages.includes(pkgName)) {
+        appendToVPSOutput(`Package "${pkgName}" is already installed.`);
+      } else {
+        vpsState.installedPackages.push(pkgName);
+        appendToVPSOutput(`Installing package "${pkgName}"...`);
+        setTimeout(() => {
+          appendToVPSOutput(`Package "${pkgName}" installed successfully.`);
+        }, 800);
+      }
+    } else if (baseCmd === 'logout') {
+      appendToVPSOutput('Logging out...');
+      setTimeout(() => {
+        logoutUser();
+      }, 500);
+    } else {
+      appendToVPSOutput(`Unknown command: ${command}`);
+    }
+  }
+
+  function appendToVPSOutput(text) {
+    vpsInfoEl.textContent += '\n> ' + text;
+    vpsInfoEl.scrollTop = vpsInfoEl.scrollHeight;
+  }
+
+  function logoutUser() {
+    isLoggedIn = false;
+    vpsInfoEl.hidden = true;
+    loginForm.style.display = 'block';
+    clearMessage();
+    loginForm.username.value = '';
+    loginForm.password.value = '';
+    loginForm.username.focus();
+  }
+
+  function initTerminal() {
+    updateVPSInfo();
+    vpsInfoEl.hidden = false;
+    appendToVPSOutput('Welcome to your VPS!');
+    appendToVPSOutput('Type commands below:');
+    appendToVPSOutput('>');
+
+    // Create an input line for commands:
+    const inputLine = document.createElement('input');
+    inputLine.type = 'text';
+    inputLine.setAttribute('aria-label', 'VPS command input');
+    inputLine.style.backgroundColor = '#111c24';
+    inputLine.style.color = '#0af';
+    inputLine.style.border = 'none';
+    inputLine.style.width = '97%';
+    inputLine.style.fontFamily = '"Roboto Mono", monospace';
+    inputLine.style.fontSize = '1rem';
+    inputLine.style.marginTop = '5px';
+    inputLine.style.padding = '4px';
+    inputLine.autocomplete = 'off';
+
+    vpsInfoEl.appendChild(document.createElement('br'));
+    vpsInfoEl.appendChild(inputLine);
+    inputLine.focus();
+
+    inputLine.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        const cmd = inputLine.value.trim();
+        if(cmd.length > 0){
+          appendToVPSOutput(cmd);
+          handleCommand(cmd);
+          inputLine.value = '';
+        }
+        e.preventDefault();
+      }
+      if(e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+        // Could implement history if desired - skipped for simplicity
+        e.preventDefault();
+      }
+    });
+  }
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearMessage();
+    if(isLoggedIn){
+      showMessage('Already logged in.', true);
+      return;
+    }
+    const uname = loginForm.username.value.trim();
+    const pwd = loginForm.password.value;
+    if(uname === VPS_USERNAME && pwd === VPS_PASSWORD){
+      isLoggedIn = true;
+      loginForm.style.display = 'none';
+      clearMessage();
+      initTerminal();
+    } else {
+      showMessage('Invalid username or password.');
+    }
+  });
+
+  // Autofocus username input on load:
+  loginForm.username.focus();
+})();
+</script>
+</body>
+</html>
+
+```
