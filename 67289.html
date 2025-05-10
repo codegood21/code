@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Situs Judi Online Otomatis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin:0; padding:0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1a1a1d, #4e4e50);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  header {
+    padding: 1rem;
+    text-align: center;
+    background: #222;
+    width: 100%;
+    border-bottom: 2px solid #ff3c00;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #ff3c00;
+    text-shadow: 0 0 8px #ff3c00;
+  }
+  main {
+    flex-grow: 1;
+    padding: 1rem;
+    width: 100%;
+  }
+  .balance-section, .deposit-section, .withdraw-section, .game-section {
+    background: #2c2c34;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 8px rgba(255, 60, 0, 0.6);
+  }
+  h2 {
+    margin-top: 0;
+    color: #ff3c00;
+    text-align: center;
+    text-shadow: 0 0 5px #ff3c00;
+  }
+  button {
+    background-color: #ff3c00;
+    border: none;
+    color: white;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px #ff3c00;
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    margin: 0.8rem auto 0 auto;
+  }
+  button:hover {
+    background-color: #e23600;
+  }
+  input[type="number"] {
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    margin: 0.5rem auto 0 auto;
+    display: block;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background: #444;
+    color: white;
+    box-shadow: inset 0 0 5px #ff3c00;
+  }
+  input[type="number"]::-webkit-inner-spin-button, 
+  input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0;
+  }
+  .balance {
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    margin-top: 0.2rem;
+    letter-spacing: 2px;
+    color: #ffaa33;
+    text-shadow: 0 0 6px #ffaa33;
+  }
+  .game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .result {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    min-height: 2rem;
+    color: #ffeeaa;
+    text-shadow: 0 0 10px #ffeeaa;
+  }
+  footer {
+    text-align:center;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      padding: 0 0.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Situs Judi Online Otomatis</h1>
+</header>
+<main>
+  <section class="balance-section" aria-label="Saldo akun">
+    <h2>Saldo Anda</h2>
+    <div class="balance" id="balanceDisplay">Rp 0</div>
+  </section>
+
+  <section class="deposit-section" aria-label="Deposit saldo">
+    <h2>Deposit Otomatis</h2>
+    <input type="number" id="depositAmount" min="1000" step="1000" placeholder="Masukkan jumlah (min Rp1000)" aria-label="Jumlah deposit" />
+    <button id="depositBtn">Deposit</button>
+  </section>
+
+  <section class="withdraw-section" aria-label="Withdraw saldo">
+    <h2>Withdraw Otomatis</h2>
+    <input type="number" id="withdrawAmount" min="1000" step="1000" placeholder="Masukkan jumlah (min Rp1000)" aria-label="Jumlah withdraw" />
+    <button id="withdrawBtn">Withdraw</button>
+  </section>
+
+  <section class="game-section" aria-label="Permainan Tebak Angka">
+    <h2>Main Tebak Angka</h2>
+    <p style="text-align:center; color:#ccc; font-size:0.9rem;">Tebak angka 1 - 10<br>Dapatkan 9x lipat jika benar!</p>
+    <input type="number" id="guessNumber" min="1" max="10" placeholder="Tebak angka (1-10)" aria-label="Tebak angka" />
+    <button id="playBtn">Mainkan</button>
+    <div class="result" id="gameResult" aria-live="polite" aria-atomic="true"></div>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Situs Judi Online Otomatis - All rights reserved
+</footer>
+
+<script>
+  // Persistent balance stored in localStorage simulating user account balance
+  const BALANCE_KEY = 'judi_online_balance';
+
+  function formatCurrency(amount) {
+    return 'Rp ' + amount.toLocaleString('id-ID');
+  }
+
+  function loadBalance() {
+    let balance = parseInt(localStorage.getItem(BALANCE_KEY), 10);
+    if (isNaN(balance)) {
+      balance = 0;
+      localStorage.setItem(BALANCE_KEY, balance);
+    }
+    return balance;
+  }
+
+  function saveBalance(amount) {
+    localStorage.setItem(BALANCE_KEY, amount);
+  }
+
+  function updateBalanceDisplay() {
+    const balance = loadBalance();
+    document.getElementById('balanceDisplay').textContent = formatCurrency(balance);
+  }
+
+  function showResult(message, success = true) {
+    const resultEl = document.getElementById('gameResult');
+    resultEl.style.color = success ? '#aaffaa' : '#ff6666';
+    resultEl.textContent = message;
+  }
+
+  // Deposit functionality
+  document.getElementById('depositBtn').addEventListener('click', () => {
+    const input = document.getElementById('depositAmount');
+    let deposit = parseInt(input.value, 10);
+    if (isNaN(deposit) || deposit < 1000) {
+      alert('Deposit minimal Rp 1000');
+      return;
+    }
+    let balance = loadBalance();
+    balance += deposit;
+    saveBalance(balance);
+    updateBalanceDisplay();
+    alert(`Deposit berhasil: ${formatCurrency(deposit)}`);
+    input.value = '';
+  });
+
+  // Withdraw functionality
+  document.getElementById('withdrawBtn').addEventListener('click', () => {
+    const input = document.getElementById('withdrawAmount');
+    let withdraw = parseInt(input.value, 10);
+    let balance = loadBalance();
+    if (isNaN(withdraw) || withdraw < 1000) {
+      alert('Withdraw minimal Rp 1000');
+      return;
+    }
+    if (withdraw > balance) {
+      alert('Saldo tidak cukup untuk withdraw');
+      return;
+    }
+    balance -= withdraw;
+    saveBalance(balance);
+    updateBalanceDisplay();
+    alert(`Withdraw berhasil: ${formatCurrency(withdraw)}`);
+    input.value = '';
+  });
+
+  // Game functionality (Tebak Angka)
+  document.getElementById('playBtn').addEventListener('click', () => {
+    const guessInput = document.getElementById('guessNumber');
+    let guess = parseInt(guessInput.value, 10);
+    if (isNaN(guess) || guess < 1 || guess > 10) {
+      alert('Masukkan angka tebakan antara 1 sampai 10');
+      return;
+    }
+    let balance = loadBalance();
+    const bet = 1000; // fixed bet 1000 per game
+    if (balance < bet) {
+      alert('Saldo tidak cukup untuk bermain, minimal Rp 1000');
+      return;
+    }
+    balance -= bet;
+
+    // Generate random number 1-10
+    const answer = Math.floor(Math.random() * 10) + 1;
+
+    if (guess === answer) {
+      const reward = bet * 9;
+      balance += reward;
+      saveBalance(balance);
+      updateBalanceDisplay();
+      showResult(`Menang! Angka yang benar adalah ${answer}. Anda mendapatkan ${formatCurrency(reward)}!`, true);
+    } else {
+      saveBalance(balance);
+      updateBalanceDisplay();
+      showResult(`Kalah! Angka yang benar adalah ${answer}. Anda kehilangan ${formatCurrency(bet)}. Coba lagi!`, false);
+    }
+    guessInput.value = '';
+  });
+
+  updateBalanceDisplay();
+</script>
+</body>
+</html>
+
+```
