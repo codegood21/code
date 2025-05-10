@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free VPS Creation Simulator</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .container {
+    background: rgba(0,0,0,0.35);
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 350px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.25);
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 1.1px;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  select, input[type=password], input[type=text] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #5a3bff;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background: #8888ff;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background: #4a2cd9;
+  }
+  .output {
+    margin-top: 20px;
+    background: rgba(255 255 255 / 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 13px;
+    max-height: 180px;
+    overflow-y: auto;
+    user-select: text;
+  }
+  .login-section {
+    margin-top: 25px;
+    display: none;
+  }
+  .login-section.active {
+    display: block;
+  }
+  .login-section label {
+    margin-top: 10px;
+  }
+  .status {
+    font-weight: 700;
+    font-size: 14px;
+    color: #5af15a;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Free VPS Creator Simulator">
+  <h1>Create Your Free VPS</h1>
+  <form id="vpsForm" aria-describedby="desc">
+    <label for="cpu">Select CPU Cores (max 16):</label>
+    <select id="cpu" name="cpu" aria-required="true" required>
+      <option value="" disabled selected>Select CPU cores</option>
+      <option value="1">1 Core</option>
+      <option value="2">2 Cores</option>
+      <option value="4">4 Cores</option>
+      <option value="8">8 Cores</option>
+      <option value="16">16 Cores</option>
+    </select>
+
+    <label for="ram">Select RAM (GB, max 64GB):</label>
+    <select id="ram" name="ram" aria-required="true" required>
+      <option value="" disabled selected>Select RAM</option>
+      <option value="1">1 GB</option>
+      <option value="2">2 GB</option>
+      <option value="4">4 GB</option>
+      <option value="8">8 GB</option>
+      <option value="16">16 GB</option>
+      <option value="32">32 GB</option>
+      <option value="64">64 GB</option>
+    </select>
+
+    <label for="vpsName">VPS Name:</label>
+    <input type="text" id="vpsName" name="vpsName" aria-required="true" placeholder="Enter VPS name" required maxlength="20" pattern="[a-zA-Z0-9-_ ]+" title="Only letters, numbers, spaces, dashes, and underscores" />
+
+    <button type="submit" id="createBtn">Create VPS</button>
+  </form>
+
+  <div class="output" id="output" aria-live="polite" aria-atomic="true"></div>
+
+  <section class="login-section" id="loginSection" aria-label="Login to VPS">
+    <h2>Login to Your VPS</h2>
+    <form id="loginForm" aria-describedby="loginDesc">
+      <label for="loginName">VPS Name:</label>
+      <input type="text" id="loginName" name="loginName" placeholder="Enter VPS Name" required />
+
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" name="loginPassword" placeholder="Enter Password" required />
+
+      <button type="submit">Login</button>
+    </form>
+    <div id="loginMessage" role="alert" style="margin-top:10px"></div>
+  </section>
+</div>
+
+<script>
+  (function() {
+    const vpsForm = document.getElementById('vpsForm');
+    const output = document.getElementById('output');
+    const loginSection = document.getElementById('loginSection');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    let createdVPS = null;
+
+    function appendOutput(message) {
+      output.textContent += message + '\\n';
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function validateCPUandRAM(cpu, ram) {
+      const cpuNum = parseInt(cpu, 10);
+      const ramNum = parseInt(ram, 10);
+      if (cpuNum > 16) return false;
+      if (ramNum > 64) return false;
+      return true;
+    }
+
+    vpsForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      output.textContent = '';
+      loginMessage.textContent = '';
+      loginSection.classList.remove('active');
+
+      const cpu = vpsForm.cpu.value;
+      const ram = vpsForm.ram.value;
+      const vpsName = vpsForm.vpsName.value.trim();
+
+      if (!validateCPUandRAM(cpu, ram)) {
+        appendOutput('Error: CPU cores must be up to 16 and RAM up to 64GB.');
+        return;
+      }
+      // Simulate VPS creation delay
+      appendOutput(`Starting VPS creation with ${cpu} CPU cores and ${ram} GB RAM...`);
+
+      setTimeout(() => {
+        createdVPS = {
+          name: vpsName,
+          cpu: cpu,
+          ram: ram,
+          password: generatePassword(),
+          isActive: true,
+          createdAt: new Date()
+        };
+        appendOutput('VPS created successfully!');
+        appendOutput('VPS Details:');
+        appendOutput(`VPS Name: ${createdVPS.name}`);
+        appendOutput(`CPU Cores: ${createdVPS.cpu}`);
+        appendOutput(`RAM: ${createdVPS.ram} GB`);
+        appendOutput(`Temporary Password: ${createdVPS.password}`);
+        appendOutput('Use the login form below to access your VPS.');
+        loginSection.classList.add('active');
+        loginForm.loginName.value = createdVPS.name;
+      }, 1200);
+    });
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      loginMessage.textContent = '';
+      const name = loginForm.loginName.value.trim();
+      const pass = loginForm.loginPassword.value;
+
+      if (!createdVPS || !createdVPS.isActive) {
+        loginMessage.style.color = '#ff5555';
+        loginMessage.textContent = 'No VPS has been created yet.';
+        return;
+      }
+
+      if (name !== createdVPS.name) {
+        loginMessage.style.color = '#ff5555';
+        loginMessage.textContent = 'VPS Name not found.';
+        return;
+      }
+
+      if (pass === createdVPS.password) {
+        loginMessage.style.color = '#5af15a';
+        loginMessage.textContent = `Login successful! Welcome to ${createdVPS.name} VPS. CPU: ${createdVPS.cpu} cores, RAM: ${createdVPS.ram} GB.`;
+      } else {
+        loginMessage.style.color = '#ff5555';
+        loginMessage.textContent = 'Incorrect password.';
+      }
+    });
+
+    // Generate a random password 8 characters
+    function generatePassword() {
+      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$_+";
+      let retVal = "";
+      for (let i = 0, n = charset.length; i < 8; ++i) {
+          retVal += charset.charAt(Math.floor(Math.random() * n));
+      }
+      return retVal;
+    }
+  })();
+</script>
+</body>
+</html>
+
+```
