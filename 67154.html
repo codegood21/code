@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ganti Gambar dan Lagu MP3</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e2f;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1 {
+    color: #82cfff;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .container {
+    background: linear-gradient(135deg, #3a3a55 0%, #1f1f2d 100%);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0px 0px 20px #4a4a7a;
+    user-select: none;
+  }
+  .image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #4178d6aa;
+    margin-bottom: 1rem;
+    background: #222240;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  img.custom-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  label {
+    color: #a0a0c0;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  input[type="file"], input[type="text"] {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background: #2a2a4a;
+    color: #c4c4ff;
+    box-sizing: border-box;
+  }
+  input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
+    background-color: #4178d6;
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #62a1ff;
+  }
+  audio {
+    width: 100%;
+    outline: none;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0px 0px 15px #4178d666;
+    background: #292945;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.83rem;
+    color: #555577;
+  }
+  @media (max-width: 600px) {
+    .container {
+      max-width: 95vw;
+      padding: 16px;
+    }
+    body {
+      padding: 15px 10px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Ganti Gambar & Lagu MP3</h1>
+  <div class="container" role="main">
+    <div class="image-wrapper" aria-label="Area gambar yang dapat diganti">
+      <img src="https://picsum.photos/400/300" alt="Gambar default" class="custom-image" />
+    </div>
+    <label for="imageInput">Pilih Gambar Baru</label>
+    <input
+      type="file"
+      id="imageInput"
+      accept="image/*"
+      aria-describedby="imageHelp"
+      aria-label="Input pilih gambar"
+    />
+    <audio controls aria-label="Kontrol musik MP3" id="audioPlayer" preload="none" >
+      <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_be02eeaba4.mp3?filename=calm-instrumental-background-11008.mp3" type="audio/mpeg" />
+      Browser Anda tidak mendukung elemen audio.
+    </audio>
+    <label for="audioInput">Ganti Lagu MP3 (URL)</label>
+    <input
+      type="text"
+      id="audioInput"
+      placeholder="Tempelkan URL lagu MP3 di sini"
+      aria-label="Input URL lagu MP3"
+    />
+    <div class="footer">* Gambar dan lagu bisa diganti oleh Anda. Dapat digunakan di browser modern & mobile.</div>
+  </div>
+<script>
+  (function(){
+    const imageInput = document.getElementById('imageInput');
+    const imgElement = document.querySelector('.custom-image');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audioInput = document.getElementById('audioInput');
+
+    imageInput.addEventListener('change', () => {
+      const file = imageInput.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          imgElement.src = e.target.result;
+          imgElement.alt = file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    audioInput.addEventListener('change', () => {
+      const url = audioInput.value.trim();
+      if (url) {
+        // Validate if URL ends with typical mp3 extensions for a basic check
+        if (!url.match(/\.(mp3|mpeg|wav|ogg)(\?.*)?$/i)) {
+          alert('Harap masukkan URL yang valid untuk file audio MP3, OGG, WAV, atau MPEG.');
+          return;
+        }
+        audioPlayer.src = url;
+        audioPlayer.load();
+        audioPlayer.play().catch(()=>{});
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
