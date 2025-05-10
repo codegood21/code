@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Deface</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at center, #ff0000, #000000);
+    font-family: 'Arial Black', Gadget, sans-serif;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  h1 {
+    font-size: 5vw;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    margin: 0;
+  }
+  p {
+    font-size: 2vw;
+    color: #ffa0a0;
+    margin-top: 1vh;
+    text-shadow: 0 0 5px #ff0000;
+  }
+  .glitch {
+    color: #ff0000;
+    position: relative;
+    font-weight: 900;
+    font-size: 6vw;
+    letter-spacing: 3px;
+    animation: glitch 1s infinite;
+  }
+  @keyframes glitch {
+    0% {
+      text-shadow:
+        2px 0 red,
+        -2px 0 cyan;
+    }
+    20% {
+      text-shadow:
+        -2px 0 red,
+        2px 0 cyan;
+    }
+    40% {
+      text-shadow:
+        2px 2px red,
+        -2px -2px cyan;
+    }
+    60% {
+      text-shadow:
+        -2px -2px red,
+        2px 2px cyan;
+    }
+    80% {
+      text-shadow:
+        2px 0 red,
+        -2px 0 cyan;
+    }
+    100% {
+      text-shadow:
+        -2px 0 red,
+        2px 0 cyan;
+    }
+  }
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 10vw;
+    }
+    p {
+      font-size: 4vw;
+    }
+    .glitch {
+      font-size: 12vw;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1 class="glitch">DEFACED</h1>
+  <p>You have been hacked!</p>
+</body>
+</html>
+
+```
