@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Jualan Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    padding: 24px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.8rem;
+    color: #222;
+    margin: 0;
+  }
+  .panel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .panel-item {
+    background: #f0f4ff;
+    padding: 16px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+  .panel-item:hover {
+    background: #d4e0ff;
+  }
+  .panel-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-name {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+  .panel-desc {
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .panel-price {
+    font-weight: 700;
+    color: #0047b3;
+    font-size: 1rem;
+  }
+  .btn-beli {
+    background: #25d366;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 12px;
+  }
+  .btn-beli:hover {
+    background: #1aa34a;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 10px;
+    }
+    .container {
+      padding: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <h1>Jualan Panel Terpercaya</h1>
+    </header>
+    <section class="panel-list" aria-label="Daftar produk panel">
+      <article class="panel-item" tabindex="0">
+        <div class="panel-info">
+          <div class="panel-name">Panel Sosmed Basic</div>
+          <div class="panel-desc">Follower Instagram 1000 aktif</div>
+        </div>
+        <div class="panel-price">Rp 50.000</div>
+        <button class="btn-beli" aria-label="Beli Panel Sosmed Basic" onclick="beliWhatsApp('Panel Sosmed Basic', '50000')">Beli</button>
+      </article>
+      <article class="panel-item" tabindex="0">
+        <div class="panel-info">
+          <div class="panel-name">Panel Streaming Premium</div>
+          <div class="panel-desc">View YouTube 5000 organik</div>
+        </div>
+        <div class="panel-price">Rp 120.000</div>
+        <button class="btn-beli" aria-label="Beli Panel Streaming Premium" onclick="beliWhatsApp('Panel Streaming Premium', '120000')">Beli</button>
+      </article>
+      <article class="panel-item" tabindex="0">
+        <div class="panel-info">
+          <div class="panel-name">Panel TikTok Viral</div>
+          <div class="panel-desc">Likes TikTok 2000 cepat naik</div>
+        </div>
+        <div class="panel-price">Rp 90.000</div>
+        <button class="btn-beli" aria-label="Beli Panel TikTok Viral" onclick="beliWhatsApp('Panel TikTok Viral', '90000')">Beli</button>
+      </article>
+    </section>
+  </div>
+<script>
+  function beliWhatsApp(namaProduk, harga) {
+    const nomorWA = '6281234567890'; // Ganti dengan nomor WhatsApp tujuan (format internasional tanpa +)
+    const pesan = `Halo, saya ingin membeli produk *${namaProduk}* dengan harga Rp ${harga}. Mohon info lebih lanjut.`;
+    const urlWA = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`;
+    window.open(urlWA, '_blank');
+  }
+</script>
+</body>
+</html>
+
+```
