@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Up Game Otomatis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .banner {
+            width: 100%;
+            height: auto;
+        }
+        .product {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Top Up Game Otomatis</h1>
+        <img src="banner.jpg" alt="Banner" class="banner mt-3">
+
+        <div class="product">
+            <h2>Top Up Diamond</h2>
+            <button class="btn btn-primary" onclick="buy('Mobile Legends', 100)">Beli Mobile Legends Diamond</button>
+            <button class="btn btn-primary" onclick="buy('Free Fire', 100)">Beli Free Fire Diamond</button>
+            <button class="btn btn-primary" onclick="buy('PUBG', 100)">Beli PUBG UC</button>
+        </div>
+
+        <div class="product">
+            <h2>Paket Data & Pulsa</h2>
+            <button class="btn btn-primary" onclick="buy('Pulsa', 10)">Beli Pulsa</button>
+            <button class="btn btn-primary" onclick="buy('Paket Data', 20)">Beli Paket Data</button>
+        </div>
+
+        <div id="paymentModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Konfirmasi Pembayaran</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Silakan lakukan pembayaran ke:</p>
+                        <p>DANA: 085659441370</p>
+                        <p>GOPAY: 085880150761</p>
+                        <p>Setelah melakukan pembayaran, silakan konfirmasi ke customer service.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function buy(game, amount) {
+            alert('Anda telah memilih untuk membeli ' + amount + ' diamond untuk ' + game);
+            $('#paymentModal').modal('show');
+        }
+    </script>
+</body>
+</html>
+```
