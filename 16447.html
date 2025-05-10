@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>BKP Website</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #283e51, #485563);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background-color: #1f2a38cc;
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    color: #e0e0e0;
+  }
+  nav {
+    margin-top: 0.5rem;
+  }
+  nav a {
+    color: #a0d8ef;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus {
+    color: #f9c80e;
+    outline: none;
+  }
+  main {
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    color: #f9c80e;
+  }
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #dcdcdc;
+  }
+  section {
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  footer {
+    background-color: #1f2a38cc;
+    color: #aaa;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+  /* Responsive */
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 1.7rem;
+    }
+    nav a {
+      font-size: 1rem;
+      margin: 0 0.5rem;
+    }
+    main {
+      padding: 1rem;
+    }
+    section {
+      padding: 1rem 1.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>BKP Official Website</h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<main>
+  <section id="about" tabindex="0">
+    <h2>About BKP</h2>
+    <p>BKP is your trusted partner in delivering modern solutions that blend creativity and technology seamlessly. Our team is committed to pushing boundaries and crafting unique experiences that make an impact.</p>
+    <p>Founded on principles of innovation and integrity, BKP drives progress for businesses and individuals alike. Join us as we explore new horizons and empower every project with excellence.</p>
+  </section>
+  <section id="services" tabindex="0">
+    <h2>Our Services</h2>
+    <p>We offer full-stack web development, creative design consultation, and digital marketing strategies custom-tailored to your needs. Whether you're a startup or an established company, BKP designs solutions that fit your vision and scale your business potential.</p>
+    <ul>
+      <li>Custom Website Design & Development</li>
+      <li>Brand Identity & Graphic Design</li>
+      <li>SEO & Social Media Marketing</li>
+      <li>Consultation & Project Management</li>
+    </ul>
+  </section>
+  <section id="contact" tabindex="0">
+    <h2>Contact Us</h2>
+    <p>Have questions or want to start a project? Reach out to BKP, and let's collaborate to bring your ideas to life with style and functionality.</p>
+    <form onsubmit="event.preventDefault(); alert('Thanks for reaching out. We will contact you shortly!');" aria-label="Contact form">
+      <label for="name" style="display:block; margin-bottom:0.25rem;">Name</label>
+      <input type="text" id="name" name="name" required placeholder="Your Name" style="width:100%; padding:0.5rem; border-radius:6px; border:none; margin-bottom:1rem; font-size:1rem;" />
+      <label for="email" style="display:block; margin-bottom:0.25rem;">Email</label>
+      <input type="email" id="email" name="email" required placeholder="your.email@example.com" style="width:100%; padding:0.5rem; border-radius:6px; border:none; margin-bottom:1rem; font-size:1rem;" />
+      <label for="message" style="display:block; margin-bottom:0.25rem;">Message</label>
+      <textarea id="message" name="message" rows="4" required placeholder="Write your message here..." style="width:100%; padding:0.5rem; border-radius:6px; border:none; margin-bottom:1rem; font-size:1rem;"></textarea>
+      <button type="submit" style="background:#f9c80e; color:#1f2a38; font-weight:700; padding:0.75rem 1.5rem; border:none; border-radius:8px; cursor:pointer; font-size:1.1rem; transition: background-color 0.3s ease;">
+        Send
+      </button>
+    </form>
+  </section>
+</main>
+<footer>
+  &copy; 2024 BKP - All Rights Reserved
+</footer>
+</body>
+</html>
+
+```
