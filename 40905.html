@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Premium Web App</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2a1a5e, #42207f);
+    color: #f0f0f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    max-width: 350px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-align: center;
+    width: 90vw;
+  }
+  h1 {
+    font-weight: 600;
+    font-size: 2.2rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  p.subtitle {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #d0cfe6;
+    margin-bottom: 30px;
+    letter-spacing: 0.05em;
+  }
+  .premium-features {
+    text-align: left;
+    margin-bottom: 30px;
+  }
+  .premium-features h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #6a52ad;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+  }
+  .feature {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  .feature-icon {
+    color: #a88cff;
+    margin-right: 10px;
+    font-size: 1.25rem;
+  }
+  button {
+    background-color: #7c58ff;
+    border: none;
+    border-radius: 9999px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    width: 100%;
+    letter-spacing: 0.1em;
+    user-select: none;
+  }
+  button:hover,
+  button:focus {
+    background-color: #9b7eff;
+    outline: none;
+  }
+  .footer {
+    margin-top: 28px;
+    font-size: 0.85rem;
+    color: #b0aee6;
+  }
+  @media (max-width: 400px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+    .premium-features h2 {
+      font-size: 1.1rem;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Premium subscription web app">
+    <h1>Unlock Premium</h1>
+    <p class="subtitle">Experience the next level of productivity and design.</p>
+    <section class="premium-features" aria-labelledby="features-title">
+      <h2 id="features-title">Premium Features</h2>
+      <div class="feature"><span class="feature-icon" aria-hidden="true">🚀</span>Lightning-fast performance</div>
+      <div class="feature"><span class="feature-icon" aria-hidden="true">🔒</span>Advanced security & privacy</div>
+      <div class="feature"><span class="feature-icon" aria-hidden="true">🎨</span>Customizable themes & layouts</div>
+      <div class="feature"><span class="feature-icon" aria-hidden="true">⚙️</span>Priority support 24/7</div>
+      <div class="feature"><span class="feature-icon" aria-hidden="true">✨</span>Exclusive updates & content</div>
+    </section>
+    <button id="subscribe-btn" aria-label="Subscribe to premium plan">Subscribe Now</button>
+    <p class="footer">&copy; 2024 Premium Web App. All rights reserved.</p>
+  </div>
+
+  <script>
+    const subscribeBtn = document.getElementById('subscribe-btn');
+    subscribeBtn.addEventListener('click', () => {
+      subscribeBtn.disabled = true;
+      subscribeBtn.textContent = 'Processing...';
+      // Simulated async subscription process
+      setTimeout(() => {
+        alert('Thank you for subscribing to Premium! Enjoy exclusive features.');
+        subscribeBtn.textContent = 'Subscribed';
+        subscribeBtn.disabled = true;
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
+
+```
