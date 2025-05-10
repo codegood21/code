@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Free VPS Login</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    background: rgba(0,0,0,0.6);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    width: 320px;
+    text-align: center;
+    user-select: none;
+  }
+  h1 {
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+    color: #bbb;
+    margin-bottom: 1.8rem;
+  }
+  .status {
+    margin: 1rem 0;
+    background: #2a2a72;
+    border-radius: 6px;
+    padding: 0.9rem;
+    font-size: 1rem;
+    min-height: 26px;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  button {
+    width: 100%;
+    background: #764ba2;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.35s ease;
+  }
+  button:hover {
+    background: #5e358f;
+  }
+  .vps-info {
+    background: #333366;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #999;
+    user-select: none;
+  }
+  @media only screen and (max-width: 400px) {
+    .container {
+      width: 90vw;
+      padding: 1.5rem 1.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Free VPS</h1>
+    <div class="subtitle">Login to your VPS</div>
+    <form id="loginForm" aria-label="VPS login form">
+      <label for="username">Username</label>
+      <input type="text" id="username" autocomplete="username" required aria-required="true" aria-describedby="usernameHelp" placeholder="Enter username" />
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required aria-required="true" placeholder="Enter password" />
+      <button type="submit" aria-live="polite">Log In</button>
+    </form>
+    <div class="status" aria-live="assertive" role="alert" id="statusMsg"></div>
+    <div id="vpsInfo" class="vps-info" hidden>
+      <p><strong>CPU:</strong> 4 cores</p>
+      <p><strong>RAM:</strong> 16 GB</p>
+      <p><strong>Username:</strong> awann</p>
+      <p><strong>Password:</strong> awan122</p>
+      <p>You can install software and use this VPS as real.</p>
+    </div>
+    <div class="footer" aria-label="Footer Information">Powered by Awan</div>
+  </div>
+
+<script>
+  (function(){
+    const loginForm = document.getElementById('loginForm');
+    const statusMsg = document.getElementById('statusMsg');
+    const vpsInfo = document.getElementById('vpsInfo');
+
+    // Simulated VPS session state
+    let loggedIn = false;
+
+    // Credentials as per user request
+    const validUsername = 'awann';
+    const validPassword = 'awan122';
+
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      statusMsg.textContent = '';
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if(username === validUsername && password === validPassword) {
+        loggedIn = true;
+        statusMsg.style.color = '#6ee662';
+        statusMsg.textContent = 'Login successful! You can now install software or use VPS features.';
+        loginForm.style.display = 'none';
+        vpsInfo.hidden = false;
+        // Simulate basic software install interface after login
+        showInstallPrompt();
+      }
+      else {
+        loggedIn = false;
+        statusMsg.style.color = '#ff6b6b';
+        statusMsg.textContent = 'Invalid username or password. Please try again.';
+      }
+    });
+
+    function showInstallPrompt() {
+      // Add a simple interface to simulate install commands
+      const installDiv = document.createElement('div');
+      installDiv.style.marginTop = '1rem';
+      installDiv.innerHTML = `
+        <label for="installCmd" style="font-weight:600;">Install Software</label>
+        <input id="installCmd" type="text" placeholder="Type package name e.g. nginx" style="width: 100%; padding: 0.5rem; border-radius: 6px; border:none; margin-bottom: 0.75rem;" aria-label="Software package name to install" />
+        <button id="installBtn" style="background:#5e358f; color:#fff; padding:0.6rem; border:none; width:100%; border-radius: 6px; font-weight: 700;">Install</button>
+        <div id="installResult" style="margin-top: 0.5rem; min-height: 24px; font-weight: 600;"></div>
+      `;
+      vpsInfo.appendChild(installDiv);
+
+      const installBtn = installDiv.querySelector('#installBtn');
+      const installCmd = installDiv.querySelector('#installCmd');
+      const installResult = installDiv.querySelector('#installResult');
+
+      installBtn.addEventListener('click', function(){
+        const pkg = installCmd.value.trim();
+        if(pkg.length === 0) {
+          installResult.style.color = '#ff6b6b';
+          installResult.textContent = 'Please enter a package name.';
+          return;
+        }
+        // Simulate installation success delay
+        installResult.style.color = '#6ee662';
+        installResult.textContent = `Installing "${pkg}"...`;
+        installBtn.disabled = true;
+        installCmd.disabled = true;
+        setTimeout(() => {
+          installResult.textContent = `Package "${pkg}" installed successfully.`;
+          installBtn.disabled = false;
+          installCmd.disabled = false;
+          installCmd.value = '';
+          installCmd.focus();
+        }, 1500);
+      });
+    }
+
+  })();
+</script>
+</body>
+</html>
+
+```
