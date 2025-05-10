@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ulang Tahun Ceria</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #FFE3E3, #FFC5BF);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #container {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 3rem;
+    box-shadow: 0 8px 20px rgba(255, 105, 135, 0.3);
+    text-align: center;
+    max-width: 350px;
+    width: 90vw;
+  }
+  h1 {
+    color: #FF5C5C;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 2.2rem;
+  }
+  label {
+    font-weight: 600;
+    color: #FF3D3D;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    border: 2px solid #FF8A8A;
+    font-size: 1.1rem;
+    color: #FF5C5C;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  input[type="number"]:focus {
+    border-color: #FF2626;
+  }
+  button {
+    margin-top: 1.5rem;
+    background: #FF5C5C;
+    border: none;
+    border-radius: 15px;
+    padding: 0.75rem 2rem;
+    color: white;
+    font-weight: 700;
+    font-size: 1.15rem;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(255, 92, 92, 0.7);
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #FF1C1C;
+  }
+
+  #message {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #FF1C1C;
+    min-height: 3rem;
+    position: relative;
+    overflow: visible;
+  }
+
+  /* Animation for the message */
+  .animate-message {
+    display: inline-block;
+    animation: floatBounce 3s ease-in-out infinite;
+    position: relative;
+  }
+
+  @keyframes floatBounce {
+    0%   { transform: translateY(0) rotate(0deg); }
+    25%  { transform: translateY(-15px) rotate(-3deg); }
+    50%  { transform: translateY(0) rotate(0deg); }
+    75%  { transform: translateY(-10px) rotate(3deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>Selamat Ulang Tahun!</h1>
+    <label for="umur">Masukkan Umur Anda</label>
+    <input id="umur" type="number" min="1" max="120" placeholder="Contoh: 25" />
+    <button id="submitBtn">Kirim</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const submitBtn = document.getElementById('submitBtn');
+    const umurInput = document.getElementById('umur');
+    const messageDiv = document.getElementById('message');
+
+    const positiveMessages = [
+      "Semoga tahun ini penuh kebahagiaan dan kesuksesan!",
+      "Umur hanya angka, semangatmu yang buat hidup cerah!",
+      "Hari ini istimewa, seperti kamu yang luar biasa!",
+      "Setiap tahun adalah kesempatan baru untuk jadi lebih hebat!",
+      "Jadikan ulang tahunmu awal dari petualangan hebat!",
+      "Semoga selalu diberi kesehatan dan kebahagiaan tiada akhir!",
+      "Usiamu bertambah, semangat dan keceriaan juga harus!",
+      "Tetaplah ceria dan terus raih mimpimu!",
+      "Semoga tahun ini penuh berkat dan kejutan indah!",
+      "Ulang tahunmu pancarkan cahaya positif yang inspiratif!"
+    ];
+
+    function getPositiveMessage() {
+      const idx = Math.floor(Math.random() * positiveMessages.length);
+      return positiveMessages[idx];
+    }
+
+    function createAnimatedMessage(text) {
+      // Clear previous
+      messageDiv.innerHTML = '';
+      const span = document.createElement('span');
+      span.className = 'animate-message';
+      span.textContent = text;
+      messageDiv.appendChild(span);
+    }
+
+    submitBtn.addEventListener('click', () => {
+      const umurVal = parseInt(umurInput.value, 10);
+
+      if (isNaN(umurVal) || umurVal < 1 || umurVal > 120) {
+        messageDiv.textContent = 'Mohon masukkan umur yang valid antara 1 hingga 120!';
+        messageDiv.style.color = '#D32F2F';
+        messageDiv.classList.remove('animate-message');
+        return;
+      }
+
+      const message = `Usia ${umurVal} tahun, ${getPositiveMessage()}`;
+      messageDiv.style.color = '#FF1C1C';
+      createAnimatedMessage(message);
+      umurInput.value = '';
+      umurInput.disabled = true;
+      submitBtn.disabled = true;
+    });
+
+    // Allow submitting by pressing enter
+    umurInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
