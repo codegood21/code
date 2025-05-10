@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Simple Public URL Access</title>
+<style>
+  /* Modern, clean styling */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+  }
+  .container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    padding: 24px;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 12px;
+    color: #007acc;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+  input[type="url"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+  input[type="url"]:focus {
+    outline: none;
+    border-color: #007acc;
+  }
+  button {
+    margin-top: 16px;
+    background-color: #007acc;
+    color: #fff;
+    font-size: 1.1rem;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #005fa3;
+  }
+  .link-output {
+    margin-top: 22px;
+    word-break: break-word;
+    font-size: 1rem;
+    color: #007acc;
+    cursor: pointer;
+  }
+  @media (max-width: 400px) {
+    body, .container {
+      padding: 10px;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Access Your URL</h1>
+    <label for="urlInput">Enter your deployed public URL:</label>
+    <input id="urlInput" type="url" placeholder="https://example.com" aria-label="Public URL input" />
+    <button id="openUrlBtn" aria-describedby="urlDesc">Open URL</button>
+    <p id="urlDesc" style="display:none;">Button to open the entered URL in a new tab.</p>
+    <p id="errorMsg" role="alert" style="color: red; display:none; font-weight: 600; margin-top: 10px;"></p>
+  </div>
+
+<script>
+  (function() {
+    const openBtn = document.getElementById("openUrlBtn");
+    const urlInput = document.getElementById("urlInput");
+    const errorMsg = document.getElementById("errorMsg");
+
+    function isValidUrl(url) {
+      try {
+        const parsed = new URL(url);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }
+
+    openBtn.addEventListener("click", function() {
+      const url = urlInput.value.trim();
+      errorMsg.style.display = "none";
+      if (!url) {
+        errorMsg.textContent = "Please enter a URL.";
+        errorMsg.style.display = "block";
+        return;
+      }
+      if (!isValidUrl(url)) {
+        errorMsg.textContent = "Invalid URL format, please enter a valid one starting with http or https.";
+        errorMsg.style.display = "block";
+        return;
+      }
+      window.open(url, "_blank", "noopener");
+    });
+
+    // Allow pressing Enter key in input to trigger open
+    urlInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        openBtn.click();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
