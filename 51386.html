@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>AllGame Top Up Otomatis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .container {
+    background: rgba(0,0,0,0.35);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 1.8rem;
+    text-align: center;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    user-select: none;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    user-select: none;
+  }
+  input[type="text"], select {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="text"]:focus, select:focus {
+    box-shadow: 0 0 6px rgba(255,255,255,0.7);
+  }
+  button {
+    margin-top: 1.75rem;
+    width: 100%;
+    padding: 0.8rem 0;
+    border: none;
+    border-radius: 30px;
+    background: #6a11cb;
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(38, 99, 255, 0.5);
+    transition: background 0.4s ease;
+    user-select: none;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5294fe, #9860db);
+    box-shadow: 0 8px 22px rgba(71, 110, 255, 0.7);
+  }
+  .message {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-height: 1.4rem;
+    text-align: center;
+    word-break: break-word;
+  }
+  .success {
+    color: #a3ffac;
+  }
+  .error {
+    color: #ffb3b3;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 1.5rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <h1>Top Up AllGame Otomatis</h1>
+  <form id="topupForm" aria-label="Form top up game">
+    <label for="game">Pilih Game</label>
+    <select id="game" required aria-required="true" aria-describedby="gameHelp">
+      <option value="" disabled selected>Pilih game...</option>
+      <option value="mobile-legends">Mobile Legends</option>
+      <option value="free-fire">Free Fire</option>
+      <option value="pubg-mobile">PUBG Mobile</option>
+      <option value="call-of-duty">Call of Duty Mobile</option>
+      <option value="valorant">Valorant</option>
+      <option value="garena">Garena Shells</option>
+      <option value="steam-wallet">Steam Wallet</option>
+    </select>
+    <label for="userid">User ID / In-Game ID</label>
+    <input id="userid" name="userid" type="text" placeholder="Masukkan User ID kamu" required aria-required="true" autocomplete="off" inputmode="numeric" pattern="[0-9]+" />
+    <label for="amount">Jumlah Top Up (contoh: 50000)</label>
+    <input id="amount" name="amount" type="text" placeholder="Jumlah nominal yang ingin di top up" required aria-required="true" autocomplete="off" inputmode="numeric" pattern="[0-9]+" />
+    <button type="submit" aria-live="polite">Top Up Sekarang</button>
+  </form>
+  <div class="message" id="message" role="alert" aria-live="assertive"></div>
+</div>
+<script>
+(() => {
+  const form = document.getElementById('topupForm');
+  const messageEl = document.getElementById('message');
+  
+  // Example dummy API endpoint for full payment top up (replace with actual URL)
+  const API_ENDPOINT = 'https://api.webtopupfullpayment.com/v1/topup';
+
+  // Helper for accessible message
+  function setMessage(text, isError = false) {
+    messageEl.textContent = text;
+    if (isError) {
+      messageEl.classList.remove('success');
+      messageEl.classList.add('error');
+    } else {
+      messageEl.classList.remove('error');
+      messageEl.classList.add('success');
+    }
+  }
+
+  // Function to call the API for top up
+  async function doTopUp(game, userid, amount) {
+    // Prepare payload as required by target API
+    const payload = {
+      game: game,
+      user_id: userid,
+      amount: Number(amount),
+      payment_method: "fullpayment"
+    };
+
+    try {
+      // Call the API with fetch
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Top up gagal, coba lagi.');
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setMessage('');
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    
+    const game = form.game.value;
+    const userid = form.userid.value.trim();
+    const amount = form.amount.value.trim();
+
+    if (!game || !userid || !amount) {
+      setMessage('Semua field wajib diisi.', true);
+      btn.disabled = false;
+      return;
+    }
+    if (!/^\d+$/.test(userid)) {
+      setMessage('User ID harus angka saja.', true);
+      btn.disabled = false;
+      return;
+    }
+    if (!/^\d+$/.test(amount) || Number(amount) <= 0) {
+      setMessage('Jumlah top up harus angka positif.', true);
+      btn.disabled = false;
+      return;
+    }
+
+    setMessage('Proses top up sedang berjalan, harap tunggu...');
+    try {
+      const result = await doTopUp(game, userid, amount);
+      setMessage(`Top up berhasil! Transaksi ID: ${result.transaction_id || 'tidak tersedia'}`);
+    } catch (error) {
+      setMessage(error.message || 'Terjadi kesalahan saat top up.', true);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
