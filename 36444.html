@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Free VPS Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+  body {
+    margin: 0;
+    background: #121212;
+    color: #eee;
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 0.25em;
+    color: #00ff99;
+  }
+  #powered {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    font-size: 12px;
+    color: #404040;
+  }
+  #loginPanel, #consolePanel {
+    background: #222;
+    box-shadow: 0 0 20px #00ff99aa;
+    border-radius: 8px;
+    width: 320px;
+    max-width: 90vw;
+    padding: 20px;
+  }
+  #loginPanel {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 8px 12px;
+    margin-top: 4px;
+    border-radius: 4px;
+    border: none;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    background: #111;
+    color: #eee;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 16px;
+    background: #00ff99;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #000;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #00cc77;
+  }
+  #loginError {
+    color: #ff5c5c;
+    font-size: 14px;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+  #consolePanel {
+    margin-top: 15px;
+    display: none;
+    flex-direction: column;
+  }
+  #console {
+    background: #000;
+    color: #00ff99;
+    font-family: 'Roboto Mono', monospace;
+    height: 260px;
+    border-radius: 4px;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+  }
+  #cmdInput {
+    margin-top: 8px;
+    padding: 8px 12px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    background: #111;
+    color: #eee;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #sysInfo {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #00cc77;
+  }
+  @media (max-width: 400px) {
+    #loginPanel, #consolePanel {
+      width: 95vw;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Free VPS Login</h1>
+<div id="loginPanel" aria-label="Login panel">
+  <label for="username">Username:</label>
+  <input type="text" id="username" autocomplete="username" aria-required="true" />
+  <label for="password">Password:</label>
+  <input type="password" id="password" autocomplete="current-password" aria-required="true" />
+  <button id="loginBtn" aria-label="Login to VPS">Login</button>
+  <div id="loginError" role="alert" aria-live="assertive"></div>
+</div>
+
+<div id="consolePanel" aria-live="polite" aria-atomic="true" aria-label="VPS Console Panel">
+  <div id="sysInfo" aria-label="System Information"></div>
+  <div id="console" tabindex="0" aria-label="VPS Console Output"></div>
+  <input type="text" id="cmdInput" placeholder="Type command and press Enter" aria-label="Command input" autocomplete="off" />
+</div>
+
+<div id="powered">powered by rijalganzz</div>
+
+<script>
+(() => {
+  // Credentials hardcoded for demo (username: 'user', password: 'password123')
+  const USERNAME = 'user';
+  const PASSWORD = 'password123';
+
+  // System info to show on login
+  const sysInfoText = [
+    "CPU Cores    : 4",
+    "RAM          : 16 GB",
+    "Disk Space   : 100 GB SSD",
+    "OS           : Ubuntu 22.04 LTS (simulated)",
+    "Network      : 100 Mbps",
+    "Uptime       : 0 days 0:0:0",
+  ];
+
+  // Simulated uptime timer
+  let uptimeSeconds = 0;
+  let uptimeInterval = null;
+
+  // Console and login elements
+  const loginPanel = document.getElementById('loginPanel');
+  const consolePanel = document.getElementById('consolePanel');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const sysInfo = document.getElementById('sysInfo');
+  const consoleOutput = document.getElementById('console');
+  const cmdInput = document.getElementById('cmdInput');
+
+  // Display system info with uptime dynamically
+  function updateSysInfo() {
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hrs = Math.floor((uptimeSeconds % 86400) / 3600);
+    const mins = Math.floor((uptimeSeconds % 3600) / 60);
+    const secs = uptimeSeconds % 60;
+    sysInfoText[5] = `Uptime       : ${days} days ${hrs}:${mins}:${secs}`;
+    sysInfo.textContent = sysInfoText.join('\n');
+  }
+
+  // Append line to console output
+  function consolePrint(text, isError = false) {
+    const line = document.createElement('div');
+    line.textContent = text;
+    if (isError) {
+      line.style.color = '#ff5555';
+    }
+    consoleOutput.appendChild(line);
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  }
+
+  // Clear console output
+  function clearConsole() {
+    consoleOutput.innerHTML = '';
+  }
+
+  // Command handlers: simulate some basic commands and installation
+  const commands = {
+    help() {
+      return `Available commands:
+help          - Show this help message
+clear         - Clear the console
+install [pkg] - Simulate installing a package
+uptime        - Show server uptime
+sysinfo       - Show system info
+logout        - Logout from VPS simulation
+`;
+    },
+    clear() {
+      clearConsole();
+      return '';
+    },
+    uptime() {
+      return sysInfoText[5];
+    },
+    sysinfo() {
+      return sysInfoText.join('\n');
+    },
+    logout() {
+      stopUptime();
+      consolePanel.style.display = 'none';
+      loginPanel.style.display = 'flex';
+      usernameInput.value = '';
+      passwordInput.value = '';
+      loginError.textContent = '';
+      clearConsole();
+      uptimeSeconds = 0;
+      updateSysInfo();
+      usernameInput.focus();
+      return 'Logged out successfully.';
+    },
+    install(pkg) {
+      if (!pkg) return 'Error: Please specify a package to install. Usage: install [package_name]';
+
+      // Simulate a delay and success
+      return new Promise((resolve) => {
+        consolePrint(`Searching for package "${pkg}"...`);
+        setTimeout(() => {
+          consolePrint(`Package "${pkg}" found.`);
+          setTimeout(() => {
+            consolePrint(`Installing "${pkg}"...`);
+            setTimeout(() => {
+              consolePrint(`Successfully installed "${pkg}".`, false);
+              resolve('');
+            }, 1500);
+          }, 800);
+        }, 1000);
+      });
+    }
+  };
+
+  // Process command input
+  async function processCommand(input) {
+    if (!input.trim()) return;
+    consolePrint(`$ ${input}`);
+    const parts = input.trim().split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    if (!(cmd in commands)) {
+      consolePrint(`Command not found: ${cmd}. Type "help" for commands.`, true);
+      return;
+    }
+
+    try {
+      const result = commands[cmd].apply(null, args);
+      if (result instanceof Promise) {
+        // Await async command (install)
+        await result;
+      } else if (result !== '') {
+        consolePrint(result);
+      }
+    } catch (err) {
+      consolePrint('Error executing command: ' + err.message, true);
+    }
+  }
+
+  // Uptime ticker
+  function startUptime() {
+    if (uptimeInterval) return;
+    uptimeInterval = setInterval(() => {
+      uptimeSeconds++;
+      updateSysInfo();
+    }, 1000);
+  }
+  function stopUptime() {
+    clearInterval(uptimeInterval);
+    uptimeInterval = null;
+  }
+
+  // Handle login click
+  loginBtn.addEventListener('click', () => {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value;
+
+    if (user === USERNAME && pass === PASSWORD) {
+      loginError.textContent = '';
+      loginPanel.style.display = 'none';
+      consolePanel.style.display = 'flex';
+      clearConsole();
+      updateSysInfo();
+      uptimeSeconds = 0;
+      startUptime();
+      consolePrint('Welcome to your Free VPS!\nType "help" for available commands.');
+      cmdInput.focus();
+    } else {
+      loginError.textContent = 'Invalid username or password.';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  });
+
+  // Handle enter key on inputs
+  [usernameInput, passwordInput].forEach(input => {
+    input.addEventListener('keyup', e => {
+      if (e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  });
+
+  // Handle command input enter
+  cmdInput.addEventListener('keyup', async (e) => {
+    if (e.key === 'Enter') {
+      const input = cmdInput.value;
+      cmdInput.value = '';
+      await processCommand(input);
+    }
+  });
+
+  // Focus username on load
+  window.addEventListener('load', () => {
+    usernameInput.focus();
+  });
+})();
+</script>
+</body>
+</html>
+
+```
