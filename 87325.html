@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Secure Webcam Access</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #4a90e2, #50e3c2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+  }
+  .container {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(80, 227, 194, 0.7);
+  }
+  video {
+    width: 320px;
+    height: 240px;
+    border-radius: 12px;
+    border: 3px solid #50e3c2;
+    background: #222;
+  }
+  button {
+    margin-top: 15px;
+    background-color: #50e3c2;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    color: #00504d;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover,
+  button:focus {
+    background-color: #3ac8a3;
+    outline: none;
+  }
+  .status {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Webcam Access Trusted Example</h2>
+  <video id="webcam" autoplay playsinline muted></video>
+  <button id="startBtn">Start Camera</button>
+  <p class="status" id="status">Click the button to enable your webcam</p>
+</div>
+
+<script>
+  const video = document.getElementById('webcam');
+  const startBtn = document.getElementById('startBtn');
+  const status = document.getElementById('status');
+
+  startBtn.addEventListener('click', async () => {
+    status.textContent = 'Requesting access to webcam...';
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      status.textContent = 'Webcam access granted. Streaming video...';
+      startBtn.disabled = true;
+      startBtn.textContent = 'Camera Active';
+    } catch (err) {
+      status.textContent = 'Access denied or no webcam found.';
+    }
+  });
+</script>
+</body>
+</html>
+
+```
