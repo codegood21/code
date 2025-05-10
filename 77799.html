@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>DSSTORE Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin:0; padding:0; height:100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #login-container, #shop-container {
+    background: rgba(255 255 255 / 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  h1 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    letter-spacing: 1.5px;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  input[type=submit] {
+    width: 100%;
+    padding: 0.65rem;
+    border:none;
+    border-radius: 6px;
+    background: #764ba2;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  input[type=submit]:hover {
+    background: #5a3678;
+  }
+  #shop-container {
+    display: none;
+    color: #f9f9f9;
+    max-width: 400px;
+  }
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 1rem 0 0.5rem 0;
+    border-bottom: 2px solid #764ba2;
+    padding-bottom: 0.25rem;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 1rem 0;
+  }
+  li {
+    background: rgba(255 255 255 / 0.15);
+    margin: 0.25rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  a.button-link {
+    display: inline-block;
+    background: #764ba2;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 0.25rem;
+    transition: background 0.3s ease;
+    font-size: 1rem;
+  }
+  a.button-link:hover {
+    background: #5a3678;
+  }
+  @media (max-width:400px) {
+    #login-container, #shop-container {
+      width: 90vw;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="login-container">
+  <h1>DSSTORE</h1>
+  <form id="login-form" autocomplete="off" novalidate>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required autocomplete="off" />
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required autocomplete="off" />
+    <input type="submit" value="Login" />
+  </form>
+</div>
+
+<div id="shop-container" aria-live="polite">
+  <h1>DSSTORE Shop</h1>
+  
+  <div>
+    <div class="section-title">Joki Dead Rails</div>
+    <ul>
+      <li>Joki Level</li>
+      <li>Joki Quest</li>
+      <li>Joki Item</li>
+    </ul>
+    <a href="https://wa.me/6285815977478" class="button-link" target="_blank" rel="noopener">Pesan Joki Dead Rails</a>
+  </div>
+
+  <div style="margin-top: 1.5rem;">
+    <div class="section-title">Panel Pterodactyl</div>
+    <ul>
+      <li>Panel Hosting Game</li>
+      <li>Panel VPS</li>
+      <li>Panel Server</li>
+    </ul>
+    <a href="https://wa.me/6285815977478" class="button-link" target="_blank" rel="noopener">Pesan Panel Pterodactyl</a>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const loginForm = document.getElementById('login-form');
+    const loginContainer = document.getElementById('login-container');
+    const shopContainer = document.getElementById('shop-container');
+
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const username = loginForm.username.value.trim();
+      const password = loginForm.password.value.trim();
+
+      if(username === 'admin' && password === 'admin') {
+        loginContainer.style.display = 'none';
+        shopContainer.style.display = 'block';
+      } else {
+        alert('Username atau password salah!');
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
