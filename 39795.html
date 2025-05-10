@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Baca Buku Online - Alpariszzx</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Roboto:wght@400;500&display=swap');
+
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Merriweather', serif;
+    background: #f5f3f1;
+    color: #333;
+    line-height: 1.75;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 700px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 50px rgba(100,100,125,0.1);
+    padding: 2rem 3rem 3rem 3rem;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 600px;
+  }
+
+  header {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1.9rem;
+    color: #0b3d91;
+    user-select: none;
+  }
+
+  header .domain {
+    font-size: 0.9rem;
+    color: #6c7a89;
+    letter-spacing: 0.04em;
+  }
+
+  main {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  p {
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+    font-size: 1.12rem;
+    color: #4a4a4a;
+    text-align: justify;
+  }
+
+  /* Scrollbar */
+  main::-webkit-scrollbar {
+    width: 8px;
+  }
+  main::-webkit-scrollbar-track {
+    background: #e8e5e2;
+    border-radius: 10px;
+  }
+  main::-webkit-scrollbar-thumb {
+    background-color: #0b3d91;
+    border-radius: 10px;
+  }
+
+  /* Navigation Controls */
+  nav {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: #0b3d91;
+    border: none;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    user-select: none;
+    width: 48%;
+  }
+
+  button:disabled {
+    background-color: #a0a5af;
+    cursor: not-allowed;
+  }
+
+  button:hover:not(:disabled),
+  button:focus:not(:disabled) {
+    background-color: #143d85;
+    outline: none;
+  }
+
+  /* Responsive for smaller/mobile screen */
+  @media (max-width: 380px), (max-height: 600px) {
+    body {
+      padding: 0.5rem;
+    }
+    .container {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0;
+      padding: 1.25rem 1.5rem 2rem;
+      height: 100vh;
+      max-height: 600px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      width: 48%;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Konten buku online Alpariszzx">
+  <header>
+    <h1>Buku Online Alpariszzx</h1>
+    <div class="domain" aria-label="Domain situs">Domain: Alpariszzx</div>
+  </header>
+  <main id="book-content" tabindex="0" aria-live="polite" aria-atomic="true" aria-relevant="additions removals text">
+    <!-- Content pages inserted here by JS -->
+  </main>
+  <nav>
+    <button id="prev-btn" aria-label="Halaman sebelumnya" disabled>‹ Sebelumnya</button>
+    <button id="next-btn" aria-label="Halaman berikutnya">Berikutnya ›</button>
+  </nav>
+</div>
+
+<script>
+  // Sample text content pages for demonstration purposes
+  const pages = [
+    `Bab 1: Pengantar Membaca Buku Online
+    Selamat datang di situs baca buku online Alpariszzx! Di sini, Anda dapat menikmati berbagai buku dengan nyaman dan mudah, langsung dari browser Anda. Nikmati pengalaman membaca yang nyaman dengan desain yang bersih dan responsif.`,
+
+    `Bab 2: Kenapa Membaca Buku Online?
+    Membaca buku secara online sangat praktis dan ramah lingkungan. Anda dapat membawa banyak buku hanya dengan perangkat yang Anda miliki. Selain itu, akses ke berbagai jenis buku bisa langsung dari mana saja dan kapan saja.`,
+
+    `Bab 3: Tips Membaca Buku dengan Nyaman di Alpariszzx
+    1. Gunakan mode terang yang nyaman untuk mata.
+    2. Pastikan layar perangkat Anda cukup terang.
+    3. Gunakan tombol navigasi untuk berpindah halaman dengan mudah.
+    4. Perbesar teks jika diperlukan menggunakan zoom browser.`,
+
+    `Bab 4: Koleksi Buku Kami
+    Situs ini menyediakan berbagai genre buku, dari fiksi, sejarah, hingga pengembangan diri. Setiap buku disajikan dalam format mudah dibaca dengan pemformatan yang rapi dan profesional.`,
+
+    `Bab 5: Terima Kasih Sudah Membaca!
+    Terima kasih telah menggunakan Alpariszzx sebagai teman membaca buku online Anda. Kami berharap pengalaman membaca Anda menyenangkan dan bermanfaat. Jangan lupa untuk kembali dan menjelajahi koleksi buku baru yang terus kami tambahkan.`
+  ];
+
+  let currentPageIndex = 0;
+
+  const contentEl = document.getElementById('book-content');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  function renderPage(pageIndex) {
+    if (pageIndex < 0 || pageIndex >= pages.length) return;
+    contentEl.textContent = pages[pageIndex];
+    prevBtn.disabled = (pageIndex === 0);
+    nextBtn.disabled = (pageIndex === pages.length - 1);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPageIndex > 0) {
+      currentPageIndex--;
+      renderPage(currentPageIndex);
+      contentEl.focus();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentPageIndex < pages.length - 1) {
+      currentPageIndex++;
+      renderPage(currentPageIndex);
+      contentEl.focus();
+    }
+  });
+
+  // Keyboard navigation support for accessibility
+  document.addEventListener('keydown', (e) => {
+    if (e.target === contentEl || e.target === document.body) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        if (!nextBtn.disabled) {
+          currentPageIndex++;
+          renderPage(currentPageIndex);
+          e.preventDefault();
+        }
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        if (!prevBtn.disabled) {
+          currentPageIndex--;
+          renderPage(currentPageIndex);
+          e.preventDefault();
+        }
+      }
+    }
+  });
+
+  // Initial render
+  renderPage(currentPageIndex);
+</script>
+</body>
+</html>
+
+```
