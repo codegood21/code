@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jualan Aplikasi Premium</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f8f8f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  header {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 2.5rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+  }
+  header p {
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #dcdcdc;
+  }
+  main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+  }
+  .card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+  }
+  .card h2 {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  .price {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #ffd700;
+    margin-bottom: 12px;
+  }
+  .desc {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    color: #eee;
+    line-height: 1.3;
+  }
+  .btn-buy {
+    background: #ffd700;
+    color: #333;
+    font-weight: 600;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+    transition: background 0.3s ease;
+    user-select:none;
+  }
+  .btn-buy:hover {
+    background: #ffec72;
+  }
+
+  footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #ddd;
+    text-align: center;
+  }
+  @media(max-width: 400px) {
+    body {
+      padding: 10px;
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+    .card {
+      padding: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Aplikasi Premium Ready</h1>
+  <p>Dapatkan akses premium Youtube, Canva Pro, Netflix & aplikasi lainnya dengan harga terjangkau!</p>
+</header>
+<main>
+  <section class="card" aria-label="Youtube Premium">
+    <h2>Youtube Premium</h2>
+    <p class="price">Rp 50.000 / bulan</p>
+    <p class="desc">Nikmati Youtube tanpa iklan, download video, dan putar di latar belakang dengan kualitas premium resmi.</p>
+    <button class="btn-buy" onclick="buy('Youtube Premium', 50000)">Beli Sekarang</button>
+  </section>
+  <section class="card" aria-label="Canva Pro">
+    <h2>Canva Pro</h2>
+    <p class="price">Rp 75.000 / bulan</p>
+    <p class="desc">Akses semua fitur premium desain grafis Canva, template profesional, dan koleksi foto & video tanpa batas.</p>
+    <button class="btn-buy" onclick="buy('Canva Pro', 75000)">Beli Sekarang</button>
+  </section>
+  <section class="card" aria-label="Netflix Premium">
+    <h2>Netflix Premium</h2>
+    <p class="price">Rp 85.000 / bulan</p>
+    <p class="desc">Streaming film dan serial TV favorit Anda dengan kualitas full HD dan 4 layar dalam satu akun.</p>
+    <button class="btn-buy" onclick="buy('Netflix Premium', 85000)">Beli Sekarang</button>
+  </section>
+  <section class="card" aria-label="Spotify Premium">
+    <h2>Spotify Premium</h2>
+    <p class="price">Rp 40.000 / bulan</p>
+    <p class="desc">Dengarkan musik tanpa iklan, offline, dengan kualitas audio tinggi dari jutaan lagu favorit.</p>
+    <button class="btn-buy" onclick="buy('Spotify Premium', 40000)">Beli Sekarang</button>
+  </section>
+  <section class="card" aria-label="Adobe Creative Cloud">
+    <h2>Adobe Creative Cloud</h2>
+    <p class="price">Rp 120.000 / bulan</p>
+    <p class="desc">Nikmati akses ke aplikasi desain profesional seperti Photoshop, Illustrator, dan Premiere Pro.</p>
+    <button class="btn-buy" onclick="buy('Adobe Creative Cloud', 120000)">Beli Sekarang</button>
+  </section>
+  <section class="card" aria-label="Microsoft 365">
+    <h2>Microsoft 365</h2>
+    <p class="price">Rp 70.000 / bulan</p>
+    <p class="desc">Dapatkan aplikasi Office terbaru seperti Word, Excel, PowerPoint dan penyimpanan cloud OneDrive.</p>
+    <button class="btn-buy" onclick="buy('Microsoft 365', 70000)">Beli Sekarang</button>
+  </section>
+</main>
+<footer>
+  <p>Hubungi kami via WhatsApp untuk pemesanan & info lebih lanjut.</p>
+</footer>
+<script>
+  function buy(product, price) {
+    const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    const whatsappNumber = '6281234567890'; // Replace with your real WhatsApp number
+    const message = encodeURIComponent(`Halo, saya ingin membeli: ${product} dengan harga ${formattedPrice}. Mohon info selanjutnya.`);
+    const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+    window.open(url, '_blank');
+  }
+</script>
+</body>
+</html>
+
+```
