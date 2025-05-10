@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Gmail Login OTP via WhatsApp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #4285F4, #34A853);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .login-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    padding: 30px 25px;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-weight: 500;
+    font-size: 24px;
+    color: #202124;
+    margin: 0 0 10px 0;
+    text-align: center;
+  }
+  p.subtitle {
+    font-size: 14px;
+    color: #5f6368;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    color: #202124;
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  input[type="tel"],
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s ease;
+  }
+  input[type="tel"]:focus,
+  input[type="text"]:focus {
+    border-color: #1a73e8;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 14px 0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+  }
+  button:disabled {
+    background-color: #a3c0f9;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background-color: #1669c1;
+  }
+  .info-text {
+    font-size: 12px;
+    color: #5f6368;
+    text-align: center;
+    margin-top: 15px;
+  }
+  .otp-sent {
+    color: #34a853;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="login-container" role="main" aria-label="Gmail login form">
+  <h1>Sign in</h1>
+  <p class="subtitle">Use your phone number to get OTP via WhatsApp</p>
+  
+  <form id="login-form" autocomplete="off" novalidate>
+    <div>
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" type="tel" placeholder="+62 812 3456 7890" pattern="^\+?\d{10,15}$" inputmode="tel" required aria-required="true" aria-describedby="phone-help"/>
+      <div id="phone-help" class="info-text">Enter your full phone number with country code</div>
+    </div>
+    
+    <button type="button" id="sendOtpBtn">Send OTP via WhatsApp</button>
+
+    <div id="otp-section" style="display:none;">
+      <p class="otp-sent" id="otpSentMsg" role="alert" aria-live="assertive">OTP sent to your WhatsApp</p>
+      <label for="otp">Enter OTP</label>
+      <input id="otp" name="otp" type="text" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required aria-required="true" />
+      <button type="submit" id="loginBtn" disabled>Verify &amp; Login</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  (function() {
+    const phoneInput = document.getElementById('phone');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otp-section');
+    const otpInput = document.getElementById('otp');
+    const loginBtn = document.getElementById('loginBtn');
+    const otpSentMsg = document.getElementById('otpSentMsg');
+    
+    function isValidPhone(phone) {
+      const phonePattern = /^\+?\d{10,15}$/;
+      return phonePattern.test(phone.trim());
+    }
+
+    function isValidOTP(otp) {
+      const otpPattern = /^\d{6}$/;
+      return otpPattern.test(otp.trim());
+    }
+
+    sendOtpBtn.addEventListener('click', function() {
+      const phone = phoneInput.value.trim();
+      if (!isValidPhone(phone)) {
+        phoneInput.focus();
+        alert('Please enter a valid phone number with country code.');
+        return;
+      }
+      // Simulate sending OTP via WhatsApp (mock)
+      // In real implementation, an API request would be made here to trigger WhatsApp OTP.
+      otpSection.style.display = 'block';
+      sendOtpBtn.disabled = true;
+      phoneInput.disabled = true;
+      otpInput.focus();
+    });
+
+    otpInput.addEventListener('input', function() {
+      if (isValidOTP(otpInput.value)) {
+        loginBtn.disabled = false;
+      } else {
+        loginBtn.disabled = true;
+      }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (loginBtn.disabled) return;
+
+      // Fake OTP verification (for demo only)
+      const otp = otpInput.value.trim();
+      if (otp === '123456') {  // Example fixed OTP for demo - replace as needed
+        alert('Login successful!');
+        // Reset form
+        phoneInput.value = '';
+        otpInput.value = '';
+        otpSection.style.display = 'none';
+        sendOtpBtn.disabled = false;
+        phoneInput.disabled = false;
+        loginBtn.disabled = true;
+        phoneInput.focus();
+      } else {
+        alert('Invalid OTP. Please try again.');
+        otpInput.focus();
+      }
+    });
+
+    // Make sure layout fits mobile screen heights exactly without scrolling on typical 600px height/350px width
+    function adjustBodyHeight() {
+      document.body.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', adjustBodyHeight);
+    adjustBodyHeight();
+  })();
+</script>
+</body>
+</html>
+
+```
