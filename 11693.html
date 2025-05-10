@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Payment via Dana & GoPay</title>
+<style>
+  /* Modern minimal styling */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+  }
+  .container {
+    background: rgba(0,0,0,0.5);
+    border-radius: 20px;
+    padding: 30px 40px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 0 15px rgba(0,0,255,0.7);
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    margin: 15px 0;
+    padding: 15px 0;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  .dana {
+    background: #0046be;
+    box-shadow: 0 5px 10px #003191;
+  }
+  .dana:hover {
+    background: #002f6c;
+  }
+  .gopay {
+    background: #00a79d;
+    box-shadow: 0 5px 10px #006e6a;
+  }
+  .gopay:hover {
+    background: #00746c;
+  }
+  .info {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ccc;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Bayar dengan Dana / GoPay</h1>
+  <button class="btn dana" id="payDana">Bayar via Dana</button>
+  <button class="btn gopay" id="payGopay">Bayar via GoPay</button>
+  <div class="info">Nomor tujuan pembayaran:<br><strong>081999424621</strong></div>
+</div>
+<script>
+  // Using link format for Dana and GoPay to open the apps directly with the number included
+  // Dana uses "dana" URI scheme; GoPay usually uses "linkaja" or deep linking. Using gojek URL for GoPay.
+
+  // Dana deep link
+  function payWithDana() {
+    // Dana payment URI with recipient number and optional amount (example)
+    const danaUrl = 'dana://pay?pa=081999424621';
+    window.location.href = danaUrl;
+  }
+
+  // GoPay deep link - commonly opened via Gojek app with phone number
+  function payWithGopay() {
+    // This URI attempts to open Gojek app to pay the specified mobile number
+    const gopayUrl = 'gojek://gopay/pay?phone=081999424621';
+    window.location.href = gopayUrl;
+  }
+
+  document.getElementById('payDana').addEventListener('click', payWithDana);
+  document.getElementById('payGopay').addEventListener('click', payWithGopay);
+</script>
+</body>
+</html>
+
+```
