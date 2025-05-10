@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Game Otomatis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #171e26, #3b4261);
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+  }
+  header {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    padding: 20px 0;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #1DD1A1;
+    letter-spacing: 1.5px;
+  }
+  main {
+    width: 100%;
+    max-width: 480px;
+    background: #222b3a;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 0 15px rgba(29, 209, 161, 0.4);
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #88c8b6;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #1c2433;
+    color: #eee;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+  select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    box-shadow: 0 0 8px #1dd1a1;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #1dd1a1;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0f1f13;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 6px 15px rgba(29, 209, 161, 0.7);
+  }
+  button:hover {
+    background: #17b68a;
+  }
+  .order-summary {
+    margin-top: 30px;
+    background: #16202b;
+    border-radius: 12px;
+    padding: 15px 20px;
+  }
+  .order-summary h2 {
+    margin-top: 0;
+    font-weight: 700;
+    color: #1dd1a1;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #1dd1a150;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+  }
+  .order-summary p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+  .footer {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #5c7a88;
+  }
+  /* Responsive Mobile Friendly */
+  @media (max-width: 480px) {
+    body {
+      padding: 15px 10px 30px;
+    }
+    main {
+      padding: 18px;
+    }
+    button {
+      font-size: 1rem;
+      padding: 12px;
+    }
+  }
+  .loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: #1dd1a1;
+    font-size: 1.8rem;
+    font-weight: 700;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .loading-overlay.active {
+    visibility: visible;
+    opacity: 1;
+  }
+  .spinner {
+    border: 4px solid #1dd1a130;
+    border-top: 4px solid #1dd1a1;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+    margin-right: 15px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Top Up Game Otomatis</h1>
+</header>
+<main>
+  <form id="topupForm" autocomplete="off">
+    <label for="game">Pilih Game</label>
+    <select id="game" required>
+      <option value="" disabled selected>-- Pilih Game --</option>
+      <option value="mobile-legends">Mobile Legends</option>
+      <option value="free-fire">Free Fire</option>
+      <option value="pubg-mobile">PUBG Mobile</option>
+      <option value="valorant">Valorant</option>
+      <option value="pubg-pc">PUBG PC</option>
+      <option value="minecraft">Minecraft</option>
+      <option value="call-of-duty">Call of Duty</option>
+    </select>
+    <label for="serverId">Server ID / User ID</label>
+    <input type="text" id="serverId" placeholder="Masukkan Server ID / User ID" required pattern=".{3,}" title="Minimal 3 karakter" />
+    <label for="product">Pilih Produk</label>
+    <select id="product" required>
+      <option value="" disabled selected>-- Pilih Produk --</option>
+    </select>
+    <label for="quantity">Jumlah Top Up</label>
+    <input type="number" id="quantity" placeholder="Masukkan jumlah" min="1" max="1000" required />
+    <label for="payment">Metode Pembayaran</label>
+    <select id="payment" required>
+      <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+      <option value="gopay">GoPay</option>
+      <option value="dana">DANA</option>
+      <option value="ovo">OVO</option>
+      <option value="bank-transfer">Bank Transfer</option>
+      <option value="shopeepay">ShopeePay</option>
+    </select>
+    <button type="submit">Proses Top Up</button>
+  </form>
+  <section id="orderResult" class="order-summary" style="display:none;">
+    <h2>Rincian Pesanan</h2>
+    <p><strong>Game:</strong> <span id="resultGame"></span></p>
+    <p><strong>Server ID / User ID:</strong> <span id="resultServer"></span></p>
+    <p><strong>Produk:</strong> <span id="resultProduct"></span></p>
+    <p><strong>Jumlah:</strong> <span id="resultQuantity"></span></p>
+    <p><strong>Total Harga:</strong> <span id="resultPrice"></span></p>
+    <p><strong>Metode Pembayaran:</strong> <span id="resultPayment"></span></p>
+    <p><em>Pesanan Anda sedang diproses otomatis, mohon tunggu beberapa saat.</em></p>
+  </section>
+</main>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  Memproses Top Up...
+</div>
+<div class="footer">© 2024 Top Up Game Otomatis | All rights reserved.</div>
+<script>
+  // Products database simulation with prices per unit
+  const productsData = {
+    'mobile-legends': [
+      { id: 'diamonds_10', name: '10 Diamond', price: 12000 },
+      { id: 'diamonds_50', name: '50 Diamond', price: 58000 },
+      { id: 'diamonds_100', name: '100 Diamond', price: 110000 },
+      { id: 'diamonds_500', name: '500 Diamond', price: 530000 }
+    ],
+    'free-fire': [
+      { id: 'diamond_5', name: '5 Diamond', price: 9000 },
+      { id: 'diamond_50', name: '50 Diamond', price: 85000 },
+      { id: 'diamond_100', name: '100 Diamond', price: 160000 },
+      { id: 'diamond_500', name: '500 Diamond', price: 780000 }
+    ],
+    'pubg-mobile': [
+      { id: 'uc_60', name: '60 UC', price: 12000 },
+      { id: 'uc_330', name: '330 UC', price: 61000 },
+      { id: 'uc_660', name: '660 UC', price: 120000 },
+      { id: 'uc_1800', name: '1800 UC', price: 300000 }
+    ],
+    'valorant': [
+      { id: 'points_450', name: '450 Points', price: 60000 },
+      { id: 'points_1000', name: '1000 Points', price: 130000 },
+      { id: 'points_2050', name: '2050 Points', price: 250000 }
+    ],
+    'pubg-pc': [
+      { id: 'crates_50', name: '50 Crates', price: 70000 },
+      { id: 'crates_100', name: '100 Crates', price: 135000 }
+    ],
+    'minecraft': [
+      { id: 'coins_1000', name: '1000 Coins', price: 15000 },
+      { id: 'coins_5000', name: '5000 Coins', price: 70000 }
+    ],
+    'call-of-duty': [
+      { id: 'cp_1000', name: '1000 CP', price: 130000 },
+      { id: 'cp_2000', name: '2000 CP', price: 260000 }
+    ]
+  };
+
+  const gameSelect = document.getElementById('game');
+  const productSelect = document.getElementById('product');
+  const quantityInput = document.getElementById('quantity');
+  const topupForm = document.getElementById('topupForm');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const orderResult = document.getElementById('orderResult');
+  const resultGame = document.getElementById('resultGame');
+  const resultServer = document.getElementById('resultServer');
+  const resultProduct = document.getElementById('resultProduct');
+  const resultQuantity = document.getElementById('resultQuantity');
+  const resultPrice = document.getElementById('resultPrice');
+  const resultPayment = document.getElementById('resultPayment');
+
+  // Populate products when a game is selected
+  gameSelect.addEventListener('change', () => {
+    const game = gameSelect.value;
+    productSelect.innerHTML = '<option value="" disabled selected>-- Pilih Produk --</option>';
+    if (productsData[game]) {
+      productsData[game].forEach(prod => {
+        const opt = document.createElement('option');
+        opt.value = prod.id;
+        opt.textContent = `${prod.name} - Rp${prod.price.toLocaleString('id-ID')}`;
+        productSelect.appendChild(opt);
+      });
+      quantityInput.value = 1;
+    }
+  });
+
+  // Format currency
+  function formatCurrency(num) {
+    return 'Rp' + num.toLocaleString('id-ID');
+  }
+
+  // Main submit handler simulating the automatic processing system
+  topupForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Validate inputs (additional client side validation)
+    if(!gameSelect.value || !productSelect.value || !quantityInput.value || !this.serverId.value.trim() || !this.payment.value){
+      alert('Harap lengkapi semua kolom dengan benar.');
+      return;
+    }
+    const productList = productsData[gameSelect.value];
+    if(!productList) {
+      alert('Game tidak valid.');
+      return;
+    }
+    const selectedProduct = productList.find(p => p.id === productSelect.value);
+    if(!selectedProduct) {
+      alert('Produk tidak valid.');
+      return;
+    }
+    const quantity = parseInt(quantityInput.value);
+    if(isNaN(quantity) || quantity < 1 || quantity > 1000){
+      alert('Jumlah harus antara 1 hingga 1000.');
+      return;
+    }
+    const serverId = this.serverId.value.trim();
+    const gameNameText = gameSelect.options[gameSelect.selectedIndex].text;
+    const paymentMethodText = this.payment.options[this.payment.selectedIndex].text;
+
+    // Show loading overlay
+    loadingOverlay.classList.add('active');
+
+    // Simulate asynchronous processing like contacting a payment and game topup API
+    setTimeout(() => {
+      // Calculate total price (unit price * quantity)
+      const totalPrice = selectedProduct.price * quantity;
+
+      // Hide loading
+      loadingOverlay.classList.remove('active');
+
+      // Show order summary
+      resultGame.textContent = gameNameText;
+      resultServer.textContent = serverId;
+      resultProduct.textContent = selectedProduct.name;
+      resultQuantity.textContent = quantity;
+      resultPrice.textContent = formatCurrency(totalPrice);
+      resultPayment.textContent = paymentMethodText;
+      orderResult.style.display = 'block';
+
+      // Reset form (except serverID for convenience)
+      // gameSelect.value = "";
+      // productSelect.innerHTML = '<option value="" disabled selected>-- Pilih Produk --</option>';
+      // quantityInput.value = "";
+      // this.payment.value = "";
+    }, 2500);
+  });
+</script>
+</body>
+</html>
+
+```
