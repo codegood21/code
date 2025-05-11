@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Pulsa dan Paket Data - All Operator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #4a90e2, #50e3c2);
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+  }
+  form {
+    max-width: 400px;
+    background: #fff;
+    margin: auto;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #333;
+  }
+  select, input[type="text"], button {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  select:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #4a90e2;
+  }
+  button {
+    background: #4a90e2;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+  }
+  button:hover, button:focus {
+    background: #357ABD;
+  }
+  .result {
+    max-width: 400px;
+    margin: 1rem auto 0;
+    padding: 1rem;
+    background: #e0f7fa;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #006064;
+    display: none;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 1rem 0.5rem;
+    }
+    form {
+      margin: 0 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Top Up Pulsa & Paket Data</h1>
+  <p>All Operator Indonesia</p>
+</header>
+<form id="topupForm" aria-label="Form top up pulsa dan paket data">
+  <label for="operator">Pilih Operator</label>
+  <select id="operator" name="operator" required aria-required="true">
+    <option value="" disabled selected>Pilih operator</option>
+    <option value="telkomsel">Telkomsel</option>
+    <option value="indosat">Indosat</option>
+    <option value="xl">XL / Axis</option>
+    <option value="tri">Tri (3)</option>
+    <option value="smartfren">Smartfren</option>
+  </select>
+
+  <label for="type">Pilih Jenis</label>
+  <select id="type" name="type" required aria-required="true" disabled>
+    <option value="" disabled selected>Pilih jenis</option>
+  </select>
+
+  <label for="nominal">Pilih Nominal</label>
+  <select id="nominal" name="nominal" required aria-required="true" disabled>
+    <option value="" disabled selected>Pilih nominal</option>
+  </select>
+
+  <label for="phone">Nomor HP</label>
+  <input type="text" id="phone" name="phone" placeholder="08xxxxxxxxxx" autocomplete="tel" pattern="08[0-9]{7,11}" required aria-required="true" />
+
+  <button type="submit" aria-label="Top Up Sekarang">Top Up Sekarang</button>
+</form>
+
+<div class="result" id="result" role="region" aria-live="polite"></div>
+
+<script>
+  (function(){
+    const operators = {
+      telkomsel: {
+        pulsa: [5000, 10000, 20000, 50000, 100000, 150000, 200000],
+        paket: [
+          {name: "1 GB 24 jam", value: "1gb-24jam"},
+          {name: "2 GB 7 hari", value: "2gb-7hari"},
+          {name: "5 GB 30 hari", value: "5gb-30hari"},
+          {name: "10 GB 30 hari", value: "10gb-30hari"}
+        ]
+      },
+      indosat: {
+        pulsa: [5000, 10000, 25000, 50000, 100000, 150000],
+        paket: [
+          {name: "1 GB 1 hari", value: "1gb-1hari"},
+          {name: "3 GB 7 hari", value: "3gb-7hari"},
+          {name: "7 GB 30 hari", value: "7gb-30hari"},
+          {name: "15 GB 30 hari", value: "15gb-30hari"}
+        ]
+      },
+      xl: {
+        pulsa: [5000, 10000, 20000, 50000, 100000],
+        paket: [
+          {name: "1 GB 1 hari", value: "1gb-1hari"},
+          {name: "3 GB 7 hari", value: "3gb-7hari"},
+          {name: "8 GB 30 hari", value: "8gb-30hari"},
+          {name: "16 GB 30 hari", value: "16gb-30hari"}
+        ]
+      },
+      tri: {
+        pulsa: [5000, 10000, 20000, 50000],
+        paket: [
+          {name: "1 GB 1 hari", value: "1gb-1hari"},
+          {name: "4 GB 7 hari", value: "4gb-7hari"},
+          {name: "11 GB 30 hari", value: "11gb-30hari"}
+        ]
+      },
+      smartfren: {
+        pulsa: [10000, 20000, 50000, 100000],
+        paket: [
+          {name: "1 GB 1 hari", value: "1gb-1hari"},
+          {name: "5 GB 30 hari", value: "5gb-30hari"},
+          {name: "10 GB 30 hari", value: "10gb-30hari"}
+        ]
+      }
+    };
+
+    const operatorSelect = document.getElementById('operator');
+    const typeSelect = document.getElementById('type');
+    const nominalSelect = document.getElementById('nominal');
+    const form = document.getElementById('topupForm');
+    const resultDiv = document.getElementById('result');
+    const phoneInput = document.getElementById('phone');
+
+    const clearSelect = (sel) => {
+      sel.innerHTML = '<option value="" disabled selected>Pilih</option>';
+      sel.disabled = true;
+    };
+
+    operatorSelect.addEventListener('change', function() {
+      const op = this.value;
+      clearSelect(typeSelect);
+      clearSelect(nominalSelect);
+      resultDiv.style.display = 'none';
+      if (!op) return;
+      typeSelect.innerHTML = '<option value="" disabled selected>Pilih jenis</option>';
+      for (const t of ['pulsa', 'paket']) {
+        let label = t === 'pulsa' ? 'Pulsa' : 'Paket Data';
+        typeSelect.innerHTML += `<option value="${t}">${label}</option>`;
+      }
+      typeSelect.disabled = false;
+    });
+
+    typeSelect.addEventListener('change', function() {
+      const op = operatorSelect.value;
+      const type = this.value;
+      clearSelect(nominalSelect);
+      resultDiv.style.display = 'none';
+      if (!type) return;
+      nominalSelect.innerHTML = '<option value="" disabled selected>Pilih nominal</option>';
+
+      if (type === 'pulsa') {
+        operators[op].pulsa.forEach(amount => {
+          nominalSelect.innerHTML += `<option value="${amount}">Rp ${amount.toLocaleString('id-ID')}</option>`;
+        });
+      } else if (type === 'paket') {
+        operators[op].paket.forEach(pkg => {
+          nominalSelect.innerHTML += `<option value="${pkg.value}">${pkg.name}</option>`;
+        });
+      }
+      nominalSelect.disabled = false;
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      resultDiv.style.display = 'none';
+
+      const op = operatorSelect.options[operatorSelect.selectedIndex].text;
+      const type = typeSelect.value;
+      const nominalText = nominalSelect.options[nominalSelect.selectedIndex].text;
+      const phone = phoneInput.value.trim();
+
+      const phonePattern = /^08\d{7,11}$/;
+      if (!phonePattern.test(phone)) {
+        showResult('Nomor HP tidak valid. Pastikan nomor dimulai dengan 08 dan terdiri dari 9-13 digit.', true);
+        phoneInput.focus();
+        return;
+      }
+
+      if (!op || !type || !nominalSelect.value) {
+        showResult('Mohon lengkapi semua form sebelum melakukan top up.', true);
+        return;
+      }
+
+      // Simulated request for top up demonstration
+      showResult(`Permintaan top up berhasil!<br>
+        Operator: <strong>${op}</strong><br>
+        Jenis: <strong>${type === 'pulsa' ? 'Pulsa' : 'Paket Data'}</strong><br>
+        Nominal: <strong>${nominalText}</strong><br>
+        Nomor HP: <strong>${phone}</strong><br>
+        Silakan lanjutkan pembayaran melalui channel resmi operator.`, false);
+    });
+
+    function showResult(message, isError){
+      resultDiv.innerHTML = message;
+      resultDiv.style.backgroundColor = isError ? '#ffebee' : '#e0f7fa';
+      resultDiv.style.color = isError ? '#c62828' : '#006064';
+      resultDiv.style.display = 'block';
+    }
+  })();
+</script>
+</body>
+</html>
+
+```
