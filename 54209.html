@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Modern Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f7ff;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    padding: 20px;
+  }
+  h1 {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 15px;
+  }
+  .store-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(140px, 1fr));
+    gap: 16px;
+  }
+  .product-card {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.3s ease;
+  }
+  .product-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+  }
+  .product-image {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    background: #ddd;
+  }
+  .product-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #111;
+  }
+  .product-price {
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  button.add-to-cart-btn {
+    background-color: #3b82f6;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button.add-to-cart-btn:hover {
+    background-color: #2563eb;
+  }
+  .cart {
+    margin-top: 25px;
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+  }
+  .cart h2 {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 15px;
+  }
+  .cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    padding: 10px 5px;
+    border-bottom: 1px solid #eee;
+  }
+  .cart-item-name {
+    flex-grow: 1;
+  }
+  .cart-item-qty {
+    margin: 0 10px;
+    color: #666;
+    min-width: 24px;
+    text-align: center;
+  }
+  button.remove-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+  button.remove-btn:hover {
+    color: #b91c1c;
+  }
+  .cart-total {
+    font-weight: 700;
+    margin-top: 15px;
+    font-size: 1.2rem;
+    text-align: right;
+    color: #111;
+  }
+  /* Responsive for mobile height max 600px and width max 350px */
+  @media (max-width: 350px), (max-height: 600px) {
+    body {
+      padding: 10px;
+    }
+    .store-container {
+      padding: 15px;
+    }
+    .product-card {
+      padding: 10px;
+    }
+    .product-image {
+      height: 100px;
+    }
+    button.add-to-cart-btn {
+      padding: 6px;
+      font-size: 0.9rem;
+    }
+    .cart-items {
+      max-height: 120px;
+    }
+    .cart-total {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Awesome Store</h1>
+  <div class="store-container" role="main">
+    <section aria-label="Product List" class="products" id="product-list">
+      <!-- Products will be rendered here -->
+    </section>
+    <section aria-label="Shopping Cart" class="cart" id="cart-section" tabindex="0">
+      <h2>Your Cart</h2>
+      <ul class="cart-items" id="cart-items" aria-live="polite" aria-relevant="additions removals"></ul>
+      <div class="cart-total" id="cart-total">Total: $0.00</div>
+    </section>
+  </div>
+<script>
+  (function(){
+    const products = [
+      { id: 1, title: 'Stylish Sunglasses', price: 25.99, image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80' },
+      { id: 2, title: 'Modern Backpack', price: 49.99, image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=300&q=80' },
+      { id: 3, title: 'Bluetooth Headphones', price: 89.99, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=300&q=80' },
+      { id: 4, title: 'Casual Sneakers', price: 59.99, image: 'https://images.unsplash.com/photo-1523381216074-462f87e756ae?auto=format&fit=crop&w=300&q=80' },
+      { id: 5, title: 'Elegant Watch', price: 129.99, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=300&q=80' }
+    ];
+    let cart = {};
+
+    function formatPrice(price){
+      return '$' + price.toFixed(2);
+    }
+
+    function renderProducts(){
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+      products.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'product-card';
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `${p.title}, Price ${formatPrice(p.price)}`);
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.title}" class="product-image" />
+          <h3 class="product-title">${p.title}</h3>
+          <p class="product-price">${formatPrice(p.price)}</p>
+          <button class="add-to-cart-btn" aria-label="Add ${p.title} to cart" data-id="${p.id}">Add to Cart</button>
+        `;
+        productList.appendChild(card);
+      });
+      productList.querySelectorAll('button.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.getAttribute('data-id'));
+          addToCart(id);
+        });
+      });
+    }
+
+    function addToCart(productId){
+      if(cart[productId]){
+        cart[productId].quantity++;
+      } else {
+        const product = products.find(p => p.id === productId);
+        if(product){
+          cart[productId] = {...product, quantity: 1};
+        }
+      }
+      renderCart();
+    }
+
+    function removeFromCart(productId){
+      if(cart[productId]){
+        cart[productId].quantity--;
+        if(cart[productId].quantity <= 0){
+          delete cart[productId];
+        }
+      }
+      renderCart();
+    }
+
+    function renderCart(){
+      const cartItemsEl = document.getElementById('cart-items');
+      cartItemsEl.innerHTML = '';
+      let total = 0;
+      Object.values(cart).forEach(item => {
+        total += item.price * item.quantity;
+        const li = document.createElement('li');
+        li.className = 'cart-item';
+        li.innerHTML = `
+          <span class="cart-item-name">${item.title}</span>
+          <span aria-label="Quantity: ${item.quantity}" class="cart-item-qty">${item.quantity}</span>
+          <button class="remove-btn" aria-label="Remove one ${item.title} from cart" data-id="${item.id}">&times;</button>
+        `;
+        cartItemsEl.appendChild(li);
+      });
+      document.getElementById('cart-total').textContent = 'Total: ' + formatPrice(total);
+      cartItemsEl.querySelectorAll('button.remove-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.getAttribute('data-id'));
+          removeFromCart(id);
+        });
+      });
+    }
+    renderProducts();
+    renderCart();
+
+  })();
+</script>
+</body>
+</html>
+
+```
