@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>PTrodactyl Web Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #16213e;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    user-select:none;
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 1.75rem;
+    color: #00e676;
+    margin: 0;
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+  }
+  nav button {
+    background: transparent;
+    border: 2px solid #00e676;
+    color: #00e676;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  nav button:hover,
+  nav button.active {
+    background-color: #00e676;
+    color: #16213e;
+  }
+  main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  section {
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+  }
+  section.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  /* Responsive Adjustment */
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    nav {
+      width: 100%;
+      justify-content: space-around;
+      margin-top: 0.5rem;
+    }
+    main {
+      padding: 1rem;
+    }
+  }
+
+  /* Panels */
+  .card {
+    background-color: #0f3460;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,230,118,0.5);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-weight: 600;
+    color: #00e676;
+  }
+  .input-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .input-group label {
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+  .input-group input, .input-group select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+  }
+  button.primary-btn {
+    background-color: #00e676;
+    border: none;
+    color: #16213e;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0,230,118,0.6);
+  }
+  button.primary-btn:hover {
+    background-color: #00c665;
+  }
+
+  /* Server List */
+  .server-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1rem;
+  }
+  .server-item {
+    background-color: #16213e;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,230,118,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .server-item h3 {
+    margin: 0 0 0.75rem 0;
+    color: #00e676;
+  }
+  .server-item p {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    color: #a5abb6;
+  }
+  .server-item button {
+    align-self: flex-start;
+    background-color: transparent;
+    border: 2px solid #00e676;
+    color: #00e676;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+  .server-item button:hover {
+    background-color: #00e676;
+    color: #16213e;
+  }
+
+  /* Logs */
+  #log-output {
+    background-color: #0f3460;
+    border-radius: 10px;
+    height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #00e676;
+    box-shadow: inset 0 0 15px rgba(0,230,118,0.6);
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>PTrodactyl Panel</h1>
+  <nav>
+    <button class="active" data-tab="dashboard">Dashboard</button>
+    <button data-tab="servers">Servers</button>
+    <button data-tab="create">Create Server</button>
+    <button data-tab="logs">Logs</button>
+  </nav>
+</header>
+<main>
+  <section id="dashboard" class="active card" role="region" aria-label="Dashboard Overview">
+    <h2>Dashboard Overview</h2>
+    <p>Welcome to PTrodactyl web panel. Monitor your servers and manage your environment seamlessly.</p>
+    <div>
+      <p><strong>Total Servers:</strong> <span id="totalServers">0</span></p>
+      <p><strong>Active Servers:</strong> <span id="activeServers">0</span></p>
+      <p><strong>Stopped Servers:</strong> <span id="stoppedServers">0</span></p>
+    </div>
+  </section>
+  <section id="servers" class="card" role="region" aria-label="Servers List">
+    <h2>Servers</h2>
+    <div id="serversList" class="server-list" tabindex="0" aria-live="polite" aria-relevant="additions removals"></div>
+  </section>
+  <section id="create" class="card" role="region" aria-label="Create New Server">
+    <h2>Create New Server</h2>
+    <form id="createServerForm" aria-describedby="createServerDesc">
+      <div id="createServerDesc" class="sr-only">Fill the form to create a new server</div>
+      <div class="input-group">
+        <label for="serverName">Server Name</label>
+        <input type="text" id="serverName" name="serverName" required maxlength="30" autocomplete="off" />
+      </div>
+      <div class="input-group">
+        <label for="serverType">Server Type</label>
+        <select id="serverType" name="serverType" required>
+          <option value="">Select a type</option>
+          <option value="game">Game Server</option>
+          <option value="app">Application Server</option>
+          <option value="database">Database Server</option>
+        </select>
+      </div>
+      <button type="submit" class="primary-btn" aria-label="Create server">Create Server</button>
+    </form>
+  </section>
+  <section id="logs" class="card" role="region" aria-label="Server Logs">
+    <h2>Logs</h2>
+    <div id="log-output" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
+  </section>
+</main>
+
+<script>
+  (() => {
+    const tabs = document.querySelectorAll('nav button');
+    const sections = document.querySelectorAll('main > section');
+    const serversList = document.getElementById('serversList');
+    const totalServersEl = document.getElementById('totalServers');
+    const activeServersEl = document.getElementById('activeServers');
+    const stoppedServersEl = document.getElementById('stoppedServers');
+    const logOutput = document.getElementById('log-output');
+    const createServerForm = document.getElementById('createServerForm');
+
+    let servers = [];
+
+    function changeTab(tabName) {
+      tabs.forEach(t => {
+        if (t.dataset.tab === tabName) {
+          t.classList.add('active');
+          t.setAttribute('aria-current', 'page');
+        } else {
+          t.classList.remove('active');
+          t.removeAttribute('aria-current');
+        }
+      });
+      sections.forEach(s => {
+        if (s.id === tabName) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        changeTab(tab.dataset.tab);
+      });
+    });
+
+    function updateDashboard() {
+      totalServersEl.textContent = servers.length;
+      const activeCount = servers.filter(s => s.status === 'running').length;
+      const stoppedCount = servers.filter(s => s.status === 'stopped').length;
+      activeServersEl.textContent = activeCount;
+      stoppedServersEl.textContent = stoppedCount;
+    }
+
+    function renderServers() {
+      serversList.innerHTML = '';
+      if (servers.length === 0) {
+        serversList.innerHTML = '<p>No servers created yet.</p>';
+        return;
+      }
+      servers.forEach(server => {
+        const div = document.createElement('div');
+        div.classList.add('server-item');
+        div.setAttribute('tabindex', '0');
+        div.setAttribute('role', 'group');
+        div.setAttribute('aria-label', `Server ${server.name}, status ${server.status}`);
+
+        const title = document.createElement('h3');
+        title.textContent = server.name;
+        div.appendChild(title);
+
+        const statusP = document.createElement('p');
+        statusP.textContent = `Status: ${server.status.charAt(0).toUpperCase() + server.status.slice(1)}`;
+        div.appendChild(statusP);
+
+        const btn = document.createElement('button');
+        if (server.status === 'running') {
+          btn.textContent = 'Stop';
+          btn.setAttribute('aria-label', `Stop server ${server.name}`);
+          btn.addEventListener('click', () => {
+            updateServerStatus(server.id, 'stopped');
+          });
+        } else {
+          btn.textContent = 'Start';
+          btn.setAttribute('aria-label', `Start server ${server.name}`);
+          btn.addEventListener('click', () => {
+            updateServerStatus(server.id, 'running');
+          });
+        }
+        div.appendChild(btn);
+        serversList.appendChild(div);
+      });
+    }
+
+    function updateServerStatus(id, status) {
+      const server = servers.find(s => s.id === id);
+      if (!server) return;
+      server.status = status;
+      addLog(`Server "${server.name}" status changed to ${status.toUpperCase()}`);
+      updateDashboard();
+      renderServers();
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
+    }
+
+    function addLog(message) {
+      const time = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.textContent = `[${time}] ${message}`;
+      logOutput.appendChild(entry);
+      logOutput.scrollTop = logOutput.scrollHeight;
+    }
+
+    function createServer(name, type) {
+      const newServer = {
+        id: Date.now().toString(),
+        name: name.trim(),
+        type,
+        status: 'stopped',
+      };
+      servers.push(newServer);
+      addLog(`Created new server "${name}" of type "${type}"`);
+      updateDashboard();
+      renderServers();
+    }
+
+    createServerForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(createServerForm);
+      const name = formData.get('serverName');
+      const type = formData.get('serverType');
+      if (!name || !type) return;
+      if (servers.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+        alert('Server name must be unique');
+        return;
+      }
+      createServer(name, type);
+      createServerForm.reset();
+      changeTab('servers');
+    });
+
+    // Initialize
+    updateDashboard();
+    renderServers();
+    addLog('Welcome to PTrodactyl Web Panel!');
+
+    // Accessibility helper: shortcut keys to switch tabs (Alt+1 to Dashboard, Alt+2 to Servers, Alt+3 to Create, Alt+4 to Logs)
+    window.addEventListener('keydown', e => {
+      if (e.altKey) {
+        switch (e.key) {
+          case '1': changeTab('dashboard'); e.preventDefault(); break;
+          case '2': changeTab('servers'); e.preventDefault(); break;
+          case '3': changeTab('create'); e.preventDefault(); break;
+          case '4': changeTab('logs'); e.preventDefault(); break;
+        }
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>
+
+```
