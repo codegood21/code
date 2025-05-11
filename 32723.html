@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Pulsa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #007bff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
+  }
+  .container {
+    background: #0a58ca;
+    border-radius: 12px;
+    padding: 25px;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  h1 {
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+  }
+  input[type="text"], select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  input[type="text"]:focus, select:focus {
+    outline: 2px solid #ffc107;
+    outline-offset: 2px;
+  }
+  button {
+    width: 100%;
+    background: #ffc107;
+    border: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0a58ca;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #e0a800;
+  }
+  .result {
+    margin-top: 20px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 10px;
+    padding: 15px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 40px;
+  }
+
+  /* Mobile friendly adjustments */
+  @media(max-width: 360px) {
+    .container {
+      padding: 20px 15px;
+    }
+    h1 {
+      font-size: 1.6rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Top Up Pulsa</h1>
+    <form id="topupForm" aria-label="Form top up pulsa">
+      <label for="phoneNumber">Nomor Telepon</label>
+      <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Masukkan nomor Anda" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="tel" required aria-required="true" aria-describedby="phoneHelp" />
+      <label for="amount">Pilih Nominal</label>
+      <select id="amount" name="amount" required aria-required="true" aria-describedby="amountHelp">
+        <option value="" disabled selected>Pilih nominal pulsa</option>
+        <option value="5000">Rp 5.000</option>
+        <option value="10000">Rp 10.000</option>
+        <option value="20000">Rp 20.000</option>
+        <option value="50000">Rp 50.000</option>
+        <option value="100000">Rp 100.000</option>
+      </select>
+      <button type="submit" aria-label="Top Up Pulsa">Top Up</button>
+    </form>
+    <div class="result" role="alert" aria-live="polite" id="result"></div>
+  </div>
+<script>
+  (function() {
+    const form = document.getElementById('topupForm');
+    const phoneInput = document.getElementById('phoneNumber');
+    const amountSelect = document.getElementById('amount');
+    const resultDiv = document.getElementById('result');
+
+    function formatPhoneNumber(number) {
+      // Basic format: insert spaces or dashes for readability, here simple
+      return number.replace(/(\d{4})(\d{3})(\d{3,})/, '$1 $2 $3');
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const phoneNumber = phoneInput.value.trim();
+      const amount = amountSelect.value;
+
+      resultDiv.textContent = '';
+      // Validation
+      if (!phoneNumber.match(/^\d{9,15}$/)) {
+        resultDiv.textContent = 'Nomor telepon tidak valid. Masukkan hanya angka 9 sampai 15 digit.';
+        resultDiv.style.color = '#dc3545'; // red
+        return;
+      }
+      if (!amount) {
+        resultDiv.textContent = 'Mohon pilih nominal pulsa.';
+        resultDiv.style.color = '#dc3545';
+        return;
+      }
+
+      // Simulate top up process with loading effect
+      resultDiv.style.color = '#856404'; // dark yellow
+      resultDiv.textContent = 'Memproses top up pulsa...';
+      setTimeout(() => {
+        const formattedNumber = formatPhoneNumber(phoneNumber);
+        resultDiv.style.color = '#155724'; // green
+        resultDiv.textContent = `Top up pulsa sebesar Rp ${parseInt(amount).toLocaleString('id-ID')} berhasil untuk nomor ${formattedNumber}. Terima kasih!`;
+      }, 1500);
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
