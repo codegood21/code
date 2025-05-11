@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>World's Most Expensive Luxury Website</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Roboto:wght@300;500&display=swap');
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #221e1f, #a89168);
+    color: #fffefb;
+    overflow-x: hidden;
+  }
+  header {
+    background: rgba(34, 30, 31, 0.85);
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 2px solid #d4af37;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 3.6rem;
+    letter-spacing: 0.12em;
+    color: #d4af37;
+    text-shadow: 2px 2px 8px rgba(212, 175, 55, 0.9);
+  }
+  nav {
+    margin-top: 12px;
+  }
+  nav a {
+    color: #d4af37;
+    text-decoration: none;
+    margin: 0 18px;
+    font-weight: 500;
+    font-size: 1.15rem;
+    transition: color 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus {
+    color: #fff;
+  }
+  main {
+    max-width: 960px;
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+  .intro {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: 2.8rem;
+    color: #e8d8a3;
+    margin-bottom: 14px;
+  }
+  .intro p {
+    font-weight: 300;
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    color: #f3e6b9;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+  }
+  .card {
+    background: rgba(34, 30, 31, 0.8);
+    border: 1.5px solid #d4af37;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 25px 5px rgba(212, 175, 55, 0.6);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: scale(1.04);
+    box-shadow: 0 0 45px 15px rgba(212, 175, 55, 0.85);
+  }
+  .card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    filter: brightness(1);
+    transition: filter 0.3s ease;
+  }
+  .card:hover img,
+  .card:focus-within img {
+    filter: brightness(1.15);
+  }
+  .card-body {
+    padding: 22px 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: #f6e38f;
+    margin-bottom: 8px;
+  }
+  .price {
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: #d4af37;
+    margin-bottom: 8px;
+  }
+  .desc {
+    flex-grow: 1;
+    font-weight: 300;
+    font-size: 1rem;
+    color: #e7ddbbcc;
+    line-height: 1.4;
+  }
+  footer {
+    text-align: center;
+    padding: 30px 10px;
+    background: rgba(34, 30, 31, 0.9);
+    border-top: 2px solid #d4af37;
+    font-size: 1rem;
+    color: #d4af37dd;
+  }
+
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 2.4rem;
+    }
+    .intro h2 {
+      font-size: 2rem;
+    }
+    nav a {
+      margin: 0 12px;
+      font-size: 1rem;
+    }
+    .card img {
+      height: 140px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>THE PINNACLE OF LUXURY</h1>
+  <nav aria-label="Primary navigation">
+    <a href="#cars">Super Cars</a>
+    <a href="#watches">Luxury Watches</a>
+    <a href="#jewelry">Fine Jewelry</a>
+    <a href="#real-estate">Real Estate</a>
+  </nav>
+</header>
+<main>
+  <section class="intro" aria-label="Introduction to world's most expensive luxury">
+    <h2>Experience Ultimate Exclusivity & Opulence</h2>
+    <p>Enter a realm where the extraordinary meets the exquisite. The pinnacle of value, craftsmanship, and rarity collides in these handpicked treasures admired worldwide for their sumptuousness and staggering price tags. Discover the most expensive luxury the world beholds today.</p>
+  </section>
+  <section class="gallery" id="cars" aria-label="Most Expensive Super Cars">
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=600&q=80" alt="Bugatti La Voiture Noire - Black luxury supercar" />
+      <div class="card-body">
+        <h3 class="card-title">Bugatti La Voiture Noire</h3>
+        <p class="price">$18.68 Million</p>
+        <p class="desc">The ultra-exclusive masterpiece from Bugatti, famed for its unmatched performance and breathtaking design, represents the epitome of automotive luxury and rarity.</p>
+      </div>
+    </article>
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80" alt="Lamborghini Veneno - Scarlet red exotic supercar" />
+      <div class="card-body">
+        <h3 class="card-title">Lamborghini Veneno</h3>
+        <p class="price">$4.5 Million</p>
+        <p class="desc">An extreme limited-edition hypercar embodying futuristic design and track-ready engineering, commanding a price fit for its rarity and legacy.</p>
+      </div>
+    </article>
+  </section>
+  <section class="gallery" id="watches" aria-label="Most Expensive Luxury Watches" style="margin-top: 50px;">
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" alt="Patek Philippe Grandmaster Chime watch with multiple complications" />
+      <div class="card-body">
+        <h3 class="card-title">Patek Philippe Grandmaster Chime</h3>
+        <p class="price">$31 Million</p>
+        <p class="desc">The most complicated and valuable wristwatch ever made with ingenious craftsmanship and historical value driving its jaw-dropping price.</p>
+      </div>
+    </article>
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1516707574392-e23e4d2d4e00?auto=format&fit=crop&w=600&q=80" alt="Rolex Daytona Paul Newman vintage watch" />
+      <div class="card-body">
+        <h3 class="card-title">Rolex Daytona “Paul Newman”</h3>
+        <p class="price">$17.75 Million</p>
+        <p class="desc">An iconic vintage Rolex famously associated with Hollywood, coveted collector’s timepiece whose auction sales stunned the world.</p>
+      </div>
+    </article>
+  </section>
+  <section class="gallery" id="jewelry" aria-label="Most Expensive Jewelry" style="margin-top: 50px;">
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80" alt="The Pink Star Diamond ring" />
+      <div class="card-body">
+        <h3 class="card-title">The Pink Star Diamond</h3>
+        <p class="price">$71.2 Million</p>
+        <p class="desc">The highest ever selling fancy vivid pink diamond, renowned for its breathtaking size and unparalleled color purity.</p>
+      </div>
+    </article>
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Cartier’s Taj Mahal necklace adorned with diamonds" />
+      <div class="card-body">
+        <h3 class="card-title">Cartier Taj Mahal Necklace</h3>
+        <p class="price">$50 Million</p>
+        <p class="desc">A lavish necklace showcasing exquisite diamonds and heritage, inspired by the iconic monument and crafted with unparalleled artistry.</p>
+      </div>
+    </article>
+  </section>
+  <section class="gallery" id="real-estate" aria-label="Most Expensive Real Estate" style="margin-top: 50px;">
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1600566750785-e06d6001146f?auto=format&fit=crop&w=600&q=80" alt="Antilia Mumbai, the billion dollar private residence" />
+      <div class="card-body">
+        <h3 class="card-title">Antilia, Mumbai</h3>
+        <p class="price">$2 Billion</p>
+        <p class="desc">The world’s most expensive private home, boasting 27 stories of ultra-luxury, innovative design, and breathtaking cityscape views.</p>
+      </div>
+    </article>
+    <article class="card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1559774867-77e518f0763d?auto=format&fit=crop&w=600&q=80" alt="Buckingham Palace, London, symbol of wealth and history" />
+      <div class="card-body">
+        <h3 class="card-title">Buckingham Palace, London</h3>
+        <p class="price">$1.55 Billion</p>
+        <p class="desc">The iconic royal residence steeped in history and grandeur, reflecting centuries of rich heritage and opulence.</p>
+      </div>
+    </article>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Pinnacle Luxury Experiences. All rights reserved.
+</footer>
+</body>
+</html>
+
+```
