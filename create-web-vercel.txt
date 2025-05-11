@@ -1,0 +1,86 @@
+//Manage Vercel
+global.vercelToken = "-" //Your Vercel Token
+
+//Manage GitHub
+global.githubToken = "-" //Your GitHub Token
+global.githubUsername = "-" //Your GitHub Username
+
+case 'cweb':
+case 'createweb': {
+ if (!isCreator && !isSellerWeb) return m.reply('Fitur Khusus `Reseller Website`')
+ if (!text) return m.reply('Penggunaan: .createweb <namaWeb>')
+ if (!qmsg || !/zip|html/.test(qmsg.mimetype)) return m.reply('Reply file .zip atau .html')
+
+ const webName = text.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '')
+ const domainCheckUrl = `https://${webName}.vercel.app`
+
+ try {
+ const check = await fetch(domainCheckUrl)
+ if (check.status === 200) return m.reply(`❌ Nama web *${webName}* sudah digunakan. Silakan gunakan nama lain.`)
+ } catch (e) {}
+
+ const quotedFile = await kxz.downloadMediaMessage(qmsg)
+ const filesToUpload = []
+
+ if (qmsg.mimetype.includes('zip')) {
+ const unzipper = require('unzipper')
+ const zipBuffer = Buffer.from(quotedFile)
+ const directory = await unzipper.Open.buffer(zipBuffer)
+
+ for (const file of directory.files) {
+ if (file.type === 'File') {
+ const content = await file.buffer()
+ const filePath = file.path.replace(/^\/+/, '').replace(/\\/g, '/')
+ filesToUpload.push({
+ file: filePath,
+ data: content.toString('base64'),
+ encoding: 'base64'
+ })
+ }
+ }
+
+ if (!filesToUpload.some(x => x.file.toLowerCase().endsWith('index.html'))) {
+ return m.reply('File index.html tidak ditemukan dalam struktur ZIP.')
+ }
+
+ } else if (qmsg.mimetype.includes('html')) {
+ filesToUpload.push({
+ file: 'index.html',
+ data: Buffer.from(quotedFile).toString('base64'),
+ encoding: 'base64'
+ })
+ } else {
+ return m.reply('File tidak dikenali. Kirim file .zip atau .html.')
+ }
+
+ const headers = {
+ Authorization: `Bearer ${global.vercelToken}`,
+ 'Content-Type': 'application/json'
+ }
+
+ await fetch('https://api.vercel.com/v9/projects', {
+ method: 'POST',
+ headers,
+ body: JSON.stringify({ name: webName })
+ }).catch(() => {})
+
+ const deployRes = await fetch('https://api.vercel.com/v13/deployments', {
+ method: 'POST',
+ headers,
+ body: JSON.stringify({
+ name: webName,
+ project: webName,
+ files: filesToUpload,
+ projectSettings: { framework: null }
+ })
+ })
+
+ const deployData = await deployRes.json().catch(() => null)
+ if (!deployData || !deployData.url) {
+ console.log('Deploy Error:', deployData)
+ return m.reply(`Gagal deploy ke Vercel:\n${JSON.stringify(deployData)}`)
+ }
+
+ m.reply(`✅ Website berhasil dibuat!\n\n🌐 URL: https://${webName}.vercel.app`)
+}
+break
