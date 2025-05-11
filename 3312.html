@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Auto Play Video with Sound</title>
+<style>
+  body, html {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+  <video autoplay muted playsinline id="video" controls>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+<script>
+  const video = document.getElementById('video');
+  // Attempt to play sound after user gesture (most browsers restrict autoplay with sound)
+  
+  function tryPlayWithSound() {
+    video.muted = false;
+    video.play().catch(() => {
+      // If failed, mute and wait for user interaction
+      video.muted = true;
+    });
+  }
+
+  // Trigger sound play after user interaction for mobile and desktop
+  window.addEventListener('click', () => {
+    tryPlayWithSound();
+  }, { once: true });
+
+  window.addEventListener('touchstart', () => {
+    tryPlayWithSound();
+  }, { once: true });
+</script>
+</body>
+</html>
+
+```
