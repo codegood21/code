@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Responsive Video Player</title>
+<style>
+  body {
+    margin: 0;
+    background: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .video-container {
+    max-width: 90vw;
+    width: 640px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.7);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+    outline: none;
+  }
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    padding: 10px 15px;
+  }
+  .btn {
+    background: transparent;
+    border: none;
+    color: #eee;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.3s ease;
+    user-select: none;
+  }
+  .btn:hover {
+    color: #1db954;
+  }
+  .progress-container {
+    flex-grow: 1;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  .progress {
+    width: 100%;
+    height: 5px;
+    background: #444;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .progress-filled {
+    width: 0%;
+    height: 100%;
+    background: #1db954;
+  }
+  @media (max-width: 400px) {
+    .video-container {
+      width: 100vw;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .btn {
+      font-size: 16px;
+      padding: 5px 6px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="video-container" role="region" aria-label="Video player" tabindex="0">
+  <video id="video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" tabindex="0" controlsList="nodownload" preload="metadata" aria-describedby="video-description"></video>
+  <div id="video-description" class="sr-only">Video player showing a flower blooming video. Use controls below to play, pause, and seek.</div>
+  <div class="controls">
+    <button id="play-pause" class="btn" aria-label="Play video">►</button>
+    <div class="progress-container" aria-label="Video progress" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+      <div class="progress">
+        <div class="progress-filled"></div>
+      </div>
+    </div>
+    <button id="mute" class="btn" aria-label="Mute video">🔊</button>
+    <button id="fullscreen" class="btn" aria-label="Toggle fullscreen">⛶</button>
+  </div>
+</div>
+<script>
+  const video = document.getElementById('video');
+  const playPauseBtn = document.getElementById('play-pause');
+  const muteBtn = document.getElementById('mute');
+  const fullscreenBtn = document.getElementById('fullscreen');
+  const progressContainer = document.querySelector('.progress-container');
+  const progressFilled = document.querySelector('.progress-filled');
+
+  function togglePlay() {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }
+  function updatePlayButton() {
+    playPauseBtn.textContent = video.paused ? '►' : '❚❚';
+    playPauseBtn.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+  }
+  function toggleMute() {
+    video.muted = !video.muted;
+    muteBtn.textContent = video.muted ? '🔈' : '🔊';
+    muteBtn.setAttribute('aria-label', video.muted ? 'Unmute video' : 'Mute video');
+  }
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      if (video.parentElement.requestFullscreen) {
+        video.parentElement.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+  function handleProgress() {
+    const percent = (video.currentTime / video.duration) * 100;
+    progressFilled.style.width = percent + '%';
+    progressContainer.setAttribute('aria-valuenow', Math.round(percent));
+  }
+  function scrub(e) {
+    const scrubTime = (e.offsetX / progressContainer.offsetWidth) * video.duration;
+    video.currentTime = scrubTime;
+  }
+
+  playPauseBtn.addEventListener('click', togglePlay);
+  video.addEventListener('click', togglePlay);
+  video.addEventListener('play', updatePlayButton);
+  video.addEventListener('pause', updatePlayButton);
+  video.addEventListener('timeupdate', handleProgress);
+  muteBtn.addEventListener('click', toggleMute);
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+  let mousedown = false;
+  progressContainer.addEventListener('click', scrub);
+  progressContainer.addEventListener('mousemove', (e) => mousedown && scrub(e));
+  progressContainer.addEventListener('mousedown', () => mousedown = true);
+  progressContainer.addEventListener('mouseup', () => mousedown = false);
+
+  // keyboard accessibility for progress slider
+  progressContainer.addEventListener('keydown', function(e) {
+    const step = video.duration / 20; // step for 5%
+    let newTime = video.currentTime;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      newTime = Math.min(video.currentTime + step, video.duration);
+      video.currentTime = newTime;
+      e.preventDefault();
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      newTime = Math.max(video.currentTime - step, 0);
+      video.currentTime = newTime;
+      e.preventDefault();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
