@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Funny Question with Laugh</title>
+<style>
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(135deg, #ffcae9, #b0e0ff);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  .question {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    animation: bounce 1.5s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  button {
+    font-size: 1.2rem;
+    background-color: #ff6f91;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(255, 111, 145, 0.5);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background-color: #ff5278;
+  }
+  audio {
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="question">Kamu kok ketawa ya? 😆😄</div>
+  <button id="laughBtn">Ketawa Lagi Dong!</button>
+  <audio id="laughSound" src="https://actions.google.com/sounds/v1/human_voices/laugh-1.mp3" preload="auto"></audio>
+
+  <script>
+    const laughBtn = document.getElementById('laughBtn');
+    const laughSound = document.getElementById('laughSound');
+
+    laughBtn.addEventListener('click', () => {
+      laughSound.currentTime = 0;
+      laughSound.play();
+    });
+  </script>
+</body>
+</html>
+
+```
