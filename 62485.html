@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>Premium Business</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora&family=Montserrat:wght@400;600&display=swap');
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f9f8f6;
+    color: #1c1c1c;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+  a:hover {
+    color: #bfa24a;
+  }
+  header {
+    background: linear-gradient(90deg, #0a0a0a, #2c2b2b);
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #d4af37;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  nav li {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #eee;
+    cursor: pointer;
+  }
+  nav li:hover {
+    color: #d4af37;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 70vh;
+    padding: 3rem;
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, rgba(0,0,0,0.4) 100%);
+  }
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin-bottom: 1rem;
+    letter-spacing: 1.5px;
+  }
+  .hero p {
+    font-size: 1.25rem;
+    font-weight: 400;
+    max-width: 600px;
+    color: #555;
+    margin-bottom: 2.5rem;
+  }
+  .btn-primary {
+    background-color: #d4af37;
+    color: #111;
+    font-weight: 700;
+    padding: 0.9rem 2rem;
+    border-radius: 30px;
+    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.6);
+    border: none;
+    cursor: pointer;
+    font-size: 1.125rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #b08c28;
+    box-shadow: 0 8px 16px rgba(176, 140, 40, 0.8);
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+  }
+  section {
+    margin-bottom: 5rem;
+  }
+  section h2 {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #1c1c1c;
+    margin-bottom: 1rem;
+    border-bottom: 3px solid #d4af37;
+    display: inline-block;
+    padding-bottom: 0.25rem;
+    letter-spacing: 1px;
+  }
+  section p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 720px;
+  }
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+  .feature-item {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+  }
+  .feature-item:hover {
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.3);
+  }
+  .feature-icon {
+    font-size: 2.75rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+    user-select: none;
+  }
+  .feature-title {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.35rem;
+    color: #333;
+  }
+  .feature-desc {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  footer {
+    background-color: #0a0a0a;
+    color: #bbb;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  footer a {
+    color: #d4af37;
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    .hero p {
+      font-size: 1rem;
+      max-width: 100%;
+    }
+    nav ul {
+      gap: 1.25rem;
+    }
+    header {
+      padding: 1rem 2rem;
+    }
+    main {
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+  }
+  @media (max-width: 400px) {
+    .btn-primary {
+      width: 100%;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" aria-label="Premium Business Logo">PREMIUM</div>
+  <nav>
+    <ul>
+      <li><a href="#about" tabindex="0">About</a></li>
+      <li><a href="#services" tabindex="0">Services</a></li>
+      <li><a href="#contact" tabindex="0">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero" role="banner">
+  <h1>Elevate Your Business to Excellence</h1>
+  <p>Discover unmatched quality and expertise. We craft bespoke solutions for discerning clients who demand the best.</p>
+  <button class="btn-primary" type="button">Get in Touch</button>
+</section>
+
+<main>
+  <section id="about" aria-label="About Premium Business">
+    <h2>About Us</h2>
+    <p>At PREMIUM, we believe that true success belongs to those who pursue excellence with elegance. Our services are tailored for elite clientele seeking innovation, reliability, and prestige.</p>
+  </section>
+
+  <section id="services" aria-label="Premium Business Services">
+    <h2>Our Services</h2>
+    <div class="features">
+      <div class="feature-item" tabindex="0" role="article" aria-label="Consulting Services">
+        <div class="feature-icon" aria-hidden="true">💼</div>
+        <h3 class="feature-title">Strategic Consulting</h3>
+        <p class="feature-desc">Crafting strategies that align with your vision and drive sustainable growth to keep you ahead of the competition.</p>
+      </div>
+      <div class="feature-item" tabindex="0" role="article" aria-label="Private Wealth Management">
+        <div class="feature-icon" aria-hidden="true">💰</div>
+        <h3 class="feature-title">Wealth Management</h3>
+        <p class="feature-desc">Personalized financial guidance designed to maximize your assets while safeguarding your legacy.</p>
+      </div>
+      <div class="feature-item" tabindex="0" role="article" aria-label="Innovative Technology Solutions">
+        <div class="feature-icon" aria-hidden="true">🔧</div>
+        <h3 class="feature-title">Tech Innovation</h3>
+        <p class="feature-desc">Cutting-edge technology services that streamline operations and elevate customer experiences.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" aria-label="Contact Premium Business">
+    <h2>Get in Touch</h2>
+    <p>Ready to start your journey towards excellence? Reach out today and let's create something extraordinary together.</p>
+    <form style="max-width: 500px; margin-top: 1.5rem;">
+      <label for="name" style="display:block; margin-bottom:0.5rem; font-weight:600;">Name</label>
+      <input id="name" name="name" type="text" placeholder="Your full name" required
+       style="width:100%; padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:8px; margin-bottom:1rem; font-family: 'Montserrat', sans-serif;"/>
+      <label for="email" style="display:block; margin-bottom:0.5rem; font-weight:600;">Email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required
+       style="width:100%; padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:8px; margin-bottom:1rem; font-family: 'Montserrat', sans-serif;"/>
+      <label for="message" style="display:block; margin-bottom:0.5rem; font-weight:600;">Message</label>
+      <textarea id="message" name="message" rows="5" placeholder="Your message" required
+       style="width:100%; padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:8px; font-family: 'Montserrat', sans-serif;"></textarea>
+      <button type="submit" class="btn-primary" style="margin-top:1rem;">Send Message</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  &copy; 2024 PREMIUM Business. Crafted with &hearts; for those who value sophistication.<br />
+  <a href="#top">Back to top</a>
+</footer>
+
+</body>
+</html>
+
+```
