@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Elegant Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
+
+  :root {
+    --dark-bg: #121212;
+    --primary-color: #c9a66b;
+    --secondary-color: #8f7a55;
+    --text-light: #f3f3f3;
+    --border-color: #877850;
+    --shadow-color: rgba(201,166,107,0.3);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+  }
+
+  header {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 0 0 8px var(--primary-color);
+    letter-spacing: 2px;
+  }
+
+  header p {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-top: 0.25rem;
+    color: var(--secondary-color);
+    font-style: italic;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  nav a {
+    color: var(--text-light);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    outline: none;
+  }
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-shadow: 0 0 6px var(--primary-color);
+  }
+
+  .about-text {
+    font-size: 1.15rem;
+    max-width: 720px;
+    margin: 0 auto;
+    color: #ddd;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .project-card {
+    background: #1e1e1e;
+    border: 1.5px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 20px var(--shadow-color);
+    border-color: var(--primary-color);
+    outline: none;
+  }
+
+  .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary-color);
+  }
+
+  .project-desc {
+    flex-grow: 1;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+  }
+
+  .project-link {
+    align-self: flex-start;
+    font-weight: 600;
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+    font-size: 1rem;
+  }
+
+  .project-link:hover,
+  .project-link:focus {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    outline: none;
+  }
+
+  footer {
+    border-top: 1.5px solid var(--border-color);
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #888;
+  }
+
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 2.25rem;
+    }
+    nav {
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .container {
+      margin: 1.5rem auto 3rem;
+      padding: 0 0.75rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Adrian Santoso</h1>
+      <p>Crafting timeless digital elegance</p>
+    </header>
+    <nav>
+      <a href="#about" tabindex="1">About</a>
+      <a href="#projects" tabindex="2">Projects</a>
+      <a href="#contact" tabindex="3">Contact</a>
+    </nav>
+    <section id="about" tabindex="4" aria-label="About me section">
+      <h2>About Me</h2>
+      <p class="about-text">I am a passionate web designer and developer with a refined eye for luxury and aesthetics. My work focuses on combining cutting-edge technology with a timeless, elegant design philosophy. With attention to detail and dedication, I create unique digital experiences that captivate and inspire.</p>
+    </section>
+    <section id="projects" tabindex="5" aria-label="Projects section">
+      <h2>Selected Projects</h2>
+      <div class="projects-grid">
+        <article class="project-card" tabindex="6">
+          <h3 class="project-title">Luxora Boutique Website</h3>
+          <p class="project-desc">A high-end e-commerce platform for a luxury fashion brand, featuring seamless animations and a premium shopping experience.</p>
+          <a href="#" class="project-link" tabindex="7" aria-label="View Luxora Boutique Website project">See Details</a>
+        </article>
+        <article class="project-card" tabindex="8">
+          <h3 class="project-title">Majestic Hotel Landing</h3>
+          <p class="project-desc">Crafted an immersive landing page with rich visuals, elegant typography, and smooth navigation for a prestigious hotel chain.</p>
+          <a href="#" class="project-link" tabindex="9" aria-label="View Majestic Hotel Landing project">See Details</a>
+        </article>
+        <article class="project-card" tabindex="10">
+          <h3 class="project-title">Golden Portfolio CMS</h3>
+          <p class="project-desc">Developed a robust content management system with an intuitive interface, designed with gold-tone theme and luxury feel.</p>
+          <a href="#" class="project-link" tabindex="11" aria-label="View Golden Portfolio CMS project">See Details</a>
+        </article>
+      </div>
+    </section>
+    <section id="contact" tabindex="12" aria-label="Contact section">
+      <h2>Contact Me</h2>
+      <p style="max-width: 480px; margin: 0 auto 1.5rem;">I'm currently open to new projects and collaborations. Reach out and let's create something extraordinary together.</p>
+      <form style="max-width: 480px; margin: 0 auto;" onsubmit="return false" aria-label="Contact form">
+        <label for="name" style="display:block; margin-bottom:0.25rem; font-weight:600;">Name</label>
+        <input id="name" name="name" type="text" required placeholder="Your full name" style="width: 100%; padding: 0.5rem; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: #1e1e1e; color: var(--text-light); margin-bottom: 1rem; font-size: 1rem;" />
+        <label for="email" style="display:block; margin-bottom:0.25rem; font-weight:600;">Email</label>
+        <input id="email" name="email" type="email" required placeholder="you@example.com" style="width: 100%; padding: 0.5rem; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: #1e1e1e; color: var(--text-light); margin-bottom: 1rem; font-size: 1rem;" />
+        <label for="message" style="display:block; margin-bottom:0.25rem; font-weight:600;">Message</label>
+        <textarea id="message" name="message" rows="4" required placeholder="Write your message here..." style="width: 100%; padding: 0.5rem; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: #1e1e1e; color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; resize: vertical;"></textarea>
+        <button type="submit" style="background-color: var(--primary-color); border: none; padding: 0.75rem 2rem; font-weight: 700; font-size: 1.1rem; color: var(--dark-bg); border-radius: 6px; cursor: pointer; box-shadow: 0 0 10px var(--primary-color); transition: background-color 0.3s ease;">
+          Send
+        </button>
+      </form>
+    </section>
+  </div>
+  <footer>
+    &copy; 2024 Adrian Santoso. All rights reserved.
+  </footer>
+</body>
+</html>
+
+```
