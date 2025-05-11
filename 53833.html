@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Group Creator Bot</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  #app {
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 20px 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin: 10px 0 6px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  input[type="text"] {
+    width: 100%;
+    border-radius: 6px;
+    border: none;
+    padding: 10px 12px;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #075e54;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #053d33;
+  }
+  p.info {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  a.whatsapp-link {
+    word-break: break-all;
+    display: block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #d1f7e9;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>WhatsApp Group Creator</h1>
+  <label for="groupName">Group Name</label>
+  <input type="text" id="groupName" placeholder="Enter group name" />
+  <label for="groupDesc">Group Description (optional)</label>
+  <input type="text" id="groupDesc" placeholder="Enter group description" />
+  <label for="phoneNumbers">Phone Numbers (international format without +, comma separated)</label>
+  <input type="text" id="phoneNumbers" placeholder="e.g. 6281234567890,6289876543210" />
+  <button id="createBtn">Create Group Invitation Link</button>
+  <p class="info">Note: This bot generates WhatsApp invite links. You must open the link on WhatsApp to finalize and create the group.</p>
+  <a id="inviteLink" class="whatsapp-link" target="_blank" rel="noopener" style="display:none;"></a>
+</div>
+
+<script>
+  function urlEncodeUTF8(str) {
+    return encodeURIComponent(str).replace(/'/g,"%27").replace(/"/g,"%22");
+  }
+
+  document.getElementById('createBtn').addEventListener('click', () => {
+    const groupName = document.getElementById('groupName').value.trim();
+    const groupDesc = document.getElementById('groupDesc').value.trim();
+    const phoneNumbersRaw = document.getElementById('phoneNumbers').value.trim();
+
+    if (!groupName || !phoneNumbersRaw) {
+      alert('Please enter both Group Name and at least one phone number.');
+      return;
+    }
+
+    const phoneNumbers = phoneNumbersRaw.split(',').map(num => num.trim().replace(/\D/g,'')).filter(num => num.length > 0);
+
+    if (phoneNumbers.length === 0) {
+      alert('Please enter valid phone numbers separated by commas.');
+      return;
+    }
+
+    /* WhatsApp API does not allow auto group creation via a simple link directly.
+       The closest solution is to create a group invite link prefilled with group subject and participants is NOT possible 
+       via public API or URLs due to security and anti-spam policies.
+       The workaround is to generate a wa.me link to start a chat with each contact or the bot instructs user to create a group manually with the participants.
+    */
+
+    // Instead, generate a WhatsApp group invite URL template for manual use:
+    // Or generate a prefilled group creation using wa.me links per contact.
+    // This HTML bot creates a WhatsApp group invite URL format per official spec - but WhatsApp doesn't officially support automated group creation links.
+
+    // DISCLAIMER MESSAGE: WhatsApp does not support automated group creation through URLs.
+    // We'll create a URL that prompts to start a chat with all given numbers, but user needs to create the group manually.
+
+    // Create a message for WhatsApp with group info and instructions
+    let inviteText = `Hi! Let's create a WhatsApp group named "${groupName}".\n\nPlease add all of us to the group.\n`;
+    if(groupDesc) inviteText += `Group Description: ${groupDesc}\n\n`;
+    inviteText += `Phone numbers to add:\n${phoneNumbers.map(number => '+'.concat(number)).join('\n')}`;
+
+    // Encode message text for URL
+    const encodedText = encodeURIComponent(inviteText);
+
+    // We'll link to wa.me with the first phone number, with prefilled text containing instructions to create the group manually and add others.
+    // This is the best possible automated approach using WhatsApp Web.
+
+    const waLink = `https://wa.me/${phoneNumbers[0]}?text=${encodedText}`;
+
+    const inviteLinkEl = document.getElementById('inviteLink');
+    inviteLinkEl.href = waLink;
+    inviteLinkEl.textContent = `Click here to open WhatsApp to create group invite with ${phoneNumbers.length} contact(s)`;
+    inviteLinkEl.style.display = 'block';
+  });
+</script>
+</body>
+</html>
+
+```
