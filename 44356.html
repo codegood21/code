@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Luminai Integration</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        #userInput { width: 80%; }
+        #sendButton { width: 18%; }
+    </style>
+</head>
+<body>
+
+    <div id="chat"></div>
+    <input type="text" id="userInput" placeholder="Ketik pesan...">
+    <button id="sendButton" onclick="sendMessage()">Kirim</button>
+
+    <script>
+        async function sendMessage() { 
+            const userInput = document.getElementById("userInput"); 
+            const message = userInput.value.trim(); 
+            if (!message) return; 
+            addMessage(message, "user"); 
+            userInput.value = ""; 
+            showTypingIndicator(); 
+            try { 
+                const response = await axios.post("https://luminai.my.id/", { 
+                    content: message, 
+                    user: "User ", 
+                    prompt: 'nama kamu adalah bagus ai' 
+                }); 
+                addMessage(response.data.content, "ai"); 
+            } catch (error) { 
+                console.error("Error:", error); 
+                addMessage("Terjadi kesalahan, coba lagi.", "ai"); 
+            } 
+        }
+
+        function addMessage(message, sender) {
+            const chat = document.getElementById("chat");
+            const messageElement = document.createElement("div");
+            messageElement.textContent = sender === "user" ? ":User  " + message : "AI: " + message;
+            chat.appendChild(messageElement);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            addMessage("AI sedang mengetik...", "ai");
+        }
+    </script>
+
+</body>
+</html>
+```
