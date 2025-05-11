@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luxury Business Website</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #faf9f7;
+    color: #2c2c2c;
+  }
+
+  header {
+    background: linear-gradient(90deg, #0b0a0a 0%, #3a3a3a 100%);
+    padding: 1.5rem 2rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    letter-spacing: 0.05em;
+    color: #f4f1ea;
+    margin: 0;
+  }
+
+  nav {
+    margin-top: 1rem;
+  }
+
+  nav a {
+    color: #d4af37;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus {
+    color: #b5942f;
+    outline: none;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+
+  .hero {
+    background: url('https://images.unsplash.com/photo-1496180727794-817822f65950?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+    border-radius: 12px;
+    height: 450px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+  }
+
+  .hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    max-width: 700px;
+    text-align: center;
+    margin: 0;
+  }
+
+  section {
+    margin-top: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e3e3e1;
+  }
+
+  section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #4a4a48;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #d4af37;
+    display: inline-block;
+    padding-bottom: 0.3rem;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 2rem;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 12px 18px rgba(0,0,0,0.1);
+    padding: 1.8rem 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 25px rgba(0,0,0,0.15);
+    outline: none;
+  }
+
+  .card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.7rem;
+    color: #2c2c2c;
+  }
+
+  .card p {
+    font-size: 1rem;
+    color: #555555;
+    line-height: 1.5;
+  }
+
+  footer {
+    margin-top: 4rem;
+    padding: 1.5rem 2rem;
+    background-color: #2c2c2c;
+    color: #d4af37;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 600px) {
+    .hero h2 {
+      font-size: 2rem;
+      padding: 0 1rem;
+    }
+
+    nav a {
+      margin: 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    main {
+      padding: 0 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Opulent Ventures</h1>
+  <nav>
+    <a href="#services" tabindex="1">Services</a>
+    <a href="#about" tabindex="2">About Us</a>
+    <a href="#contact" tabindex="3">Contact</a>
+  </nav>
+</header>
+<main>
+  <section class="hero" aria-label="Luxurious business environment">
+    <h2>Empowering Your Success with Elegance & Excellence</h2>
+  </section>
+
+  <section id="services" tabindex="0" aria-labelledby="services-title">
+    <h3 id="services-title">Our Premium Services</h3>
+    <div class="content-grid">
+      <article class="card" tabindex="0">
+        <h4>Consulting Excellence</h4>
+        <p>Strategic business consulting crafted to elevate your enterprise to new heights with bespoke solutions tailored to your industry.</p>
+      </article>
+      <article class="card" tabindex="0">
+        <h4>Investment Management</h4>
+        <p>Robust asset management services ensuring growth, preservation, and diversification, delivered with integrity and precision.</p>
+      </article>
+      <article class="card" tabindex="0">
+        <h4>Exclusive Networking</h4>
+        <p>Access to VIP business networks and exclusive events connecting you with industry leaders and decision makers.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="about" tabindex="0" aria-labelledby="about-title" style="margin-top:3rem;">
+    <h3 id="about-title">About Opulent Ventures</h3>
+    <p>Founded with the vision to combine innovation and luxury, Opulent Ventures has been a premier consulting and investment firm for discerning clients across the globe. Our commitment to excellence is mirrored in the results we deliver and the trust we build.</p>
+  </section>
+
+  <section id="contact" tabindex="0" aria-labelledby="contact-title" style="margin-top:3rem;">
+    <h3 id="contact-title">Get in Touch</h3>
+    <p>Reach out to us for personalized consultations or to schedule an exclusive meeting. Your success is our legacy.</p>
+    <address style="font-style: normal;">
+      <strong>Email:</strong> <a href="mailto:contact@opulentventures.com" style="color:#d4af37;">contact@opulentventures.com</a><br />
+      <strong>Phone:</strong> <a href="tel:+1234567890" style="color:#d4af37;">+1 (234) 567-890</a><br />
+      <strong>Location:</strong> 123 Luxury Blvd, Suite 100, Capital City
+    </address>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Opulent Ventures. All rights reserved.
+</footer>
+</body>
+</html>
+
+```
