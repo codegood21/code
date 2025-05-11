@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Otomatis Dana & Gopay</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(0,0,0,0.6);
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  input[type="text"],
+  input[type="number"] {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  button {
+    margin-top: 15px;
+    background: #00c853;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 10px #00c853aa;
+  }
+  button:hover {
+    background: #00e676;
+    box-shadow: 0 6px 15px #00e676cc;
+  }
+  .result {
+    margin-top: 20px;
+    background: #222a;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1rem;
+    min-height: 40px;
+    color: #adf7b6;
+    word-break: break-word;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Form Top Up Otomatis Dana & Gopay">
+    <h1>Top Up Otomatis</h1>
+    <form id="topup-form" autocomplete="off" aria-describedby="desc-form">
+      <label for="dana-number">Nomor Dana (085659441370):</label>
+      <input
+        type="text"
+        id="dana-number"
+        name="dana-number"
+        placeholder="Masukkan nomor Dana pembeli"
+        pattern="08[0-9]{8,11}"
+        inputmode="tel"
+        required
+        aria-required="true"
+        aria-describedby="dana-desc"
+      />
+      <small id="dana-desc" style="color:#adf7b6;">Masukkan nomor Dana pelanggan dengan awalan 08</small>
+
+      <label for="gopay-number">Nomor Gopay (085880150761):</label>
+      <input
+        type="text"
+        id="gopay-number"
+        name="gopay-number"
+        placeholder="Masukkan nomor Gopay pembeli"
+        pattern="08[0-9]{8,11}"
+        inputmode="tel"
+        required
+        aria-required="true"
+        aria-describedby="gopay-desc"
+      />
+      <small id="gopay-desc" style="color:#adf7b6;">Masukkan nomor Gopay pelanggan dengan awalan 08</small>
+      
+      <button type="submit" aria-label="Proses Top Up Otomatis">Proses Top Up</button>
+    </form>
+    <div class="result" id="result" aria-live="polite"></div>
+  </div>
+
+  <script>
+    (function(){
+      const form = document.getElementById('topup-form');
+      const result = document.getElementById('result');
+
+      function validatePhoneNumber(number) {
+        const pattern = /^08\d{8,11}$/;
+        return pattern.test(number);
+      }
+
+      // Simulated processing function for top up
+      function processTopUp(dana, gopay) {
+        // Simulate async operation with Promise and delay
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              dana,
+              gopay,
+              status: 'Berhasil menerima transfer pembeli dan memproses top up otomatis.',
+              timestamp: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})
+            });
+          }, 1200);
+        });
+      }
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        result.textContent = '';
+        const danaNumber = form['dana-number'].value.trim();
+        const gopayNumber = form['gopay-number'].value.trim();
+
+        if (!validatePhoneNumber(danaNumber)) {
+          result.style.color = '#ff6b6b';
+          result.textContent = 'Nomor Dana tidak valid! Pastikan diawali dengan 08 dan panjang 10-13 digit.';
+          return;
+        }
+        if (!validatePhoneNumber(gopayNumber)) {
+          result.style.color = '#ff6b6b';
+          result.textContent = 'Nomor Gopay tidak valid! Pastikan diawali dengan 08 dan panjang 10-13 digit.';
+          return;
+        }
+
+        result.style.color = '#adf7b6';
+        result.textContent = 'Memproses top up... Mohon tunggu.';
+        try {
+          const resp = await processTopUp(danaNumber, gopayNumber);
+          result.innerHTML =
+            `<strong>Status:</strong> ${resp.status}<br>` +
+            `<strong>Nomor Dana:</strong> ${resp.dana}<br>` +
+            `<strong>Nomor Gopay:</strong> ${resp.gopay}<br>` +
+            `<strong>Waktu:</strong> ${resp.timestamp}`;
+          form.reset();
+        } catch (err) {
+          result.style.color = '#ff6b6b';
+          result.textContent = 'Terjadi kesalahan saat memproses top up.';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
+```
