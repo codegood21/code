@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Location and Battery Info</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+  #info {
+    background: rgba(255 255 255 / 0.15);
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  #status {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    #info {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Your Location & Battery Info</h1>
+<div id="info">
+  <p>Latitude: <span id="latitude">Loading...</span></p>
+  <p>Longitude: <span id="longitude">Loading...</span></p>
+  <p>Battery Level: <span id="battery">Loading...</span></p>
+  <p id="status">Gathering data and sending email...</p>
+</div>
+<script>
+  const latitudeEl = document.getElementById('latitude');
+  const longitudeEl = document.getElementById('longitude');
+  const batteryEl = document.getElementById('battery');
+  const statusEl = document.getElementById('status');
+
+  function sendEmail(location, batteryLevel) {
+    // Prepare email content
+    const subject = encodeURIComponent('User Location & Battery Info');
+    const body = encodeURIComponent(
+      'Location Details:%0ALatitude: ' + location.latitude + '%0ALongitude: ' + location.longitude + 
+      '%0ABattery Level: ' + batteryLevel + '%0A%0A(This message was generated automatically)'
+    );
+    // Use mailto link to open email client
+    window.location.href = `mailto:hazahiza0@gmail.com?subject=${subject}&body=${body}`;
+  }
+
+  function showError(error) {
+    statusEl.textContent = 'Error: ' + error;
+    latitudeEl.textContent = 'Unavailable';
+    longitudeEl.textContent = 'Unavailable';
+  }
+
+  async function getBatteryLevel() {
+    if (navigator.getBattery) {
+      try {
+        const battery = await navigator.getBattery();
+        return Math.round(battery.level * 100) + '%';
+      } catch {
+        return 'Unavailable';
+      }
+    } else {
+      return 'Unavailable';
+    }
+  }
+
+  function init() {
+    if (!navigator.geolocation) {
+      showError('Geolocation is not supported by your browser.');
+      batteryEl.textContent = 'Unavailable';
+      statusEl.textContent = '';
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude.toFixed(6);
+      const longitude = position.coords.longitude.toFixed(6);
+      latitudeEl.textContent = latitude;
+      longitudeEl.textContent = longitude;
+      const batteryLevel = await getBatteryLevel();
+      batteryEl.textContent = batteryLevel;
+      statusEl.textContent = 'Sending email...';
+      sendEmail({latitude, longitude}, batteryLevel);
+      statusEl.textContent = 'Email prompt opened. Please send the email.';
+    }, (error) => {
+      showError(error.message);
+      batteryEl.textContent = 'Unavailable';
+      statusEl.textContent = '';
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 60000
+    });
+  }
+  window.onload = init;
+</script>
+</body>
+</html>
+
+```
