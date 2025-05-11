@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Auto Play Video</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    overflow: hidden;
+  }
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  video {
+    max-width: 100vw;
+    max-height: 100vh;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+<div id="overlay">
+  <video id="videoPlayer" playsinline autoplay muted>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<script>
+  const video = document.getElementById('videoPlayer');
+  video.muted = false;
+  video.volume = 1.0;
+  video.autoplay = true;
+  video.play();
+
+  // Disable right-click, keyboard shortcuts, and context menu to block controls
+  window.addEventListener('contextmenu', e => e.preventDefault());
+  window.addEventListener('keydown', e => {
+    // Block common keys: ESC, F4 (Alt+F4), Ctrl+W, Ctrl+R, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+Shift+K, F12
+    const blockedKeys = [
+      'Escape', 'F4', 'F12', 'r', 'w', 'i', 'j', 'c', 'k'
+    ];
+    // Block Ctrl+W, Ctrl+R, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+Shift+K
+    if (
+      (e.ctrlKey && ['w', 'r', 'i', 'j', 'c', 'k'].includes(e.key.toLowerCase())) ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c', 'k'].includes(e.key.toLowerCase())) ||
+      blockedKeys.includes(e.key)
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    // Block Alt+F4
+    if(e.altKey && e.key === 'F4') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Prevent drag or selection
+  document.body.style.userSelect = "none";
+  document.body.style.webkitUserSelect = "none";
+  document.body.style.msUserSelect = "none";
+  document.body.style.mozUserSelect = "none";
+
+  // Prevent closing or navigating away while video is playing
+  window.addEventListener('beforeunload', function (e) {
+    if (!video.ended) {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    }
+  });
+
+  // Disable clicks outside video to prevent accidental closing overlays
+  document.getElementById('overlay').addEventListener('click', e => {
+    e.stopPropagation();
+  });
+
+  // When video ends, allow user to close the page by removing restrictions
+  video.addEventListener('ended', () => {
+    window.onbeforeunload = null;
+    // Optionally remove keydown block for user convenience
+    window.removeEventListener('keydown', () => {});
+  });
+</script>
+</body>
+</html>
+
+```
