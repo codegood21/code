@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>VPS Manager</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #3a6186, #89253e);
+    color: #fff;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+  }
+  .vps-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  label {
+    display: block;
+    margin: 0.8rem 0 0.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  select, input[type=text] {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    box-sizing: border-box;
+    outline: none;
+  }
+  select {
+    background: #fff;
+    color: #333;
+    font-weight: 600;
+  }
+  .checkbox-group {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+  }
+  .checkbox-group input[type=checkbox] {
+    margin-right: 0.5rem;
+    transform: scale(1.3);
+    cursor: pointer;
+  }
+  button {
+    margin-top: 1.2rem;
+    width: 100%;
+    background-color: #ff6f61;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 10px #ff6f61cc;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #e65c50;
+  }
+  .output {
+    margin-top: 1rem;
+    background: rgba(255,255,255,0.15);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    max-height: 220px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  footer {
+    margin-top: auto;
+    font-size: 0.9rem;
+    color: #eee;
+    text-align: center;
+    padding: 1rem 0 0;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 0.7rem;
+    }
+    .vps-container {
+      padding: 1rem;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>VPS Configuration & Control</h1>
+<div class="vps-container" role="main" aria-label="VPS Manager">
+  <form id="vpsForm" autocomplete="off">
+    <label for="ramSelect">Select RAM Size (GB):</label>
+    <select id="ramSelect" name="ram" required>
+      <option value="" disabled selected>-- Choose RAM --</option>
+      <option value="1">1 GB</option>
+      <option value="2">2 GB</option>
+      <option value="4">4 GB</option>
+      <option value="8">8 GB</option>
+      <option value="16">16 GB</option>
+    </select>
+
+    <label for="cpuSelect">Select CPU Cores:</label>
+    <select id="cpuSelect" name="cpu" required>
+      <option value="" disabled selected>-- Choose CPU Cores --</option>
+      <option value="1">1 Core</option>
+      <option value="2">2 Cores</option>
+      <option value="3">3 Cores</option>
+      <option value="4">4 Cores</option>
+      <option value="5">5 Cores</option>
+      <option value="6">6 Cores</option>
+    </select>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="sshAccess" name="sshAccess" />
+      <label for="sshAccess" style="user-select:none;">Enable SSH Login (e.g. JuiceSSH)</label>
+    </div>
+
+    <button type="submit" aria-label="Install VPS">Install VPS</button>
+  </form>
+  <pre class="output" aria-live="polite" id="outputArea"></pre>
+</div>
+<footer>
+  &copy; 2024 VPS Manager App — Responsive & Mobile Friendly
+</footer>
+
+<script>
+  const form = document.getElementById('vpsForm');
+  const output = document.getElementById('outputArea');
+
+  const now = () => new Date().toLocaleTimeString();
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function generateVPSId() {
+    // simple random VPS id
+    return 'VPS-' + Math.floor(Math.random() * 90000 + 10000);
+  }
+
+  async function simulateInstall(config) {
+    output.textContent = 'Starting VPS installation...\n';
+    await sleep(700);
+    output.textContent += `Configuring VPS with ${config.ram} GB RAM and ${config.cpu} CPU core(s)...\n`;
+    await sleep(700);
+    if (config.sshAccess) {
+      output.textContent += 'Enabling SSH access...\n';
+      await sleep(500);
+      output.textContent += 'SSH login: Enabled (use JuiceSSH or other SSH clients to connect)\n';
+    } else {
+      output.textContent += 'SSH login: Disabled\n';
+    }
+    await sleep(700);
+    output.textContent += 'Installing base system...\n';
+    await sleep(1200);
+    const vpsId = generateVPSId();
+    output.textContent += `Installation complete! Your VPS ID: ${vpsId}\n\n`;
+    output.textContent += `SSH Command:\nssh user@${vpsId.toLowerCase()}.example.com\n\n`;
+    output.textContent += 'Use your SSH client to connect if SSH login is enabled.\n';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ram = form.ram.value;
+    const cpu = form.cpu.value;
+    const sshAccess = form.sshAccess.checked;
+
+    if (!ram || !cpu) {
+      output.textContent = 'Please select both RAM and CPU options.';
+      return;
+    }
+
+    const config = { ram, cpu, sshAccess };
+
+    form.querySelector('button').disabled = true;
+    await simulateInstall(config);
+    form.querySelector('button').disabled = false;
+  });
+</script>
+</body>
+</html>
+
+```
