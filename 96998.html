@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>AI Insights</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(90deg, #7f5af0, #feb692);
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1.2px;
+    user-select: none;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 600px;
+    width: 100%;
+    margin: 2rem auto;
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 0 18px rgba(255, 114, 94, 0.5);
+  }
+  label {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  textarea {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #303030;
+    color: #fff;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Poppins', sans-serif;
+  }
+  button {
+    margin-top: 1rem;
+    cursor: pointer;
+    background: #7f5af0;
+    border: none;
+    padding: 0.75rem 1.6rem;
+    font-size: 1rem;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    width: 100%;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  button:hover, button:focus {
+    background: #feb692;
+    color: #121212;
+    outline: none;
+  }
+  #response {
+    margin-top: 1.5rem;
+    background: #282828;
+    border-radius: 10px;
+    padding: 1rem;
+    min-height: 80px;
+    font-size: 1rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #888;
+  }
+  @media (max-width: 600px) {
+    main {
+      margin: 1rem;
+      padding: 1rem;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    header {
+      font-size: 1.5rem;
+      padding: 0.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>AI Insights</header>
+<main>
+  <label for="userPrompt">Ask AI something insightful:</label>
+  <textarea id="userPrompt" placeholder="Type your question or topic here..." aria-label="Input your question to AI"></textarea>
+  <button id="askBtn" aria-live="polite">Ask AI</button>
+  <div id="response" aria-live="polite"></div>
+</main>
+<footer>© 2024 AI Insights — Crafted with passion</footer>
+<script>
+  const askBtn = document.getElementById('askBtn');
+  const userPrompt = document.getElementById('userPrompt');
+  const responseDiv = document.getElementById('response');
+
+  // Simulated AI response database
+  const aiKnowledge = {
+    "what is artificial intelligence": "Artificial Intelligence (AI) is the simulation of human intelligence in machines programmed to think and learn like humans.",
+    "how does machine learning work": "Machine learning works by feeding data into algorithms, allowing the machine to learn patterns and make decisions based on data.",
+    "benefits of ai": "AI benefits include automation, improved decision making, data analysis, and enabling breakthroughs in healthcare, finance, and many fields.",
+    "future of ai": "The future of AI involves more advanced reasoning, creativity, and human-like interaction, alongside ethical challenges and integration in daily life.",
+    "who invented ai": "The term 'Artificial Intelligence' was coined by John McCarthy in 1956, but contributions come from many pioneers like Alan Turing and Marvin Minsky."
+  };
+
+  function simulateAIResponse(input) {
+    const normalizedInput = input.toLowerCase().trim();
+    for (const question in aiKnowledge) {
+      if (normalizedInput.includes(question)) {
+        return aiKnowledge[question];
+      }
+    }
+    // Provide a generic response otherwise
+    return "That's an interesting topic! AI technology is continuously evolving and expanding its capabilities.";
+  }
+
+  askBtn.addEventListener('click', () => {
+    const prompt = userPrompt.value.trim();
+    if (!prompt) {
+      responseDiv.textContent = "Please enter a question or topic.";
+      return;
+    }
+    responseDiv.textContent = "Thinking...";
+    setTimeout(() => {
+      const answer = simulateAIResponse(prompt);
+      responseDiv.textContent = answer;
+    }, 1200);
+  });
+
+  // Accessibility improvement: allow enter to submit in textarea with shift+enter for newline
+  userPrompt.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      askBtn.click();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
