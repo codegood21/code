@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter</title>
+</head>
+<body>
+    <h1>File Converter</h1>
+    <form id="converterForm">
+        <label for="fileType">Choose an option:</label>
+        <select id="fileType" name="fileType">
+            <option value="txt_to_vcf">TXT to VCF</option>
+            <option value="vcf_to_txt">VCF to TXT</option>
+            <option value="split_vcf">Split VCF</option>
+            <option value="split_txt">Split TXT</option>
+        </select>
+        <br><br>
+        <label for="inputFile">Select input file:</label>
+        <input type="file" id="inputFile" name="inputFile" required>
+        <br><br>
+        <label for="outputFile">Enter output file path:</label>
+        <input type="text" id="outputFile" name="outputFile">
+        <br><br>
+        <label for="outputDir">Enter output directory path:</label>
+        <input type="text" id="outputDir" name="outputDir">
+        <br><br>
+        <button type="submit">Convert</button>
+    </form>
+
+    <script>
+        document.getElementById('converterForm').onsubmit = function(event) {
+            event.preventDefault();
+            const fileType = document.getElementById('fileType').value;
+            const inputFile = document.getElementById('inputFile').files[0];
+            const outputFile = document.getElementById('outputFile').value;
+            const outputDir = document.getElementById('outputDir').value;
+
+            // Here you would handle the file conversion logic using JavaScript or send the data to a server
+            console.log('File Type:', fileType);
+            console.log('Input File:', inputFile);
+            console.log('Output File:', outputFile);
+            console.log('Output Directory:', outputDir);
+        };
+    </script>
+</body>
+</html>
+```
