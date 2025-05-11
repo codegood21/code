@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Simple OpenAI Chat</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  header {
+    background: linear-gradient(90deg, #4a90e2, #50e3c2);
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    user-select: none;
+  }
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #222;
+  }
+  .message {
+    max-width: 80%;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 18px;
+    line-height: 1.4;
+    font-size: 1rem;
+    word-break: break-word;
+  }
+  .user {
+    margin-left: auto;
+    background: linear-gradient(45deg, #6a5af9, #a673f9);
+    color: white;
+  }
+  .bot {
+    margin-right: auto;
+    background: #333;
+    border: 1px solid #555;
+    color: #ddd;
+  }
+  form {
+    display: flex;
+    padding: 0.5rem;
+    background: #1f1f1f;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: #2a2a2a;
+    color: #eee;
+  }
+  button {
+    margin-left: 0.5rem;
+    padding: 0 1.5rem;
+    border-radius: 30px;
+    border: none;
+    background: #4a90e2;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      height: 100vh;
+    }
+    #chat {
+      padding: 0.5rem;
+    }
+    form {
+      padding: 0.25rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>OpenAI Chat AI</header>
+<div id="chat" role="log" aria-live="polite"></div>
+<form id="chat-form">
+  <input type="text" aria-label="Enter your message" id="prompt-input" autocomplete="off" required placeholder="Type your question here..." />
+  <button type="submit" id="send-btn">Send</button>
+</form>
+
+<script>
+  const chatEl = document.getElementById('chat');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('prompt-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  const OPENAI_API_KEY = 'your_openai_api_key_here'; // Replace with your OpenAI API key
+
+  function addMessage(text, sender = 'bot') {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
+    msgDiv.textContent = text;
+    chatEl.appendChild(msgDiv);
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
+
+  async function queryOpenAI(prompt) {
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + OPENAI_API_KEY,
+    };
+    const body = {
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 150,
+      temperature: 0.7,
+      n: 1,
+      stop: null,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error('OpenAI API error: ' + response.statusText);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content.trim();
+    } catch (err) {
+      return 'Error: ' + err.message;
+    }
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const prompt = input.value.trim();
+    if (!prompt) return;
+    addMessage(prompt, 'user');
+    input.value = '';
+    sendBtn.disabled = true;
+    addMessage('...', 'bot');
+    const lastBotMessage = chatEl.querySelector('.bot:last-child');
+    const reply = await queryOpenAI(prompt);
+    lastBotMessage.textContent = reply;
+    sendBtn.disabled = false;
+    input.focus();
+  });
+
+  input.focus();
+</script>
+</body>
+</html>
+
+```
