@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Admin Perkaos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f6fc;
+    margin: 0;
+    padding: 0;
+    color: #444;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    user-select: none;
+  }
+  main {
+    flex: 1;
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 1rem auto 2rem;
+    width: 100%;
+  }
+  h2 {
+    margin-bottom: 1rem;
+    color: #2a5298;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px -5px rgba(0,0,0,0.1);
+  }
+  thead {
+    background: #2a5298;
+    color: white;
+  }
+  th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  tbody tr {
+    border-bottom: 1px solid #eee;
+  }
+  tbody tr:hover {
+    background: #f0f4ff;
+  }
+  button {
+    background-color: #2a5298;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #1e3c72;
+  }
+  form {
+    background: #fff;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px -5px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin-top: 2rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: #2a5298;
+  }
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #2a5298;
+    outline: none;
+  }
+  .form-actions {
+    text-align: right;
+  }
+  @media (max-width: 600px) {
+    body {
+      padding: 0 0.5rem;
+    }
+    main {
+      padding: 1rem 1rem;
+      margin: 0.5rem auto 1rem;
+    }
+    table {
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.5rem 0.6rem;
+    }
+    form {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Admin Perkaos</header>
+<main>
+  <h2>Daftar Kaos</h2>
+  <table id="kaos-table" aria-describedby="daftar-kaos">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nama Kaos</th>
+        <th scope="col">Warna</th>
+        <th scope="col">Ukuran</th>
+        <th scope="col">Harga (Rp)</th>
+        <th scope="col" style="width:110px;">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data Kaos Akan Muncul Disini -->
+    </tbody>
+  </table>
+
+  <form id="kaos-form" aria-label="Form Tambah / Edit Kaos">
+    <input type="hidden" id="kaos-id" />
+    <label for="nama-kaos">Nama Kaos:</label>
+    <input type="text" id="nama-kaos" name="nama-kaos" placeholder="Masukkan nama kaos" required autocomplete="off" />
+    
+    <label for="warna-kaos">Warna:</label>
+    <select id="warna-kaos" name="warna-kaos" required>
+      <option value="" disabled selected>Pilih warna</option>
+      <option value="Putih">Putih</option>
+      <option value="Hitam">Hitam</option>
+      <option value="Merah">Merah</option>
+      <option value="Biru">Biru</option>
+      <option value="Hijau">Hijau</option>
+      <option value="Kuning">Kuning</option>
+    </select>
+
+    <label for="ukuran-kaos">Ukuran:</label>
+    <select id="ukuran-kaos" name="ukuran-kaos" required>
+      <option value="" disabled selected>Pilih ukuran</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="XXL">XXL</option>
+    </select>
+
+    <label for="harga-kaos">Harga (Rp):</label>
+    <input type="number" id="harga-kaos" name="harga-kaos" placeholder="Masukkan harga kaos" min="1000" required />
+
+    <div class="form-actions">
+      <button type="submit" id="submit-btn">Tambah Kaos</button>
+    </div>
+  </form>
+</main>
+<script>
+  (function() {
+    const kaosTableBody = document.querySelector("#kaos-table tbody");
+    const kaosForm = document.getElementById("kaos-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const inputId = document.getElementById("kaos-id");
+    const inputNama = document.getElementById("nama-kaos");
+    const selectWarna = document.getElementById("warna-kaos");
+    const selectUkuran = document.getElementById("ukuran-kaos");
+    const inputHarga = document.getElementById("harga-kaos");
+
+    let kaosData = [];
+    let editingId = null;
+
+    function renderTable() {
+      kaosTableBody.innerHTML = "";
+      if (kaosData.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 6;
+        td.style.textAlign = "center";
+        td.textContent = "Belum ada data kaos.";
+        tr.appendChild(td);
+        kaosTableBody.appendChild(tr);
+        return;
+      }
+      kaosData.forEach((kaos, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${kaos.id}</td>
+          <td>${kaos.nama}</td>
+          <td>${kaos.warna}</td>
+          <td>${kaos.ukuran}</td>
+          <td>${kaos.harga.toLocaleString('id-ID')}</td>
+          <td>
+            <button type="button" aria-label="Edit kaos ${kaos.nama}" data-action="edit" data-id="${kaos.id}">Edit</button>
+            <button type="button" aria-label="Hapus kaos ${kaos.nama}" data-action="delete" data-id="${kaos.id}">Hapus</button>
+          </td>
+        `;
+        kaosTableBody.appendChild(tr);
+      });
+    }
+
+    function resetForm() {
+      editingId = null;
+      inputId.value = "";
+      kaosForm.reset();
+      submitBtn.textContent = "Tambah Kaos";
+    }
+
+    function generateId() {
+      return kaosData.length > 0 ? Math.max(...kaosData.map(k => k.id)) + 1 : 1;
+    }
+
+    kaosForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const nama = inputNama.value.trim();
+      const warna = selectWarna.value;
+      const ukuran = selectUkuran.value;
+      const harga = parseInt(inputHarga.value, 10);
+
+      if (!nama || !warna || !ukuran || isNaN(harga) || harga < 1000) {
+        alert("Harap isi semua data dengan benar dan harga minimal 1000.");
+        return;
+      }
+
+      if (editingId !== null) {
+        // Edit mode
+        const idx = kaosData.findIndex(k => k.id === editingId);
+        if (idx !== -1) {
+          kaosData[idx] = { id: editingId, nama, warna, ukuran, harga };
+          alert("Data kaos berhasil diperbarui.");
+        }
+      } else {
+        // Add mode
+        const newKaos = {
+          id: generateId(),
+          nama,
+          warna,
+          ukuran,
+          harga
+        };
+        kaosData.push(newKaos);
+        alert("Data kaos berhasil ditambahkan.");
+      }
+      renderTable();
+      resetForm();
+    });
+
+    kaosTableBody.addEventListener("click", function(event) {
+      if (event.target.tagName === "BUTTON") {
+        const action = event.target.getAttribute("data-action");
+        const id = parseInt(event.target.getAttribute("data-id"), 10);
+        if (action === "edit") {
+          const kaos = kaosData.find(k => k.id === id);
+          if (kaos) {
+            editingId = id;
+            inputId.value = id;
+            inputNama.value = kaos.nama;
+            selectWarna.value = kaos.warna;
+            selectUkuran.value = kaos.ukuran;
+            inputHarga.value = kaos.harga;
+            submitBtn.textContent = "Simpan Perubahan";
+            inputNama.focus();
+          }
+        } else if (action === "delete") {
+          if (confirm("Yakin ingin menghapus data kaos ini?")) {
+            kaosData = kaosData.filter(k => k.id !== id);
+            renderTable();
+            if(editingId === id) {
+              resetForm();
+            }
+            alert("Data kaos berhasil dihapus.");
+          }
+        }
+      }
+    });
+
+    // Initial render
+    renderTable();
+  })();
+</script>
+</body>
+</html>
+
+```
