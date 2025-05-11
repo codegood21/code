@@ -1,0 +1,40 @@
+case 'createpython': {
+ const fs = require('fs');
+ const path = require('path');
+ const fetch = require('node-fetch');
+
+ if (!text) return reply('❌ Masukkan perintah dengan deskripsi kode Python.\nContoh: .createpython Buatkan script kalkulator dengan Python.');
+
+ try {
+ reply('⏳ Proses Bang Tunggu Bentar!! Gausah Spam');
+
+ let apiUrl = `https://apizell.web.id/ai/blackbox?text=${encodeURIComponent(text)}%20jangan%20berikan%20saya%20respon%20lain,%20kirimkan%20saja%20kode%20pythonnya%20tanpa%20tambahan%20kata%20apapun,ingat%20jangan%20berikan%20respon%20lain%20apapun%20termasuk%20nama%20file`;
+ let response = await fetch(apiUrl);
+ let data = await response.json();
+
+ if (data.status !== "success") return reply('❌ Terjadi kesalahan saat membuat kode Python.');
+ 
+ let pythonCode = data.result;
+ if (!pythonCode) return reply('❌ Kode Python tidak valid atau tidak ditemukan!');
+
+ let randomId = Math.floor(Math.random() * 90000) + 10000;
+ let fileName = `${randomId}.py`;
+ let filePath = path.join('./', fileName);
+
+ await fs.writeFileSync(filePath, pythonCode);
+
+ await conn.sendMessage(m.chat, {
+ document: { url: filePath },
+ mimetype: 'text/x-python',
+ fileName: fileName,
+ caption: '✅ Success! Ini kodenya.'
+ }, { quoted: m });
+
+ if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat membuat kode Python!');
+ }
+}
+break;
