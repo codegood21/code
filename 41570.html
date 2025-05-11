@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Berita Terkini</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f9f9f9;
+    color: #222;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  header {
+    background: #1e88e5;
+    color: white;
+    padding: 20px 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  main {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 15px 50px;
+  }
+  .article {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .article img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .article-content {
+    padding: 15px 20px 20px;
+  }
+  .article-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #1e88e5;
+  }
+  .article-description {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #555;
+  }
+  .article-meta {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: #999;
+  }
+  footer {
+    text-align: center;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    color: #ccc;
+    user-select: none;
+  }
+  @media (max-width: 600px) {
+    main {
+      margin: 10px auto;
+    }
+    header {
+      font-size: 1.4rem;
+      padding: 15px 10px;
+    }
+    .article-title {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Berita Terkini</header>
+<main>
+<article class="article">
+  <img src="https://source.unsplash.com/600x338/?news,technology" alt="Teknologi Terbaru" />
+  <div class="article-content">
+    <h2 class="article-title">Inovasi Teknologi Baru Mengubah Dunia</h2>
+    <p class="article-description">Teknologi mutakhir terus berkembang pesat, menghadirkan solusi revolusioner di berbagai bidang seperti kesehatan, transportasi, dan energi.</p>
+    <div class="article-meta">Dipublikasikan: 27 April 2024</div>
+  </div>
+</article>
+<article class="article">
+  <img src="https://source.unsplash.com/600x338/?news,economy" alt="Ekonomi Global" />
+  <div class="article-content">
+    <h2 class="article-title">Pertumbuhan Ekonomi Global Melambat di Kuartal Pertama</h2>
+    <p class="article-description">Para ahli memperingatkan adanya perlambatan ekonomi global akibat ketidakpastian pasar dan konflik geopolitik di beberapa wilayah.</p>
+    <div class="article-meta">Dipublikasikan: 26 April 2024</div>
+  </div>
+</article>
+<article class="article">
+  <img src="https://source.unsplash.com/600x338/?news,environment" alt="Lingkungan Hidup" />
+  <div class="article-content">
+    <h2 class="article-title">Upaya Global Menanggulangi Perubahan Iklim</h2>
+    <p class="article-description">Konferensi internasional membahas langkah-langkah konkret untuk mengurangi emisi karbon dan melindungi keanekaragaman hayati di seluruh dunia.</p>
+    <div class="article-meta">Dipublikasikan: 25 April 2024</div>
+  </div>
+</article>
+<article class="article">
+  <img src="https://source.unsplash.com/600x338/?news,sports" alt="Berita Olahraga" />
+  <div class="article-content">
+    <h2 class="article-title">Tim Nasional Raih Kemenangan Gemilang di Piala Dunia</h2>
+    <p class="article-description">Pertandingan terakhir menampilkan aksi dramatis yang membawa tim nasional meraih kemenangan dan lolos ke babak selanjutnya.</p>
+    <div class="article-meta">Dipublikasikan: 27 April 2024</div>
+  </div>
+</article>
+</main>
+<footer>© 2024 Berita Terkini - Semua hak cipta dilindungi</footer>
+</body>
+</html>
+
+```
