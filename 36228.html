@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Epic Cool Web Experience</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  header {
+    padding: 1rem 2rem;
+    background: rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+  }
+  
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  
+  nav a {
+    color: #fff;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  nav a:hover {
+    color: #ffdd57;
+  }
+  
+  .hero {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  
+  .hero h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+  
+  .hero p {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 5px rgba(0,0,0,0.25);
+  }
+  
+  .btn-primary {
+    background: #ffdd57;
+    color: #3a1457;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(255, 221, 87, 0.4);
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  
+  .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 25px rgba(255, 221, 87, 0.6);
+  }
+  
+  section.features {
+    background: #2f2f5e;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 2rem;
+    padding: 3rem 4vw;
+  }
+  
+  .feature-card {
+    background: #433d6e;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+  }
+  
+  .feature-icon {
+    font-size: 3rem;
+    color: #ffdd57;
+    margin-bottom: 1rem;
+  }
+  
+  .feature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  
+  .feature-desc {
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9rem;
+    color: #bbb;
+    background-color: rgba(0, 0, 0, 0.15);
+    user-select: none;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .hero h2 {
+      font-size: 2.25rem;
+    }
+    
+    .hero p {
+      font-size: 1rem;
+    }
+    
+    section.features {
+      padding: 2rem 3vw;
+      gap: 1.5rem;
+    }
+    
+    .feature-card {
+      padding: 1.5rem;
+    }
+  }
+  
+</style>
+</head>
+<body>
+<header>
+  <h1>CoolWeb</h1>
+  <nav>
+    <a href="#features" aria-label="Features Section">Features</a>
+    <a href="#signup" aria-label="Sign Up Section">Sign Up</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-label="Main Hero Section">
+    <h2>Experience the Future of Web</h2>
+    <p>Dynamic, engaging, and crafted with love. Dive into a world where design meets function seamlessly on any device.</p>
+    <button class="btn-primary" id="cta-button" aria-describedby="signup">Get Started</button>
+  </section>
+
+  <section id="features" class="features" aria-label="Feature Highlights">
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">⚡</div>
+      <h3 class="feature-title">Lightning Fast</h3>
+      <p class="feature-desc">Optimized to load in the blink of an eye, delivering smooth animations and instant responsiveness.</p>
+    </article>
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🔒</div>
+      <h3 class="feature-title">Secure by Design</h3>
+      <p class="feature-desc">Built with modern security best practices and privacy considerations at its core.</p>
+    </article>
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">📱</div>
+      <h3 class="feature-title">Mobile Ready</h3>
+      <p class="feature-desc">Perfectly adaptable layouts and interactions for all screen sizes and mobile devices.</p>
+    </article>
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🎨</div>
+      <h3 class="feature-title">Modern Aesthetics</h3>
+      <p class="feature-desc">A clean, vibrant design language that keeps users captivated while feeling effortless to navigate.</p>
+    </article>
+  </section>
+
+  <section id="signup" aria-label="Sign Up Section" style="text-align:center; padding:3rem 1rem; background: #5c54a4;">
+    <h2>Join Our Community</h2>
+    <p style="max-width: 400px; margin: 0 auto 2rem;">Sign up to receive exclusive updates, early features, and tips direct to your inbox!</p>
+    <form id="signup-form" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column;" aria-labelledby="signup">
+      <label for="email" style="text-align:left; margin-bottom: 0.3rem;">Email Address</label>
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder="you@example.com" 
+        required 
+        style="padding: 0.8rem 1rem; border-radius: 30px; border: none; outline: none; margin-bottom: 1rem; font-size: 1rem;"
+        aria-required="true"
+      />
+      <button type="submit" class="btn-primary" style="align-self: center; width: 100%;">Subscribe</button>
+    </form>
+    <p id="form-message" role="alert" style="margin-top: 1rem; font-weight: 600;"></p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2024 CoolWeb. Crafted with care.
+</footer>
+
+<script>
+  // Smooth scroll for navigation links
+  document.querySelectorAll('nav a').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      e.preventDefault();
+      const targetId = anchor.getAttribute('href').substr(1);
+      const targetSection = document.getElementById(targetId);
+      if(targetSection) {
+        targetSection.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    });
+  });
+
+  // CTA button scrolls to signup
+  document.getElementById('cta-button').addEventListener('click', () => {
+    document.getElementById('signup').scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
+
+  // Simple form validation and submission simulation
+  const form = document.getElementById('signup-form');
+  const message = document.getElementById('form-message');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const emailInput = form.email.value.trim();
+    if(!emailInput || !emailInput.includes('@')) {
+      message.textContent = 'Please enter a valid email address.';
+      message.style.color = '#ff6b6b';
+      form.email.focus();
+      return;
+    }
+    message.textContent = '';
+    
+    // Simulate async submission
+    message.style.color = '#fff';
+    message.textContent = 'Subscribing...';
+    setTimeout(() => {
+      message.style.color = '#4caf50';
+      message.textContent = 'Thank you for subscribing!';
+      form.reset();
+    }, 1500);
+  });
+</script>
+</body>
+</html>
+
+```
