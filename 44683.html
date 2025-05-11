@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Mahal 4 Juta</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #1f005c, #5b0060, #870160, #ac255e, #ca485c, #e16b5c, #f39060, #ffb56b);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  .topup-container {
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 20px;
+    width: 350px;
+    max-width: 90vw;
+    padding: 30px;
+    box-shadow: 0 0 20px #ff5733aa;
+    text-align: center;
+    user-select: none;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #ff6d00;
+  }
+  .price {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 15px #ff6d00;
+  }
+  .btn-topup {
+    background: #ff6d00;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 15px 0;
+    border-radius: 40px;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 15px #ff6d00aa;
+  }
+  .btn-topup:hover {
+    background: #ff8c33;
+    box-shadow: 0 0 25px #ff8c3366;
+  }
+  p.info {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ffb470cc;
+  }
+  @media (max-width: 400px) {
+    h1 {
+      font-size: 2rem;
+    }
+    .price {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="topup-container" role="main" aria-label="Form Top Up Mahal 4 Juta">
+    <h1>Top Up Mahal</h1>
+    <div class="price" aria-live="polite" aria-atomic="true" aria-relevant="additions">Rp 4.000.000,-</div>
+    <button class="btn-topup" type="button" aria-label="Bayar sekarang Top Up Mahal seharga 4 juta" onclick="alert('Terima kasih sudah top up mahal Rp4.000.000!')">Bayar Sekarang</button>
+    <p class="info">Nikmati layanan terbaik dengan top up terbesar kami.</p>
+  </div>
+<script>
+  // Accessibility: focus on the button on load for easy mobile tap
+  window.onload = function() {
+    document.querySelector('.btn-topup').focus();
+  };
+</script>
+</body>
+</html>
+
+```
