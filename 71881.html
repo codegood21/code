@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Viral Bug</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #330000, #660000);
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    user-select: none;
+    margin: 0;
+    height: 100vh;
+  }
+  #glitch {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    text-align: center;
+    font-size: 3.5em;
+    letter-spacing: 0.2em;
+    animation: glitchAnim 2s infinite;
+  }
+  @keyframes glitchAnim {
+    0% {
+      text-shadow:
+        2px 0 red,
+        -2px 0 cyan;
+    }
+    20% {
+      text-shadow:
+        2px 0 cyan,
+        -2px 0 red;
+    }
+    40% {
+      text-shadow:
+        5px 0 lime,
+        -5px 0 magenta;
+    }
+    60% {
+      text-shadow:
+        3px 0 yellow,
+        -3px 0 blue;
+    }
+    80% {
+      text-shadow:
+        4px 0 orange,
+        -4px 0 purple;
+    }
+    100% {
+      text-shadow:
+        2px 0 red,
+        -2px 0 cyan;
+    }
+  }
+  #error-log {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 40%;
+    overflow-y: scroll;
+    background: rgba(0,0,0,0.85);
+    padding: 10px;
+    font-size: 0.9em;
+    font-family: monospace;
+    line-height: 1.3em;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+<div id="glitch">SYSTEM CORRUPTION DETECTED</div>
+<div id="error-log"></div>
+<script>
+(function () {
+  const errorLog = document.getElementById('error-log');
+  const errorMessages = [
+    "Error: Unexpected token in JSON at position 34",
+    "Warning: Deprecated API usage detected",
+    "Fatal: Memory leak detected in module 'renderer.js'",
+    "Error: Uncaught TypeError: Cannot read property 'foo' of undefined",
+    "Warning: Slow network detected, retrying request",
+    "Fatal: Stack overflow in recursive function 'bugSpawner()'",
+    "Error: Failed to load resource: the server responded with a status of 500",
+    "Warning: Possible infinite loop detected",
+    "Fatal: Access violation at address 0x00000000",
+    "Error: Null pointer exception in module 'mainloop.js'",
+    "Warning: Unsupported browser feature used",
+    "Fatal: Unable to allocate required heap memory",
+    "Error: Network timeout while connecting to server",
+    "Warning: Cross-origin request blocked by browser security policy",
+    "Fatal: Concurrent modification exception in code module 'virus.js'",
+  ];
+
+  function addRandomError() {
+    const msg = errorMessages[Math.floor(Math.random()*errorMessages.length)];
+    const time = new Date().toLocaleTimeString();
+    const el = document.createElement('div');
+    el.textContent = `[${time}] ${msg}`;
+    errorLog.appendChild(el);
+    errorLog.scrollTop = errorLog.scrollHeight;
+  }
+
+  // Spread "infection" effect by changing page content rapidly
+  function glitchEffect() {
+    const body = document.body;
+    // Randomly invert colors
+    const invert = Math.random() < 0.5;
+    body.style.filter = invert ? 'invert(1) hue-rotate(180deg)' : 'none';
+    // Flicker background color
+    body.style.background = invert
+      ? `rgb(${Math.floor(Math.random()*256)},0,0)`
+      : `rgb(0,0,${Math.floor(Math.random()*256)})`;
+  }
+
+  function spawnBug() {
+    const bug = document.createElement('div');
+    bug.textContent = '☣';
+    bug.style.position = 'fixed';
+    bug.style.color = ['lime', 'red', 'cyan', 'magenta'][Math.floor(Math.random()*4)];
+    bug.style.fontSize = `${10 + Math.random()*40}px`;
+    bug.style.left = `${Math.random()*100}vw`;
+    bug.style.top = `${Math.random()*100}vh`;
+    bug.style.userSelect = 'none';
+    bug.style.opacity = '0.9';
+    bug.style.zIndex = 9999;
+    bug.style.pointerEvents = 'none';
+    document.body.appendChild(bug);
+    setTimeout(() => {
+      bug.remove();
+    }, 15000);
+  }
+
+  // Spread "infection" concept by duplicating parts of text rapidly
+  function textCorrupt() {
+    const glitchEl = document.getElementById('glitch');
+    let txt = glitchEl.textContent;
+    let corrupted = txt.split('').map(c => Math.random() < 0.1 ? randomChar() : c).join('');
+    glitchEl.textContent = corrupted;
+  }
+
+  function randomChar() {
+    const chars = "!@#$%^&*()_+{}:\"<>?\\|[];',./`~";
+    return chars[Math.floor(Math.random()*chars.length)];
+  }
+
+  function viralLoop() {
+    addRandomError();
+    glitchEffect();
+    spawnBug();
+    textCorrupt();
+  }
+
+  // Start viral loop every 700ms
+  setInterval(viralLoop, 700);
+
+  // Disable user selection everywhere for more "malicious" feel
+  document.body.style.userSelect = 'none';
+})();
+</script>
+</body>
+</html>
+
+```
