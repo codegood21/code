@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>EliteAI - Asisten AI Cerdas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #1e1f29 0%, #3a3f5c 100%);
+    font-family: 'Montserrat', sans-serif;
+    color: #ececec;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(30,31,41,0.9);
+    max-width: 450px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    padding: 30px 30px 20px;
+    border-bottom: 1px solid #444867;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.9rem;
+    letter-spacing: 2px;
+    color: #a18cd1;
+    text-shadow: 0 0 10px #a18cd1;
+  }
+  header p {
+    margin-top: 8px;
+    font-style: italic;
+    color: #c0b6e3cc;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  .content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #9286c7 transparent;
+  }
+  /* custom scrollbar for Webkit */
+  .content::-webkit-scrollbar {
+    width: 6px;
+  }
+  .content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .content::-webkit-scrollbar-thumb {
+    background-color: #9286c7;
+    border-radius: 3px;
+  }
+  .message {
+    padding: 15px 20px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.4;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+    font-size: 1rem;
+    user-select: text;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .message.user {
+    margin-left: auto;
+    background: linear-gradient(135deg,#7868e6 0%, #a998ff 100%);
+    color: #fff;
+    text-align: right;
+  }
+  .message.ai {
+    margin-right: auto;
+    background: linear-gradient(135deg,#423381 0%, #6a5acd 100%);
+    color: #e1dfff;
+    font-weight: 500;
+  }
+  form {
+    padding: 20px 25px;
+    background: #292b3a;
+    display: flex;
+    gap: 12px;
+  }
+  input[type="text"] {
+    flex-grow: 1;
+    background: #423381;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #ececec;
+    font-weight: 500;
+    outline-offset: 2px;
+    transition: 0.3s ease border-color;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border: 2px solid #a18cd1;
+    background: #533fba;
+  }
+  button {
+    background: #a18cd1;
+    border: none;
+    border-radius: 20px;
+    padding: 0 22px;
+    font-weight: 700;
+    color: #1e1f29;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 10px #a18cd1;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background: #7b75a9;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  button:hover:not(:disabled) {
+    background: #c0b6e3;
+  }
+  footer {
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 0.85rem;
+    color: #7b75a9;
+  }
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .container {
+      max-width: 100%;
+      height: 100vh;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    header h1 {
+      font-size: 1.6rem;
+    }
+    .content {
+      padding: 15px 20px;
+      gap: 12px;
+    }
+    form {
+      padding: 15px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Chat with EliteAI">
+  <header>
+    <h1>EliteAI</h1>
+    <p>Asisten AI Cerdas untuk Profesional dan Kreator</p>
+  </header>
+  <div class="content" id="chat" aria-live="polite" aria-relevant="additions"></div>
+  <form id="chat-form" aria-label="Form to send message to AI">
+    <input type="text" id="user-input" autocomplete="off" placeholder="Tanyakan sesuatu..." aria-required="true" />
+    <button type="submit" aria-label="Kirim Pertanyaan">KIRIM</button>
+  </form>
+  <footer>
+    &copy; 2024 EliteAI. Niche: AI untuk Bisnis & Kreativitas. Gaya bahasa profesional, ramah, dan jelas.
+  </footer>
+</div>
+<script>
+  (() => {
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+    const OPENAI_API_KEY = 'PASTE_YOUR_OPENAI_API_KEY_HERE';
+
+    // Append message to chat container with appropriate class
+    function appendMessage(text, sender) {
+      const msgEl = document.createElement('div');
+      msgEl.classList.add('message', sender);
+      msgEl.textContent = text;
+      chat.appendChild(msgEl);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Show loading dots (animated) while waiting for AI response
+    function showLoadingIndicator() {
+      const loading = document.createElement('div');
+      loading.classList.add('message', 'ai');
+      loading.setAttribute('aria-live', 'polite');
+      loading.textContent = 'Membalas';
+      chat.appendChild(loading);
+      chat.scrollTop = chat.scrollHeight;
+      let dots = 0;
+      const interval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        loading.textContent = 'Membalas' + '.'.repeat(dots);
+      }, 500);
+      return { loading, interval };
+    }
+
+    async function fetchAIResponse(prompt) {
+      // Call OpenAI chat completion API (GPT-4 or GPT-3.5-turbo)
+      const url = 'https://api.openai.com/v1/chat/completions';
+      const body = {
+        model: "gpt-4",
+        messages: [
+          {
+            role: 'system',
+            content: "Kamu adalah asisten AI profesional yang membantu pengguna dengan jawaban jelas, ramah, dan berkelas. Gunakan bahasa Indonesia dengan gaya profesional dan elegan."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 900,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+      };
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify(body)
+      });
+      if (!response.ok) {
+        throw new Error("Gagal terhubung ke layanan AI. Coba lagi nanti.");
+      }
+      const data = await response.json();
+      if (data && data.choices && data.choices.length > 0) {
+        return data.choices[0].message.content.trim();
+      } else {
+        throw new Error("Tidak ada balasan dari AI.");
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userText = input.value.trim();
+      if (!userText) return;
+      appendMessage(userText, 'user');
+      input.value = '';
+      input.setAttribute('disabled', true);
+      const { loading, interval } = showLoadingIndicator();
+      try {
+        const aiResponse = await fetchAIResponse(userText);
+        clearInterval(interval);
+        chat.removeChild(loading);
+        appendMessage(aiResponse, 'ai');
+      } catch (error) {
+        clearInterval(interval);
+        chat.removeChild(loading);
+        appendMessage("Terjadi kesalahan: " + error.message, 'ai');
+      }
+      input.removeAttribute('disabled');
+      input.focus();
+    });
+
+    // Accessibility: focus input on page load
+    input.focus();
+  })();
+</script>
+</body>
+</html>
+
+```
