@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Netflix Clone</title>
+<style>
+  /* RESET & BASE */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #141414;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  ul {
+    list-style: none;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background-color: rgba(20, 20, 20, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+  }
+  header.scrolled {
+    background-color: #141414;
+  }
+  .logo {
+    width: 110px;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  nav a {
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  nav a:hover {
+    color: #e50914;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background-image: url('https://occ-0-1722-92.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABY7Jewi9imXQZBNf9C8MkCJlXVrpJw TWpGRWTx3puDlRbmb2lDSQdwGGxY-HlpIQzBmUc1sLteY7auYiKov_8D9uw.png?r=6f0');
+    background-size: cover;
+    cursor: pointer;
+  }
+  .nav-text {
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    color: white;
+    height: 60vh;
+    max-height: 700px;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 30px 60px 30px;
+    user-select: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, transparent, #141414 90%);
+    pointer-events: none;
+  }
+  .hero-content {
+    max-width: 700px;
+    z-index: 5;
+  }
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
+  }
+  .hero-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  .btn {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 25px;
+    border-radius: 4px;
+    border: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.6);
+  }
+  .btn-play {
+    background-color: #e6e6e6;
+    color: #141414;
+  }
+  .btn-play:hover {
+    background-color: #ff1e00;
+    color: white;
+  }
+  .btn-info {
+    background-color: #6d6d6e99;
+    color: white;
+  }
+  .btn-info:hover {
+    background-color: #333;
+  }
+  .btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* MAIN SECTIONS */
+  main {
+    margin-top: 70px; /* header height */
+  }
+  .section {
+    margin: 20px 0 50px 0;
+    padding-left: 30px;
+  }
+  .section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .row {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+  .row::-webkit-scrollbar {
+    height: 7px;
+  }
+  .row::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+  }
+  .movie-card {
+    min-width: 150px;
+    max-width: 150px;
+    cursor: pointer;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .movie-card:hover {
+    transform: scale(1.2);
+    z-index: 20;
+  }
+  .movie-card img {
+    border-radius: 5px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    .hero-description {
+      font-size: 1rem;
+      max-width: 90vw;
+    }
+    .hero-buttons {
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+    .row {
+      padding-left: 15px;
+      gap: 6px;
+    }
+    .movie-card {
+      min-width: 110px;
+      max-width: 110px;
+    }
+  }
+  @media (max-width: 400px) {
+    header {
+      padding: 0 15px;
+    }
+    nav a {
+      font-size: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo" />
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">TV Shows</a>
+    <a href="#">Movies</a>
+    <a href="#">New & Popular</a>
+    <a href="#">My List</a>
+  </nav>
+  <div class="nav-right">
+    <div class="nav-text">Kids</div>
+    <div class="profile" title="Profile"></div>
+  </div>
+</header>
+
+<section class="hero" id="hero" style="background-image: url('https://occ-0-1722-92.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABYi6qwARjLF1eFAkCcKDwPCK8Y6XZkiEEW5v5c9P4gls6zUpP7ag9cf5T9mVn5p-CmTE0AzwQ246CHyDLaNVd5NZfZiPjw.jpg?r=125');">
+  <div class="hero-content">
+    <h1 class="hero-title">Stranger Things</h1>
+    <p class="hero-description">When a young boy disappears, his mother, a police chief, and his friends confront terrifying supernatural forces in order to get him back.</p>
+    <div class="hero-buttons">
+      <button class="btn btn-play" aria-label="Play"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg> Play</button>
+      <button class="btn btn-info" aria-label="More Info"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm.25 15h-1.5v-6h1.5zm0-8h-1.5v-1.5h1.5z"/></svg> More Info</button>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="section">
+    <h2>Trending Now</h2>
+    <div class="row">
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/voagdxBgsFG3 NMPDZ5GGKBtPQHL.jpg" alt="The Witcher" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/hb3y0nwomrlm1ekzgjdrmvxzzr.jpg" alt="Money Heist" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/tHbMIIF51rguMNSastqoQwR0sBs.jpg" alt="Breaking Bad" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/ghvw0d6-dTmj9MPiy7GnMzXW5mW.jpg" alt="Narcos" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/uqt6Qvpa13l50x0u9qvrxPmPKP6.jpg" alt="Dark" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/lNbwE09SSYtYT1b7eV0d6IaAtLL.jpg" alt="The Crown" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Popular on Netflix</h2>
+    <div class="row">
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/rQ2O1OHFKc1ZTq2tTMw4gUT0iNa.jpg" alt="Lucifer" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/c5xwcoprZjNRpJ6pfLHesvE1Twu.jpg" alt="The Umbrella Academy" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/c81fQkmPl9ilbzI8PYhjjTT5C0Y.jpg" alt="13 Reasons Why" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/8F7PAgR69fQOfGpKKE7PiSF2dP6.jpg" alt="Shadow and Bone" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/9lOQlXaSHbZcRQEoNVyzsGHaVz.jpg" alt="House of Cards" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/ymN9B1ACajuCrJyqa9NyDXmNYVv.jpg" alt="Ozark" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>New Releases</h2>
+    <div class="row">
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/x3d70cJz6dqZ4uh37DTI0lLSwO.jpg" alt="Army of the Dead" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/n8F6hyQe2RUvEFoF2uBzEYdir4F.jpg" alt="Ratched" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/bAyKXnFJTV2ZHZ3pfdpnfw6yMm7.jpg" alt="Jungle Cruise" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/84IkGgLc3qGueUqnswEIBVQe9eZ.jpg" alt="The Midnight Sky" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/k4UZIxZ06erIsdJKcqZ1L4k5XC8.jpg" alt="The Queen's Gambit" />
+      </div>
+      <div class="movie-card" tabindex="0">
+        <img src="https://image.tmdb.org/t/p/w300/9zSH1C36r9bFfc6tLHfeQ3VFnqV.jpg" alt="Over the Moon" />
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Change header background on scroll
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  // Simple play and info button clicks - For demo only
+  document.querySelectorAll('.btn-play').forEach(btn => {
+    btn.addEventListener('click', () => alert('Playing title...'));
+  });
+  document.querySelectorAll('.btn-info').forEach(btn => {
+    btn.addEventListener('click', () =>
+      alert('More info about this title...')
+    );
+  });
+</script>
+
+</body>
+</html>
+
+```
