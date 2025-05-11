@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>VPS Manager</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #00bcd4;
+  }
+  .container {
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,188,212,0.5);
+    padding: 20px;
+    width: 100%;
+    max-width: 350px;
+    box-sizing: border-box;
+  }
+  label {
+    display: block;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  select, input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    background: #2c2c2c;
+    color: #e0e0e0;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: #00bcd4;
+    color: #121212;
+    cursor: pointer;
+    filter: drop-shadow(0 0 6px #00bcd4);
+    transition: background-color 0.25s ease;
+  }
+  button:hover {
+    background: #0097a7;
+  }
+  .vps-list {
+    margin-top: 30px;
+  }
+  .vps-card {
+    background: #232323;
+    border-radius: 10px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(0,188,212,0.3);
+  }
+  .vps-card > p {
+    margin: 6px 0;
+    font-size: 0.9rem;
+    word-break: break-all;
+  }
+  .status {
+    margin-top: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>VPS Manager</h1>
+<div class="container" role="main">
+  <label for="ram">Select RAM (GB):</label>
+  <select id="ram" name="ram" aria-label="Select RAM size">
+    <option value="1">1 GB</option>
+    <option value="2">2 GB</option>
+    <option value="3">3 GB</option>
+    <option value="4">4 GB</option>
+    <option value="5">5 GB</option>
+    <option value="6">6 GB</option>
+    <option value="7">7 GB</option>
+    <option value="8">8 GB</option>
+    <option value="9">9 GB</option>
+    <option value="10">10 GB</option>
+    <option value="11">11 GB</option>
+    <option value="12">12 GB</option>
+    <option value="13">13 GB</option>
+    <option value="14">14 GB</option>
+    <option value="15">15 GB</option>
+    <option value="16">16 GB</option>
+  </select>
+
+  <label for="cpu">Select CPU Cores:</label>
+  <select id="cpu" name="cpu" aria-label="Select CPU cores">
+    <option value="1">1 Core</option>
+    <option value="2">2 Cores</option>
+    <option value="3">3 Cores</option>
+    <option value="4">4 Cores</option>
+    <option value="5">5 Cores</option>
+    <option value="6">6 Cores</option>
+  </select>
+
+  <label for="sshLogin">Enable SSH Login:</label>
+  <select id="sshLogin" name="sshLogin" aria-label="Enable or disable SSH login">
+    <option value="yes">Yes</option>
+    <option value="no" selected>No</option>
+  </select>
+
+  <label for="ipAddress">IP Address (for SSH login):</label>
+  <input type="text" id="ipAddress" name="ipAddress" placeholder="e.g. 192.168.1.100" aria-label="Enter IP address" disabled />
+
+  <label for="password">Password (for SSH login):</label>
+  <input type="password" id="password" name="password" placeholder="Password" aria-label="Enter SSH password" disabled />
+
+  <button id="createVPSBtn" type="button" aria-controls="vpsList">Create VPS</button>
+</div>
+
+<div class="vps-list" id="vpsList" aria-live="polite" aria-relevant="additions" aria-label="List of created VPS">
+</div>
+
+<script>
+  (() => {
+    const ramSelect = document.getElementById('ram');
+    const cpuSelect = document.getElementById('cpu');
+    const sshLoginSelect = document.getElementById('sshLogin');
+    const ipAddressInput = document.getElementById('ipAddress');
+    const passwordInput = document.getElementById('password');
+    const createVPSBtn = document.getElementById('createVPSBtn');
+    const vpsList = document.getElementById('vpsList');
+
+    function toggleSSHFields() {
+      const enabled = sshLoginSelect.value === 'yes';
+      ipAddressInput.disabled = !enabled;
+      passwordInput.disabled = !enabled;
+      if(!enabled){
+        ipAddressInput.value = '';
+        passwordInput.value = '';
+      }
+    }
+
+    sshLoginSelect.addEventListener('change', toggleSSHFields);
+    toggleSSHFields();
+
+    function validateIP(ip) {
+      // Simple IPv4 format check
+      const ipv4Pattern = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+      return ipv4Pattern.test(ip);
+    }
+
+    function createVPS(ram, cpu, sshEnabled, ip, password) {
+      return {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+        ram,
+        cpu,
+        sshEnabled,
+        ip,
+        password,
+        installed: false,
+      };
+    }
+
+    function renderVPSCard(vps) {
+      const div = document.createElement('div');
+      div.className = 'vps-card';
+      div.id = `vps-${vps.id}`;
+
+      const ramP = document.createElement('p');
+      ramP.textContent = `RAM: ${vps.ram} GB`;
+      div.appendChild(ramP);
+
+      const cpuP = document.createElement('p');
+      cpuP.textContent = `CPU Cores: ${vps.cpu}`;
+      div.appendChild(cpuP);
+
+      const sshStatus = document.createElement('p');
+      sshStatus.textContent = `SSH Login: ${vps.sshEnabled ? 'Enabled' : 'Disabled'}`;
+      div.appendChild(sshStatus);
+
+      if (vps.sshEnabled) {
+        const ipP = document.createElement('p');
+        ipP.textContent = `IP Address: ${vps.ip}`;
+        div.appendChild(ipP);
+
+        const passP = document.createElement('p');
+        passP.textContent = `Password: ${vps.password}`;
+        div.appendChild(passP);
+      }
+
+      const statusP = document.createElement('p');
+      statusP.className = 'status';
+      statusP.textContent = vps.installed ? 'Status: Installed' : 'Status: Not Installed';
+      div.appendChild(statusP);
+
+      const installBtn = document.createElement('button');
+      installBtn.textContent = vps.installed ? 'Reinstall VPS' : 'Install VPS';
+      installBtn.style.marginTop = '10px';
+      installBtn.style.width = '100%';
+      installBtn.style.background = vps.installed ? '#ff5722' : '#4caf50';
+      installBtn.style.color = '#fff';
+      installBtn.style.border = 'none';
+      installBtn.style.borderRadius = '6px';
+      installBtn.style.cursor = 'pointer';
+      installBtn.addEventListener('click', () => {
+        installBtn.disabled = true;
+        installBtn.textContent = 'Installing...';
+        // Simulating install delay
+        setTimeout(() => {
+          vps.installed = true;
+          statusP.textContent = 'Status: Installed';
+          installBtn.textContent = 'Reinstall VPS';
+          installBtn.disabled = false;
+          installBtn.style.background = '#ff5722';
+        }, 2500);
+      });
+      div.appendChild(installBtn);
+
+      return div;
+    }
+
+    function clearInputs() {
+      ramSelect.value = '1';
+      cpuSelect.value = '1';
+      sshLoginSelect.value = 'no';
+      toggleSSHFields();
+    }
+
+    createVPSBtn.addEventListener('click', () => {
+      const ram = Number(ramSelect.value);
+      const cpu = Number(cpuSelect.value);
+      const sshEnabled = sshLoginSelect.value === 'yes';
+      const ip = ipAddressInput.value.trim();
+      const password = passwordInput.value;
+
+      if (sshEnabled) {
+        if (!validateIP(ip)) {
+          alert('Please enter a valid IP address.');
+          ipAddressInput.focus();
+          return;
+        }
+        if (password.length === 0) {
+          alert('Please enter a password for SSH login.');
+          passwordInput.focus();
+          return;
+        }
+      }
+      // Create VPS object
+      const vps = createVPS(ram, cpu, sshEnabled, ip, password);
+
+      // Render VPS card and add to list
+      const vpsCard = renderVPSCard(vps);
+      vpsList.prepend(vpsCard);
+
+      clearInputs();
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
