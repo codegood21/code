@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 350px;
+    padding: 30px;
+    max-height: 600px;
+    overflow: auto;
+  }
+  h1 {
+    text-align: center;
+    color: #5a3eaa;
+    margin-bottom: 25px;
+  }
+  label {
+    font-weight: 600;
+    color: #444;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #764ba2;
+  }
+  button {
+    background: #764ba2;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+  button:hover {
+    background: #5a3eaa;
+  }
+  .result {
+    background: #f3f3f3;
+    color: #333;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+    user-select: text;
+  }
+  @media (max-width: 400px) {
+    .container {
+      width: 90vw;
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <h1>Top Up</h1>
+  <form id="topupForm" aria-label="Top up your account form">
+    <label for="username">Username / ID</label>
+    <input type="text" id="username" name="username" required aria-required="true" placeholder="Enter your username or ID" autocomplete="username" />
+    
+    <label for="amount">Amount</label>
+    <select id="amount" name="amount" required aria-required="true">
+      <option value="" disabled selected>Select amount</option>
+      <option value="10000">10,000</option>
+      <option value="25000">25,000</option>
+      <option value="50000">50,000</option>
+      <option value="100000">100,000</option>
+      <option value="200000">200,000</option>
+    </select>
+
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod" name="paymentMethod" required aria-required="true">
+      <option value="" disabled selected>Select payment method</option>
+      <option value="credit_card">Credit Card</option>
+      <option value="bank_transfer">Bank Transfer</option>
+      <option value="e_wallet">E-Wallet</option>
+    </select>
+
+    <button type="submit" aria-label="Submit top up">Top Up Now</button>
+  </form>
+  <div id="result" class="result" role="alert" aria-live="polite" style="display:none;"></div>
+</div>
+
+<script>
+  (function() {
+    const form = document.getElementById('topupForm');
+    const result = document.getElementById('result');
+
+    function formatCurrency(num) {
+      return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      result.style.display = 'none';
+      const username = form.username.value.trim();
+      const amount = form.amount.value;
+      const paymentMethod = form.paymentMethod.value;
+
+      if (!username || !amount || !paymentMethod) {
+        alert('Please fill out all required fields.');
+        return;
+      }
+
+      // Simulate processing top up and display a success message
+      const msg = `Top up request successful!  
+Username/ID: ${username}  
+Amount: ${formatCurrency(amount)}  
+Payment Method: ${paymentMethod.replace('_', ' ').toUpperCase()}
+
+Thank you for your purchase.`;
+      result.textContent = msg;
+      result.style.display = 'block';
+      form.reset();
+      form.amount.selectedIndex = 0;
+      form.paymentMethod.selectedIndex = 0;
+      form.username.focus();
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
