@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>AI Guru Pintar - Bantuan Tugas Sekolah</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background-color: rgba(0,0,0,0.3);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 6px #000000cc;
+  }
+  header p {
+    margin: 0.3rem 0 0;
+    font-weight: 300;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #ddd;
+    user-select: none;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 720px;
+    margin: 2rem auto 3rem;
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    padding: 2rem 1.8rem;
+    backdrop-filter: blur(15px);
+  }
+  section.teachers {
+    margin-bottom: 2rem;
+  }
+  section.teachers h2 {
+    font-weight: 600;
+    border-bottom: 2px solid #a788f1;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+  .teacher-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.1rem;
+  }
+  .teacher-card {
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    min-width: 140px;
+    max-width: 180px;
+    text-align: center;
+    box-shadow: 0 0 11px #a788f1;
+    transition: transform 0.3s ease;
+    cursor: default;
+  }
+  .teacher-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #c2b0ffcc;
+  }
+  .teacher-avatar {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid #9f7aea;
+    box-shadow: 0 0 14px #9f7aea88;
+  }
+  .teacher-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+  }
+  .teacher-subject {
+    font-weight: 300;
+    color: #ddd;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  section.ask {
+    margin-top: 1rem;
+  }
+  section.ask h2 {
+    font-weight: 600;
+    border-bottom: 2px solid #a788f1;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+  form {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  textarea {
+    flex-grow: 1;
+    min-height: 90px;
+    padding: 1rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
+    background: rgba(255 255 255 / 0.12);
+    color: #f0f0f0;
+    box-shadow: inset 0 0 6px #7d63f9cc;
+  }
+  textarea::placeholder {
+    color: #d3caff;
+    font-style: italic;
+  }
+  button {
+    background-color: #7d63f9;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    font-weight: 600;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 15px #7d63f9aa;
+    transition: background-color 0.25s ease;
+  }
+  button:hover, button:focus {
+    background-color: #6544e0;
+  }
+  .answer-box {
+    margin-top: 1.2rem;
+    padding: 1.3rem 1.3rem;
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 12px;
+    min-height: 70px;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    color: #f9f9f9;
+    box-shadow: inset 0 0 14px #9f7aea;
+    white-space: pre-wrap;
+    user-select: text;
+  }
+  footer {
+    background-color: rgba(0,0,0,0.2);
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #bbb;
+    user-select: none;
+  }
+
+  @media (max-width: 400px) {
+    main {
+      margin: 1rem;
+      padding: 1.2rem 1rem;
+    }
+    .teacher-card {
+      min-width: 120px;
+      max-width: 140px;
+    }
+    button {
+      flex-grow: 1;
+      padding: 0.9rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI Guru Pintar</h1>
+  <p>Bersama AI, bantu guru menjawab tugas kapan saja</p>
+</header>
+<main>
+  <section class="teachers" aria-label="Daftar Guru Mata Pelajaran">
+    <h2>Guru Mata Pelajaran</h2>
+    <div class="teacher-list" role="list">
+      <div class="teacher-card" role="listitem" tabindex="0" aria-label="Guru Matematika: Pak Budi">
+        <div class="teacher-avatar" style="background-image: url('https://i.pravatar.cc/75?img=10');" aria-hidden="true"></div>
+        <div class="teacher-name">Pak Budi</div>
+        <div class="teacher-subject">Matematika</div>
+      </div>
+      <div class="teacher-card" role="listitem" tabindex="0" aria-label="Guru Bahasa Indonesia: Bu Sari">
+        <div class="teacher-avatar" style="background-image: url('https://i.pravatar.cc/75?img=20');" aria-hidden="true"></div>
+        <div class="teacher-name">Bu Sari</div>
+        <div class="teacher-subject">Bahasa Indonesia</div>
+      </div>
+      <div class="teacher-card" role="listitem" tabindex="0" aria-label="Guru IPA: Pak Agus">
+        <div class="teacher-avatar" style="background-image: url('https://i.pravatar.cc/75?img=30');" aria-hidden="true"></div>
+        <div class="teacher-name">Pak Agus</div>
+        <div class="teacher-subject">IPA</div>
+      </div>
+      <div class="teacher-card" role="listitem" tabindex="0" aria-label="Guru IPS: Bu Lina">
+        <div class="teacher-avatar" style="background-image: url('https://i.pravatar.cc/75?img=40');" aria-hidden="true"></div>
+        <div class="teacher-name">Bu Lina</div>
+        <div class="teacher-subject">IPS</div>
+      </div>
+      <div class="teacher-card" role="listitem" tabindex="0" aria-label="Guru Bahasa Inggris: Pak Dedi">
+        <div class="teacher-avatar" style="background-image: url('https://i.pravatar.cc/75?img=50');" aria-hidden="true"></div>
+        <div class="teacher-name">Pak Dedi</div>
+        <div class="teacher-subject">Bahasa Inggris</div>
+      </div>
+    </div>
+  </section>
+  <section class="ask" aria-label="Form Tanya Jawab Belajar">
+    <h2>Tanya Tugasmu pada AI Guru</h2>
+    <form id="taskForm" aria-describedby="answerDesc">
+      <textarea id="taskInput" placeholder="Tulis pertanyaan tugas sekolahmu di sini, misal: 'Jelaskan fotosintesis pada tumbuhan!'" aria-label="Isi pertanyaan tugas"></textarea>
+      <button type="submit" aria-label="Kirim pertanyaan">Tanya</button>
+    </form>
+    <div id="answerBox" class="answer-box" role="region" aria-live="polite" aria-atomic="true" aria-describedby="answerDesc"></div>
+    <p id="answerDesc" class="sr-only">Jawaban dari AI Guru akan muncul di sini setelah kamu mengirimkan pertanyaan.</p>
+  </section>
+</main>
+<footer>
+  &copy; 2024 AI Guru Pintar - Semua hak cipta dilindungi.
+</footer>
+<script>
+  const form = document.getElementById('taskForm');
+  const input = document.getElementById('taskInput');
+  const answerBox = document.getElementById('answerBox');
+
+  // Simple knowledge base for sample answers
+  const knowledgeBase = {
+    'fotosintesis': "Fotosintesis adalah proses di mana tumbuhan mengubah cahaya matahari menjadi energi kimia dalam bentuk glukosa, menggunakan karbon dioksida dan air. Proses ini juga menghasilkan oksigen sebagai produk sampingan.",
+    'matematika': "Matematika adalah ilmu yang mempelajari tentang bilangan, ruang, struktur, dan perubahan. Contoh tugas: Selesaikan persamaan kuadrat, tentukan luas bangun datar, dan sebagainya.",
+    'sejarah indonesia': "Sejarah Indonesia mencakup periode penting seperti masa kerajaan kuno, penjajahan Belanda, kemerdekaan, dan perkembangan modern. Contoh tugas: Jelaskan peranan Soekarno dalam kemerdekaan Indonesia.",
+    'bahasa indonesia': "Dalam Bahasa Indonesia, tugas sering meliputi menulis karangan, menganalisis teks, dan memahami tata bahasa. Contoh: Buatlah ringkasan cerita pendek yang dibaca.",
+    'hukum newton': "Hukum Newton adalah tiga prinsip dasar mekanika yang menjelaskan hubungan antara gaya, massa, dan percepatan benda.",
+    'tugas ipa': "IPA (Ilmu Pengetahuan Alam) mencakup topik seperti biologi, fisika, dan kimia. Contoh tugas: Jelaskan siklus air, gaya gravitasi, atau perubahan wujud zat.",
+    'bahasa inggris': "Tugas Bahasa Inggris biasanya melibatkan tata bahasa, kosa kata, dan kemampuan menulis serta berbicara, misalnya membuat kalimat tanya menggunakan present continuous tense."
+  };
+
+  function generateResponse(question) {
+    if (!question) return "Silakan tulis pertanyaan tugas yang ingin kamu tanyakan.";
+
+    const q = question.toLowerCase();
+    for (const key in knowledgeBase) {
+      if (q.includes(key)) {
+        return knowledgeBase[key];
+      }
+    }
+    // Default fallback answer with encouragement
+    return "Maaf, saya belum bisa menjawab pertanyaan itu secara spesifik. Coba tanyakan tentang Matematika, IPA, Bahasa Indonesia, Bahasa Inggris, atau Sejarah Indonesia. AI Guru akan terus belajar agar bisa membantu kamu lebih banyak!";
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const userQuestion = input.value.trim();
+    answerBox.textContent = "Sedang mencari jawaban...";
+    // Simulate processing delay
+    setTimeout(() => {
+      const answer = generateResponse(userQuestion);
+      answerBox.textContent = answer;
+    }, 700);
+  });
+</script>
+</body>
+</html>
+
+```
