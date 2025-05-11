@@ -1,0 +1,32 @@
+case 'addcase': {
+ if (!isOwner) return reply('❌ Hanya owner yang bisa menambahkan perintah!');
+
+ let code = m.quoted ? m.quoted.text : text;
+ if (!code) return reply('❌ Harap reply atau kirim kode JavaScript yang ingin ditambahkan!');
+
+ const filePath = './bgs.js';
+ const fs = require('fs');
+
+ try {
+ if (!code.includes('case ')) return reply('❌ Kode harus berisi "case" untuk perintah baru!');
+
+ let fileContent = fs.readFileSync(filePath, 'utf8');
+ 
+ const insertPosition = fileContent.lastIndexOf('break;');
+
+ if (insertPosition === -1) return reply('❌ Gagal menemukan posisi untuk menambahkan case!');
+
+ const before = fileContent.slice(0, insertPosition + 'break;'.length);
+ const after = fileContent.slice(insertPosition + 'break;'.length);
+
+ const newContent = `${before}\n\n${code}\n${after}`;
+
+ fs.writeFileSync(filePath, newContent, 'utf8');
+
+ reply(`✅ Perintah baru berhasil ditambahkan!`);
+ } catch (err) {
+ console.error(err);
+ reply('❌ Gagal menambahkan perintah!');
+ }
+}
+break;
