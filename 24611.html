@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter</title>
+</head>
+<body>
+    <h1>File Converter</h1>
+    <form id="converterForm">
+        <label for="choice">Choose an option:</label>
+        <select id="choice" name="choice">
+            <option value="1">TXT to VCF</option>
+            <option value="2">VCF to TXT</option>
+            <option value="3">Split VCF</option>
+            <option value="4">Split TXT</option>
+        </select>
+        <br><br>
+        <label for="inputFile">Enter input file path:</label>
+        <input type="text" id="inputFile" name="inputFile" required>
+        <br><br>
+        <div id="outputFields">
+            <label for="outputFile">Enter output file path:</label>
+            <input type="text" id="outputFile" name="outputFile">
+        </div>
+        <div id="outputDirFields" style="display:none;">
+            <label for="outputDir">Enter output directory path:</label>
+            <input type="text" id="outputDir" name="outputDir">
+        </div>
+        <br>
+        <button type="submit">Convert</button>
+    </form>
+
+    <script>
+        document.getElementById('choice').addEventListener('change', function() {
+            const choice = this.value;
+            const outputFileField = document.getElementById('outputFields');
+            const outputDirField = document.getElementById('outputDirFields');
+
+            if (choice === '1' || choice === '2') {
+                outputFileField.style.display = 'block';
+                outputDirField.style.display = 'none';
+            } else {
+                outputFileField.style.display = 'none';
+                outputDirField.style.display = 'block';
+            }
+        });
+
+        document.getElementById('converterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Here you would handle the file conversion logic
+            alert('Conversion initiated!');
+        });
+    </script>
+</body>
+</html>
+```
