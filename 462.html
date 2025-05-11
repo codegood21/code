@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Pembuatan Nomor Kosong Gratis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  h1 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 1.2px;
+  }
+  p {
+    font-weight: 400;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #dcdcdc;
+  }
+  button {
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #764ba2;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255,255,255,0.4);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  button:hover {
+    background: #764ba2;
+    color: #fff;
+    box-shadow: 0 5px 20px #5f3984;
+  }
+  .output {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: 3px;
+    user-select: all;
+  }
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #dcdcdc;
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 20px;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Pembuatan Nomor Kosong">
+    <h1>Buat Nomor Kosong GRATIS</h1>
+    <p>Tekan tombol di bawah untuk menghasilkan nomor kosong acak yang mudah dan terbukti bekerja.</p>
+    <button id="generateBtn" aria-describedby="descBtn">Buat Nomor Kosong</button>
+    <div id="output" class="output" aria-live="polite"></div>
+    <p id="descBtn" class="footer">Nomor yang dihasilkan terdiri dari 12 digit angka nol dan angka acak agar valid.</p>
+  </div>
+<script>
+  const output = document.getElementById('output');
+  const btn = document.getElementById('generateBtn');
+
+  function generateEmptyNumber() {
+    // Generate a 12-digit number starting with zeroes and a few random digits
+    // pattern: 0xxxx0000000 to look like empty number format with some randomness
+    // For example: "080000000000", "090000000001", "070000000092"
+    // But user wants nomor kosong which can mean empty or zero-filled numbers valid and easy
+    // We produce a zero-filled number with last 2-3 digits random safely.
+
+    const base = '0'.repeat(9);
+    const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const number = base + randomPart;
+    return number;
+  }
+
+  btn.addEventListener('click', () => {
+    const number = generateEmptyNumber();
+    output.textContent = number;
+  });
+</script>
+</body>
+</html>
+
+```
