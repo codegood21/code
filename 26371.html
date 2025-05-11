@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up All Games - Modern Recharge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+  }
+
+  header {
+    background: rgba(0,0,0,0.3);
+    padding: 20px 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+
+  main {
+    max-width: 400px;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+
+  h2 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    background: rgba(255,255,255,0.22);
+  }
+
+  button {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+    border: none;
+    background: #ff5f6d;
+    background: linear-gradient(45deg, #ff5f6d, #ffc371);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255,95,109,0.6);
+  }
+  button:hover, button:focus {
+    filter: brightness(1.1);
+  }
+
+  .result {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    min-height: 40px;
+  }
+
+  /* Games dropdown with icons */
+  select option {
+    padding-left: 25px;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+  }
+  /* Custom icons per game (CSS trick, not supported in all browsers) */
+  option[data-icon="mobile-legends"] {
+    background-image: url('https://i.imgur.com/VHZRJZ9.png');
+  }
+  option[data-icon="free-fire"] {
+    background-image: url('https://i.imgur.com/EcbTq9I.png');
+  }
+  option[data-icon="pubg"] {
+    background-image: url('https://i.imgur.com/N49Yaon.png');
+  }
+  option[data-icon="valorant"] {
+    background-image: url('https://i.imgur.com/Xr15IqK.png');
+  }
+  option[data-icon="call-of-duty"] {
+    background-image: url('https://i.imgur.com/LOBDxsa.png');
+  }
+  option[data-icon="among-us"] {
+    background-image: url('https://i.imgur.com/DIrCPfG.png');
+  }
+  
+  /* Responsive for small devices */
+  @media (max-width: 450px) {
+    main {
+      margin: 10px 15px;
+    }
+    header {
+      font-size: 1.4rem;
+      padding: 15px 10px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Top Up All Games</header>
+<main>
+  <h2>Isi Saldo Game Favoritmu</h2>
+  <form id="topup-form" autocomplete="off" novalidate>
+    <div class="form-group">
+      <label for="game-select">Pilih Game</label>
+      <select id="game-select" required>
+        <option value="" disabled selected>Pilih game kamu...</option>
+        <option value="mobile-legends" data-icon="mobile-legends">Mobile Legends</option>
+        <option value="free-fire" data-icon="free-fire">Free Fire</option>
+        <option value="pubg" data-icon="pubg">PUBG Mobile</option>
+        <option value="valorant" data-icon="valorant">Valorant</option>
+        <option value="call-of-duty" data-icon="call-of-duty">Call of Duty</option>
+        <option value="among-us" data-icon="among-us">Among Us</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="player-id">ID Player / Username</label>
+      <input type="text" id="player-id" placeholder="Masukkan ID Player atau Username" required pattern=".{3,30}" title="Minimal 3 hingga 30 karakter" />
+    </div>
+    <div class="form-group">
+      <label for="topup-amount">Nominal Top Up</label>
+      <select id="topup-amount" required>
+        <option value="" disabled selected>Pilih nominal top up...</option>
+      </select>
+    </div>
+    <button type="submit">Top Up Sekarang</button>
+  </form>
+  <div class="result" id="result"></div>
+</main>
+
+<script>
+  const gameSelect = document.getElementById('game-select');
+  const topupAmountSelect = document.getElementById('topup-amount');
+  const resultDiv = document.getElementById('result');
+  const form = document.getElementById('topup-form');
+
+  // Sample nominal top up options mapped per game
+  const topupOptions = {
+    'mobile-legends': [
+      { label: 'Rp 10.000 - 14 Diamonds', value: 10000 },
+      { label: 'Rp 25.000 - 38 Diamonds', value: 25000 },
+      { label: 'Rp 50.000 - 78 Diamonds', value: 50000 },
+      { label: 'Rp 100.000 - 168 Diamonds', value: 100000 }
+    ],
+    'free-fire': [
+      { label: 'Rp 10.000 - 125 Diamonds', value: 10000 },
+      { label: 'Rp 25.000 - 380 Diamonds', value: 25000 },
+      { label: 'Rp 50.000 - 780 Diamonds', value: 50000 },
+      { label: 'Rp 100.000 - 1680 Diamonds', value: 100000 }
+    ],
+    'pubg': [
+      { label: 'Rp 10.000 - 70 UC', value: 10000 },
+      { label: 'Rp 25.000 - 180 UC', value: 25000 },
+      { label: 'Rp 50.000 - 360 UC', value: 50000 },
+      { label: 'Rp 100.000 - 720 UC', value: 100000 }
+    ],
+    'valorant': [
+      { label: 'Rp 10.000 - 100 VP', value: 10000 },
+      { label: 'Rp 25.000 - 250 VP', value: 25000 },
+      { label: 'Rp 50.000 - 550 VP', value: 50000 },
+      { label: 'Rp 100.000 - 1100 VP', value: 100000 }
+    ],
+    'call-of-duty': [
+      { label: 'Rp 10.000 - 130 CP', value: 10000 },
+      { label: 'Rp 25.000 - 350 CP', value: 25000 },
+      { label: 'Rp 50.000 - 700 CP', value: 50000 },
+      { label: 'Rp 100.000 - 1400 CP', value: 100000 }
+    ],
+    'among-us': [
+      { label: 'Rp 10.000 - 1 Month Premium', value: 10000 },
+      { label: 'Rp 40.000 - 6 Months Premium', value: 40000 },
+      { label: 'Rp 70.000 - 12 Months Premium', value: 70000 }
+    ]
+  };
+
+  function populateTopupAmounts(game) {
+    topupAmountSelect.innerHTML = '<option value="" disabled selected>Pilih nominal top up...</option>';
+    if (!game || !topupOptions[game]) return;
+    topupOptions[game].forEach(option => {
+      const opt = document.createElement('option');
+      opt.value = option.value;
+      opt.textContent = option.label;
+      topupAmountSelect.appendChild(opt);
+    });
+  }
+
+  gameSelect.addEventListener('change', e => {
+    populateTopupAmounts(e.target.value);
+    resultDiv.textContent = '';
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    resultDiv.textContent = '';
+    if (!form.checkValidity()) {
+      resultDiv.textContent = 'Mohon isi semua kolom dengan benar.';
+      resultDiv.style.color = '#ffbaba';
+      return;
+    }
+    const game = gameSelect.options[gameSelect.selectedIndex].text;
+    const playerId = document.getElementById('player-id').value.trim();
+    const amountLabel = topupAmountSelect.options[topupAmountSelect.selectedIndex].text;
+
+    // Simulate top up processing
+    resultDiv.style.color = '#a0f6a0';
+    resultDiv.textContent = `Top Up berhasil! Game: ${game}, Player ID: ${playerId}, Paket: ${amountLabel}. Terima kasih!`;
+  });
+</script>
+</body>
+</html>
+
+```
