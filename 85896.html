@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Kenon WhatsApp</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #25d366;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #ffffff;
+  }
+  .container {
+    max-width: 350px;
+    width: 100%;
+    background: #075e54;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 18px;
+    font-weight: 700;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  input[type="tel"] {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  input[type="tel"]:focus {
+    outline: none;
+    box-shadow: 0 0 8px #34b7f1;
+  }
+  button {
+    background: #34b7f1;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease-in-out;
+  }
+  button:hover {
+    background: #0b93d5;
+  }
+  .info {
+    margin-top: 12px;
+    font-size: 14px;
+    text-align: center;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 10px;
+    }
+    .container {
+      max-width: 100%;
+      padding: 15px;
+    }
+    input[type="tel"], button {
+      font-size: 16px;
+      padding: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kenon WhatsApp</h1>
+    <form id="waForm" autocomplete="off" spellcheck="false" novalidate>
+      <label for="phoneNumber">Masukkan Nomor WhatsApp (contoh: 6281234567890):</label>
+      <input
+        type="tel"
+        id="phoneNumber"
+        name="phoneNumber"
+        placeholder="Masukkan nomor tanpa tanda + atau spasi"
+        pattern="^62\d{8,15}$"
+        required
+        inputmode="tel"
+      />
+      <button type="submit">Buka WhatsApp</button>
+      <div class="info">Nomor harus diawali dengan "62" dan tanpa tanda spasi atau tanda plus</div>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById('waForm');
+    const phoneInput = document.getElementById('phoneNumber');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      let phone = phoneInput.value.trim();
+      // Basic validation: start with 62 and min 9 digits total
+      let phoneRegex = /^62\d{8,15}$/;
+      if (!phoneRegex.test(phone)) {
+        alert('Nomor tidak valid. Pastikan nomor diawali dengan 62 dan terdiri dari 10 sampai 17 digit.');
+        phoneInput.focus();
+        return;
+      }
+      // Construct WhatsApp API url
+      let url = `https://wa.me/${phone}`;
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
+
+```
