@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Awesome Sliding Sidebar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #667eea, #764ba2);
+    color: #fff;
+    overflow-x: hidden;
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    background: #281e4f;
+    padding-top: 60px;
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    transform: translateX(-100%);
+    box-shadow: 3px 0 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .sidebar nav a {
+    text-decoration: none;
+    color: #ccc;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .sidebar nav a:hover {
+    background: #7f60e8;
+    color: #fff;
+    box-shadow: 0 0 10px #7f60e8;
+  }
+  
+  .menu-btn {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: #7f60e8;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(127, 96, 232, 0.7);
+    transition: background 0.3s ease;
+  }
+  
+  .menu-btn:hover {
+    background: #a48df2;
+    box-shadow: 0 5px 20px rgba(164, 141, 242, 0.9);
+  }
+  
+  .menu-btn:focus {
+    outline: none;
+  }
+  
+  .menu-btn .bar {
+    position: relative;
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 1px;
+    transition: 0.4s;
+  }
+  .menu-btn .bar::before,
+  .menu-btn .bar::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 1px;
+    transition: 0.4s;
+  }
+  .menu-btn .bar::before {
+    top: -6px;
+  }
+  .menu-btn .bar::after {
+    top: 6px;
+  }
+  
+  .menu-btn.open .bar {
+    background-color: transparent;
+  }
+  .menu-btn.open .bar::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+  .menu-btn.open .bar::after {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+  
+  main {
+    padding: 80px 40px 40px 40px;
+    max-width: 960px;
+    margin-left: 0;
+    transition: margin-left 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  main.shifted {
+    margin-left: 280px;
+  }
+  
+  h1 {
+    font-weight: 600;
+    font-size: 2.8rem;
+    margin-bottom: 0.5em;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  
+  p {
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #ddd;
+    margin-bottom: 3em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  
+  .content-section {
+    background: rgba(255 255 255 / 0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    transition: background 0.4s ease;
+  }
+  
+  .content-section h2 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+  }
+  
+  .content-section p {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #eee;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .sidebar {
+      width: 220px;
+      padding-top: 50px;
+    }
+    main.shifted {
+      margin-left: 220px;
+    }
+    main {
+      padding: 70px 20px 20px 20px;
+    }
+    .menu-btn {
+      top: 10px;
+      left: 10px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+</style>
+</head>
+<body>
+<button aria-label="Toggle menu" class="menu-btn" id="menuBtn">
+  <span class="bar"></span>
+</button>
+<aside class="sidebar" id="sidebar" aria-label="Sidebar Navigation">
+  <nav>
+    <a href="#home" tabindex="0">Home</a>
+    <a href="#about" tabindex="0">About</a>
+    <a href="#services" tabindex="0">Services</a>
+    <a href="#portfolio" tabindex="0">Portfolio</a>
+    <a href="#contact" tabindex="0">Contact</a>
+  </nav>
+</aside>
+<main id="mainContent" tabindex="0">
+  <section id="home" class="content-section" aria-label="Home Section">
+    <h1>Welcome to Your Awesome Site</h1>
+    <p>Explore a smooth sliding sidebar and a modern, sleek interface. Resize the browser or open on your mobile device for an optimal experience.</p>
+  </section>
+  <section id="about" class="content-section" aria-label="About Section" style="margin-top: 3em;">
+    <h2>About Us</h2>
+    <p>We build beautiful interfaces with clean code and delightful animations that feel smooth and fresh. Perfect for your projects and ideas!</p>
+  </section>
+  <section id="services" class="content-section" aria-label="Services Section" style="margin-top: 3em;">
+    <h2>Our Services</h2>
+    <p>From design to development, we deliver solutions that engage users and meet your business goals with style and performance.</p>
+  </section>
+  <section id="portfolio" class="content-section" aria-label="Portfolio Section" style="margin-top: 3em;">
+    <h2>Portfolio Highlights</h2>
+    <p>Take a look at some of our recent projects showcasing creativity, responsiveness, and smooth user experiences.</p>
+  </section>
+  <section id="contact" class="content-section" aria-label="Contact Section" style="margin-top: 3em; margin-bottom: 3em;">
+    <h2>Contact Us</h2>
+    <p>Have questions? We're here to help. Reach out anytime, and we'll get back to you promptly with a friendly smile.</p>
+  </section>
+</main>
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+
+  menuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    menuBtn.classList.toggle('open');
+    mainContent.classList.toggle('shifted');
+  });
+
+  // Accessibility: close sidebar on navigation link click on mobile
+  sidebar.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if(window.innerWidth <= 600) {
+        sidebar.classList.remove('open');
+        menuBtn.classList.remove('open');
+        mainContent.classList.remove('shifted');
+        menuBtn.focus();
+      }
+    });
+  });
+
+  // Close sidebar on window resize if desktop
+  window.addEventListener('resize', () => {
+    if(window.innerWidth > 600) {
+      sidebar.classList.remove('open');
+      menuBtn.classList.remove('open');
+      mainContent.classList.remove('shifted');
+    }
+  })
+</script>
+</body>
+</html>
+
+```
