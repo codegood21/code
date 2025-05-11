@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chat {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            background: white;
+            padding: 10px;
+        }
+        #userInput {
+            width: 300px;
+            padding: 10px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .user {
+            text-align: right;
+            color: blue;
+        }
+        .ai {
+            text-align: left;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="chat"></div>
+    <input type="text" id="userInput" placeholder="Ketik pesan...">
+    <button onclick="sendMessage()">Kirim</button>
+
+    <script>
+        async function sendMessage() { 
+            const userInput = document.getElementById("userInput"); 
+            const message = userInput.value.trim(); 
+            if (!message) return; 
+            addMessage(message, "user"); 
+            userInput.value = ""; 
+            showTypingIndicator(); 
+            try { 
+                const response = await axios.post("https://luminai.my.id/", { 
+                    content: message, 
+                    user: "User ", 
+                    prompt: 'nama kamu adalah bagus ai' 
+                }); 
+                addMessage(response.data.reply, "ai"); 
+            } catch (error) { 
+                console.error("Error:", error); 
+                addMessage("Terjadi kesalahan, coba lagi.", "ai"); 
+            } 
+        }
+
+        function addMessage(message, sender) {
+            const chat = document.getElementById("chat");
+            const messageElement = document.createElement("div");
+            messageElement.className = `message ${sender}`;
+            messageElement.textContent = message;
+            chat.appendChild(messageElement);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            addMessage("AI sedang mengetik...", "ai");
+        }
+    </script>
+
+</body>
+</html>
+```
