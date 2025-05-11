@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>WhatsApp Group Link Generator Bot</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 10px;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  p {
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  input[type="text"] {
+    border: none;
+    border-radius: 30px;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    width: 280px;
+    max-width: 100%;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 20px;
+  }
+  input[type="text"]:focus {
+    box-shadow: 0 0 10px #25D366;
+  }
+  button {
+    background-color: #075E54;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+  }
+  button:hover, button:focus {
+    background-color: #128C7E;
+    outline: none;
+  }
+  #result {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    word-break: break-word;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  }
+  #result a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  @media (max-width: 400px) {
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Bot Pembuat Grup WhatsApp</h1>
+  <p>Masukkan nama grup baru yang ingin Anda buat:</p>
+  <input type="text" id="groupName" placeholder="Nama Grup WhatsApp" maxlength="50" aria-label="Nama Grup WhatsApp" />
+  <button id="createBtn" aria-label="Buat Grup WhatsApp">Buat Grup</button>
+  <div id="result" aria-live="polite"></div>
+
+  <script>
+    const createBtn = document.getElementById('createBtn');
+    const groupNameInput = document.getElementById('groupName');
+    const resultDiv = document.getElementById('result');
+
+    function sanitizeGroupName(name) {
+      // Trim, replace spaces with %20, remove special URL chars except allowed in WhatsApp link
+      return encodeURIComponent(name.trim());
+    }
+
+    createBtn.addEventListener('click', () => {
+      let groupName = groupNameInput.value.trim();
+      if (!groupName) {
+        resultDiv.innerHTML = '<span style="color:#ffdddd;">⚠️ Tolong masukkan nama grup yang valid.</span>';
+        groupNameInput.focus();
+        return;
+      }
+      // WhatsApp group invite link reference format:
+      // https://chat.whatsapp.com/invite/INVITECODE
+      // But generating real invite code automatically is not possible without WhatsApp API or user action.
+      // So simulate a link with the group name as a parameter in a custom link for convenience.
+
+      const sanitizedGroupName = sanitizeGroupName(groupName);
+      // Create the link that will redirect to WhatsApp to start a chat or group creation.
+      // WhatsApp does not provide open link to auto-create groups.
+      // So provide a prefilled message link to invite users.
+      // The bot simulates a standard invitation message with group name.
+
+      const message = encodeURIComponent(`Halo! Saya mengundang Anda untuk bergabung ke grup WhatsApp baru: "${groupName}". Klik link ini untuk bergabung.`);
+
+      const waLink = `https://api.whatsapp.com/send?text=${message}`;
+
+      // Provide the user a clickable link to open WhatsApp with invite message prefilled
+      resultDiv.innerHTML =
+        `Grup WhatsApp "<strong>${groupName}</strong>" siap dibuat!<br>` +
+        `Klik tautan di bawah untuk membuka WhatsApp dan kirim undangan:<br><br>` +
+        `<a href="${waLink}" target="_blank" rel="noopener noreferrer" >Buka WhatsApp untuk Undang</a>`;
+    });
+
+    // Allow pressing Enter to create group
+    groupNameInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        createBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
