@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Top Up Pulsa dan Paket Data All Operator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 600px;
+    padding: 20px;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 30px 25px;
+    width: 320px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input[type="tel"], select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    outline: none;
+  }
+  input[type="tel"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  select {
+    background: #fff;
+    color: #333;
+  }
+  button {
+    width: 100%;
+    background: #4caf50;
+    border: none;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(76,175,80,0.6);
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #43a047;
+  }
+  .note {
+    font-size: 0.8rem;
+    margin-top: 12px;
+    color: #ddd;
+    text-align: center;
+  }
+  @media (max-width: 400px) {
+    .container {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container" role="main">
+    <h1>Top Up Pulsa & Paket Data</h1>
+    <form id="topupForm" novalidate>
+      <label for="phone">Nomor HP (+62)</label>
+      <input type="tel" id="phone" name="phone" placeholder="8568795334" aria-describedby="phoneHelp" pattern="^8\d{8,12}$" required value="8568795334" inputmode="tel" autofocus />
+      
+      <label for="operator">Operator</label>
+      <select id="operator" name="operator" required aria-required="true">
+        <option value="" disabled selected>Pilih Operator</option>
+        <option value="telkomsel">Telkomsel</option>
+        <option value="indosat">Indosat Ooredoo</option>
+        <option value="xl">XL Axiata</option>
+        <option value="tri">Tri (3)</option>
+        <option value="axis">Axis</option>
+        <option value="smartfren">Smartfren</option>
+      </select>
+
+      <label for="topupType">Jenis Top Up</label>
+      <select id="topupType" name="topupType" required>
+        <option value="" disabled selected>Pilih Jenis</option>
+        <option value="pulsa">Pulsa</option>
+        <option value="paketData">Paket Data</option>
+      </select>
+
+      <label for="nominal">Nominal</label>
+      <select id="nominal" name="nominal" required>
+        <option value="" disabled selected>Pilih Nominal</option>
+      </select>
+
+      <button type="submit" aria-label="Top Up Sekarang">Top Up Sekarang</button>
+      <p class="note" id="formMessage" role="alert" aria-live="polite"></p>
+    </form>
+  </main>
+
+<script>
+  (function(){
+    const pulsaNominals = [
+      "5.000", "10.000", "15.000", "20.000", "25.000", "30.000", "50.000", "75.000", "100.000", "150.000", "200.000", "300.000"
+    ];
+    const paketDataNominals = [
+      "1 GB (24 jam)", "2 GB (7 hari)", "5 GB (30 hari)", "10 GB (30 hari)", "Unlimited 10 GB (30 hari)", "15 GB (30 hari)", "20 GB (30 hari)"
+    ];
+
+    const topupType = document.getElementById('topupType');
+    const nominalSelect = document.getElementById('nominal');
+    const form = document.getElementById('topupForm');
+    const formMessage = document.getElementById('formMessage');
+    const phoneInput = document.getElementById('phone');
+
+    function clearNominalOptions() {
+      while (nominalSelect.firstChild) {
+        nominalSelect.removeChild(nominalSelect.firstChild);
+      }
+      let defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      defaultOption.textContent = 'Pilih Nominal';
+      nominalSelect.appendChild(defaultOption);
+    }
+
+    function fillNominalOptions(type) {
+      clearNominalOptions();
+      let values = type === 'pulsa' ? pulsaNominals : paketDataNominals;
+      values.forEach(val => {
+        let option = document.createElement('option');
+        option.value = val;
+        option.textContent = val;
+        nominalSelect.appendChild(option);
+      });
+    }
+
+    topupType.addEventListener('change', function(){
+      if (!this.value) {
+        clearNominalOptions();
+        return;
+      }
+      fillNominalOptions(this.value);
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      formMessage.textContent = '';
+      const phone = phoneInput.value.trim();
+      const operator = document.getElementById('operator').value;
+      const type = topupType.value;
+      const nominal = nominalSelect.value;
+
+      // Validate phone number pattern (starts with 8 and 9 to 13 digits)
+      const phonePattern = /^8\d{8,12}$/;
+      if(!phonePattern.test(phone)){
+        formMessage.textContent = 'Nomor HP tidak valid, harus diawali angka 8 dan 9-13 digit.';
+        return;
+      }
+      if(!operator) {
+        formMessage.textContent = 'Pilih operator terlebih dahulu.';
+        return;
+      }
+      if(!type) {
+        formMessage.textContent = 'Pilih jenis top up.';
+        return;
+      }
+      if(!nominal) {
+        formMessage.textContent = 'Pilih nominal top up.';
+        return;
+      }
+
+      // Simulate topup submission
+      formMessage.style.color = '#fff';
+      formMessage.textContent = `Permintaan top up ${type === 'pulsa' ? 'pulsa' : 'paket data'} dengan nominal ${nominal} ke nomor +62 ${phone} (${operator}) berhasil diproses!`;
+      form.reset();
+      clearNominalOptions();
+    });
+
+    // Initialize nominal options as empty
+    clearNominalOptions();
+
+  })();
+</script>
+</body>
+</html>
+
+```
