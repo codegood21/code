@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Wi-Fi Password Finder</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #16222A 0%, #3A6073 100%);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    overflow: hidden;
+  }
+  header {
+    margin-top: 20px;
+    font-size: 2.2em;
+    font-weight: 700;
+    text-shadow: 0 0 8px #00ffd5, 0 0 20px #00ffd5;
+  }
+  #app {
+    margin-top: 40px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    padding: 20px 30px;
+    text-align: center;
+    max-width: 320px;
+    width: 90vw;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4em;
+    font-weight: 600;
+    font-size: 1em;
+    text-align: left;
+  }
+  select, input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+  }
+  select:focus, input:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 12px #00ffd5;
+  }
+  button {
+    width: 100%;
+    padding: 12px 0;
+    background: #00ffd5;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #021a1e;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #00b3a1;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: 700;
+    min-height: 40px;
+    user-select: text;
+  }
+  #footer {
+    margin-top: auto;
+    padding: 12px 10px;
+    font-size: 0.8em;
+    color: #aaa;
+  }
+  @media (max-width: 360px) {
+    header {
+      font-size: 1.5em;
+      margin-top: 15px;
+    }
+    #app {
+      padding: 15px 20px;
+    }
+    button {
+      font-size: 1em;
+      padding: 10px 0;
+    }
+    #result {
+      font-size: 1em;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Wi-Fi Password Finder</header>
+<div id="app" role="main" aria-label="Wi-Fi Password Finder Application">
+  <label for="network">Select Wi-Fi Network:</label>
+  <select id="network" aria-required="true" aria-describedby="networkHelp">
+    <option value="" disabled selected>Choose a network</option>
+  </select>
+  <label for="password">Password:</label>
+  <input type="text" id="password" placeholder="Password will appear here" readonly aria-readonly="true" />
+  <button id="findPasswordBtn" aria-live="polite" aria-label="Find Wi-Fi password">Find Password</button>
+  <div id="result" aria-live="polite" aria-atomic="true"></div>
+</div>
+<div id="footer">© 2024 Wi-Fi Password Finder Simulator</div>
+<script>
+  // Simulated Wi-Fi networks and their passwords (for demonstration only)
+  const wifiNetworks = [
+    { ssid: 'Home_Network', password: 'home1234' },
+    { ssid: 'CoffeeShop_WiFi', password: 'coffeesip2024' },
+    { ssid: 'Airport_FreeWiFi', password: 'airport2024' },
+    { ssid: 'Library_WiFi', password: 'readbooks!' },
+    { ssid: 'Guest_Network', password: 'guestaccess' },
+    { ssid: 'SmartHome', password: 'smartsecure99' }
+  ];
+
+  const networkSelect = document.getElementById('network');
+  const passwordInput = document.getElementById('password');
+  const findPasswordBtn = document.getElementById('findPasswordBtn');
+  const resultDiv = document.getElementById('result');
+
+  // Populate network dropdown
+  function populateNetworks() {
+    wifiNetworks.forEach(net => {
+      const option = document.createElement('option');
+      option.value = net.ssid;
+      option.textContent = net.ssid;
+      networkSelect.appendChild(option);
+    });
+  }
+
+  // Simulate hacking with delay and progress effect
+  function simulateHack(ssid, callback) {
+    let progress = 0;
+    resultDiv.textContent = 'Cracking password';
+    passwordInput.value = '';
+    findPasswordBtn.disabled = true;
+    networkSelect.disabled = true;
+
+    const interval = setInterval(() => {
+      progress++;
+      if (progress === 3) {
+        resultDiv.textContent = 'Bypassing security...';
+      } else if (progress === 6) {
+        resultDiv.textContent = 'Decrypting key...';
+      } else if (progress === 9) {
+        clearInterval(interval);
+        callback();
+        findPasswordBtn.disabled = false;
+        networkSelect.disabled = false;
+      } else {
+        resultDiv.textContent += '.';
+      }
+    }, 700);
+  }
+
+  // Event handler for button click
+  findPasswordBtn.addEventListener('click', () => {
+    const selectedSSID = networkSelect.value;
+    if (!selectedSSID) {
+      resultDiv.textContent = 'Please select a Wi-Fi network first.';
+      passwordInput.value = '';
+      return;
+    }
+
+    const network = wifiNetworks.find(net => net.ssid === selectedSSID);
+    if (!network) {
+      resultDiv.textContent = 'Network not found.';
+      passwordInput.value = '';
+      return;
+    }
+
+    simulateHack(selectedSSID, () => {
+      passwordInput.value = network.password;
+      resultDiv.textContent = `Password found for "${selectedSSID}"!`;
+    });
+  });
+
+  // Initialize app
+  populateNetworks();
+</script>
+</body>
+</html>
+
+```
