@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Codashop TopUp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f2027;  /* fallback for old browsers */
+    background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #eee;
+  }
+  .container {
+    background: rgba(0,0,0,0.7);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  }
+  h1 {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+    color: #00e676;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #b2ff59;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+  select {
+    background: #263238;
+    color: #e0e0e0;
+  }
+  input[type="text"], input[type="number"] {
+    background: #37474f;
+    color: #eee;
+  }
+  button {
+    width: 100%;
+    padding: 0.8rem 0;
+    font-weight: 600;
+    background: #00e676;
+    border: none;
+    border-radius: 8px;
+    color: #0b3d00;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #00c853;
+  }
+  .message {
+    margin-top: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .error {
+    color: #ff5252;
+  }
+  .success {
+    color: #69f0ae;
+  }
+  @media (max-width: 400px) {
+    .container {
+      width: 95vw;
+      padding: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Codashop TopUp</h1>
+  <form id="topupForm">
+    <label for="apiKey">API Key</label>
+    <input type="text" id="apiKey" placeholder="Enter your API Key" required />
+
+    <label for="game">Select Game</label>
+    <select id="game" required>
+      <option value="" disabled selected>Select Game</option>
+      <option value="shopeepay">ShopeePay</option>
+      <option value="pubg">PUBG Mobile</option>
+      <option value="ml">Mobile Legends</option>
+      <option value="freefire">Free Fire</option>
+      <option value="genshin">Genshin Impact</option>
+    </select>
+
+    <label for="productId">Product ID</label>
+    <input type="text" id="productId" placeholder="Enter Product ID" required />
+
+    <label for="userId">User ID / Username</label>
+    <input type="text" id="userId" placeholder="Enter User ID" required />
+
+    <button type="submit">Top Up</button>
+  </form>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+  const form = document.getElementById('topupForm');
+  const messageEl = document.getElementById('message');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    messageEl.textContent = '';
+    messageEl.className = 'message';
+
+    const apiKey = document.getElementById('apiKey').value.trim();
+    const game = document.getElementById('game').value;
+    const productId = document.getElementById('productId').value.trim();
+    const userId = document.getElementById('userId').value.trim();
+
+    if (!apiKey || !game || !productId || !userId) {
+      messageEl.textContent = 'Please fill all required fields.';
+      messageEl.classList.add('error');
+      return;
+    }
+
+    messageEl.textContent = 'Processing your top-up...';
+    messageEl.classList.remove('error', 'success');
+
+    try {
+      // Replace with actual Codashop API endpoint as needed
+      // This example assumes a generic POST request structure to the Codashop API
+      const response = await fetch('https://api.codashop.com/v1/topup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          game: game,
+          product_id: productId,
+          user_id: userId
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Top-up failed');
+      }
+
+      const data = await response.json();
+
+      // Assuming the API returns a success field and order info
+      if (data.success) {
+        messageEl.textContent = `Top-up successful! Order ID: ${data.order_id || 'N/A'}`;
+        messageEl.classList.add('success');
+        form.reset();
+      } else {
+        throw new Error(data.message || 'Top-up failed');
+      }
+    } catch (error) {
+      messageEl.textContent = `Error: ${error.message}`;
+      messageEl.classList.add('error');
+    }
+  });
+</script>
+</body>
+</html>
+
+```
