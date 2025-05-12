@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Audio to Link Converter</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin-bottom: 20px;
+    color: #0af;
+  }
+  input[type="file"] {
+    width: 300px;
+    padding: 10px;
+    color: #333;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #eee;
+  }
+  .output {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 500px;
+    word-wrap: break-word;
+  }
+  label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: bold;
+  }
+  button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #0af;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  button:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
+  a.link-output {
+    color: #0af;
+    word-break: break-all;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <h1>Audio to Link Converter</h1>
+  <label for="audioInput">Select audio file:</label>
+  <input type="file" id="audioInput" accept="audio/*" />
+  <button id="convertBtn" disabled>Convert to Link</button>
+  <div class="output" id="output"></div>
+
+<script>
+  const audioInput = document.getElementById('audioInput');
+  const convertBtn = document.getElementById('convertBtn');
+  const output = document.getElementById('output');
+
+  let audioFile = null;
+
+  audioInput.addEventListener('change', () => {
+    output.textContent = '';
+    if (audioInput.files.length > 0) {
+      audioFile = audioInput.files[0];
+      convertBtn.disabled = false;
+    } else {
+      audioFile = null;
+      convertBtn.disabled = true;
+    }
+  });
+
+  convertBtn.addEventListener('click', () => {
+    if (!audioFile) return;
+
+    const url = URL.createObjectURL(audioFile);
+    output.innerHTML = `<strong>Download Link:</strong><br><a href="${url}" download="${audioFile.name}" class="link-output">${url}</a>`;
+  });
+</script>
+</body>
+</html>
+
+```
