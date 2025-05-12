@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>AI Play Music</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin-bottom: 0.3em;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  p {
+    margin: 0 0 1em 0;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  #inputSection {
+    width: 100%;
+    display: flex;
+    margin-bottom: 1em;
+  }
+  input[type="text"] {
+    flex: 1;
+    border-radius: 24px 0 0 24px;
+    border: none;
+    padding: 0.6em 1em;
+    font-size: 1rem;
+    outline: none;
+  }
+  button {
+    background: #ff6f91;
+    border: none;
+    padding: 0 1.2em;
+    border-radius: 0 24px 24px 0;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background: #ff477e;
+  }
+  #response {
+    flex: 1;
+    width: 100%;
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 12px;
+    padding: 1em;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+  audio {
+    margin-top: 1em;
+    width: 100%;
+    border-radius: 12px;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+<h1>Play Music AI</h1>
+<p>Ask for a song or music recommendation and play it.</p>
+<div id="inputSection">
+  <input type="text" id="userInput" placeholder="Type music or song name..." autocomplete="off" />
+  <button id="playBtn" disabled>Play</button>
+</div>
+<div id="response">Enter a song or music style above and press Play.</div>
+
+<script>
+  const apiKey = 'ak-49293ce1cdcf4d0a9cfb5c61c0b6bedf';
+  const input = document.getElementById('userInput');
+  const playBtn = document.getElementById('playBtn');
+  const responseDiv = document.getElementById('response');
+  let audioElem;
+
+  function setLoading(loading) {
+    playBtn.disabled = loading;
+    playBtn.textContent = loading ? 'Loading...' : 'Play';
+  }
+
+  input.addEventListener('input', () => {
+    playBtn.disabled = input.value.trim() === '';
+  });
+
+  playBtn.addEventListener('click', () => {
+    const query = input.value.trim();
+    if (!query) return;
+    playMusicAI(query);
+  });
+
+  async function playMusicAI(query) {
+    setLoading(true);
+    responseDiv.textContent = 'Searching for music...';
+
+    // Using a fictitious music AI API endpoint for demo since actual API details not provided
+    // The AI is meant to interpret the query and return a music URL to play.
+    
+    try {
+      // Call the AI backend with the music query (simulate music search/play response)
+      const response = await fetch('https://api.example.com/playmusic', { // placeholder URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({ query })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data && data.audioUrl) {
+        responseDiv.textContent = `Playing: ${data.title || query}`;
+        playAudio(data.audioUrl);
+      } else {
+        responseDiv.textContent = 'No music found for "' + query + '". Try another.';
+        stopAudio();
+      }
+    } catch (err) {
+      responseDiv.textContent = 'Error fetching music. Please try again later.';
+      stopAudio();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function playAudio(url) {
+    if (audioElem) {
+      audioElem.pause();
+      audioElem.remove();
+    }
+    audioElem = document.createElement('audio');
+    audioElem.controls = true;
+    audioElem.src = url;
+    audioElem.autoplay = true;
+    responseDiv.appendChild(audioElem);
+  }
+
+  function stopAudio() {
+    if (audioElem) {
+      audioElem.pause();
+      audioElem.remove();
+      audioElem = null;
+    }
+  }
+</script>
+</body>
+</html>
+
+```
