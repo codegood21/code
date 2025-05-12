@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Elegant API Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  body, html {
+    height: 100%;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #e0e6f3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  main {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 30px 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 100%;
+  }
+  h1 {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 1.2px;
+  }
+  p.subtitle {
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #bfc7d8cc;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+  }
+  input[type="text"] {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-weight: 300;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.15);
+    color: #f0f4ff;
+    transition: background 0.3s ease;
+    margin-bottom: 18px;
+  }
+  input[type="text"]::placeholder {
+    color: #d0d8f2cc;
+  }
+  input[type="text"]:focus {
+    background: rgba(255,255,255,0.3);
+  }
+  button {
+    width: 100%;
+    padding: 14px 0;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 14px #764ba2aa;
+    transition: background 0.35s ease, box-shadow 0.35s ease;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #5a67d8, #6b46c1);
+    box-shadow: 0 6px 20px #6b46c1cc;
+  }
+  .response-container {
+    margin-top: 26px;
+    font-size: 0.95rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 14px;
+    padding: 16px;
+    max-height: 180px;
+    overflow-y: auto;
+    color: #d1d9ff;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    user-select: text;
+  }
+  @media (max-width: 400px) {
+    main {
+      padding: 20px 24px;
+      border-radius: 14px;
+    }
+    button {
+      padding: 12px 0;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<main role="main" aria-label="Elegant API Interaction Dashboard">
+  <h1>Elegant API Dashboard</h1>
+  <p class="subtitle">Test your API endpoint easily with style</p>
+  <form id="apiForm" aria-label="API Request Form">
+    <label for="endpoint">API Endpoint URL</label>
+    <input type="text" id="endpoint" name="endpoint" placeholder="https://api.example.com/data" required autocomplete="off" />
+    <button type="submit" aria-label="Send API Request">Send Request</button>
+  </form>
+  <div id="response" class="response-container" role="region" aria-live="polite" aria-label="API Response Output" tabindex="0"></div>
+</main>
+<script>
+  (() => {
+    const form = document.getElementById('apiForm');
+    const input = document.getElementById('endpoint');
+    const responseContainer = document.getElementById('response');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      responseContainer.textContent = 'Loading...';
+      try {
+        const url = input.value.trim();
+        if (!url) {
+          responseContainer.textContent = 'Please enter a valid API URL.';
+          return;
+        }
+        const res = await fetch(url, { method: 'GET', cache: 'no-store' });
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
+          responseContainer.textContent = JSON.stringify(data, null, 2);
+        } else if (res.ok) {
+          const text = await res.text();
+          responseContainer.textContent = text;
+        } else {
+          responseContainer.textContent = `Error: ${res.status} ${res.statusText}`;
+        }
+      } catch (err) {
+        responseContainer.textContent = 'Network error or invalid URL.';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
