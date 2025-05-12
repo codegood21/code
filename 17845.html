@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel Jasteb</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  .panel {
+    background: #fff;
+    padding: 20px 30px 30px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    width: 320px;
+    max-width: 100%;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #222;
+    text-align: center;
+  }
+  label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #444;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1.8px solid #ccd0d5;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="number"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 6px #4a90e2a0;
+  }
+  button {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  }
+  button:hover {
+    background-color: #357abd;
+    box-shadow: 0 6px 12px rgba(53, 122, 189, 0.5);
+  }
+  .info {
+    margin-top: 20px;
+    font-size: 0.925rem;
+    color: #666;
+    text-align: center;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="panel" role="form" aria-label="Panel Jasteb Form">
+    <h2>Panel Jasteb</h2>
+    <form id="jastebForm" autocomplete="off" novalidate>
+      <label for="resultName">Nama Result</label>
+      <input
+        type="text"
+        id="resultName"
+        name="resultName"
+        aria-required="true"
+        placeholder="Masukkan Nama Result"
+        required
+      />
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        aria-required="true"
+        placeholder="Masukkan Email"
+        required
+      />
+      <label for="numResult">Mau Berapa Result</label>
+      <input
+        type="number"
+        id="numResult"
+        name="numResult"
+        aria-required="true"
+        placeholder="Masukkan Jumlah Result"
+        min="1"
+        max="1000"
+        required
+      />
+      <button type="submit" aria-label="Submit Form">Submit</button>
+    </form>
+    <div class="info" aria-live="polite"></div>
+  </div>
+
+<script>
+  const form = document.getElementById('jastebForm');
+  const info = form.querySelector('.info') || document.querySelector('.info');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const resultName = form.resultName.value.trim();
+    const email = form.email.value.trim();
+    const numResult = form.numResult.value.trim();
+
+    if (!resultName) {
+      info.textContent = 'Nama Result harus diisi.';
+      form.resultName.focus();
+      return;
+    }
+
+    if (!email) {
+      info.textContent = 'Email harus diisi.';
+      form.email.focus();
+      return;
+    }
+    // Basic email pattern check
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      info.textContent = 'Email tidak valid.';
+      form.email.focus();
+      return;
+    }
+
+    if (!numResult || isNaN(numResult) || numResult < 1) {
+      info.textContent = 'Jumlah Result harus angka dan minimal 1.';
+      form.numResult.focus();
+      return;
+    }
+
+    info.textContent = `Data diterima: Nama Result = "${resultName}", Email = "${email}", Jumlah Result = ${numResult}. SMTP: deadlox@support.com`;
+  });
+</script>
+</body>
+</html>
+
+```
