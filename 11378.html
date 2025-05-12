@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Payment Premium</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #1a1a1a, #321414);
+    font-family: 'Montserrat', sans-serif;
+    color: #e6e1dd;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 3rem 1rem;
+  }
+  header {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ffd700;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 8px #ffe066, 0 0 20px #ffd700;
+    text-align: center;
+    user-select: none;
+  }
+  .subtitle {
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+    color: #ccc4b9;
+    text-align: center;
+    max-width: 320px;
+    font-weight: 500;
+  }
+  .payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 360px;
+  }
+  button.pay-btn {
+    flex: 1 1 45%;
+    background: linear-gradient(145deg, #3d1a1a 0%, #5b2121 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  button.pay-btn:hover,
+  button.pay-btn:focus {
+    background: linear-gradient(145deg, #ffd700 0%, #ffdf55 100%);
+    color: #3d1a1a;
+    box-shadow: 0 0 15px 4px #fff59d;
+    outline: none;
+    transform: scale(1.05);
+  }
+  button.pay-btn:active {
+    transform: scale(0.98);
+  }
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 360px;
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: inset 0 0 15px 2px rgba(255, 215, 0, 0.25);
+    user-select: none;
+  }
+  .qr-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .qr-container.active {
+    display: flex;
+  }
+  .qr-code {
+    width: 220px;
+    height: 220px;
+    background: #222;
+    border-radius: 24px;
+    box-shadow:
+      inset 0 0 10px #ffd700aa,
+      0 0 20px #ffd700cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qr-code svg {
+    width: 80%;
+    height: 80%;
+  }
+  .payment-info {
+    text-align: center;
+    color: #f5f0e6;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.3;
+    user-select: text;
+  }
+  @media (max-width: 400px) {
+    button.pay-btn {
+      flex: 1 1 100%;
+      font-size: 1.05rem;
+      padding: 0.85rem 0;
+    }
+    main {
+      padding: 1rem;
+    }
+    .qr-code {
+      width: 180px;
+      height: 180px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Payment Premium</header>
+<div class="subtitle">Pilih metode pembayaran dengan mudah dan cepat</div>
+<div class="payment-methods">
+  <button class="pay-btn" data-method="QRIS">QRIS</button>
+  <button class="pay-btn" data-method="Dana">Dana</button>
+  <button class="pay-btn" data-method="GoPay">GoPay</button>
+  <button class="pay-btn" data-method="OVO">OVO</button>
+</div>
+<main>
+  <div id="qrDisplay" class="qr-container" aria-live="polite" aria-atomic="true">
+    <div class="qr-code" id="qrCode"></div>
+    <div class="payment-info" id="paymentInfo"></div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-vzO2695LkJiF05Jo6ylft0HYG9EXW+RyPE8hfxRCHzAt3YYovyjxu0bHTSuYa7m7rmTmFuexqUbbWQHva3aRmg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  (function(){
+    const paymentData = {
+      QRIS: {
+        name: 'Scan QRIS',
+        number: 'Scan dengan aplikasi e-wallet Anda',
+        qrText: 'https://merchant.qris.id/your-merchant-id'
+      },
+      Dana: {
+        name: 'Dana',
+        number: '0812-3456-7890',
+        qrText: 'https://dana.id/qr/081234567890'
+      },
+      GoPay: {
+        name: 'GoPay',
+        number: '0878-9876-5432',
+        qrText: 'https://gopay.id/qr/087898765432'
+      },
+      OVO: {
+        name: 'OVO',
+        number: '0856-1234-5678',
+        qrText: 'https://ovo.id/qr/085612345678'
+      }
+    };
+
+    const btns = document.querySelectorAll('button.pay-btn');
+    const qrContainer = document.getElementById('qrDisplay');
+    const qrCodeEl = document.getElementById('qrCode');
+    const paymentInfoEl = document.getElementById('paymentInfo');
+
+    let qr;
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const method = btn.getAttribute('data-method');
+        const info = paymentData[method];
+        if (!info) return;
+
+        if(!qr){
+          qr = new QRious({
+            element: qrCodeEl,
+            size: 220,
+            backgroundAlpha: 0,
+            foreground: '#ffd700',
+            level: 'H' // High error correction for better scanning
+          });
+        }
+
+        qr.set({
+          value: info.qrText
+        });
+
+        paymentInfoEl.innerHTML = `<strong>${info.name}</strong><br />${info.number}`;
+        qrContainer.classList.add('active');
+        qrCodeEl.focus();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
