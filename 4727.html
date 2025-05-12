@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Topup Game with Codashop API</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+  }
+  .topup-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    width: 350px;
+    padding: 30px 25px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 1.2px;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  select, input {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+  select:focus, input:focus {
+    box-shadow: 0 0 8px #9fa8da;
+  }
+  button {
+    width: 100%;
+    background: #493267;
+    border: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #774fa6;
+  }
+  .result {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    font-size: 14px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+  }
+  @media (max-width: 400px) {
+    .topup-container {
+      width: 90vw;
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="topup-container" role="main">
+  <h1>Topup Game</h1>
+  <form id="topupForm" aria-label="Topup form">
+    <label for="game">Select Game</label>
+    <select id="game" required aria-required="true" aria-describedby="gameHelp">
+      <option value="" disabled selected>Select your game</option>
+      <option value="mobile_legends">Mobile Legends</option>
+      <option value="free_fire">Free Fire</option>
+      <option value="pubg_mobile">PUBG Mobile</option>
+    </select>
+    <label for="product">Select Product</label>
+    <select id="product" required aria-required="true" aria-describedby="productHelp" disabled>
+      <option value="" disabled selected>Select product</option>
+    </select>
+    <label for="userId">Enter User ID / Nickname</label>
+    <input type="text" id="userId" name="userId" placeholder="Your user ID or nickname" required aria-required="true" autocomplete="off" />
+    <button type="submit" aria-label="Submit topup">Topup Now</button>
+  </form>
+  <div class="result" id="result" aria-live="polite" aria-atomic="true"></div>
+</div>
+<script>
+  const apiKey = '538d19e0-a7a1-11ed-8595-071eebdce1db'; // Sample Codashop public API key (demo)
+
+  const productsByGame = {
+    mobile_legends: [
+      { id: 'md_1', name: 'Diamonds 50', price: 12900 },
+      { id: 'md_2', name: 'Diamonds 100', price: 24900 },
+      { id: 'md_3', name: 'Diamonds 500', price: 109900 }
+    ],
+    free_fire: [
+      { id: 'ff_1', name: 'Diamonds 50', price: 14000 },
+      { id: 'ff_2', name: 'Diamonds 140', price: 37900 },
+      { id: 'ff_3', name: 'Diamonds 355', price: 89900 }
+    ],
+    pubg_mobile: [
+      { id: 'pg_1', name: 'UC 60', price: 13900 },
+      { id: 'pg_2', name: 'UC 170', price: 36900 },
+      { id: 'pg_3', name: 'UC 355', price: 74900 }
+    ]
+  };
+
+  const gameSelect = document.getElementById('game');
+  const productSelect = document.getElementById('product');
+  const topupForm = document.getElementById('topupForm');
+  const resultDiv = document.getElementById('result');
+
+  gameSelect.addEventListener('change', () => {
+    const selectedGame = gameSelect.value;
+    productSelect.innerHTML = '<option value="" disabled selected>Select product</option>';
+    if (selectedGame && productsByGame[selectedGame]) {
+      productsByGame[selectedGame].forEach(p => {
+        const option = document.createElement('option');
+        option.value = p.id;
+        option.textContent = `${p.name} - Rp ${p.price.toLocaleString('id-ID')}`;
+        productSelect.appendChild(option);
+      });
+      productSelect.disabled = false;
+    } else {
+      productSelect.disabled = true;
+    }
+  });
+
+  topupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultDiv.textContent = '';
+    const game = gameSelect.value;
+    const productId = productSelect.value;
+    const userId = document.getElementById('userId').value.trim();
+
+    if (!game || !productId || !userId) {
+      resultDiv.textContent = 'Please complete all fields.';
+      return;
+    }
+
+    resultDiv.textContent = 'Processing your topup...';
+
+    // Sample Call to Codashop API for topup (Simulated for demo only)
+    // The real API endpoint and parameters may differ and require authentication with API Key.
+    // This demo code mocks the call and response to show the flow.
+
+    // Instead of a real API call that requires an actual Codashop key, we'll simulate the API response.
+
+    setTimeout(() => {
+      // Simulated successful response:
+      const success = true;
+      if (success) {
+        resultDiv.innerHTML = `<strong>Topup success!</strong><br>User: ${userId}<br>Product: ${
+          productsByGame[game].find(p => p.id === productId).name
+        }<br>Thank you for your purchase.`;
+      } else {
+        resultDiv.textContent = 'Topup failed. Please try again later.';
+      }
+    }, 2000);
+  });
+</script>
+</body>
+</html>
+
+```
