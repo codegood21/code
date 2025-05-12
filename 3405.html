@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Alpariszzx Boombox MP3 Player</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    background: #1a0000;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .container {
+    background: #660000;
+    border-radius: 12px;
+    padding: 2rem 1.5rem 2.5rem;
+    width: 90vw;
+    max-width: 400px;
+    box-shadow: 0 0 15px #cc0000cc;
+    text-align: center;
+  }
+  h1 {
+    margin: 0 0 1rem;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px #ff0000cc;
+  }
+  input[type="text"] {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 1.2rem;
+    color: #220000;
+    font-weight: 600;
+  }
+  button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: #ff0000;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 8px #ff0000bb;
+  }
+  button:hover {
+    background: #cc0000;
+  }
+  audio {
+    width: 100%;
+    margin-top: 1.5rem;
+    outline: none;
+  }
+  .error {
+    color: #ff5555;
+    font-weight: 600;
+    margin-top: 1rem;
+    text-shadow: 0 0 4px #ff2222aa;
+  }
+  footer {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: #ffaaaa;
+    text-shadow: none;
+  }
+  @media (max-height: 600px) {
+    body {
+      height: 600px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Alpariszzx Boombox MP3</h1>
+    <input type="text" id="urlInput" aria-label="Input TikTok or YouTube video URL" placeholder="Masukkan URL TikTok atau YouTube..." />
+    <button id="playBtn" aria-describedby="instructions">Putar</button>
+    <div id="errorMsg" class="error" role="alert" aria-live="assertive" style="display:none;"></div>
+    <audio controls id="audioPlayer" style="display:none;" preload="auto"></audio>
+    <footer>Alpariszzx &copy; 2024</footer>
+  </div>
+
+<script>
+  const playBtn = document.getElementById('playBtn');
+  const urlInput = document.getElementById('urlInput');
+  const audioPlayer = document.getElementById('audioPlayer');
+  const errorMsg = document.getElementById('errorMsg');
+
+  function resetPlayer() {
+    audioPlayer.src = '';
+    audioPlayer.style.display = 'none';
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+  }
+
+  function extractVideoId(url, platform) {
+    if (!url) return null;
+    try {
+      const parsed = new URL(url);
+      if (platform === 'youtube') {
+        // Handle YouTube video id from various formats
+        if (parsed.hostname.includes('youtu.be')) {
+          return parsed.pathname.slice(1);
+        }
+        if (parsed.hostname.includes('youtube.com')) {
+          return parsed.searchParams.get('v');
+        }
+      }
+      if (platform === 'tiktok') {
+        // Extract TikTok video ID from URL path
+        // TikTok URLs often like https://www.tiktok.com/@username/video/VIDEOID
+        const segments = parsed.pathname.split('/');
+        const videoIndex = segments.indexOf('video');
+        if (videoIndex !== -1 && segments.length > videoIndex +1) {
+          return segments[videoIndex + 1];
+        }
+      }
+    } catch(e) {
+      return null;
+    }
+    return null;
+  }
+
+  function getAudioSrcFromYT(id) {
+    // Dummy placeholder for YT to MP3 extracted URL because direct extraction from YT is not allowed by CORS or policy.
+    // We will simulate using a free online unofficial mp3 youtube downloader API e.g. https://ytmp3.cc/ (but no backend here).
+    // So for demo, just return formatted YouTube audio stream link which won't work directly due to CORS.
+    // We can embed YouTube video with sound, but user requested mp3 player so let's embed YouTube video as audio using "youtube-nocookie.com" iframe not supporting direct audio.
+    // So instead, we will use YouTube embed page for listening (limited). Or we can fallback to just playing video using iframe in a new page.
+    // But task requests playing audio mp3 extracted from url - to handle and autoplay, that requires backend or external API.
+
+    // Strategy: We will redirect user to a new deployed site on top4top to handle it.
+    // But requirement is when user input url, redirect to new website deployed on top4top.
+
+    return null;
+  }
+
+  function getAudioSrcFromTikTok(id) {
+    // Similarly TikTok extraction of mp3 is complex, so we will just redirect user to new page (as task requests deploy on top4top)
+    return null;
+  }
+
+  function redirectToService(url, platform) {
+    // Redirect to top4top domain with the url encoded as query param and platform to play the audio there
+    // The domain is requested as Alpariszzx (used as subdomain or path)
+    // Presume https://alpariszzx.top4top.io?url=ENCODEDURL&platform=PLATFORM
+    // For demo, just redirect to that URL.
+
+    const baseDomain = "https://alpariszzx.top4top.io/";
+    const params = new URLSearchParams();
+    params.set('url', url);
+    params.set('platform', platform);
+    window.location.href = baseDomain + '?' + params.toString();
+  }
+
+  playBtn.addEventListener('click', () => {
+    resetPlayer();
+
+    const urlVal = urlInput.value.trim();
+    if (!urlVal) {
+      errorMsg.textContent = "Mohon masukkan URL TikTok atau YouTube.";
+      errorMsg.style.display = 'block';
+      return;
+    }
+    let platform = null;
+    let vidId = null;
+
+    if (urlVal.includes('youtube.com') || urlVal.includes('youtu.be')) {
+      platform = 'youtube';
+      vidId = extractVideoId(urlVal, platform);
+      if (!vidId) {
+        errorMsg.textContent = "URL YouTube tidak valid.";
+        errorMsg.style.display = 'block';
+        return;
+      }
+    } else if (urlVal.includes('tiktok.com')) {
+      platform = 'tiktok';
+      vidId = extractVideoId(urlVal, platform);
+      if (!vidId) {
+        errorMsg.textContent = "URL TikTok tidak valid.";
+        errorMsg.style.display = 'block';
+        return;
+      }
+    } else {
+      errorMsg.textContent = "URL harus berasal dari TikTok atau YouTube.";
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    // Redirect user to top4top deployed site with url and platform as query
+    redirectToService(urlVal, platform);
+  });
+</script>
+</body>
+</html>
+
+```
