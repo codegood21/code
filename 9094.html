@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Alpariszzx Boombox MP3</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    background: #260000;
+    font-family: 'Poppins', sans-serif;
+    color: #ff3333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  h2 {
+    margin: 0 0 1rem 0;
+    font-weight: 400;
+    font-size: 1rem;
+    color: #ff6666;
+    text-align: center;
+  }
+  .container {
+    background: #330000;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 15px rgba(255,0,0,0.4);
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    border: 2px solid #ff4444;
+    background: #440000;
+    color: #ffcccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  button {
+    cursor: pointer;
+    margin-top: 1.5rem;
+    width: 100%;
+    background: #ff2222;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255,0,0,0.7);
+  }
+  button:hover {
+    background: #ff4444;
+    box-shadow: 0 6px 14px rgba(255,0,0,0.9);
+  }
+  audio {
+    margin-top: 2rem;
+    width: 100%;
+    outline-offset: 4px;
+    outline: 2px solid #ff5555;
+    border-radius: 8px;
+    background: #330000;
+  }
+  .footer {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: #660000;
+    text-align: center;
+    user-select: none;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 0.5rem;
+    }
+    .container {
+      padding: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Alpariszzx Boombox MP3</h1>
+<h2>Putar MP3 dari URL TikTok atau YouTube</h2>
+<div class="container">
+  <label for="inputUrl">Masukkan URL TikTok atau YouTube:</label>
+  <input type="text" id="inputUrl" placeholder="https://www.tiktok.com/@user/video/123 or https://youtu.be/xyz" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+  <button id="playBtn">Putar Audio</button>
+  <audio id="audioPlayer" controls></audio>
+</div>
+<div class="footer">Domain: Alpariszzx</div>
+<script>
+  const inputUrl = document.getElementById('inputUrl');
+  const playBtn = document.getElementById('playBtn');
+  const audioPlayer = document.getElementById('audioPlayer');
+
+  function extractYouTubeID(url) {
+    // Support youtu.be and youtube.com/watch?v= format
+    let regex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w\-]{11})/;
+    let match = url.match(regex);
+    return match ? match[1] : null;
+  }
+
+  function extractTikTokID(url) {
+    // Extract video ID from tiktok video URL
+    // Example: https://www.tiktok.com/@user/video/1234567890123456789
+    let regex = /tiktok\.com\/.*\/video\/(\d+)/;
+    let match = url.match(regex);
+    return match ? match[1] : null;
+  }
+
+  // API endpoints for converting TikTok or YouTube video URLs to direct MP3 audio URLs
+  // Since no backend support is allowed, we will use 3rd party free APIs that allow video->audio streaming
+  // Note: Such free APIs may have rate limits or CORS restrictions. We use publicly available demo endpoints.
+
+  function getYouTubeAudioUrl(videoId) {
+    // Use 'https://www.youtube.com/watch?v=videoId' in a free API
+    // For demonstration, using a free open API like "https://ytstream-download-youtube.com" is not reliable or not CORS-enabled.
+    // Instead, as a fallback, we provide a link to play the YouTube video audio only via YouTube's embed with audio hidden (not MP3).
+    // But requirement is MP3 streaming, so let's use an online third party open API for demo purpose:
+    
+    // NOTE: demo free APIs like "https://api.vevioz.com/api/button/mp3/{videoId}" do not support direct audio src due to CORS.
+    // Therefore, embed YouTube video as fallback with muted video to simulate audio only playback.
+    return null; // No direct MP3 stream available client side without backend or external service
+    
+    // If we had a reliable free API returning direct mp3 stream with CORS, we would return that URL here.
+  }
+
+  function getTikTokAudioUrl(videoId) {
+    // TikTok does not provide direct audio URLs publicly.
+    // There is no free official API to get direct MP3 URL.
+    // So we cannot play TikTok audio directly as mp3 in browser without backend.
+    return null; // No direct accessible MP3 URL for TikTok client side.
+  }
+
+  function clearAudio() {
+    audioPlayer.pause();
+    audioPlayer.removeAttribute('src');
+    audioPlayer.load();
+  }
+
+  playBtn.addEventListener('click', () => {
+    let url = inputUrl.value.trim();
+    if (!url) {
+      alert('Masukkan URL TikTok atau YouTube terlebih dahulu.');
+      return;
+    }
+
+    clearAudio();
+
+    const ytId = extractYouTubeID(url);
+    const ttId = extractTikTokID(url);
+
+    if (ytId) {
+      // Since no direct MP3 streaming URL,
+      // fallback: embed YouTube video with controls and autoplay audio
+      audioPlayer.style.display = 'none'; // hide native audio controls
+      // Create or replace YouTube iframe
+      let iframe = document.getElementById('ytIframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'ytIframe';
+        iframe.width = '100%';
+        iframe.height = '60';
+        iframe.allow = 'autoplay; encrypted-media';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '8px';
+        document.querySelector('.container').appendChild(iframe);
+      }
+      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&controls=1&modestbranding=1&playsinline=1`;
+      return;
+    } else {
+      // Remove YouTube iframe if exists
+      let iframe = document.getElementById('ytIframe');
+      if (iframe) {
+        iframe.remove();
+        audioPlayer.style.display = 'block';
+      }
+    }
+
+    if (ttId) {
+      // No direct stream API for TikTok, so fallback to open TikTok video in new tab or alert
+      alert('Sayangnya, tidak dapat memutar audio langsung dari TikTok karena keterbatasan teknis.');
+      clearAudio();
+      return;
+    }
+
+    alert('URL tidak valid atau tidak didukung, gunakan URL TikTok atau YouTube yang benar.');
+  });
+</script>
+</body>
+</html>
+
+```
