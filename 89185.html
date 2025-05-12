@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Lacak Lokasi & NIK via WhatsApp</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  header {
+    margin: 1rem 0 2rem 0;
+    text-align: center;
+    max-width: 350px;
+  }
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 8px rgba(0,0,0,0.2);
+  }
+  header p {
+    font-weight: 400;
+    font-size: 1rem;
+    opacity: 0.85;
+    line-height: 1.3;
+  }
+  form {
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 1.2rem 1rem;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    backdrop-filter: blur(10px);
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    text-shadow: 0 0 4px rgba(0,0,0,0.3);
+  }
+  input[type="text"] {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    padding: 0.7rem;
+    background-image: linear-gradient(45deg, #ff416c, #ff4b2b);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(255,75,43,0.7);
+    transition: background-image 0.3s ease;
+  }
+  button:hover, button:focus {
+    background-image: linear-gradient(45deg, #ff4b2b, #ff416c);
+  }
+  .status {
+    margin-top: 1rem;
+    text-align: center;
+    min-height: 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-shadow: 0 0 4px rgba(0,0,0,0.25);
+  }
+  .result {
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.17);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    box-shadow: inset 0 0 8px rgba(255 255 255 / 0.25);
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  @media(max-width: 375px) {
+    header h1 {
+      font-size: 1.5rem;
+    }
+    form {
+      max-width: 300px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Lacak Lokasi & NIK via WhatsApp</h1>
+  <p>Masukkan nomor WhatsApp untuk melacak lokasi dan NIK. Hasil akan dikirim ke bot Telegram yang sudah dikonfigurasi.</p>
+</header>
+<form id="lacakForm" autocomplete="off">
+  <label for="whatsappNumber">Nomor WhatsApp (contoh: 6281234567890):</label>
+  <input type="text" id="whatsappNumber" name="whatsappNumber" pattern="8[0-9]{8,14}" placeholder="8xxxxxxxxxxx" required autocomplete="tel" inputmode="numeric" />
+  <button type="submit">Lacak</button>
+</form>
+<div class="status" id="status"></div>
+<pre class="result" id="result"></pre>
+<script>
+(() => {
+  const TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN_HERE';
+  const CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID_HERE';
+
+  const form = document.getElementById('lacakForm');
+  const statusEl = document.getElementById('status');
+  const resultEl = document.getElementById('result');
+
+  // Validate WhatsApp number prefix with regex (starts with 8 after optional 62)
+  function normalizeNumber(num) {
+    num = num.trim();
+    if (num.startsWith('0')) return '62' + num.slice(1);
+    if (num.startsWith('8')) return '62' + num;
+    if (num.startsWith('62')) return num;
+    return num; // fallback
+  }
+
+  // Mocked API call to simulate location & NIK fetching by WhatsApp number
+  function fetchLocationAndNIK(waNumber) {
+    // This is a simulated API call; no real data is available here.
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const data = {
+          whatsapp: waNumber,
+          name: "Nama Sementara",
+          nik: "1234567890123456",
+          location: {
+            city: "Jakarta",
+            province: "DKI Jakarta",
+            latlng: "-6.2088,106.8456"
+          },
+          timestamp: new Date().toISOString(),
+          note: "Data ini hanyalah simulasi. Implementasi nyata membutuhkan backend dan izin legal."
+        };
+        resolve(data);
+      }, 2200);
+    });
+  }
+
+  // Send message to Telegram bot
+  async function sendTelegramMessage(message) {
+    try {
+      const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+      const payload = {
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+      };
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  function buildMessage(data) {
+    return `*Lacak Lokasi & NIK dari WhatsApp*\n\n` +
+           `*Nomor WA:* ${data.whatsapp}\n` +
+           `*Nama:* ${data.name}\n` +
+           `*NIK:* ${data.nik}\n` +
+           `*Kota:* ${data.location.city}\n` +
+           `*Provinsi:* ${data.location.province}\n` +
+           `*Koordinat:* ${data.location.latlng}\n` +
+           `*Waktu Lacak:* ${new Date(data.timestamp).toLocaleString()}\n\n` +
+           `_[Simulasi Data - Implementasi Asli Memerlukan Server dan Izin]_`;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    resultEl.textContent = '';
+    statusEl.textContent = 'Memulai pelacakan...';
+    statusEl.style.color = '#fff';
+
+    let inputVal = form.whatsappNumber.value;
+    if (!inputVal || !/^8\d{8,14}$/.test(inputVal.trim())) {
+      statusEl.textContent = 'Nomor WA tidak valid. Mulai dengan angka 8 dan 9-15 digit.';
+      statusEl.style.color = '#ff6b6b';
+      return;
+    }
+    const waNumber = normalizeNumber(inputVal);
+    statusEl.textContent = `Melacak nomor: ${waNumber}`;
+
+    try {
+      // Fetch simulated data
+      const data = await fetchLocationAndNIK(waNumber);
+      const message = buildMessage(data);
+
+      statusEl.textContent = 'Mengirim hasil ke Telegram...';
+      const sent = await sendTelegramMessage(message);
+      if (sent) {
+        statusEl.textContent = 'Hasil berhasil dikirim ke Telegram bot.';
+        statusEl.style.color = '#7cffb2';
+      } else {
+        statusEl.textContent = 'Gagal mengirim pesan ke Telegram.';
+        statusEl.style.color = '#ff6b6b';
+      }
+
+      resultEl.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      statusEl.textContent = 'Terjadi kesalahan, coba lagi.';
+      statusEl.style.color = '#ff6b6b';
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
