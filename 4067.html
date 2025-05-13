@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>BlocBlast</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+  body, html {
+    height: 100%;
+    background: #121212;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #game {
+    width: 320px;
+    height: 480px;
+    border: 5px solid #444;
+    background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  #scoreboard {
+    color: #f0f0f0;
+    font-size: 18px;
+    background: #222;
+    padding: 10px 15px;
+    text-align: center;
+    border-bottom: 3px solid #444;
+  }
+  canvas {
+    background: #222;
+    flex-grow: 1;
+    display: block;
+    margin: auto;
+    border-top: 3px solid #444;
+  }
+  #controls {
+    background: #222;
+    padding: 10px;
+    border-top: 3px solid #444;
+    display: flex;
+    justify-content: space-around;
+  }
+  button {
+    background: #444;
+    border: none;
+    color: #eee;
+    font-size: 18px;
+    padding: 12px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex: 1;
+    margin: 0 5px;
+    user-select: none;
+  }
+  button:active, button:hover {
+    background: #f44336;
+  }
+  #btn-fire {
+    background: #f44336;
+    font-weight: bold;
+    transform: scale(1.1);
+  }
+  #btn-fire:active, #btn-fire:hover {
+    background: #d32f2f;
+  }
+  @media(max-width: 480px) {
+    #game {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      max-width: 600px;
+      max-height: 800px;
+    }
+    #scoreboard {
+      font-size: 20px;
+      padding: 12px;
+    }
+    button {
+      font-size: 20px;
+      padding: 15px 20px;
+      margin: 0 8px;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="game" role="main" aria-label="BlocBlast game container">
+  <div id="scoreboard" aria-live="polite">Score: 0</div>
+  <canvas id="canvas" width="320" height="400" aria-label="Game play area"></canvas>
+  <div id="controls" role="group" aria-label="Game controls">
+    <button id="btn-left" aria-label="Move left" tabindex="0">&#9664;</button>
+    <button id="btn-fire" aria-label="Fire bullet" tabindex="0">Fire</button>
+    <button id="btn-right" aria-label="Move right" tabindex="0">&#9654;</button>
+  </div>
+</div>
+<script>
+(() => {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const scoreBoard = document.getElementById('scoreboard');
+  const btnLeft = document.getElementById('btn-left');
+  const btnRight = document.getElementById('btn-right');
+  const btnFire = document.getElementById('btn-fire');
+
+  const WIDTH = canvas.width;
+  const HEIGHT = canvas.height;
+
+  // Game Entities
+  class Block {
+    constructor(x, y, width, height, color) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.color = color;
+      this.alive = true;
+    }
+    draw() {
+      if (!this.alive) return;
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
+  }
+
+  class Paddle {
+    constructor() {
+      this.width = 60;
+      this.height = 12;
+      this.x = WIDTH / 2 - this.width / 2;
+      this.y = HEIGHT - this.height - 10;
+      this.color = '#f44336';
+      this.speed = 5;
+      this.movingLeft = false;
+      this.movingRight = false;
+    }
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      ctx.strokeStyle = '#b71c1c';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
+    update() {
+      if (this.movingLeft) {
+        this.x -= this.speed;
+      }
+      if (this.movingRight) {
+        this.x += this.speed;
+      }
+      if (this.x < 0) this.x = 0;
+      if (this.x + this.width > WIDTH) this.x = WIDTH - this.width;
+    }
+  }
+
+  class Bullet {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = 4;
+      this.speed = 8;
+      this.active = true;
+      this.color = '#ffeb3b';
+    }
+    draw() {
+      if (!this.active) return;
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = '#ffeb3b';
+      ctx.shadowBlur = 8;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.closePath();
+    }
+    update() {
+      this.y -= this.speed;
+      if (this.y + this.radius < 0) {
+        this.active = false;
+      }
+    }
+  }
+
+  // Initialize blocks grid
+  const ROWS = 5;
+  const COLS = 8;
+  const BLOCK_WIDTH = 35;
+  const BLOCK_HEIGHT = 20;
+  const BLOCK_PADDING = 8;
+  const BLOCK_OFFSET_TOP = 30;
+  const BLOCK_OFFSET_LEFT = 15;
+
+  const COLORS = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#2196f3'];
+
+  let blocks = [];
+  function createBlocks() {
+    blocks = [];
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        let x = BLOCK_OFFSET_LEFT + col * (BLOCK_WIDTH + BLOCK_PADDING);
+        let y = BLOCK_OFFSET_TOP + row * (BLOCK_HEIGHT + BLOCK_PADDING);
+        blocks.push(new Block(x, y, BLOCK_WIDTH, BLOCK_HEIGHT, COLORS[row % COLORS.length]));
+      }
+    }
+  }
+
+  // Game variables
+  let paddle = new Paddle();
+  let bullets = [];
+  let score = 0;
+  let isGameOver = false;
+
+  // Controls handlers
+  function keyDownHandler(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      paddle.movingLeft = true;
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      paddle.movingRight = true;
+    } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+      fireBullet();
+    }
+  }
+  function keyUpHandler(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      paddle.movingLeft = false;
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      paddle.movingRight = false;
+    }
+  }
+
+  // Mobile buttons handlers
+  btnLeft.addEventListener('touchstart', () => paddle.movingLeft = true);
+  btnLeft.addEventListener('touchend', () => paddle.movingLeft = false);
+  btnRight.addEventListener('touchstart', () => paddle.movingRight = true);
+  btnRight.addEventListener('touchend', () => paddle.movingRight = false);
+  btnFire.addEventListener('touchstart', fireBullet);
+
+  btnLeft.addEventListener('mousedown', () => paddle.movingLeft = true);
+  btnLeft.addEventListener('mouseup', () => paddle.movingLeft = false);
+  btnRight.addEventListener('mousedown', () => paddle.movingRight = true);
+  btnRight.addEventListener('mouseup', () => paddle.movingRight = false);
+  btnFire.addEventListener('mousedown', fireBullet);
+
+  // Game logic
+  function fireBullet() {
+    if (isGameOver) return;
+    if (bullets.length >= 1) return; // One bullet at a time
+    let bulletX = paddle.x + paddle.width / 2;
+    let bulletY = paddle.y;
+    bullets.push(new Bullet(bulletX, bulletY));
+  }
+
+  function collisionDetection() {
+    bullets.forEach((bullet) => {
+      if (!bullet.active) return;
+      blocks.forEach((block) => {
+        if (!block.alive) return;
+        if (
+          bullet.x > block.x &&
+          bullet.x < block.x + block.width &&
+          bullet.y - bullet.radius < block.y + block.height &&
+          bullet.y + bullet.radius > block.y
+        ) {
+          block.alive = false;
+          bullet.active = false;
+          score += 10;
+          updateScore();
+        }
+      });
+    });
+  }
+
+  function updateScore() {
+    scoreBoard.textContent = 'Score: ' + score;
+  }
+
+  function checkGameOver() {
+    if (blocks.every(block => !block.alive)) {
+      isGameOver = true;
+      setTimeout(() => alert('🎉 You Win! Your Score: ' + score), 100);
+    }
+  }
+
+  // Game loop
+  function gameLoop() {
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    paddle.update();
+    paddle.draw();
+
+    bullets = bullets.filter(b => b.active);
+    bullets.forEach(bullet => {
+      bullet.update();
+      bullet.draw();
+    });
+
+    blocks.forEach(block => block.draw());
+
+    collisionDetection();
+    checkGameOver();
+
+    if (!isGameOver) {
+      requestAnimationFrame(gameLoop);
+    }
+  }
+
+  // Initialize game
+  function init() {
+    createBlocks();
+    updateScore();
+    isGameOver = false;
+    bullets = [];
+    paddle = new Paddle();
+    gameLoop();
+  }
+
+  // Event listeners
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+
+  // Start game
+  init();
+})();
+</script>
+</body>
+</html>
+
+```
