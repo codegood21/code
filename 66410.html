@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Modern Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: #eee;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    color: #64ffda;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  a:hover {
+    color: #38b2ac;
+  }
+  header {
+    background: #1f1f1f;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: #64ffda;
+  }
+  nav a {
+    font-weight: 500;
+    margin-left: 2rem;
+    font-size: 1rem;
+  }
+  nav a.active {
+    border-bottom: 2px solid #64ffda;
+    padding-bottom: 4px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+  section {
+    margin-bottom: 4rem;
+  }
+  h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #64ffda;
+    border-left: 4px solid #64ffda;
+    padding-left: 0.75rem;
+  }
+  .intro {
+    font-weight: 300;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+  }
+  .projects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media(max-width: 600px) {
+    .projects {
+      grid-template-columns: 1fr;
+    }
+    nav a {
+      margin-left: 1rem;
+    }
+  }
+  .project-card {
+    background: #1e1e1e;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+    transition: transform 0.3s ease;
+  }
+  .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.8);
+  }
+  .project-card img {
+    width: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    height: 180px;
+  }
+  .project-card h3 {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #64ffda;
+  }
+  .project-card p {
+    color: #bbb;
+    font-weight: 300;
+    font-size: 1rem;
+  }
+  footer {
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
+    margin: 4rem 0 2rem 0;
+  }
+  .btn {
+    background: #64ffda;
+    color: #121212;
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: background 0.3s ease;
+  }
+  .btn:hover {
+    background: #38b2ac;
+    color: #eee;
+  }
+  .contact-info {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>JAYA PORTFOLIO</h1>
+    <nav>
+      <a href="#about" class="active">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="about">
+      <h2>About Me</h2>
+      <p class="intro">I am a passionate web developer focused on creating modern and responsive websites and web applications. Skilled in HTML, CSS, JavaScript, and front-end frameworks. I love coding clean, efficient code and building great user experiences.</p>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      <div class="projects">
+        <article class="project-card">
+          <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80" alt="Project 1 Screenshot" />
+          <h3>Portfolio Website</h3>
+          <p>A sleek, modern portfolio website built with HTML5, CSS3, and vanilla JavaScript. Fully responsive and mobile-friendly.</p>
+          <a href="#" class="btn" target="_blank" rel="noopener">View Project</a>
+        </article>
+
+        <article class="project-card">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" alt="Project 2 Screenshot" />
+          <h3>Task Manager App</h3>
+          <p>A single-page application for managing tasks with localStorage persistence. Features include task creation, editing, completion toggling.</p>
+          <a href="#" class="btn" target="_blank" rel="noopener">View Project</a>
+        </article>
+
+        <article class="project-card">
+          <img src="https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=400&q=80" alt="Project 3 Screenshot" />
+          <h3>Blog Platform</h3>
+          <p>A responsive blog platform front-end built with React and styled-components. Supports posts, comments, and user profiles.</p>
+          <a href="#" class="btn" target="_blank" rel="noopener">View Project</a>
+        </article>
+
+        <article class="project-card">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80" alt="Project 4 Screenshot" />
+          <h3>E-commerce Landing Page</h3>
+          <p>A modern, clean landing page for an e-commerce brand with product showcase, testimonials, and newsletter subscription.</p>
+          <a href="#" class="btn" target="_blank" rel="noopener">View Project</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <p>You can reach out to me for web development projects, collaborations or just to say hello!</p>
+      <p class="contact-info">Email: <a href="mailto:jaya@example.com">jaya@example.com</a></p>
+      <p class="contact-info">Phone: <a href="tel:+628123456789">+62 812-3456-789</a></p>
+      <p class="contact-info">LinkedIn: <a href="https://www.linkedin.com/in/jaya" target="_blank" rel="noopener">linkedin.com/in/jaya</a></p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 Jaya Portfolio. All rights reserved.
+  </footer>
+</body>
+</html>
+
+```
