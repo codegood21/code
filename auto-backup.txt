@@ -1,0 +1,58 @@
+async function sendBackupToOwner(backupPath) {
+ const ownerNumber = '6281936845010';
+ const fileData = fs.readFileSync(backupPath);
+ const fileName = `BackupData${NowDayz(Date.now())}.json`;
+
+ try {
+ await conn.sendMessage(ownerNumber + '@s.whatsapp.net', {
+ document: fileData,
+ mimetype: 'application/json',
+ fileName: fileName,
+ caption: `Successs Mem backup File ✅ 
+ 
+Detail Waktu Backup: 
+
+📆 tanggal : ${tanggalnew}
+⏰ Jam : ${wib}
+
+NOTE : ⚠️
+
+> JANGAN LUPA MENGGANTI FILE TERSEBUT KE SCRIPT YA BOS 😊`
+ });
+
+ console.log('File backup berhasil dikirim ke pemilik.');
+ } catch (err) {
+ console.error('Gagal mengirim file:', err);
+ }
+}
+
+ 
+function backupDatabase() {
+ const databasePath = './lib/database/file_yang_ingin_di_backup.json';
+ 
+ const backupPath = `./lib/database/data_backup.json`;
+ fs.readFile(databasePath, 'utf8', (err, data) => {
+ if (err) {
+ console.error('Gagal membaca database:', err);
+ return;
+ }
+
+ fs.writeFile(backupPath, data, (err) => {
+ if (err) {
+ console.error('Gagal membuat backup:', err);
+ return;
+ }
+ console.log('Backup database berhasil!');
+ sendBackupToOwner(backupPath);
+ });
+ });
+}
+
+case 'backup': {
+if (!isOwner) return reply('khusus owner')
+ return reply('Proses backup sedang berjalan...')
+ .then(() => {
+ backupDatabase();
+ });
+ break;
+}
