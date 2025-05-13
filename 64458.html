@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nokos All Negara Auto Send OTP</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f0f0;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+  select, input[type="text"], button {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  select, input[type="text"] {
+    background: rgba(255,255,255,0.15);
+    color: #f0f0f0;
+  }
+  select:focus, input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 6px #764ba2;
+    background: rgba(255,255,255,0.3);
+  }
+  button {
+    background: #764ba2;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #5a3586;
+  }
+  #status {
+    font-size: 0.95rem;
+    height: 1.4em;
+    margin-top: 0.5rem;
+    color: #f5a623;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Nokos Auto Send OTP</h1>
+    <form id="otpForm" autocomplete="off">
+      <label for="country">Pilih Negara</label>
+      <select id="country" required>
+        <option value="" disabled selected>-- Pilih Negara --</option>
+        <option value="id">Indonesia (+62)</option>
+        <option value="us">United States (+1)</option>
+        <option value="gb">United Kingdom (+44)</option>
+        <option value="au">Australia (+61)</option>
+        <option value="my">Malaysia (+60)</option>
+        <option value="sg">Singapore (+65)</option>
+        <option value="ph">Philippines (+63)</option>
+        <option value="th">Thailand (+66)</option>
+        <option value="vn">Vietnam (+84)</option>
+        <option value="in">India (+91)</option>
+        <option value="jp">Japan (+81)</option>
+        <option value="kr">South Korea (+82)</option>
+        <!-- Add more countries as desired -->
+      </select>
+
+      <label for="phone">Nomor Telepon</label>
+      <input type="text" id="phone" name="phone" placeholder="Contoh: 81234567890" pattern="\d{6,15}" required />
+
+      <button type="submit">Kirim OTP</button>
+      <div id="status"></div>
+    </form>
+  </div>
+
+<script>
+(() => {
+  const countryCodes = {
+    id: "+62",
+    us: "+1",
+    gb: "+44",
+    au: "+61",
+    my: "+60",
+    sg: "+65",
+    ph: "+63",
+    th: "+66",
+    vn: "+84",
+    in: "+91",
+    jp: "+81",
+    kr: "+82"
+  };
+
+  const form = document.getElementById('otpForm');
+  const statusDiv = document.getElementById('status');
+
+  const mockApiSendOTP = (fullPhoneNumber) => {
+    return new Promise((resolve) => {
+      // Simulate a delay for sending OTP
+      setTimeout(() => {
+        resolve({ success: true, message: `OTP berhasil dikirim ke ${fullPhoneNumber}` });
+      }, 1500);
+    });
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusDiv.textContent = '';
+    const country = form.country.value;
+    const phone = form.phone.value.trim();
+
+    if (!countryCodes[country]) {
+      statusDiv.textContent = 'Mohon pilih negara yang valid.';
+      return;
+    }
+    if (!/^\d{6,15}$/.test(phone)) {
+      statusDiv.textContent = 'Nomor telepon harus 6-15 digit angka.';
+      return;
+    }
+
+    const fullPhone = countryCodes[country] + phone;
+
+    statusDiv.style.color = '#f5a623';
+    statusDiv.textContent = 'Mengirim OTP...';
+
+    try {
+      const response = await mockApiSendOTP(fullPhone);
+      if (response.success) {
+        statusDiv.style.color = '#7ed6df';
+        statusDiv.textContent = response.message;
+        form.phone.value = '';
+        form.country.value = '';
+      } else {
+        statusDiv.style.color = '#ff7979';
+        statusDiv.textContent = 'Gagal mengirim OTP, coba lagi.';
+      }
+    } catch (error) {
+      statusDiv.style.color = '#ff6b81';
+      statusDiv.textContent = 'Terjadi kesalahan saat mengirim OTP.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
