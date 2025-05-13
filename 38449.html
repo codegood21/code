@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stress Test Tool</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #090979, #00d4ff);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1rem;
+  }
+  h1 {
+    font-weight: 900;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+  }
+  p {
+    margin: 0 0 20px 0;
+    font-size: 1.1rem;
+    text-align: center;
+    max-width: 500px;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"],
+  input[type="number"] {
+    width: 300px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+  button {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 40px;
+    background: #00d4ff;
+    color: #021124;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 40px #00d4ff;
+  }
+  button:hover {
+    background-color: #009ec3;
+    box-shadow: 0 0 60px #009ec3;
+  }
+  #log {
+    margin-top: 30px;
+    max-width: 500px;
+    padding: 15px;
+    background: rgba(255 255 255 / 0.1);
+    border-radius: 12px;
+    min-height: 140px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    overflow-y: auto;
+    box-shadow: inset 0 0 10px #00d4ff;
+  }
+</style>
+</head>
+<body>
+<h1>Stress Test Tool</h1>
+<p>Enter target URL and number of requests to fire concurrently.</p>
+<div>
+  <label for="url">Target URL:</label>
+  <input type="text" id="url" placeholder="https://target-site.com" />
+  <label for="count">Concurrent Requests:</label>
+  <input type="number" id="count" min="1" max="1000" value="30" />
+  <button id="startBtn">Start Test</button>
+  <button id="stopBtn" disabled>Stop Test</button>
+</div>
+<pre id="log"></pre>
+
+<script>
+(() => {
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const urlInput = document.getElementById('url');
+  const countInput = document.getElementById('count');
+  const log = document.getElementById('log');
+
+  let running = false;
+  let controllers = [];
+
+  function appendLog(text) {
+    log.textContent += text + '\\n';
+    log.scrollTop = log.scrollHeight;
+  }
+
+  async function sendRequest(url, controller) {
+    try {
+      const res = await fetch(url, { signal: controller.signal, mode: 'no-cors' });
+      appendLog(`Request success: ${url}`);
+    } catch (err) {
+      appendLog(`Request failed or aborted.`);
+    }
+  }
+
+  function startAttack(target, concurrency) {
+    running = true;
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    log.textContent = '';
+    appendLog(`Starting test on: ${target} with ${concurrency} concurrent requests.`);
+
+    controllers = [];
+    function fireBatch() {
+      if (!running) return;
+      for (let i = 0; i < concurrency; i++) {
+        const controller = new AbortController();
+        controllers.push(controller);
+        sendRequest(target, controller);
+      }
+      // Repeat continuously every 500ms
+      if (running) setTimeout(fireBatch, 500);
+    }
+    fireBatch();
+  }
+
+  function stopAttack() {
+    running = false;
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    controllers.forEach(c => c.abort());
+    controllers = [];
+    appendLog('Test stopped.');
+  }
+
+  startBtn.addEventListener('click', () => {
+    let url = urlInput.value.trim();
+    const concurrency = parseInt(countInput.value, 10);
+    if (!url) {
+      alert('Please enter a valid target URL.');
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'http://' + url;
+    }
+    if (concurrency <= 0 || concurrency > 1000) {
+      alert('Concurrent requests must be between 1 and 1000.');
+      return;
+    }
+    startAttack(url, concurrency);
+  });
+
+  stopBtn.addEventListener('click', () => {
+    stopAttack();
+  });
+
+})();
+</script>
+</body>
+</html>
+
+```
