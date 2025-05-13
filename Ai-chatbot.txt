@@ -1,0 +1,18 @@
+case 'ai': { 
+ if (!text) return reply('❌ Masukkan pertanyaan atau perintah untuk AI.\nContoh: .ai Siapa presiden Indonesia?');
+
+ try {
+ let apiUrl = `https://apizell.web.id/ai/blackbox?text=${encodeURIComponent(text)}`;
+ let response = await fetch(apiUrl);
+ let data = await response.json();
+
+ if (data.status !== "success" || !data.result) return reply('❌ Terjadi kesalahan saat mendapatkan jawaban dari AI.');
+
+ reply(`${data.result}`);
+
+ } catch (err) {
+ console.error(err);
+ reply('❌ Terjadi kesalahan saat memproses pertanyaanmu!');
+ }
+}
+break;
