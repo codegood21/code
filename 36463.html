@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Block Blast Game</title>
+<style>
+  /* Reset and basics */
+  * {
+    box-sizing: border-box;
+    user-select: none;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  #game-container {
+    width: 350px;
+    height: 600px;
+    background: #1e1e1e;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #header {
+    background: #272727;
+    color: #eee;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  #score-board {
+    background: #222;
+    color: #ddd;
+    padding: 8px 20px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #game-canvas {
+    flex-grow: 1;
+    background: #111;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+  }
+
+  #footer {
+    background: #272727;
+    color: #ccc;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+
+  /* Block style */
+  #score-board div {
+    user-select: none;
+  }
+
+  /* Mobile friendly buttons for blast action */
+  #blast-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e63946;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    width: 120px;
+    height: 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    box-shadow: 0 0 10px #e63946;
+    user-select: none;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  #blast-btn:active {
+    background: #a52a34;
+  }
+</style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="header">BLOCK BLAST</div>
+    <div id="score-board">
+      <div>Score: <span id="score">0</span></div>
+      <div>Level: <span id="level">1</span></div>
+    </div>
+    <canvas id="game-canvas" width="350" height="480" aria-label="Block Blast game area"></canvas>
+    <button id="blast-btn" aria-label="Blast selected blocks">BLAST</button>
+    <div id="footer">Tap blocks to select, then tap BLAST to remove them!</div>
+  </div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('score');
+  const levelEl = document.getElementById('level');
+  const blastBtn = document.getElementById('blast-btn');
+
+  const BLOCK_COLS = 7;
+  const BLOCK_ROWS = 9;
+  const BLOCK_SIZE = 48;
+  const BLOCK_SPACING = 4; // space between blocks
+  const COLORS = [
+    '#e63946', // red
+    '#f1faee', // cream white
+    '#a8dadc', // cyan
+    '#457b9d', // blue
+    '#1d3557', // dark navy
+    '#ffb703', // yellow
+  ];
+
+  // The grid holds the blocks as a 2D array of objects
+  // Each block: {colorIndex: number, selected: boolean, x: number, y: number}
+  let grid = [];
+  let score = 0;
+  let level = 1;
+
+  // For animation
+  let animating = false;
+
+  // Utility function to shuffle the initial colors randomly in grid
+  function initGrid() {
+    grid = [];
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      let row = [];
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        const colorIndex = Math.floor(Math.random() * COLORS.length);
+        row.push({ colorIndex, selected: false, x: 0, y: 0 });
+      }
+      grid.push(row);
+    }
+  }
+
+  // Draw all blocks
+  function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        const block = grid[r][c];
+        if (block === null) continue; // empty spot after removal
+
+        const x = c * (BLOCK_SIZE + BLOCK_SPACING) + BLOCK_SPACING / 2;
+        const y = r * (BLOCK_SIZE + BLOCK_SPACING) + BLOCK_SPACING / 2;
+        block.x = x;
+        block.y = y;
+
+        // Draw block background
+        ctx.fillStyle = COLORS[block.colorIndex];
+        ctx.strokeStyle = block.selected ? '#fff' : '#222';
+        ctx.lineWidth = block.selected ? 4 : 2;
+        ctx.shadowColor = block.selected ? 'rgba(255,255,255,0.8)' : 'transparent';
+        ctx.shadowBlur = block.selected ? 8 : 0;
+        ctx.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+        ctx.strokeRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+
+        // Draw subtle block shading for 3D effect
+        const grad = ctx.createLinearGradient(x, y, x + BLOCK_SIZE, y + BLOCK_SIZE);
+        grad.addColorStop(0, 'rgba(255,255,255,0.2)');
+        grad.addColorStop(1, 'rgba(0,0,0,0.2)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+      }
+    }
+  }
+
+  // Calculate which block was clicked/tapped
+  function getBlockAt(x, y) {
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        const block = grid[r][c];
+        if (block === null) continue;
+        if (
+          x >= block.x &&
+          x <= block.x + BLOCK_SIZE &&
+          y >= block.y &&
+          y <= block.y + BLOCK_SIZE
+        ) {
+          return {row: r, col: c};
+        }
+      }
+    }
+    return null;
+  }
+
+  // Find all connected same-color blocks from given position (DFS)
+  function findConnectedBlocks(row, col, colorIndex, visited = {}) {
+    const key = row + ',' + col;
+    if (visited[key]) return [];
+    if (row < 0 || row >= BLOCK_ROWS || col < 0 || col >= BLOCK_COLS) return [];
+    if (!grid[row][col]) return [];
+    if (grid[row][col].colorIndex !== colorIndex) return [];
+
+    visited[key] = true;
+    let connected = [{row, col}];
+    connected = connected.concat(findConnectedBlocks(row - 1, col, colorIndex, visited));
+    connected = connected.concat(findConnectedBlocks(row + 1, col, colorIndex, visited));
+    connected = connected.concat(findConnectedBlocks(row, col - 1, colorIndex, visited));
+    connected = connected.concat(findConnectedBlocks(row, col + 1, colorIndex, visited));
+
+    return connected;
+  }
+
+  // Clear current selection
+  function clearSelection() {
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        if (grid[r][c]) grid[r][c].selected = false;
+      }
+    }
+  }
+
+  // Select blocks by array of positions
+  function selectBlocks(positions) {
+    clearSelection();
+    positions.forEach(({row, col}) => {
+      if (grid[row][col]) grid[row][col].selected = true;
+    });
+  }
+
+  // Count how many blocks are selected
+  function countSelected() {
+    let count = 0;
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        if (grid[r][c] && grid[r][c].selected) count++;
+      }
+    }
+    return count;
+  }
+
+  // Remove selected blocks, drop others down and shift columns left if empty
+  function removeSelectedBlocks() {
+    animating = true;
+
+    // Remove selected blocks
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        if (grid[r][c] && grid[r][c].selected) {
+          grid[r][c] = null;
+        }
+      }
+    }
+
+    // Drop blocks down in each column
+    for (let c = 0; c < BLOCK_COLS; c++) {
+      let colBlocks = [];
+      for (let r = 0; r < BLOCK_ROWS; r++) {
+        if (grid[r][c] !== null) {
+          colBlocks.push(grid[r][c]);
+        }
+      }
+      // Fill with null for empty spaces at top
+      while (colBlocks.length < BLOCK_ROWS) {
+        colBlocks.unshift(null);
+      }
+      // Write back to grid column
+      for (let r = 0; r < BLOCK_ROWS; r++) {
+        grid[r][c] = colBlocks[r];
+      }
+    }
+
+    // Shift columns left if they are empty
+    let shifted = true;
+    while (shifted) {
+      shifted = false;
+      for (let c = 0; c < BLOCK_COLS - 1; c++) {
+        if (isColumnEmpty(c) && !isColumnEmpty(c + 1)) {
+          shiftColumnLeft(c + 1);
+          shifted = true;
+        }
+      }
+    }
+
+    function isColumnEmpty(c) {
+      for (let r = 0; r < BLOCK_ROWS; r++) {
+        if (grid[r][c] !== null) return false;
+      }
+      return true;
+    }
+    function shiftColumnLeft(fromCol) {
+      for (let r = 0; r < BLOCK_ROWS; r++) {
+        grid[r][fromCol - 1] = grid[r][fromCol];
+        grid[r][fromCol] = null;
+      }
+    }
+
+    clearSelection();
+    animating = false;
+  }
+
+  // Calculate score from blast size; big blast gives bigger score
+  function calculateScore(blastCount) {
+    if (blastCount < 2) return 0;
+    return blastCount * (blastCount - 1);
+  }
+
+  // Check if there are any moves left (any connected blocks of size >= 2)
+  function hasMovesLeft() {
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        if (!grid[r][c]) continue;
+        const connected = findConnectedBlocks(r, c, grid[r][c].colorIndex);
+        if (connected.length >= 2) return true;
+      }
+    }
+    return false;
+  }
+
+  // Advance level by increasing grid color variety
+  function advanceLevel() {
+    level++;
+    levelEl.textContent = level;
+    // Increase difficulty by adding more colors up to all COLORS available
+    const maxColors = Math.min(COLORS.length, 3 + level); // start 3 colors, +1 per level
+    for (let r = 0; r < BLOCK_ROWS; r++) {
+      for (let c = 0; c < BLOCK_COLS; c++) {
+        if (grid[r][c]) {
+          // Random recolor within new range on advance level
+          grid[r][c].colorIndex = Math.floor(Math.random() * maxColors);
+        }
+      }
+    }
+  }
+
+  // Handle canvas click/tap event
+  function onCanvasClick(e) {
+    if (animating) return;
+    const rect = canvas.getBoundingClientRect();
+    const clickX = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const clickY = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    const hit = getBlockAt(clickX, clickY);
+    if (!hit) {
+      clearSelection();
+      drawGrid();
+      return;
+    }
+
+    const block = grid[hit.row][hit.col];
+    if (!block) {
+      clearSelection();
+      drawGrid();
+      return;
+    }
+
+    // Get connected blocks of the clicked block's color
+    const connected = findConnectedBlocks(hit.row, hit.col, block.colorIndex);
+    if (connected.length < 2) {
+      // Not enough connected blocks - clear selection and select only the clicked block (optional)
+      clearSelection();
+      block.selected = true;
+    } else {
+      // Highlight all connected blocks
+      selectBlocks(connected);
+    }
+    drawGrid();
+  }
+
+  // Handle blast button
+  function onBlastClick() {
+    if (animating) return;
+    const selectedCount = countSelected();
+    if (selectedCount < 2) return; // Need at least 2 blocks to blast
+
+    // Remove selected blocks with animation effect
+    removeSelectedBlocks();
+
+    // Update score
+    const addedScore = calculateScore(selectedCount);
+    score += addedScore;
+    scoreEl.textContent = score;
+
+    // Redraw grid with updated blocks
+    drawGrid();
+
+    // After blast check moves left
+    if (!hasMovesLeft()) {
+      // Automatically advance level and refill the grid
+      advanceLevel();
+      drawGrid();
+    }
+  }
+
+  // Initialize game
+  function initGame() {
+    score = 0;
+    level = 1;
+    scoreEl.textContent = score;
+    levelEl.textContent = level;
+    initGrid();
+    drawGrid();
+  }
+
+  // Touch support for mobile friendly blast button
+  blastBtn.addEventListener('click', onBlastClick);
+  canvas.addEventListener('click', onCanvasClick);
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    onCanvasClick(e);
+  });
+
+  // Responsive canvas size for high DPI screens - scaling canvas for sharpness
+  function setCanvasDPI() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 350 * dpr;
+    canvas.height = 480 * dpr;
+    canvas.style.width = '350px';
+    canvas.style.height = '480px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  }
+
+  setCanvasDPI();
+
+  // Start the game
+  initGame();
+})();
+</script>
+</body>
+</html>
+
+```
