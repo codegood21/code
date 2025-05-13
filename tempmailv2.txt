@@ -1,0 +1,60 @@
+let handler = async (m, { conn }) => { const axios = require('axios');
+
+class TempMail { constructor() { this.cookie = null; this.baseUrl = 'https://tempmail.so'; }
+
+async updateCookie(response) {
+ if (response.headers['set-cookie']) {
+ this.cookie = response.headers['set-cookie'].join('; ');
+ }
+}
+
+async makeRequest(url) {
+ const response = await axios({
+ method: 'GET',
+ url: url,
+ headers: {
+ 'accept': 'application/json',
+ 'cookie': this.cookie || '',
+ 'referer': this.baseUrl + '/',
+ 'x-inbox-lifespan': '600',
+ 'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+ 'sec-ch-ua-mobile': '?1'
+ }
+ });
+
+ await this.updateCookie(response);
+ return response;
+}
+
+async initialize() {
+ const response = await axios.get(this.baseUrl);
+ await this.updateCookie(response);
+ return this;
+}
+
+async getInbox() {
+ const url = `${this.baseUrl}/us/api/inbox?requestTime=${Date.now()}&lang=us`;
+ const response = await this.makeRequest(url);
+ return response.data;
+}
+
+async getMessage(messageId) {
+ const url = `${this.baseUrl}/us/api/inbox/messagehtmlbody/${messageId}?requestTime=${Date.now()}&lang=us`;
+ const response = await this.makeRequest(url);
+ return response.data;
+}
+
+}
+
+try { const mail = new TempMail(); await mail.initialize(); const inbox = await mail.getInbox();
+
+if (!inbox.data?.name) throw 'Gagal mendapatkan email sementara!';
+
+const emailInfo = `Temporary Email\n\n*Email :* ${inbox.data.name}\n*Expired :* 10 minutes\nInbox Status : ${inbox.data.inbox?.length || 0} Pesan\n\n> Email Akan Otomatis Dihapus Setelah 10 Menit`;
+await conn.sendMessage(m.chat, { text: emailInfo }, { quoted: m });
+
+} catch (e) { conn.sendMessage(m.chat, { text: Error: ${e} }, { quoted: m }); } };
+
+handler.help = ['tempmail']; handler.command = ['tempmail']; handler.tags = ['tools'];
+
+module.exports = handler;
