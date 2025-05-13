@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Bot Uploader Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container {
+    background: #1f1f38;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    width: 100%;
+    max-width: 480px;
+    padding: 30px 40px;
+  }
+  h1 {
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  p.subtitle {
+    color: #9ea7b7;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  input[type="file"] {
+    border: 2px dashed #667eea;
+    border-radius: 8px;
+    padding: 20px;
+    background: #2c2c58;
+    color: #ccc;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  input[type="file"]:hover {
+    background-color: #3a3a6c;
+  }
+  button {
+    margin-top: 25px;
+    background: #764ba2;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-weight: 700;
+    color: #eae9f5;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #5a3780;
+  }
+  .status {
+    margin-top: 20px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    background: #333367;
+    text-align: center;
+    min-height: 48px;
+  }
+  .status.success {
+    background: #2ecc71;
+    color: #fff;
+  }
+  .status.error {
+    background: #e74c3c;
+    color: #fff;
+  }
+  small {
+    margin-top: 10px;
+    display: block;
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>WhatsApp Bot Panel</h1>
+    <p class="subtitle">Upload your WhatsApp bot ZIP file to run</p>
+    <form id="uploadForm">
+      <label for="botZip">Select WhatsApp Bot ZIP File</label>
+      <input type="file" id="botZip" name="botZip" accept=".zip" required />
+      <button type="submit">Upload & Run Bot</button>
+    </form>
+    <div aria-live="polite" class="status" id="statusMessage"></div>
+    <small>Note: This panel simulates upload and run. Actual backend logic is required.</small>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const statusMessage = document.getElementById('statusMessage');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      statusMessage.textContent = '';
+      statusMessage.className = 'status';
+      const fileInput = document.getElementById('botZip');
+      if(fileInput.files.length === 0){
+        statusMessage.textContent = 'Please select a ZIP file to upload.';
+        statusMessage.classList.add('error');
+        return;
+      }
+      const file = fileInput.files[0];
+      if(file.type !== "application/x-zip-compressed" && !file.name.toLowerCase().endsWith('.zip')){
+        statusMessage.textContent = 'Invalid file type. Please upload a ZIP file.';
+        statusMessage.classList.add('error');
+        return;
+      }
+
+      statusMessage.textContent = 'Uploading and running bot...';
+      // Simulate upload and run delay
+      setTimeout(() => {
+        statusMessage.textContent = 'Bot successfully uploaded and running!';
+        statusMessage.classList.add('success');
+        form.reset();
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
+
+```
