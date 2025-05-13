@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lacak Lokasi Nomor HP</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    margin: 0; padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+  .container {
+    background: rgba(0,0,0,0.6);
+    padding: 2rem;
+    margin-top: 5vh;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+  label {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  button {
+    background: #5a67d8;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #434190;
+  }
+  #result {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    background: rgba(255,255,255,0.1);
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    min-height: 80px;
+  }
+  iframe {
+    width: 100%;
+    min-height: 300px;
+    border: none;
+    margin-top: 1rem;
+    border-radius: 8px;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #bbb;
+    margin-top: 2rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Lacak lokasi nomor HP">
+    <h1>Lacak Lokasi Nomor HP</h1>
+    <label for="phoneNumber">Masukkan Nomor HP (format internasional +62xxx):</label>
+    <input id="phoneNumber" type="text" placeholder="+6281234567890" aria-describedby="result" />
+    <button id="trackBtn">Lacak Lokasi</button>
+    <div id="result" role="region" aria-live="polite"></div>
+    <iframe id="mapFrame" title="Peta lokasi" aria-label="Peta lokasi nomor HP"></iframe>
+    <footer>Disclaimer: Ini adalah demo. Lokasi sebenarnya tidak dapat dilacak hanya menggunakan nomor HP tanpa izin resmi.</footer>
+  </div>
+  <script>
+    const trackBtn = document.getElementById('trackBtn');
+    const phoneNumberInput = document.getElementById('phoneNumber');
+    const resultDiv = document.getElementById('result');
+    const mapFrame = document.getElementById('mapFrame');
+
+    /*
+      DISCLAIMER:
+      Tracking a phone number's exact location requires legal permissions and is not possible publicly via only the number.
+      This demo simulates location tracking by extracting a country code and showing a guessed location based on that.
+      It does NOT track actual phone location.
+    */
+
+    // Minimal country codes geolocation guess (could be expanded)
+    const countryData = {
+      '62': {name: 'Indonesia', lat: -2.5, lng: 118.0},
+      '1': {name: 'United States/Canada', lat: 39.8, lng: -98.6},
+      '44': {name: 'United Kingdom', lat: 54.0, lng: -2.0},
+      '91': {name: 'India', lat: 20.6, lng: 78.9},
+      '81': {name: 'Japan', lat: 36.2, lng: 138.3},
+      '61': {name: 'Australia', lat: -25.3, lng: 133.8},
+      '49': {name: 'Germany', lat: 51.2, lng: 10.4},
+      // Add more if desired
+    };
+
+    function guessLocationByNumber(phone) {
+      // Remove all non-numeric except + 
+      const cleaned = phone.trim();
+      if (!cleaned.startsWith('+')) {
+        return {error: 'Nomor harus diawali dengan tanda + dan kode negara, contoh +6281234567890'};
+      }
+      // Extract digits after +
+      let digits = cleaned.slice(1);
+      // Try longest country code first 3 digits then 2 then 1
+      for (let len=3; len>0; len--) {
+        let code = digits.substring(0,len);
+        if (countryData[code]) {
+          return {...countryData[code], code};
+        }
+      }
+      return {error: 'Kode negara tidak dikenali'};
+    }
+
+    trackBtn.addEventListener('click', () => {
+      resultDiv.textContent = '';
+      mapFrame.src = '';
+      const phone = phoneNumberInput.value;
+      if (!phone) {
+        resultDiv.textContent = 'Mohon masukkan nomor HP.';
+        return;
+      }
+      const guess = guessLocationByNumber(phone);
+      if (guess.error) {
+        resultDiv.textContent = 'Error: ' + guess.error;
+        return;
+      }
+      resultDiv.innerHTML = 
+        `Nomor: <strong>${phone}</strong><br>` +
+        `Diperkirakan berada di wilayah: <strong>${guess.name}</strong> (Kode negara: +${guess.code})<br>` +
+        `<small>Catatan: Lokasi ini hanya perkiraan berdasarkan kode negara, bukan posisi akurat nomor HP.</small>`;
+
+      // Show map centered around guessed country
+      // Use Google Maps embed (no API key needed for simple region center)
+      const mapUrl = `https://maps.google.com/maps?q=${guess.lat},${guess.lng}&z=5&output=embed`;
+      mapFrame.src = mapUrl;
+    });
+
+    // Enter key triggers button click
+    phoneNumberInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        trackBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
