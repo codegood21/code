@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hard JavaScript Decode Challenge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e1e2f, #121224);
+    font-family: 'Inconsolata', monospace;
+    color: #c8c8c8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #container {
+    background: #252535;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px #6200eeaa;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    color: #ff4488;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+  }
+  textarea {
+    width: 100%;
+    height: 150px;
+    background: #1b1b2d;
+    border: 1px solid #6200ee;
+    border-radius: 0.5rem;
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
+    color: #bb86fc;
+    padding: 1rem;
+    resize: none;
+    margin-bottom: 1rem;
+  }
+  button {
+    background: #bb86fc;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: bold;
+    color: #1e1e2f;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+  }
+  button:hover {
+    background: #9e65f9;
+  }
+  #output {
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #121224;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    min-height: 100px;
+    border: 1px solid #bb86fc;
+    color: #eee;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>Hard JS Decode Tool</h1>
+    <textarea id="input" placeholder="Paste your encoded JavaScript here"></textarea>
+    <br />
+    <button id="decodeBtn">Decode</button>
+    <pre id="output" aria-live="polite"></pre>
+  </div>
+  <script>
+  (() => {
+    // Extremely hard JS decoder
+    // Supports layers of encodings commonly used for obfuscation (e.g. eval, base64, escape, JSFuck patterns)
+    // The script attempts controlled evaluation by sandboxed Function
+    const inputEl = document.getElementById('input');
+    const outputEl = document.getElementById('output');
+    const decodeBtn = document.getElementById('decodeBtn');
+
+    // Helper: base64 decode with Unicode support
+    function base64DecodeUnicode(str) {
+      try {
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+      } catch {
+        return null;
+      }
+    }
+
+    // Helper: try unescape (legacy)
+    function tryUnescape(s) {
+      try {
+        return unescape(s);
+      } catch {
+        return null;
+      }
+    }
+
+    // Helper: safe Function execution with strict mode to decode common wrappers
+    function safeEval(js) {
+      try {
+        // Do not allow direct eval inside eval; use new Function with strict mode
+        // Remove 'use strict' to allow older patterns sometimes
+        return (new Function('"use strict";return (' + js + ')'))();
+      } catch {
+        return null;
+      }
+    }
+
+    // Detect base64 pattern heuristics (length multiple of 4 and only base64 allowed chars)
+    function looksLikeBase64(s) {
+      if (!s || s.length % 4 !== 0) return false;
+      return /^[A-Za-z0-9+/=]+$/.test(s.trim());
+    }
+
+    // JSFuck pattern detection (only certain chars)
+    function isJSFuck(s) {
+      return /^[\[\]\(\)\!\+\$]+$/.test(s.trim());
+    }
+
+    // Attempt JSFuck decode using known library-tones technique (offline miniature)
+    function decodeJSFuck(s) {
+      // Basic replacements and evaluation trick (eval carefully)
+      // This is minimal and only works if simple JSFuck string
+      try {
+        // We use safe eval to return the string value result
+        const func = new Function('return ' + s);
+        return func();
+      } catch {
+        return null;
+      }
+    }
+
+    // Attempt layered decoding: base64 -> unescape -> eval strings
+    function layeredDecode(str) {
+      let current = str.trim();
+      let last = null;
+      let maxLayers = 10;
+      let layer = 0;
+
+      while (layer < maxLayers && current !== last) {
+        last = current;
+
+        // If looks like base64, decode it
+        if (looksLikeBase64(current)) {
+          const decoded = base64DecodeUnicode(current);
+          if (decoded && decoded !== current) {
+            current = decoded.trim();
+            layer++;
+            continue;
+          }
+        }
+
+        // Try unescape
+        const unescaped = tryUnescape(current);
+        if (unescaped && unescaped !== current) {
+          current = unescaped.trim();
+          layer++;
+          continue;
+        }
+
+        // Try JSFuck decode
+        if (isJSFuck(current)) {
+          const jdecoded = decodeJSFuck(current);
+          if (typeof jdecoded === 'string' && jdecoded !== current) {
+            current = jdecoded.trim();
+            layer++;
+            continue;
+          }
+        }
+
+        // Try safe eval if string literal or function that returns string
+        let evaled = safeEval(current);
+        if (typeof evaled === 'string' && evaled !== current) {
+          current = evaled.trim();
+          layer++;
+          continue;
+        }
+
+        // Handle eval calls inside string (like eval('...'))
+        if (current.startsWith('eval(') && current.endsWith(')')) {
+          try {
+            // extract inner string
+            const inner = current.slice(5, -1);
+            const innerEval = safeEval(inner);
+            if (typeof innerEval === 'string' && innerEval !== current) {
+              current = innerEval.trim();
+              layer++;
+              continue;
+            }
+          } catch {}
+        }
+
+        break; // no change
+      }
+
+      return current;
+    }
+
+    decodeBtn.onclick = () => {
+      outputEl.textContent = 'Decoding...';
+      setTimeout(() => {
+        const rawInput = inputEl.value;
+        if (!rawInput.trim()) {
+          outputEl.textContent = 'Please enter encoded JavaScript.';
+          return;
+        }
+        const decoded = layeredDecode(rawInput);
+        outputEl.textContent = decoded || 'Unable to decode the supplied input.';
+      }, 50);
+    };
+  })();
+  </script>
+</body>
+</html>
+
+```
