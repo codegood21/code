@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp SC Bot Runner Panel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #16213e;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 1.8rem;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      color: #00ff99;
+      text-shadow: 0 0 6px #00ff99;
+    }
+    main {
+      flex-grow: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form {
+      background: #0f3460;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff9977;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: #00ff99;
+    }
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      font-family: 'Roboto', sans-serif;
+      outline: none;
+      resize: vertical;
+    }
+    textarea {
+      height: 120px;
+      background: #16213e;
+      color: #e0e0e0;
+      border: 1px solid #00ff99;
+    }
+    input[type="text"], select {
+      background: #e0e0e0;
+      color: #16213e;
+      font-weight: 600;
+    }
+    button {
+      background: #00ff99;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+      color: #16213e;
+      box-shadow: 0 0 10px #00ff99;
+      display: block;
+      margin: 0 auto;
+      margin-top: 1rem;
+      letter-spacing: 1px;
+    }
+    button:hover {
+      background: #00cc77;
+      box-shadow: 0 0 20px #00cc77;
+      color: #fff;
+    }
+    .log-output {
+      margin-top: 2rem;
+      background: #0b1927;
+      padding: 1rem;
+      border-radius: 10px;
+      height: 250px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+      border: 1px solid #00ff99;
+      color: #00ff99;
+      white-space: pre-wrap;
+    }
+    footer {
+      background: #16213e;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #00ff9977;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>WhatsApp SC Bot Runner Panel</header>
+  <main>
+    <h2>Run Your WhatsApp SC Bot</h2>
+    <form id="botForm">
+      <label for="botScript">Bot Script (JavaScript):</label>
+      <textarea id="botScript" name="botScript" placeholder="Paste your WhatsApp SC bot script here..." required></textarea>
+
+      <label for="phoneNumber">Target Phone Number (with country code):</label>
+      <input type="text" id="phoneNumber" name="phoneNumber" placeholder="+6281234567890" required pattern="^\+\d{8,15}$" title="Must include country code like +62" />
+
+      <label for="runMode">Run Mode:</label>
+      <select id="runMode" name="runMode" required>
+        <option value="simulate" selected>Simulate (No real API)</option>
+        <option value="realAPI">Real WhatsApp API (Placeholder)</option>
+      </select>
+
+      <button type="submit">Run Bot</button>
+    </form>
+
+    <section class="log-output" id="logOutput" aria-live="polite" aria-label="Bot output logs">
+      Waiting for execution...
+    </section>
+  </main>
+  <footer>Note: This panel simulates running a WhatsApp SC bot. Real WhatsApp API integration requires backend support.</footer>
+
+  <script>
+    (function() {
+      const botForm = document.getElementById('botForm');
+      const logOutput = document.getElementById('logOutput');
+
+      // Simulated WhatsApp API function
+      function sendMessageToWhatsApp(number, message) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(`Message sent to ${number}: "${message}"`);
+          }, 1000);
+        });
+      }
+
+      // Clear logs then append new line
+      function log(message) {
+        logOutput.textContent += message + '\\n';
+        logOutput.scrollTop = logOutput.scrollHeight;
+      }
+
+      botForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        logOutput.textContent = '';
+        log('Starting bot execution...\n');
+
+        const botScriptText = botForm.botScript.value.trim();
+        const phoneNumber = botForm.phoneNumber.value.trim();
+        const runMode = botForm.runMode.value;
+
+        // Simple validation already from HTML but double check
+        if (!phoneNumber.match(/^\\+\\d{8,15}$/)) {
+          log('Error: Invalid phone number format.');
+          return;
+        }
+
+        log(`Target Phone: ${phoneNumber}`);
+        log(`Run Mode: ${runMode}`);
+        log('');
+
+        if (runMode === 'simulate') {
+          log('Running in simulation mode...');
+          try {
+            // Create a sandboxed async function to run the user bot script
+            const sandboxedBot = new Function('phone', 'sendMessage', '"use strict"; return (async () => {' + botScriptText + '})()');
+            // Provide phone number and simulated sendMessage function
+            await sandboxedBot(phoneNumber, sendMessageToWhatsApp);
+            log('\nBot script execution finished successfully.');
+          } catch (err) {
+            log(`\nError during bot script execution:\n${err.stack || err}`);
+          }
+        } else {
+          log('Real WhatsApp API mode is not implemented in this panel.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
+```
