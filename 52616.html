@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Auto Deploy to Vercel</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #0f2027;  /* fallback for old browsers */
+    background: linear-gradient(135deg, #2c5364, #203a43, #0f2027);
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin-bottom: 0.3em;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 1.2px;
+  }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  label, input, button {
+    font-size: 1rem;
+  }
+  form {
+    background: rgba(255 255 255 / 0.1);
+    padding: 1rem 1.4rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 6px;
+    outline-offset: 2px;
+    outline-color: #1db954;
+  }
+  button {
+    background-color: #1db954;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  button:hover,
+  button:focus {
+    background-color: #17a445;
+    outline: none;
+  }
+  .status {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    min-height: 1.4em;
+    text-align: center;
+  }
+  @media (max-width: 400px) {
+    body {
+      padding: 1rem 0.5rem;
+    }
+    form {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Auto Deploy to Vercel</h1>
+<p>Paste your raw HTML content here, then press Deploy. Your site will be uploaded and deployed to Vercel automatically.</p>
+<form id="deploy-form" autocomplete="off">
+  <label for="html-content">HTML Content</label>
+  <textarea id="html-content" name="html-content" rows="10" style="width:100%;border-radius:6px;padding:0.6rem 0.8rem;resize: vertical; font-family: monospace; font-size: 0.9rem; outline-offset: 2px; outline-color: #1db954;" placeholder="Paste your full HTML here..."></textarea>
+  <button type="submit">Deploy to Vercel</button>
+  <div class="status" aria-live="polite" id="status"></div>
+</form>
+
+<script>
+  // IMPORTANT:
+  // This client-side demo does not actually deploy because Vercel API requires a token that shouldn't be exposed publicly.
+  // This is a placeholder UI for demonstration.
+  // To make it truly auto deploy, backend server with Vercel token is needed.
+  
+  const form = document.getElementById('deploy-form');
+  const statusDiv = document.getElementById('status');
+  const textarea = document.getElementById('html-content');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    statusDiv.textContent = '';
+    let htmlContent = textarea.value.trim();
+
+    if (!htmlContent) {
+      statusDiv.textContent = 'Please enter some HTML content to deploy.';
+      statusDiv.style.color = 'tomato';
+      textarea.focus();
+      return;
+    }
+
+    statusDiv.style.color = '#f0f0f0';
+    statusDiv.textContent = 'Simulating deploy...';
+
+    // Simulate a brief deploy delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Show a fake deploy URL
+    const fakeDeployUrl = 'https://your-deployment.vercel.app';
+    statusDiv.innerHTML = `Deployment simulated!<br>View your site at: <a href="${fakeDeployUrl}" target="_blank" rel="noopener noreferrer" style="color:#1db954;">${fakeDeployUrl}</a>`;
+  });
+</script>
+</body>
+</html>
+
+```
