@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Number Blocker</title>
+<style>
+  body {
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    color: #25d366;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px #25d366;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  input[type="text"] {
+    width: 320px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 1.5rem;
+  }
+  button {
+    background: #25d366;
+    color: #121212;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 12px #25d366;
+  }
+  button:hover {
+    background: #1ebe56;
+  }
+  .result {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    max-width: 400px;
+    text-align: center;
+    word-wrap: break-word;
+    background: #222;
+    padding: 1.5rem;
+    border-radius: 0.6rem;
+    box-shadow: 0 0 10px #25d366aa;
+  }
+</style>
+</head>
+<body>
+<h1>WhatsApp Number Blocker</h1>
+<label for="number">Masukkan Nomor WhatsApp (Contoh: 6281234567890)</label>
+<input type="text" id="number" placeholder="Masukkan nomor WA tanpa tanda + atau spasi" autocapitalize="off" autocomplete="off" />
+<button id="blockBtn">Blokir Nomor</button>
+
+<div class="result" id="result" hidden></div>
+
+<script>
+  // Store blocked numbers in localStorage to persist them permanently on client side
+  const blockedListKey = 'blockedWhatsAppNumbers';
+  const blockedNumbers = new Set(JSON.parse(localStorage.getItem(blockedListKey) || '[]'));
+
+  // Function to validate Indonesian phone number format (start with 62 or 08)
+  function isValidNumber(num) {
+    return /^62\d{8,15}$/.test(num) || /^08\d{8,15}$/.test(num);
+  }
+
+  // Normalize number to international format starting with 62
+  function normalizeNumber(num) {
+    let n = num.trim();
+    if (n.startsWith('08')) {
+      n = '62' + n.slice(1);
+    }
+    return n;
+  }
+
+  // Show result message
+  function showMessage(msg, isError) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.color = isError ? '#ff4f4f' : '#25d366';
+    resultDiv.textContent = msg;
+    resultDiv.hidden = false;
+  }
+
+  // Blocking function - adds number to localStorage set
+  function blockNumber(num) {
+    if (blockedNumbers.has(num)) {
+      showMessage('Nomor ini sudah diblokir sebelumnya.', true);
+      return;
+    }
+    blockedNumbers.add(num);
+    localStorage.setItem(blockedListKey, JSON.stringify([...blockedNumbers]));
+    showMessage('Nomor WhatsApp ' + num + ' berhasil diblokir permanen.');
+  }
+
+  document.getElementById('blockBtn').addEventListener('click', () => {
+    const input = document.getElementById('number').value;
+    if (!input) {
+      showMessage('Tolong masukkan nomor WhatsApp.', true);
+      return;
+    }
+    const normalized = normalizeNumber(input);
+    if (!isValidNumber(normalized)) {
+      showMessage('Nomor tidak valid. Pastikan format nomor benar tanpa tanda + dan spasi (contoh: 6281234567890).', true);
+      return;
+    }
+    blockNumber(normalized);
+  });
+</script>
+</body>
+</html>
+
+```
