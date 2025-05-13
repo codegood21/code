@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>Auto Deploy to Vercel</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #0070f3;
+  }
+  form {
+    max-width: 500px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  button {
+    background-color: #0070f3;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #005bb5;
+  }
+  #status {
+    max-width: 500px;
+    margin: 20px auto;
+    font-weight: 600;
+    color: #0070f3;
+    min-height: 22px;
+    text-align: center;
+  }
+  #status.error {
+    color: #d93025;
+  }
+  #status.success {
+    color: #188038;
+  }
+</style>
+</head>
+<body>
+
+<h1>Auto Deploy Your HTML to Vercel</h1>
+<form id="deployForm">
+  <label for="projectName">Project Name (for custom Vercel URL)</label>
+  <input type="text" id="projectName" placeholder="e.g. my-cool-site" required pattern="^[a-z0-9\-]+$" title="Only lowercase letters, numbers, and hyphens allowed"/>
+  
+  <label for="htmlFile">Upload HTML File</label>
+  <input type="file" id="htmlFile" accept=".html" required />
+  
+  <button type="submit">Deploy to Vercel</button>
+</form>
+
+<div id="status"></div>
+
+<script>
+  const form = document.getElementById('deployForm');
+  const statusDiv = document.getElementById('status');
+
+  // Helper function to create a ZIP with a single HTML file
+  function createZip(fileName, fileContent) {
+    // Using JSZip from CDN (added dynamically)
+    return new Promise((resolve, reject) => {
+      if (!window.JSZip) {
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+        script.onload = () => {
+          const zip = new JSZip();
+          zip.file(fileName, fileContent);
+          zip.generateAsync({type:"blob"}).then(resolve, reject);
+        };
+        script.onerror = () => reject(new Error("Failed to load JSZip"));
+        document.head.appendChild(script);
+      } else {
+        const zip = new JSZip();
+        zip.file(fileName, fileContent);
+        zip.generateAsync({type:"blob"}).then(resolve, reject);
+      }
+    });
+  }
+
+  // Function to get Vercel token from localStorage or prompt
+  async function getToken() {
+    let token = localStorage.getItem('vercel_token');
+    if (!token) {
+      token = prompt('Please enter your Vercel Personal Access Token:\nYou can create one at https://vercel.com/account/tokens');
+      if (token) {
+        localStorage.setItem('vercel_token', token.trim());
+      }
+    }
+    return token;
+  }
+
+  // Main deploy function
+  async function deployToVercel(projectName, htmlFile) {
+    statusDiv.textContent = "Preparing deployment...";
+
+    // Read HTML content as text
+    const fileText = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = () => rej(new Error("Failed to read uploaded file"));
+      reader.readAsText(htmlFile);
+    });
+
+    // Create ZIP archive with index.html inside
+    const zipBlob = await createZip("index.html", fileText);
+
+    // Upload ZIP to Vercel Deployment API
+    const token = await getToken();
+    if (!token) {
+      statusDiv.textContent = "No Vercel token provided. Deployment cancelled.";
+      statusDiv.className = "error";
+      return;
+    }
+
+    statusDiv.textContent = "Uploading and deploying on Vercel...";
+    statusDiv.className = "";
+
+    // Prepare deployment payload
+    // Vercel Deployment API expects files as an array of {file: path, data: base64}
+    // We need to unzip the ZIP and send files individually.
+    // To keep it simple, we will directly send the single index.html as base64.
+    // Since we control the input, no need for complex extraction.
+
+    // Convert file content to base64
+    function toBase64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    const filesPayload = [
+      {
+        file: "/index.html",
+        data: toBase64(fileText)
+      }
+    ];
+
+    try {
+      const resp = await fetch("https://api.vercel.com/v13/deployments", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: projectName,
+          files: filesPayload,
+          target: "production"
+        })
+      });
+
+      if (!resp.ok) {
+        let errorJson = {};
+        try {
+          errorJson = await resp.json();
+        } catch {}
+        throw new Error(`Vercel API error: ${resp.status} ${resp.statusText} ${errorJson.error ? '- ' + errorJson.error.message : ''}`);
+      }
+
+      const deployment = await resp.json();
+      const url = deployment.url ? deployment.url : (deployment.deployment?.url || '');
+      statusDiv.innerHTML = `Deployment successful!<br><a href="https://${url}" target="_blank" rel="noopener noreferrer">https://${url}</a>`;
+      statusDiv.className = "success";
+    } catch (err) {
+      statusDiv.textContent = "Deployment failed: " + err.message;
+      statusDiv.className = "error";
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusDiv.textContent = "";
+    statusDiv.className = "";
+    const projectName = form.projectName.value.trim();
+    const fileInput = form.htmlFile.files[0];
+
+    if (!projectName) {
+      statusDiv.textContent = "Project name is required.";
+      statusDiv.className = "error";
+      return;
+    }
+
+    if (!fileInput) {
+      statusDiv.textContent = "Please upload an HTML file.";
+      statusDiv.className = "error";
+      return;
+    }
+
+    await deployToVercel(projectName, fileInput);
+  });
+</script>
+
+</body>
+</html>
+
+```
