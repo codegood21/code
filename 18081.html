@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Web Ban Nomor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+  }
+  .container {
+    background: rgba(255 255 255 / 0.1);
+    padding: 2rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    width: 320px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: #754ba2;
+    color: white;
+    border: none;
+    padding: 0.85rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #5a3481;
+  }
+  .result {
+    margin-top: 1.5rem;
+    background: rgba(255 255 255 / 0.15);
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: rgba(255 255 255 / 0.7);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ban Nomor Cek</h1>
+    <label for="nomor">Masukkan Nomor Telepon (contoh: 08123456789):</label>
+    <input type="text" id="nomor" placeholder="Masukkan nomor telepon" maxlength="15" />
+    <button id="checkBtn">Cek Status Nomor</button>
+    <div class="result" id="result"></div>
+    <footer>Website 100% Bebas Penipuan</footer>
+  </div>
+
+<script>
+  const bannedNumbers = new Set([
+    "08123456789",
+    "08211234567",
+    "08334567890",
+    "08567891234",
+    "08198765432",
+    "08987654321",
+    "08765432109",
+    "08654321098"
+  ]);
+
+  function normalizeNumber(input) {
+    // Remove spaces, dashes, and dots
+    let num = input.replace(/[\s\-\.\(\)]/g, '');
+    // Replace leading +62 with 0
+    if(num.startsWith('+62')) {
+      num = '0' + num.substring(3);
+    }
+    return num;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    const input = document.getElementById('nomor').value.trim();
+    const resultEl = document.getElementById('result');
+    if (!input) {
+      resultEl.textContent = 'Nomor harus diisi.';
+      resultEl.style.color = '#f44336';
+      return;
+    }
+    const normalized = normalizeNumber(input);
+    if(!/^0\d+/.test(normalized)) {
+      resultEl.textContent = 'Format nomor tidak valid.';
+      resultEl.style.color = '#f44336';
+      return;
+    }
+    if(bannedNumbers.has(normalized)) {
+      resultEl.textContent = `Nomor ${normalized} TERBANNED!`;
+      resultEl.style.color = '#ff4c4c';
+    } else {
+      resultEl.textContent = `Nomor ${normalized} TIDAK TERBANNED.`;
+      resultEl.style.color = '#a6ff4c';
+    }
+  });
+</script>
+</body>
+</html>
+
+```
