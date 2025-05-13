@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>WhatsApp Bot APIKey</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2b5876, #4e4376);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 10px 40px;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  }
+  p.subtitle {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+  /* Container */
+  #app {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    max-width: 380px;
+    width: 100%;
+    padding: 20px 25px 30px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  }
+  /* Input group */
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #f0f0f0;
+  }
+  input[type="text"], input[type="tel"], select, textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 18px;
+    font-family: inherit;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 80px;
+    max-height: 150px;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 8px 2px #85c1f9;
+    background-color: #fafafa;
+    color: #111;
+  }
+  /* Button */
+  button {
+    width: 100%;
+    background: #4e9af1;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 14px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(78,154,241,0.7);
+    user-select: none;
+  }
+  button:hover, button:focus {
+    background: #3679d6;
+    box-shadow: 0 6px 15px rgba(54,121,214,0.9);
+  }
+  button:active {
+    background: #2e65b3;
+  }
+  /* Output */
+  #result {
+    margin-top: 25px;
+    background: rgba(0,0,0,0.2);
+    padding: 15px 18px;
+    border-radius: 10px;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 60px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+  }
+  /* API key input flex */
+  .apikey-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .apikey-container input {
+    flex: 1;
+  }
+  /* Features list */
+  .features {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 15px 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .features h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .features ul {
+    list-style: none;
+    padding-left: 16px;
+  }
+  .features ul li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 18px;
+  }
+  .features ul li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #47d147;
+  }
+  /* Footer */
+  footer {
+    margin-top: auto;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    text-align: center;
+    padding-top: 18px;
+    user-select: none;
+  }
+  /* Responsive */
+  @media screen and (max-width: 400px) {
+    #app {
+      max-width: 100%;
+      padding: 15px 20px 25px;
+    }
+    h1 {
+      font-size: 2.1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>WhatsApp Bot APIKey</h1>
+<p class="subtitle">Semua fitur bot WhatsApp bisa diakses dengan APIKey-mu</p>
+<div id="app" role="main" aria-label="Form Fungsi Bot WhatsApp APIKey">
+  <form id="botForm" autocomplete="off" novalidate>
+    <label for="apikey">Masukkan APIKey WhatsApp Anda</label>
+    <div class="apikey-container">
+      <input
+        type="text"
+        name="apikey"
+        id="apikey"
+        placeholder="APIKey anda..."
+        aria-required="true"
+        required
+        autocomplete="off"
+        inputmode="text"
+        spellcheck="false"
+      />
+      <button type="button" id="clearApiKey" aria-label="Hapus API Key">×</button>
+    </div>
+    <label for="featureSelect">Pilih Fitur Bot WhatsApp</label>
+    <select id="featureSelect" aria-required="true" required>
+      <option value="" disabled selected>-- Pilih fitur --</option>
+      <option value="sendMessage">Kirim Pesan Teks</option>
+      <option value="sendImage">Kirim Gambar</option>
+      <option value="sendSticker">Kirim Stiker</option>
+      <option value="sendContact">Kirim Kontak</option>
+      <option value="createGroup">Buat Grup WhatsApp</option>
+      <option value="getChatList">Dapatkan Daftar Chat</option>
+      <option value="getStatus">Status Bot</option>
+      <option value="blockUser">Blokir Pengguna</option>
+      <option value="unblockUser">Buka Blokir Pengguna</option>
+      <option value="getQR">Dapatkan QR Code Login</option>
+    </select>
+    <label for="targetInput">Nomor Tujuan / Grup ID / Status API</label>
+    <input
+      type="text"
+      name="target"
+      id="targetInput"
+      placeholder="e.g. 6281234567890 atau group12345 atau kosong untuk status"
+      aria-required="true"
+      required
+      autocomplete="off"
+      inputmode="tel"
+    />
+    <label for="messageInput" id="messageLabel">Pesan (jika perlu)</label>
+    <textarea
+      id="messageInput"
+      name="message"
+      placeholder="Tulis pesan atau URL gambar, stiker, kontak..."
+      rows="3"
+      aria-describedby="messageHelper"
+    ></textarea>
+    <div id="messageHelper" style="font-size:0.8rem; opacity:0.8; margin-bottom:12px;">
+      Isi pesan yang sesuai dengan fitur yang dipilih. Contoh URL gambar/stiker, teks biasa, atau nomor kontak.
+    </div>
+    <button type="submit" id="sendBtn" aria-live="polite" aria-busy="false">Kirim Perintah</button>
+  </form>
+  <div id="result" aria-live="polite" aria-atomic="true"></div>
+  <section class="features" aria-label="Daftar fitur bot WhatsApp">
+    <h2>Fitur Bot WhatsApp yang Didukung</h2>
+    <ul>
+      <li>Kirim Pesan Teks ke Nomor WhatsApp</li>
+      <li>Kirim Gambar dengan URL</li>
+      <li>Kirim Stiker dari URL PNG/WebP</li>
+      <li>Kirim Kontak dalam format vCard</li>
+      <li>Buat Grup WhatsApp baru dengan nama dan anggota</li>
+      <li>Dapatkan daftar chat dan status bot</li>
+      <li>Blokir dan buka blokir pengguna</li>
+      <li>Dapatkan QR Code untuk login bot</li>
+    </ul>
+  </section>
+</div>
+<footer>
+  &copy; 2024 WhatsApp Bot APIKey. All rights reserved.
+</footer>
+<script>
+  (() => {
+    const form = document.getElementById('botForm');
+    const apikeyInput = document.getElementById('apikey');
+    const clearApiKeyBtn = document.getElementById('clearApiKey');
+    const featureSelect = document.getElementById('featureSelect');
+    const targetInput = document.getElementById('targetInput');
+    const messageInput = document.getElementById('messageInput');
+    const messageLabel = document.getElementById('messageLabel');
+    const sendBtn = document.getElementById('sendBtn');
+    const resultBox = document.getElementById('result');
+
+    // Adjust message label and input required based on feature
+    function updateFormInputs() {
+      const value = featureSelect.value;
+      // Features that require a message
+      const featuresWithMessage = ['sendMessage', 'sendImage', 'sendSticker', 'sendContact', 'createGroup'];
+      if (featuresWithMessage.includes(value)) {
+        messageLabel.style.display = 'block';
+        messageInput.style.display = 'block';
+        messageInput.required = true;
+      } else {
+        messageLabel.style.display = 'none';
+        messageInput.style.display = 'none';
+        messageInput.required = false;
+      }
+      // For getStatus and getQR maybe target is optional? We keep required for now.
+    }
+
+    featureSelect.addEventListener('change', updateFormInputs);
+    updateFormInputs();
+
+    clearApiKeyBtn.addEventListener('click', () => {
+      apikeyInput.value = '';
+      apikeyInput.focus();
+    });
+
+    // Fake "API call" simulation for demonstration
+    async function fakeApiCall(endpoint, data) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            endpoint,
+            requestData: data,
+            message: 'Perintah berhasil diproses (simulasi).',
+            timestamp: new Date().toISOString(),
+          });
+        }, 1200);
+      });
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      resultBox.textContent = '';
+      sendBtn.disabled = true;
+      sendBtn.setAttribute('aria-busy', 'true');
+
+      const apikey = apikeyInput.value.trim();
+      const feature = featureSelect.value;
+      const target = targetInput.value.trim();
+      const message = messageInput.value.trim();
+
+      // Validation basic
+      if (!apikey) {
+        resultBox.textContent = 'APIKey wajib diisi!';
+        sendBtn.disabled = false;
+        sendBtn.setAttribute('aria-busy', 'false');
+        apikeyInput.focus();
+        return;
+      }
+      if (!feature) {
+        resultBox.textContent = 'Harap pilih fitur bot WhatsApp.';
+        featureSelect.focus();
+        sendBtn.disabled = false;
+        sendBtn.setAttribute('aria-busy', 'false');
+        return;
+      }
+      if (!target && !(feature === 'getStatus' || feature === 'getQR')) {
+        resultBox.textContent = 'Nomor tujuan / Grup ID wajib diisi untuk fitur ini.';
+        targetInput.focus();
+        sendBtn.disabled = false;
+        sendBtn.setAttribute('aria-busy', 'false');
+        return;
+      }
+      if (
+        (['sendMessage', 'sendImage', 'sendSticker', 'sendContact', 'createGroup'].includes(feature))
+        && !message
+      ) {
+        resultBox.textContent = 'Pesan atau data tambahan wajib diisi untuk fitur ini.';
+        messageInput.focus();
+        sendBtn.disabled = false;
+        sendBtn.setAttribute('aria-busy', 'false');
+        return;
+      }
+
+      resultBox.textContent = 'Mengirim perintah ...';
+
+      try {
+        // Example endpoint mapping (in real case make XHR/fetch to real API)
+        const endpointMap = {
+          sendMessage: 'send-message',
+          sendImage: 'send-image',
+          sendSticker: 'send-sticker',
+          sendContact: 'send-contact',
+          createGroup: 'create-group',
+          getChatList: 'get-chat-list',
+          getStatus: 'get-status',
+          blockUser: 'block-user',
+          unblockUser: 'unblock-user',
+          getQR: 'get-qrcode',
+        };
+
+        const endpoint = endpointMap[feature] || 'unknown-feature';
+
+        const requestData = {
+          apikey,
+          target,
+          message,
+          feature,
+        };
+
+        // Simulate API call
+        const response = await fakeApiCall(endpoint, requestData);
+
+        if (response.success) {
+          resultBox.textContent = 
+            `✅ Fitur: ${feature}\n` +
+            `Endpoint: ${response.endpoint}\n` +
+            `Waktu: ${response.timestamp}\n\n` +
+            `Request Data:\n` +
+            JSON.stringify(requestData, null, 2) + '\n\n' +
+            `${response.message}`;
+        } else {
+          resultBox.textContent = '❌ Terjadi kesalahan saat memproses perintah.';
+        }
+      } catch (e) {
+        resultBox.textContent = '❌ Kesalahan jaringan atau internal: ' + e.message;
+      }
+
+      sendBtn.disabled = false;
+      sendBtn.setAttribute('aria-busy', 'false');
+    }
+
+    form.addEventListener('submit', handleFormSubmit);
+
+  })();
+</script>
+</body>
+</html>
+
+```
