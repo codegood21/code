@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Auto Deploy to Vercel</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
+  input, textarea {
+    margin-top: 0.25rem;
+    width: 320px;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 1.5rem;
+    background-color: #5a40a3;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #7155cc;
+  }
+  #status {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    min-height: 1.5em;
+  }
+</style>
+</head>
+<body>
+  <h1>Vercel Auto Deploy</h1>
+  <p>Enter your GitHub repo URL and press Deploy</p>
+
+  <label for="repo">GitHub Repository URL</label>
+  <input type="url" id="repo" placeholder="https://github.com/username/repo" required />
+
+  <label for="token">Vercel Token</label>
+  <input type="password" id="token" value="ubwszpgWvrCr6q9Ap1PMC4Cc" readonly />
+
+  <button id="deployBtn">Deploy</button>
+
+  <div id="status"></div>
+
+<script>
+  const deployBtn = document.getElementById('deployBtn');
+  const statusDiv = document.getElementById('status');
+  const repoInput = document.getElementById('repo');
+  const tokenInput = document.getElementById('token');
+
+  async function deployProject() {
+    const repoUrl = repoInput.value.trim();
+    const token = tokenInput.value.trim();
+
+    statusDiv.textContent = '';
+    if (!repoUrl) {
+      statusDiv.textContent = 'Please enter a GitHub repository URL.';
+      return;
+    }
+    
+    // Extract owner and repo from URL
+    let match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)(\.git)?$/i);
+    if(!match) {
+      statusDiv.textContent = 'Invalid GitHub repository URL format.';
+      return;
+    }
+    const owner = match[1];
+    const repo = match[2].replace(/\.git$/i, '');
+
+    statusDiv.textContent = 'Creating deployment...';
+
+    try {
+      // Create a new Vercel project for the repo or trigger deployment
+      // Using Vercel API to create deployment with Git source
+
+      let body = {
+        name: repo,
+        gitSource: {
+          type: "github",
+          repoId: `github.com/${owner}/${repo}`,
+          repo: repo,
+          org: owner,
+          ref: "main"
+        },
+        target: "production"
+      };
+
+      // Note: The Vercel API does not publicly support creating a project and deploying in one step.
+      // As a workaround, we will trigger a deployment via the Deployments endpoint
+      // Assume the project is already linked or it will auto-link on first deploy
+
+      const deploymentResponse = await fetch('https://api.vercel.com/v13/deployments', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: repo,
+          gitSource: {
+            type: "github",
+            repoId: `github.com/${owner}/${repo}`,
+            repo: repo,
+            org: owner,
+            ref: "main"
+          },
+          target: "production"
+        })
+      });
+
+      const data = await deploymentResponse.json();
+
+      if (!deploymentResponse.ok) {
+        throw new Error(data.error ? data.error.message : 'Deployment failed');
+      }
+
+      statusDiv.innerHTML = `Deployment started!<br/>
+      URL: <a href="${data.url}" target="_blank" rel="noopener">${data.url}</a><br/>
+      You can check your deployment status on your Vercel dashboard.`;
+
+    } catch (error) {
+      statusDiv.textContent = `Error: ${error.message}`;
+    }
+  }
+
+  deployBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    deployProject();
+  });
+</script>
+</body>
+</html>
+
+```
