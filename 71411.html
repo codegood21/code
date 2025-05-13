@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pelacak Lokasi Nomor HP</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  header {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  form {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8.5px);
+    -webkit-backdrop-filter: blur(8.5px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  button {
+    background-color: #5a67d8;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #434190;
+  }
+  #result {
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 10px;
+    font-size: 1rem;
+    min-height: 3rem;
+    text-align: center;
+    user-select: none;
+  }
+  #error {
+    color: #ff6b6b;
+  }
+</style>
+</head>
+<body>
+<header>Lacak Lokasi Nomor HP</header>
+<form id="trackerForm" autocomplete="off">
+  <label for="phoneNumber">Masukkan Nomor HP:</label>
+  <input type="text" id="phoneNumber" name="phoneNumber" placeholder="+62xxxxxxxxxx" pattern="^\+?\d{8,15}$" required />
+  <button type="submit">Lacak Lokasi</button>
+</form>
+<div id="result"></div>
+
+<script>
+  // DISCLAIMER: This is a simulation and demonstration.
+  // Real mobile phone location tracking via number only is not possible in client-side JS due to privacy & security.
+  // This demo mimics a lookup with fake data.
+
+  const form = document.getElementById('trackerForm');
+  const resultDiv = document.getElementById('result');
+
+  // Simulated sample data for demonstration
+  const sampleLocations = {
+    "+628123456789": "Jakarta, Indonesia",
+    "+628987654321": "Surabaya, Indonesia",
+    "+628112233445": "Bandung, Indonesia",
+    "+628223344556": "Yogyakarta, Indonesia",
+    "+621234567890": "Denpasar, Bali",
+  };
+
+  function simulateLookup(phone) {
+    // simulate network delay
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (sampleLocations[phone]) {
+          resolve({ success: true, location: sampleLocations[phone] });
+        } else {
+          resolve({ success: false, message: "Lokasi tidak ditemukan atau nomor tidak valid." });
+        }
+      }, 1500);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultDiv.textContent = "Mencari lokasi...";
+    const phone = form.phoneNumber.value.trim();
+    if (!phone.match(/^\+?\d{8,15}$/)) {
+      resultDiv.innerHTML = '<span id="error">Nomor HP tidak valid. Gunakan format: +62xxxxxxxxxx</span>';
+      return;
+    }
+    const lookupResult = await simulateLookup(phone);
+    if (lookupResult.success) {
+      resultDiv.textContent = `Lokasi terdeteksi: ${lookupResult.location}`;
+    } else {
+      resultDiv.innerHTML = `<span id="error">${lookupResult.message}</span>`;
+    }
+  });
+</script>
+</body>
+</html>
+
+```
