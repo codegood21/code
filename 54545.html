@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kata Kata Masa Depan</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 1rem;
+  }
+  .container {
+    max-width: 600px;
+    background: rgba(0,0,0,0.3);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  }
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  button {
+    background-color: #f6ad55;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    color: #333;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgb(246 173 85 / 0.6);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  button:hover {
+    background-color: #dd6b20;
+    color: #fff;
+    transform: scale(1.1);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Kata Kata Motivasi Masa Depan</h1>
+  <p id="kata">Tekad hari ini adalah jalan bagi masa depan yang gemilang.</p>
+  <button onclick="generateKata()">Tampilkan Kata Motivasi Lain</button>
+</div>
+<script>
+  const kataKata = [
+    "Masa depan dimulai dengan langkah kecil hari ini.",
+    "Jangan takut melangkah ke depan, karena masa depanmu menantimu.",
+    "Kerja keras hari ini akan menjadi kebanggaan masa depan.",
+    "Jadilah cahaya yang menerangi jalan masa depanmu sendiri.",
+    "Impian besarmu adalah rencana masa depan yang sedang kamu bentuk.",
+    "Setiap kegagalan adalah pijakan menuju kesuksesan di masa depan.",
+    "Jangan biarkan keraguan menghentikanmu membangun masa depan gemilang.",
+    "Terus belajar dan berkembang, karena masa depan adalah milik yang siap.",
+    "Masa depan adalah hadiah, buatlah setiap detiknya berarti.",
+    "Bersiaplah hari ini untuk masa depan yang luar biasa."
+  ];
+  function generateKata() {
+    const kataElement = document.getElementById('kata');
+    const index = Math.floor(Math.random() * kataKata.length);
+    kataElement.textContent = kataKata[index];
+  }
+</script>
+</body>
+</html>
+
+```
