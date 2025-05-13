@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple & Cool Blog</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: #e0e0e0;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    max-width: 700px;
+    width: 100%;
+    background: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+
+  header {
+    background: linear-gradient(135deg, #6c63ff, #7c4dff);
+    padding: 2rem 2rem 2rem 2rem;
+    text-align: center;
+  }
+
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+  }
+
+  header p {
+    margin-top: 0.5rem;
+    font-weight: 300;
+    font-size: 1.1rem;
+    opacity: 0.85;
+  }
+
+  article {
+    padding: 2rem;
+  }
+
+  article h2 {
+    font-weight: 600;
+    font-size: 1.9rem;
+    margin-bottom: 0.5rem;
+    color: #b39ddb;
+  }
+
+  article time {
+    font-size: 0.85rem;
+    color: #999;
+    display: block;
+    margin-bottom: 1.2rem;
+  }
+
+  article p {
+    font-size: 1rem;
+    color: #ddd;
+  }
+
+  article p + p {
+    margin-top: 1em;
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding: 1rem 0.5rem;
+    }
+    
+    header h1 {
+      font-size: 2rem;
+    }
+    article h2 {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <header>
+    <h1>Info Blog</h1>
+    <p>Your daily dose of quick, smart info</p>
+  </header>
+
+  <article>
+    <h2>Welcome to Info Blog</h2>
+    <time datetime="2024-06-01">June 1, 2024</time>
+    <p>Start your journey with concise, impactful articles designed to keep you informed and intrigued. From tech trends to lifestyle tips, we cover it all with clarity and style.</p>
+    <p>Stay tuned for insightful posts and easy-to-digest content that'll make you look forward to every read.</p>
+  </article>
+</div>
+</body>
+</html>
+
+```
