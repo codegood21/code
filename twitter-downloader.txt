@@ -1,0 +1,23 @@
+case 'twitter': {
+ if (!args[0]) return m.reply('Masukkan link Twitter yang ingin diunduh.\nContoh: .twitter https://x.com/memeunivrse/status/1908344782289854746');
+ 
+ try {
+ const url = args[0];
+ const apiURL = `https://apizell.web.id/download/twitter?url=${encodeURIComponent(url)}`;
+ const res = await fetch(apiURL);
+ const json = await res.json();
+ 
+ if (json["0"]) {
+ const downloadUrl = json["2"]?.download || json["1"]?.download || json["0"]?.download;
+ const mediaBuffer = await fetch(downloadUrl).then(res => res.buffer());
+
+ await conn.sendMessage(from, { video: mediaBuffer }, { quoted: m });
+ } else {
+ m.reply('Gagal mengunduh video dari Twitter. Pastikan link yang kamu berikan valid.');
+ }
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan saat mengunduh video Twitter.');
+ }
+ break;
+}
