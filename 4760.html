@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Nomor Permanen</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #25D366;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+  }
+  .container {
+    background: #075E54;
+    padding: 2rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  p {
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .whatsapp-number {
+    font-weight: 700;
+    font-size: 1.2rem;
+    background: #128C7E;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    user-select: all;
+  }
+  button {
+    background: #25D366;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(37,211,102,0.6);
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background: #128C7E;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Nomor WhatsApp Permanen</h1>
+    <p>Nomor WhatsApp ini dijamin permanen dan 100% bebas banned dan gimmick.</p>
+    <div class="whatsapp-number" id="wa-number">+6281234567890</div>
+    <button id="copyBtn" aria-label="Salin nomor WhatsApp">Salin Nomor</button>
+    <div class="footer">Nomor ini aktif dan siap digunakan untuk WhatsApp kapan saja.</div>
+  </div>
+  <script>
+    const copyButton = document.getElementById('copyBtn');
+    const waNumber = document.getElementById('wa-number').textContent.trim();
+    copyButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(waNumber).then(() => {
+        copyButton.textContent = 'Disalin!';
+        copyButton.disabled = true;
+        setTimeout(() => {
+          copyButton.textContent = 'Salin Nomor';
+          copyButton.disabled = false;
+        }, 2000);
+      }).catch(() => {
+        alert('Gagal menyalin nomor, silakan salin manual.');
+      });
+    });
+  </script>
+</body>
+</html>
+
+```
