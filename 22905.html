@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Topup Otomatis dengan QRIS</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #141414;
+    color: #eee;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-weight: 700;
+    color: #0af;
+    margin-bottom: 0.2em;
+  }
+  .container {
+    background: #1e1e1e;
+    padding: 15px 20px 40px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(10, 170, 255, 0.5);
+    max-width: 350px;
+    width: 100%;
+  }
+  label {
+    display: block;
+    margin: 0.7em 0 0.3em;
+    font-weight: 600;
+    font-size: 1em;
+  }
+  select, button {
+    width: 100%;
+    font-size: 1.1em;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  select {
+    background-color: #222;
+    color: #eee;
+  }
+  button {
+    background-color: #0a9;
+    color: #fff;
+    font-weight: 700;
+    border: 2px solid #0a9;
+  }
+  button:hover {
+    background-color: transparent;
+    color: #0a9;
+  }
+  .qris-section {
+    margin-top: 1em;
+    text-align: center;
+  }
+  .qris-phone {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #0af;
+    margin-bottom: 12px;
+  }
+  .qris-option {
+    display: inline-block;
+    background: #0a9;
+    border-radius: 10px;
+    padding: 8px 20px;
+    margin: 0 10px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 12px #0af;
+    transition: background-color 0.3s ease;
+  }
+  .qris-option:hover {
+    background-color: #0de;
+    box-shadow: 0 0 18px #0df;
+  }
+  .status {
+    text-align: center;
+    margin-top: 15px;
+    min-height: 24px;
+    font-weight: 600;
+  }
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100%;
+      padding: 15px 15px 35px 15px;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Topup Otomatis</h1>
+<div class="container" role="form" aria-label="Form Topup Otomatis">
+  <label for="panel-select">Pilih Panel Topup:</label>
+  <select id="panel-select" aria-required="true" aria-describedby="panel-desc">
+    <option value="" disabled selected>Pilih panel</option>
+    <option value="topup_panel">Topup Panel</option>
+    <option value="ptrodatyl">Ptrodatyl</option>
+  </select>
+
+  <label for="amount-select">Pilih Nominal QRIS:</label>
+  <div class="qris-section" role="radiogroup" aria-labelledby="qris-label">
+    <div id="qris-label" class="qris-phone">Nomor QRIS: <span aria-live="polite" style="color:#0af;">0838-7075-0111</span></div>
+    <button type="button" class="qris-option" data-amount="5000" aria-pressed="false" role="radio">5K</button>
+    <button type="button" class="qris-option" data-amount="10000" aria-pressed="false" role="radio">10K</button>
+  </div>
+
+  <button id="topup-btn" aria-label="Proses Topup" disabled>Proses Topup</button>
+
+  <div id="status" class="status" aria-live="assertive" role="alert" aria-atomic="true"></div>
+</div>
+
+<script>
+  (() => {
+    const panelSelect = document.getElementById('panel-select');
+    const qrisOptions = Array.from(document.querySelectorAll('.qris-option'));
+    const topupBtn = document.getElementById('topup-btn');
+    const statusEl = document.getElementById('status');
+
+    let selectedPanel = null;
+    let selectedAmount = null;
+
+    function updateButtonState() {
+      if (selectedPanel && selectedAmount !== null) {
+        topupBtn.disabled = false;
+      } else {
+        topupBtn.disabled = true;
+      }
+    }
+
+    panelSelect.addEventListener('change', (e) => {
+      selectedPanel = e.target.value;
+      statusEl.textContent = '';
+      updateButtonState();
+    });
+
+    qrisOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        qrisOptions.forEach(opt => {
+          opt.setAttribute('aria-pressed', 'false');
+          opt.style.backgroundColor = '#0a9';
+          opt.style.boxShadow = '0 0 12px #0af';
+        });
+        option.setAttribute('aria-pressed', 'true');
+        option.style.backgroundColor = '#0de';
+        option.style.boxShadow = '0 0 18px #0df';
+        selectedAmount = parseInt(option.dataset.amount, 10);
+        statusEl.textContent = '';
+        updateButtonState();
+      });
+    });
+
+    // Simulate topup process
+    topupBtn.addEventListener('click', () => {
+      if (!selectedPanel || selectedAmount === null) {
+        statusEl.textContent = 'Silakan pilih panel dan nominal terlebih dahulu.';
+        return;
+      }
+      statusEl.style.color = '#0af';
+      statusEl.textContent = 'Memproses topup...';
+      topupBtn.disabled = true;
+
+      // Simulate fake API call delay
+      setTimeout(() => {
+        // Simulated success response for demo
+        statusEl.style.color = '#0f0';
+        statusEl.textContent = `Topup sebesar Rp${selectedAmount.toLocaleString('id-ID')} berhasil pada panel "${selectedPanel.replace('_', ' ')}".`;
+        topupBtn.disabled = false;
+      }, 1800);
+    });
+
+  })();
+</script>
+</body>
+</html>
+
+```
