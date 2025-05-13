@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vercel Auto Deploy</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  header {
+    width: 100%;
+    padding: 1rem;
+    background: #0f62fe;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  main {
+    margin-top: 2rem;
+    width: 90%;
+    max-width: 400px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  input[type="text"], input[type="file"], textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: 1.5px solid #555;
+    background: #222;
+    color: #eee;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+    margin-bottom: 1.25rem;
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: #0f62fe;
+    box-shadow: 0 0 8px 1px #0f62feaa;
+  }
+  button {
+    width: 100%;
+    background-color: #0f62fe;
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background-color: #0053be;
+  }
+  footer {
+    margin-top: auto;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: #777;
+    text-align: center;
+  }
+  pre {
+    background: #222;
+    border-radius: 6px;
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    border: 1px solid #444;
+  }
+</style>
+</head>
+<body>
+<header><h1>Auto Deploy HTML to Vercel</h1></header>
+<main>
+  <form id="deployForm">
+    <label for="projectName">Project Name (lowercase, no spaces, e.g. my-site)</label>
+    <input type="text" id="projectName" name="projectName" placeholder="your-project-name" pattern="^[a-z0-9\-]+$" required autocomplete="off" />
+    
+    <label for="htmlFile">Upload HTML File</label>
+    <input type="file" id="htmlFile" name="htmlFile" accept=".html" required />
+    
+    <button type="submit">Deploy</button>
+  </form>
+  <pre id="output" aria-live="polite"></pre>
+</main>
+<footer>Vercel Deploy Token included for auto deployment</footer>
+<script>
+(() => {
+  const token = "ubwszpgWvrCr6q9Ap1PMC4Cc";
+  const apiUrl = "https://api.vercel.com";
+
+  const deployForm = document.getElementById("deployForm");
+  const output = document.getElementById("output");
+
+  // Helper: print log output
+  function log(message){
+    output.textContent += message + "\\n";
+    output.scrollTop = output.scrollHeight;
+  }
+
+  // Create or update files structure for deployment
+  // Here, only index.html with user HTML content
+  function prepareFiles(htmlContent) {
+    return [
+      {
+        file: "index.html",
+        data: htmlContent
+      }
+    ];
+  }
+
+  // Deploys to Vercel with given project and files
+  async function deployToVercel(projectName, files) {
+    log("Getting Vercel project info...");
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    };
+
+    // First get existing project info by name (scope = user by default)
+    // This simplifies to create a new deployment.
+    // Vercel API deploy via "Deployment" endpoint with target project name
+    
+    // We create a deployment directly with project name as "name"
+    // Vercel API docs: https://vercel.com/docs/rest-api#endpoints/deployments/create-a-deployment
+    
+    // Prepare files for upload
+    const fileBlobs = files.map(f => {
+      // convert string data to Buffer (base64 for upload)
+      return {
+        file: f.file,
+        data: btoa(unescape(encodeURIComponent(f.data)))
+      };
+    });
+
+    // Request body for deployment
+    const body = {
+      name: projectName,
+      files: fileBlobs,
+      target: "production"
+    };
+
+    log("Creating deployment... this may take a moment.");
+    try {
+      const res = await fetch(apiUrl + "/v13/deployments", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(`Failed to deploy: ${errorData.error.message || res.statusText}`);
+      }
+
+      const deployment = await res.json();
+      log("Deployment created successfully!");
+      log(`URL: https://${deployment.url}`);
+      return deployment.url;
+    } catch (e) {
+      log("Error: " + e.message);
+      throw e;
+    }
+  }
+
+  deployForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    output.textContent = "";
+    const projectName = deployForm.projectName.value.trim();
+    const fileInput = deployForm.htmlFile.files[0];
+    if (!fileInput) {
+      log("Please select an HTML file.");
+      return;
+    }
+    if (!projectName.match(/^[a-z0-9\-]+$/)) {
+      log("Project name invalid. Use lowercase letters, numbers, and hyphens only.");
+      return;
+    }
+
+    try {
+      log("Reading HTML file...");
+      const text = await fileInput.text();
+
+      log("Preparing files for deployment...");
+      const files = prepareFiles(text);
+
+      await deployToVercel(projectName, files);
+    } catch (error) {
+      log("Deployment failed: " + error.message);
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+```
