@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free Unlimited SMS Code Generator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f0f0;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+  #app {
+    background: rgba(0,0,0,0.35);
+    border-radius: 12px;
+    width: 360px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    padding: 1.8rem;
+  }
+  h1 {
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  label {
+    display: block;
+    margin: 1rem 0 0.4rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  select, button {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 1.3rem;
+    background: #7b59fc;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #a178fc;
+  }
+  #codeOutput {
+    margin-top: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    background: rgba(255,255,255,0.15);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    user-select: all;
+  }
+  footer {
+    margin-top: 1.8rem;
+    font-size: 0.75rem;
+    color: #a3a3a3;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div id="app" role="main" aria-label="Free Unlimited SMS Code Generator">
+  <h1>SMS Code Generator</h1>
+  <form id="codeForm" autocomplete="off" aria-describedby="desc">
+    <label for="countrySelect">Select Country</label>
+    <select id="countrySelect" aria-required="true" aria-describedby="desc">
+      <option value="US" selected>United States</option>
+      <option value="IN">India</option>
+      <option value="GB">United Kingdom</option>
+      <option value="ID">Indonesia</option>
+      <option value="DE">Germany</option>
+      <option value="FR">France</option>
+      <option value="BR">Brazil</option>
+      <option value="CN">China</option>
+      <option value="JP">Japan</option>
+      <option value="RU">Russia</option>
+      <option value="ZA">South Africa</option>
+      <option value="NG">Nigeria</option>
+      <option value="MX">Mexico</option>
+      <option value="CA">Canada</option>
+      <option value="AU">Australia</option>
+      <option value="KR">South Korea</option>
+      <option value="TR">Turkey</option>
+      <option value="EG">Egypt</option>
+      <option value="SA">Saudi Arabia</option>
+      <option value="FR">France</option>
+      <option value="IT">Italy</option>
+      <option value="ES">Spain</option>
+      <option value="PL">Poland</option>
+      <option value="NL">Netherlands</option>
+      <option value="SE">Sweden</option>
+      <option value="CH">Switzerland</option>
+      <!-- More countries can be added here -->
+    </select>
+    <button type="submit" aria-label="Generate SMS code">Generate Code</button>
+    <div id="codeOutput" aria-live="polite" aria-atomic="true" tabindex="0" title="Generated SMS Code"></div>
+  </form>
+  <footer>Unlimited codes for all countries. Just select and generate.</footer>
+</div>
+
+<script>
+  (function(){
+    const countryCodeMap = {
+      US: {prefix: '+1', codeLength: 6},
+      IN: {prefix: '+91', codeLength: 6},
+      GB: {prefix: '+44', codeLength: 6},
+      ID: {prefix: '+62', codeLength: 6},
+      DE: {prefix: '+49', codeLength: 6},
+      FR: {prefix: '+33', codeLength: 6},
+      BR: {prefix: '+55', codeLength: 6},
+      CN: {prefix: '+86', codeLength: 6},
+      JP: {prefix: '+81', codeLength: 6},
+      RU: {prefix: '+7', codeLength: 6},
+      ZA: {prefix: '+27', codeLength: 6},
+      NG: {prefix: '+234', codeLength: 6},
+      MX: {prefix: '+52', codeLength: 6},
+      CA: {prefix: '+1', codeLength: 6},
+      AU: {prefix: '+61', codeLength: 6},
+      KR: {prefix: '+82', codeLength: 6},
+      TR: {prefix: '+90', codeLength: 6},
+      EG: {prefix: '+20', codeLength: 6},
+      SA: {prefix: '+966', codeLength: 6},
+      IT: {prefix: '+39', codeLength: 6},
+      ES: {prefix: '+34', codeLength: 6},
+      PL: {prefix: '+48', codeLength: 6},
+      NL: {prefix: '+31', codeLength: 6},
+      SE: {prefix: '+46', codeLength: 6},
+      CH: {prefix: '+41', codeLength: 6}
+    };
+
+    function generateNumericCode(length) {
+      let code = '';
+      for(let i=0; i<length; i++) {
+        code += Math.floor(Math.random()*10);
+      }
+      return code;
+    }
+
+    function generateSMSCode(countryCode) {
+      const country = countryCodeMap[countryCode];
+      if (!country) return null;
+      return country.prefix + ' ' + generateNumericCode(country.codeLength);
+    }
+
+    const form = document.getElementById('codeForm');
+    const countrySelect = document.getElementById('countrySelect');
+    const codeOutput = document.getElementById('codeOutput');
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const country = countrySelect.value;
+      const code = generateSMSCode(country);
+      if(code){
+        codeOutput.textContent = code;
+        codeOutput.focus();
+      } else {
+        codeOutput.textContent = 'Error generating code for selected country.';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
