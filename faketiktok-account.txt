@@ -1,0 +1,23 @@
+case 'faketiktok': {
+ const [name, username, verified, followers, following, likes, bio, isFollow] = args.join(" ").split(",").map(v => v.trim());
+ if (!name) return m.reply('Masukkan parameter dengan benar.\nContoh: .faketiktok Nama,Username,Verified(true/false),Followers,Following,Likes,Bio,IsFollow(true/false)');
+
+ let ppuser;
+ try {
+ ppuser = await conn.profilePictureUrl(m.sender, 'image');
+ } catch {
+ ppuser = 'https://files.catbox.moe/2ryaif.jpg';
+ }
+
+ try {
+ const apiURL = `https://flowfalcon.dpdns.org/imagecreator/faketiktok?name=${encodeURIComponent(name)}&username=${encodeURIComponent(username || '')}&pp=${encodeURIComponent(ppuser)}&verified=${verified || 'no'}&followers=${followers || '0'}&following=${following || '0'}&likes=${likes || '0'}&bio=${encodeURIComponent(bio || '')}&dark=true&isFollow=${isFollow || 'false'}`;
+ 
+ const res = await fetch(apiURL);
+ const imageBuffer = await res.buffer();
+ 
+ await conn.sendMessage(from, { image: imageBuffer, caption: "Fake TikTok berhasil dibuat!" }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan saat membuat Fake TikTok.');
+ }
+} break
