@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website AI Simple</title>
+    <script>
+        async function sendRequest() {
+            const response = await fetch('https://luminai.my.id/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    // Tambahkan data yang diperlukan sesuai dengan API
+                })
+            });
+            const data = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(data);
+        }
+    </script>
+</head>
+<body>
+    <h1>Website AI Simple</h1>
+    <button onclick="sendRequest()">Kirim Permintaan</button>
+    <pre id="result"></pre>
+</body>
+</html>
+```
