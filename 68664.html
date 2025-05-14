@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modern Cool Website</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 2.8rem;
+    letter-spacing: 0.05em;
+  }
+  main {
+    flex-grow: 1;
+    padding: 3rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  main h2 {
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  main p {
+    font-weight: 300;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: #dcd6f7;
+    margin-bottom: 3rem;
+  }
+  .btn-primary {
+    background: #ff758c;
+    background: linear-gradient(45deg, #ff7eb9, #ff758c);
+    border: none;
+    padding: 0.75rem 2.5rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+    box-shadow: 0 8px 15px rgba(255,117,140,0.3);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(45deg, #ff6ab6, #ff527f);
+    box-shadow: 0 12px 20px rgba(255,82,127,0.5);
+  }
+  footer {
+    padding: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.15);
+    color: #eee;
+  }
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 2rem;
+    }
+    main {
+      padding: 2rem 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Welcome to CoolSite</h1>
+</header>
+<main>
+  <h2>Experience Modern Design</h2>
+  <p>Discover a sleek, responsive and vibrant website crafted with elegant typography and smooth gradients. Designed for a great user experience on all devices.</p>
+  <button class="btn-primary" onclick="alert('Welcome to CoolSite!')">Click Me</button>
+</main>
+<footer>
+  &copy; 2024 CoolSite. All rights reserved.
+</footer>
+</body>
+</html>
+
+```
