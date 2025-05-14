@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sistem Judi Online</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+  }
+  body {
+    background: linear-gradient(135deg, #1e1e2f, #342e59);
+    font-family: 'Montserrat', sans-serif;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+  .container {
+    max-width: 400px;
+    width: 100%;
+    background: #2a2440dd;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: #ffb347;
+    text-shadow: 0 0 6px #ffb347cc;
+  }
+  label {
+    display: block;
+    margin: 12px 0 6px;
+    font-weight: 600;
+  }
+  input, select, button {
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+  }
+  input, select {
+    background: #433f59;
+    color: #eee;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease;
+  }
+  input:focus, select:focus {
+    background: #5f5a82;
+    outline: none;
+  }
+  button {
+    background: #ffb347;
+    color: #2a2440;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 5px 15px #ffb347aa;
+  }
+  button:hover {
+    background: #ffa021;
+  }
+  .game-select {
+    margin-bottom: 1.5rem;
+  }
+  .game-section {
+    background: #3a3460;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .game-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #ffd369;
+  }
+  .slot-reel {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+  .reel {
+    width: 50px;
+    height: 50px;
+    background: #5b547f;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffc74b;
+    text-shadow: 0 0 5px #ffc74bba;
+  }
+  .history-section {
+    max-height: 180px;
+    overflow-y: auto;
+    background: #241e3b;
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+  .history-section p {
+    margin-bottom: 0.4rem;
+    border-bottom: 1px solid #3b3570;
+    padding-bottom: 0.2rem;
+  }
+  .log-section {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #bbb;
+    height: 60px;
+    overflow-y: auto;
+  }
+  @media (max-width: 480px) {
+    .container {
+      max-width: 100%;
+      padding: 1.5rem;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Website Judi Online</h1>
+  <form id="registerForm">
+    <label for="username">Register Username</label>
+    <input type="text" id="username" name="username" required autocomplete="off" />
+    <button type="submit">Register</button>
+  </form>
+  <div id="balanceSection" style="display:none;">
+    <p><strong>Saldo:</strong> <span id="balance">0</span></p>
+    <form id="depositForm">
+      <label for="depositAmount">Deposit</label>
+      <input type="number" id="depositAmount" min="1" step="1" required />
+      <button type="submit">Deposit</button>
+    </form>
+    <form id="withdrawForm">
+      <label for="withdrawAmount">Withdraw</label>
+      <input type="number" id="withdrawAmount" min="1" step="1" required />
+      <button type="submit">Withdraw</button>
+    </form>
+    <div class="game-select">
+      <label for="gameSelect">Pilih Game</label>
+      <select id="gameSelect">
+        <option value="slot">Slot</option>
+        <option value="roulette">Roulette</option>
+        <option value="togel">Togel</option>
+      </select>
+    </div>
+    <div id="gameArea"></div>
+    <div class="history-section" id="gameHistory">
+      <h3>Histori Permainan</h3>
+    </div>
+  </div>
+  <div class="log-section" id="logArea"></div>
+</div>
+
+<script>
+(() => {
+  const telegramBotToken = 'YOUR_BOT_TOKEN_HERE'; // Replace with your Telegram bot token
+  const telegramChatId = 'YOUR_CHAT_ID_HERE'; // Replace with your Telegram chat id
+
+  // Send message to Telegram bot
+  async function sendTelegramMessage(message) {
+    try {
+      const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+      await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({chat_id: telegramChatId, text: message, parse_mode: 'MarkdownV2'})
+      });
+      appendLog('Dikirim ke Telegram: ' + message);
+    } catch (e) {
+      appendLog('Gagal kirim Telegram: ' + e.message);
+    }
+  }
+
+  // Escape message for Telegram MarkdownV2
+  function escapeMarkdown(text) {
+    return text.replace(/[-_[\]()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+
+  // Logging in UI
+  function appendLog(text) {
+    const logArea = document.getElementById('logArea');
+    const p = document.createElement('p');
+    p.textContent = text;
+    logArea.appendChild(p);
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+
+  // User data
+  let username = null;
+  let balance = 0;
+  let gameHistory = [];
+
+  // Update balance display
+  function updateBalance() {
+    document.getElementById('balance').textContent = balance.toLocaleString('id-ID');
+  }
+
+  // Add history entry
+  function addHistory(entry) {
+    gameHistory.push(entry);
+    const historyDiv = document.getElementById('gameHistory');
+    const p = document.createElement('p');
+    p.textContent = entry;
+    historyDiv.appendChild(p);
+    historyDiv.scrollTop = historyDiv.scrollHeight;
+  }
+
+  // Register form
+  const registerForm = document.getElementById('registerForm');
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    username = e.target.username.value.trim();
+    if (!username) return;
+    registerForm.style.display = 'none';
+    document.getElementById('balanceSection').style.display = 'block';
+    appendLog(`User registered: ${username}`);
+    sendTelegramMessage(`*Register*\nUsername: _${escapeMarkdown(username)}_`);
+  });
+
+  // Deposit form
+  const depositForm = document.getElementById('depositForm');
+  depositForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let amount = Number(document.getElementById('depositAmount').value);
+    if (amount <= 0) return alert('Jumlah deposit harus positif.');
+    balance += amount;
+    updateBalance();
+    addHistory(`Deposit: +${amount.toLocaleString('id-ID')}`);
+    sendTelegramMessage(`*Deposit*\nUsername: _${escapeMarkdown(username)}_\nJumlah: +${amount}`);
+    depositForm.reset();
+  });
+
+  // Withdraw form
+  const withdrawForm = document.getElementById('withdrawForm');
+  withdrawForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let amount = Number(document.getElementById('withdrawAmount').value);
+    if (amount <= 0) return alert('Jumlah withdraw harus positif.');
+    if (amount > balance) return alert('Saldo tidak cukup.');
+    balance -= amount;
+    updateBalance();
+    addHistory(`Withdraw: -${amount.toLocaleString('id-ID')}`);
+    sendTelegramMessage(`*Withdraw*\nUsername: _${escapeMarkdown(username)}_\nJumlah: -${amount}`);
+    withdrawForm.reset();
+  });
+
+  // Game implementations
+  const gameArea = document.getElementById('gameArea');
+
+  // Clear game area and render chosen game UI
+  function renderGame(game) {
+    gameArea.innerHTML = '';
+    if(game === 'slot'){
+      renderSlotGame();
+    } else if(game === 'roulette'){
+      renderRouletteGame();
+    } else if(game === 'togel'){
+      renderTogelGame();
+    }
+  }
+
+  // SLOT GAME
+  function renderSlotGame(){
+    const slotDiv = document.createElement('div');
+    slotDiv.classList.add('game-section');
+    slotDiv.innerHTML = `
+      <h2>Game Slot</h2>
+      <div class="slot-reel">
+        <div class="reel" id="reel1">-</div>
+        <div class="reel" id="reel2">-</div>
+        <div class="reel" id="reel3">-</div>
+      </div>
+      <label for="slotBetAmount">Taruhan</label>
+      <input type="number" id="slotBetAmount" min="1" step="1" />
+      <button id="slotPlayBtn">Putar Slot</button>
+    `;
+    gameArea.appendChild(slotDiv);
+
+    const symbols = ['🍒', '🍋', '🔔', '🍉', '⭐', '7️⃣'];
+
+    function getRandomSymbol() {
+      return symbols[Math.floor(Math.random()*symbols.length)];
+    }
+
+    document.getElementById('slotPlayBtn').addEventListener('click', () => {
+      let bet = Number(document.getElementById('slotBetAmount').value);
+      if (bet <= 0) return alert('Taruhan harus positif.');
+      if (bet > balance) return alert('Saldo tidak cukup.');
+
+      // Spin reels
+      let reel1 = getRandomSymbol();
+      let reel2 = getRandomSymbol();
+      let reel3 = getRandomSymbol();
+
+      document.getElementById('reel1').textContent = reel1;
+      document.getElementById('reel2').textContent = reel2;
+      document.getElementById('reel3').textContent = reel3;
+
+      // Evaluate results
+      let winAmount = 0;
+      if (reel1 === reel2 && reel2 === reel3) {
+        // Jackpot - 10x bet
+        winAmount = bet * 10;
+      } else if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
+        // Partial win - 3x bet
+        winAmount = bet * 3;
+      }
+
+      if (winAmount > 0) {
+        balance += winAmount - bet;
+        updateBalance();
+        addHistory(`Slot menang! Taruhan: ${bet}, Menang: ${winAmount}`);
+        sendTelegramMessage(`*Slot*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nMenang: ${winAmount}\nHasil: ${reel1} ${reel2} ${reel3}`);
+      } else {
+        balance -= bet;
+        updateBalance();
+        addHistory(`Slot kalah. Taruhan: ${bet}`);
+        sendTelegramMessage(`*Slot*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nKalah\nHasil: ${reel1} ${reel2} ${reel3}`);
+      }
+    });
+  }
+
+  // ROULETTE GAME
+  function renderRouletteGame(){
+    const rouletteDiv = document.createElement('div');
+    rouletteDiv.classList.add('game-section');
+    rouletteDiv.innerHTML = `
+      <h2>Game Roulette</h2>
+      <label for="rouletteBetAmount">Taruhan</label>
+      <input type="number" id="rouletteBetAmount" min="1" step="1" />
+      <label for="rouletteBetChoice">Pilih Warna</label>
+      <select id="rouletteBetChoice">
+        <option value="merah">Merah</option>
+        <option value="hitam">Hitam</option>
+        <option value="hijau">Hijau (0)</option>
+      </select>
+      <button id="rouletteSpinBtn">Putar Roulette</button>
+      <p id="rouletteResult"></p>
+    `;
+    gameArea.appendChild(rouletteDiv);
+
+    document.getElementById('rouletteSpinBtn').addEventListener('click', () => {
+      let bet = Number(document.getElementById('rouletteBetAmount').value);
+      if (bet <= 0) return alert('Taruhan harus positif.');
+      if (bet > balance) return alert('Saldo tidak cukup.');
+      let choice = document.getElementById('rouletteBetChoice').value;
+
+      // Roulette results: 0-36, color logic:
+      // 0 = hijau
+      // numbers 1-36 alternate red and black: odd = merah, even = hitam (simplified)
+      let resultNumber = Math.floor(Math.random()*37);
+      let resultColor = 'hijau';
+      if (resultNumber !== 0) {
+        resultColor = (resultNumber % 2 === 0) ? 'hitam' : 'merah';
+      }
+
+      let winAmount = 0;
+      let resultText = `Nomor: ${resultNumber} (${resultColor})`;
+
+      if(choice === resultColor) {
+        if(resultColor === 'hijau'){
+          winAmount = bet * 14; // higher odds for 0
+        } else {
+          winAmount = bet * 2;
+        }
+      }
+
+      if(winAmount > 0){
+        balance += winAmount - bet;
+        updateBalance();
+        addHistory(`Roulette menang! Taruhan: ${bet}, Menang: ${winAmount}, Pilihan: ${choice}, Hasil: ${resultNumber}`);
+        sendTelegramMessage(`*Roulette*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nMenang: ${winAmount}\nPilihan: ${choice}\nHasil: ${resultNumber} (${resultColor})`);
+        document.getElementById('rouletteResult').textContent = `🎉 Menang! ${resultText}`;
+      } else {
+        balance -= bet;
+        updateBalance();
+        addHistory(`Roulette kalah. Taruhan: ${bet}, Pilihan: ${choice}, Hasil: ${resultNumber}`);
+        sendTelegramMessage(`*Roulette*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nKalah\nPilihan: ${choice}\nHasil: ${resultNumber} (${resultColor})`);
+        document.getElementById('rouletteResult').textContent = `😞 Kalah. ${resultText}`;
+      }
+    });
+  }
+
+  // TOGEL GAME (simple 2-digit guess)
+  function renderTogelGame(){
+    const togelDiv = document.createElement('div');
+    togelDiv.classList.add('game-section');
+    togelDiv.innerHTML = `
+      <h2>Game Togel</h2>
+      <label for="togelBetAmount">Taruhan</label>
+      <input type="number" id="togelBetAmount" min="1" step="1" />
+      <label for="togelGuess">Tebak angka 2 digit (00-99)</label>
+      <input type="number" id="togelGuess" min="0" max="99" step="1" />
+      <button id="togelPlayBtn">Mainkan Togel</button>
+      <p id="togelResult"></p>
+    `;
+    gameArea.appendChild(togelDiv);
+
+    document.getElementById('togelPlayBtn').addEventListener('click', () => {
+      let bet = Number(document.getElementById('togelBetAmount').value);
+      if (bet <= 0) return alert('Taruhan harus positif.');
+      if (bet > balance) return alert('Saldo tidak cukup.');
+      let guess = Number(document.getElementById('togelGuess').value);
+      if (isNaN(guess) || guess < 0 || guess > 99) return alert('Tebakan harus antara 00-99.');
+
+      let resultNumber = Math.floor(Math.random()*100);
+
+      let winAmount = 0;
+      let resultText = `Hasil undian: ${resultNumber.toString().padStart(2,'0')}`;
+
+      if (guess === resultNumber) {
+        winAmount = bet * 50; // big win for exact match
+      } else if (Math.floor(guess / 10) === Math.floor(resultNumber / 10)) {
+        winAmount = bet * 5; // partial win if same tens digit
+      }
+
+      if (winAmount > 0) {
+        balance += winAmount - bet;
+        updateBalance();
+        addHistory(`Togel menang! Taruhan: ${bet}, Menang: ${winAmount}, Tebakan: ${guess.toString().padStart(2,'0')}`);
+        sendTelegramMessage(`*Togel*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nMenang: ${winAmount}\nTebakan: ${guess.toString().padStart(2,'0')}\n${resultText}`);
+        document.getElementById('togelResult').textContent = `🎉 Menang! ${resultText}`;
+      } else {
+        balance -= bet;
+        updateBalance();
+        addHistory(`Togel kalah. Taruhan: ${bet}, Tebakan: ${guess.toString().padStart(2,'0')}`);
+        sendTelegramMessage(`*Togel*\nUsername: _${escapeMarkdown(username)}_\nTaruhan: ${bet}\nKalah\nTebakan: ${guess.toString().padStart(2,'0')}\n${resultText}`);
+        document.getElementById('togelResult').textContent = `😞 Kalah. ${resultText}`;
+      }
+    });
+  }
+
+  // Change game select
+  const gameSelect = document.getElementById('gameSelect');
+  gameSelect.addEventListener('change', e => {
+    renderGame(e.target.value);
+  });
+
+  // Initialize default game
+  renderGame(gameSelect.value);
+  updateBalance();
+})();
+</script>
+</body>
+</html>
+
+```
