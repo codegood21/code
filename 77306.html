@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulasi Stalk Telegram</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2d3436, #00cec9);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #222831;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    width: 360px;
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  form {
+    margin-bottom: 1.5rem;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    background-color: #00cec9;
+    color: #222831;
+    padding: 0.7rem 0;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #019f9a;
+  }
+  .result {
+    background-color: #393e46;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .result h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.7rem;
+    border-bottom: 1px solid #00cec9;
+    padding-bottom: 0.3rem;
+  }
+  .user-info {
+    margin-bottom: 0.8rem;
+  }
+  .label-bold {
+    font-weight: 700;
+  }
+  .fake-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png') center center/cover no-repeat;
+    margin: 0 auto 1rem auto;
+    border: 3px solid #00cec9;
+  }
+  .footer {
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: 1.4rem;
+    color: #a3a3a3;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Simulasi Stalk Telegram</h1>
+    <form id="stalkForm" aria-label="Form simulasi stalking nomor Telegram">
+      <label for="phoneNumber">Masukkan Nomor Telegram (misal: +628123456789)</label>
+      <input type="text" id="phoneNumber" name="phoneNumber" placeholder="+62..." autocomplete="tel" required aria-required="true" />
+      <button type="submit" aria-label="Stalk nomor Telegram">Stalk</button>
+    </form>
+    <section id="result" class="result" aria-live="polite" aria-atomic="true" hidden>
+      <div class="fake-photo" aria-hidden="true"></div>
+      <h2>Profil Pengguna</h2>
+      <div class="user-info"><span class="label-bold">Nama:</span> <span id="userName"></span></div>
+      <div class="user-info"><span class="label-bold">Username:</span> <span id="userUsername"></span></div>
+      <div class="user-info"><span class="label-bold">Nomor:</span> <span id="userNumber"></span></div>
+      <div class="user-info"><span class="label-bold">Bio:</span> <span id="userBio"></span></div>
+      <div class="user-info"><span class="label-bold">Terakhir Online:</span> <span id="userLastSeen"></span></div>
+      <div class="user-info"><span class="label-bold">Status Akun:</span> <span id="userStatus"></span></div>
+    </section>
+    <div class="footer">*Ini hanya simulasi, data tidak nyata.</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('stalkForm');
+    const resultSection = document.getElementById('result');
+    const userNameEl = document.getElementById('userName');
+    const userUsernameEl = document.getElementById('userUsername');
+    const userNumberEl = document.getElementById('userNumber');
+    const userBioEl = document.getElementById('userBio');
+    const userLastSeenEl = document.getElementById('userLastSeen');
+    const userStatusEl = document.getElementById('userStatus');
+
+    // Sample simulated data pool
+    const sampleNames = [
+      'Fajar Nursalim', 'Dewi Kartika', 'Rizky Pratama', 'Lestari Wulan', 'Bagus Santoso', 
+      'Intan Puspita', 'Arman Saputra', 'Nadia Safira', 'Rian Kurniawan', 'Sinta Maharani'
+    ];
+    const sampleUsernames = [
+      'fajar_nslm', 'dewi_ktk', 'rizky_p', 'lestariw', 'bagus.s',
+      'intan.p', 'arman_spt', 'nadiasf', 'riankurn', 'sinta.mhr'
+    ];
+    const sampleBios = [
+      "Pecinta kopi dan teknologi ☕️💻",
+      "Traveler & photographer 📸✈️",
+      "Food lover dan penggemar musik 🎵🍣",
+      "Selalu upgrade skill setiap hari 🚀",
+      "Cinta damai dan olahraga ⚽️✌️",
+      "Digital nomad di era modern 🌍💼",
+      "Penggemar anime dan gaming 🎮✨",
+      "Pencinta seni dan budaya lokal 🎭🎨",
+      "Coffee addict & bookworm 📚☕️",
+      "Developer & coffee enthusiast 👨‍💻☕️"
+    ];
+    const sampleStatuses = [
+      'Online', 'Offline', 'Terakhir terlihat 5 menit yang lalu', 'Terakhir terlihat hari ini', 'Sedang mengetik...', 
+      'Offline sejak kemarin', 'Aktif 1 jam yang lalu', 'Dalam perjalanan', 'Sedang sibuk', 'Online via web'
+    ];
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function simulateLastSeen() {
+      const now = new Date();
+      // Random time in past 7 days
+      const pastTime = new Date(now.getTime() - Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000));
+      return pastTime.toLocaleString('id-ID', {
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const phone = form.phoneNumber.value.trim();
+
+      // Basic phone number validation for Indonesian country code +62 or + other number format
+      const phoneValid = /^\+\d{7,15}$/.test(phone);
+      if (!phoneValid) {
+        alert('Masukkan nomor dengan format internasional, contoh: +628123456789');
+        return;
+      }
+
+      // Simulate the data generation
+      const index = Math.floor(Math.random() * sampleNames.length);
+
+      userNameEl.textContent = sampleNames[index];
+      userUsernameEl.textContent = '@' + sampleUsernames[index];
+      userNumberEl.textContent = phone;
+      userBioEl.textContent = sampleBios[index];
+      userLastSeenEl.textContent = simulateLastSeen();
+      userStatusEl.textContent = randomItem(sampleStatuses);
+
+      // Show result section
+      resultSection.hidden = false;
+      resultSection.focus();
+    });
+  </script>
+</body>
+</html>
+
+```
