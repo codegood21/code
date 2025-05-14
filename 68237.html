@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Online Gambling Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #121212, #1e1e2f);
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  #app {
+    max-width: 1200px;
+    width: 100%;
+    background-color: #21222c;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #4b4bffaa;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px;
+  }
+  h1 {
+    width: 100%;
+    text-align: center;
+    color: #4b6ef6;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #4b6ef6;
+  }
+  section {
+    background: #2a2d3a;
+    border-radius: 10px;
+    flex: 1 1 350px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 6px #4b6ef6aa;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+  }
+  label {
+    display: block;
+    margin: 10px 0 6px 0;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #a9a9a9;
+  }
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    margin-bottom: 16px;
+    background: #15171f;
+    color: #eee;
+    box-shadow: inset 0 0 5px #0008;
+    transition: box-shadow 0.3s;
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    box-shadow: inset 0 0 8px #4b6ef6;
+  }
+  button {
+    background: #4b6ef6;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 6px #4b6ef6;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  button:hover {
+    background: #3656ce;
+    box-shadow: 0 0 14px #2d3dcf;
+  }
+  #games {
+    flex: 1 1 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  #history {
+    flex: 1 1 40%;
+    background: #181a23;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px #0008;
+    color: #ccc;
+    display: flex;
+    flex-direction: column;
+  }
+  #history h2 {
+    text-align: center;
+    color: #9fbfff;
+    margin: 16px 0;
+  }
+  #history-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 16px 20px 16px;
+    font-size: 0.9rem;
+  }
+  #history-list div {
+    border-bottom: 1px solid #333;
+    padding: 8px 0;
+  }
+  .game-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .roulette-wheel {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 6px solid #4b6ef6;
+    background: conic-gradient(
+      #ee1500 0deg 30deg,
+      #000 30deg 60deg,
+      #ee1500 60deg 90deg,
+      #000 90deg 120deg,
+      #ee1500 120deg 150deg,
+      #000 150deg 180deg,
+      #ee1500 180deg 210deg,
+      #000 210deg 240deg,
+      #ee1500 240deg 270deg,
+      #000 270deg 300deg,
+      #ee1500 300deg 330deg,
+      #000 330deg 360deg
+    );
+    margin: 0 auto 20px auto;
+    box-shadow: 0 0 12px #4b6ef6aa inset;
+  }
+  .roulette-indicator {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 25px solid #4b6ef6;
+  }
+  #slot-container {
+    text-align: center;
+  }
+  .slot-reels {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 15px 0;
+  }
+  .slot-reel {
+    width: 60px;
+    height: 60px;
+    margin: 0 5px;
+    background: #121218;
+    border: 3px solid #4b6ef6;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4b6ef6;
+    text-shadow: 0 0 8px #4b6ef6;
+    user-select: none;
+  }
+  .togel-inputs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .togel-inputs input[type="number"] {
+    flex: 1 1 60px;
+  }
+  .balance-display {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 10px 0 20px 0;
+    color: #82caff;
+    text-align: center;
+    text-shadow: 0 0 6px #82caffaa;
+  }
+  .status-message {
+    margin-top: 10px;
+    min-height: 24px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  @media (max-width: 900px) {
+    #app {
+      flex-direction: column;
+    }
+    #games, #history {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>Online Gambling Hub</h1>
+  <section id="user-section">
+    <h2>User Account</h2>
+    <form id="register-form">
+      <label for="username">Username (3–15 chars):</label>
+      <input type="text" id="username" minlength="3" maxlength="15" required />
+      <label for="password">Password (min 6 chars):</label>
+      <input type="password" id="password" minlength="6" required />
+      <button type="submit">Register / Login</button>
+    </form>
+    <div class="balance-display" id="balance-display">Balance: 0</div>
+    <form id="deposit-form">
+      <label for="deposit-amount">Deposit Amount:</label>
+      <input type="number" id="deposit-amount" min="10" step="10" value="10" />
+      <button type="submit">Deposit</button>
+    </form>
+    <form id="withdraw-form">
+      <label for="withdraw-amount">Withdraw Amount:</label>
+      <input type="number" id="withdraw-amount" min="10" step="10" value="10" />
+      <button type="submit">Withdraw</button>
+    </form>
+    <div id="user-status" class="status-message"></div>
+  </section>
+  <section id="games">
+    <h2>Games</h2>
+    <div id="slot-game" style="margin-bottom: 30px;">
+      <h3>Slot Game</h3>
+      <div id="slot-container">
+        <div class="slot-reels">
+          <div class="slot-reel" id="slot-reel-1">?</div>
+          <div class="slot-reel" id="slot-reel-2">?</div>
+          <div class="slot-reel" id="slot-reel-3">?</div>
+        </div>
+        <label for="slot-bet">Bet Amount:</label>
+        <input type="number" id="slot-bet" min="10" step="10" value="10" />
+        <button id="slot-spin-btn">Spin</button>
+        <div id="slot-result" class="status-message"></div>
+      </div>
+    </div>
+    <div id="roulette-game" style="margin-bottom: 30px;">
+      <h3>Roulette</h3>
+      <div class="roulette-wheel" id="roulette-wheel">
+        <div class="roulette-indicator"></div>
+      </div>
+      <label for="roulette-bet">Bet Amount:</label>
+      <input type="number" id="roulette-bet" min="10" step="10" value="10" />
+      <label for="roulette-choice">Bet on number (0-11):</label>
+      <input type="number" id="roulette-choice" min="0" max="11" value="0" />
+      <button id="roulette-spin-btn">Spin Roulette</button>
+      <div id="roulette-result" class="status-message"></div>
+    </div>
+    <div id="togel-game">
+      <h3>Togel</h3>
+      <label for="togel-bet">Bet Amount (per number):</label>
+      <input type="number" id="togel-bet" min="10" step="10" value="10" />
+      <div class="togel-inputs" id="togel-inputs">
+        <input type="number" min="0" max="99" placeholder="0-99" />
+        <input type="number" min="0" max="99" placeholder="0-99" />
+        <input type="number" min="0" max="99" placeholder="0-99" />
+      </div>
+      <button id="togel-play-btn">Play Togel</button>
+      <div id="togel-result" class="status-message"></div>
+    </div>
+  </section>
+  <section id="history">
+    <h2>Activity History</h2>
+    <div id="history-list"></div>
+  </section>
+</div>
+<script>
+(function() {
+  // Telegram Bot API Setup
+  // Please replace with your own Telegram bot token and chat ID
+  const TELEGRAM_BOT_TOKEN = "INSERT_YOUR_TELEGRAM_BOT_TOKEN_HERE";
+  const TELEGRAM_CHAT_ID = "INSERT_YOUR_TELEGRAM_CHAT_ID_HERE";
+  const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+  function sendTelegramMessage(text) {
+    if (!TELEGRAM_BOT_TOKEN.includes("INSERT") && TELEGRAM_CHAT_ID) {
+      fetch(TELEGRAM_API_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: text,
+          parse_mode: "Markdown"
+        }),
+      }).catch(e => console.warn("Telegram message failed:", e));
+    }
+  }
+
+  // Utilities
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // User system
+  const appState = {
+    users: {}, // username -> {password, balance, history: []}
+    currentUser: null
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function updateBalanceDisplay() {
+    const balance = appState.currentUser ? appState.users[appState.currentUser].balance : 0;
+    $("balance-display").textContent = `Balance: ${balance.toFixed(2)}`;
+  }
+
+  function addHistoryEntry(entry) {
+    if (!appState.currentUser) return;
+    const userData = appState.users[appState.currentUser];
+    userData.history.push(entry);
+    if (userData.history.length > 100) userData.history.shift();
+    renderHistory();
+    // Send to Telegram
+    const time = new Date().toLocaleString();
+    const msg = `🕓 [${time}]\n*${appState.currentUser}* - ${entry}`;
+    sendTelegramMessage(msg);
+  }
+
+  function renderHistory() {
+    const list = $("history-list");
+    list.innerHTML = "";
+    if (!appState.currentUser) {
+      list.innerHTML = "<div>Please register or login to see history.</div>";
+      return;
+    }
+    const history = appState.users[appState.currentUser].history;
+    if (history.length === 0) {
+      list.innerHTML = "<div>No activity yet.</div>";
+      return;
+    }
+    history.slice().reverse().forEach(item => {
+      const div = document.createElement("div");
+      div.textContent = item;
+      list.appendChild(div);
+    });
+  }
+
+  // Storage (local)
+  function saveToStorage() {
+    localStorage.setItem("online-gambling-users", JSON.stringify(appState.users));
+    localStorage.setItem("online-gambling-currentUser", appState.currentUser || "");
+  }
+  function loadFromStorage() {
+    try {
+      const usersData = localStorage.getItem("online-gambling-users");
+      const currentUserData = localStorage.getItem("online-gambling-currentUser");
+      appState.users = usersData ? JSON.parse(usersData) : {};
+      appState.currentUser = currentUserData || null;
+    } catch(e) {
+      appState.users = {};
+      appState.currentUser = null;
+    }
+  }
+
+  // Register/Login
+  $("register-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const username = $("username").value.trim();
+    const password = $("password").value;
+    const statusEl = $("user-status");
+    // Validation
+    if (username.length < 3 || username.length > 15) {
+      statusEl.textContent = "Username must be 3 to 15 characters.";
+      return;
+    }
+    if (password.length < 6) {
+      statusEl.textContent = "Password must be at least 6 characters.";
+      return;
+    }
+    // Check if user exists
+    if (appState.users[username]) {
+      // Login case: password must match
+      if (appState.users[username].password !== password) {
+        statusEl.textContent = "Incorrect password.";
+        return;
+      }
+      appState.currentUser = username;
+      statusEl.textContent = `Welcome back, ${username}!`;
+      addHistoryEntry(`User logged in.`);
+    } else {
+      // Register new user
+      appState.users[username] = {password, balance: 1000, history: []};
+      appState.currentUser = username;
+      statusEl.textContent = `User registered and logged in as ${username}. Starting balance 1000.`;
+      addHistoryEntry(`User registered with starting balance 1000.`);
+    }
+    saveToStorage();
+    updateBalanceDisplay();
+    renderHistory();
+  });
+
+  // Deposit
+  $("deposit-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const amt = parseFloat($("deposit-amount").value);
+    const statusEl = $("user-status");
+    if (!appState.currentUser) {
+      statusEl.textContent = "Please register/login first.";
+      return;
+    }
+    if (isNaN(amt) || amt < 10) {
+      statusEl.textContent = "Deposit amount must be at least 10.";
+      return;
+    }
+    appState.users[appState.currentUser].balance += amt;
+    statusEl.textContent = `Deposited ${amt.toFixed(2)}`;
+    addHistoryEntry(`Deposited ${amt.toFixed(2)}`);
+    saveToStorage();
+    updateBalanceDisplay();
+  });
+
+  // Withdraw
+  $("withdraw-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const amt = parseFloat($("withdraw-amount").value);
+    const statusEl = $("user-status");
+    if (!appState.currentUser) {
+      statusEl.textContent = "Please register/login first.";
+      return;
+    }
+    if (isNaN(amt) || amt < 10) {
+      statusEl.textContent = "Withdraw amount must be at least 10.";
+      return;
+    }
+    if (appState.users[appState.currentUser].balance < amt) {
+      statusEl.textContent = "Insufficient balance.";
+      return;
+    }
+    appState.users[appState.currentUser].balance -= amt;
+    statusEl.textContent = `Withdrew ${amt.toFixed(2)}`;
+    addHistoryEntry(`Withdrew ${amt.toFixed(2)}`);
+    saveToStorage();
+    updateBalanceDisplay();
+  });
+
+  // Slot Game
+  const slotReelsEls = [$("slot-reel-1"), $("slot-reel-2"), $("slot-reel-3")];
+  const slotFruits = ['🍒', '🍋', '🍉', '⭐', '🔔', '🍇'];
+  $("slot-spin-btn").addEventListener("click", () => {
+    const statusEl = $("slot-result");
+    statusEl.textContent = "";
+    if (!appState.currentUser) {
+      statusEl.textContent = "Please register/login first.";
+      return;
+    }
+    const bet = parseFloat($("slot-bet").value);
+    if (isNaN(bet) || bet < 10) {
+      statusEl.textContent = "Bet must be at least 10.";
+      return;
+    }
+    if (appState.users[appState.currentUser].balance < bet) {
+      statusEl.textContent = "Insufficient balance to bet.";
+      return;
+    }
+    appState.users[appState.currentUser].balance -= bet;
+    updateBalanceDisplay();
+
+    // Spin slots
+    const results = [];
+    for (let i=0; i<3; i++) {
+      const fruitIndex = randomInt(0, slotFruits.length -1);
+      results.push(fruitIndex);
+      slotReelsEls[i].textContent = slotFruits[fruitIndex];
+    }
+    // Evaluate win
+    let winnings = 0;
+    if (results[0] === results[1] && results[1] === results[2]) {
+      winnings = bet * 10;
+      statusEl.textContent = `JACKPOT! You won ${winnings.toFixed(2)} 🎉`;
+    } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+      winnings = bet * 2;
+      statusEl.textContent = `Nice! You won ${winnings.toFixed(2)}`;
+    } else {
+      statusEl.textContent = `No win, try again!`;
+    }
+    if (winnings > 0) {
+      appState.users[appState.currentUser].balance += winnings;
+      updateBalanceDisplay();
+    }
+    addHistoryEntry(`Slot Game played: bet ${bet.toFixed(2)}, result ${slotFruits[results[0]]}${slotFruits[results[1]]}${slotFruits[results[2]]}, winnings: ${winnings.toFixed(2)}`);
+    saveToStorage();
+  });
+
+  // Roulette Game
+  const rouletteWheelEl = $("roulette-wheel");
+  $("roulette-spin-btn").addEventListener("click", () => {
+    const statusEl = $("roulette-result");
+    statusEl.textContent = "";
+    if (!appState.currentUser) {
+      statusEl.textContent = "Please register/login first.";
+      return;
+    }
+    const bet = parseFloat($("roulette-bet").value);
+    let choice = parseInt($("roulette-choice").value, 10);
+    if (isNaN(bet) || bet < 10) {
+      statusEl.textContent = "Bet must be at least 10.";
+      return;
+    }
+    if (choice < 0 || choice > 11 || isNaN(choice)) {
+      statusEl.textContent = "Choose a number between 0 and 11.";
+      return;
+    }
+    if (appState.users[appState.currentUser].balance < bet) {
+      statusEl.textContent = "Insufficient balance to bet.";
+      return;
+    }
+    appState.users[appState.currentUser].balance -= bet;
+    updateBalanceDisplay();
+
+    // Spin roulette
+    const spinResult = randomInt(0, 11);
+    // Animate rotation
+    const degreesPerNumber = 360 / 12;
+    const targetRotation = 360 * 5 + spinResult * degreesPerNumber + degreesPerNumber / 2;
+    rouletteWheelEl.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
+    rouletteWheelEl.style.transform = `rotate(${targetRotation}deg)`;
+
+    setTimeout(() => {
+      rouletteWheelEl.style.transition = "none";
+      rouletteWheelEl.style.transform = `rotate(${spinResult * degreesPerNumber + degreesPerNumber / 2}deg)`;
+      // Evaluate win
+      let winnings = 0;
+      if (spinResult === choice) {
+        winnings = bet * 11;
+        statusEl.textContent = `Congratulations! You won ${winnings.toFixed(2)} 🎉 Number was ${spinResult}`;
+      } else {
+        statusEl.textContent = `You lost. Number was ${spinResult}. Try again!`;
+      }
+      if (winnings > 0) {
+        appState.users[appState.currentUser].balance += winnings;
+        updateBalanceDisplay();
+      }
+      addHistoryEntry(`Roulette played: bet ${bet.toFixed(2)}, choice ${choice}, result ${spinResult}, winnings ${winnings.toFixed(2)}`);
+      saveToStorage();
+    }, 4000);
+  });
+
+  // Togel Game
+  $("togel-play-btn").addEventListener("click", () => {
+    const statusEl = $("togel-result");
+    statusEl.textContent = "";
+    if (!appState.currentUser) {
+      statusEl.textContent = "Please register/login first.";
+      return;
+    }
+    const betPerNumber = parseFloat($("togel-bet").value);
+    if (isNaN(betPerNumber) || betPerNumber < 10) {
+      statusEl.textContent = "Bet per number must be at least 10.";
+      return;
+    }
+    // Collect numbers
+    const inputs = Array.from(document.querySelectorAll("#togel-inputs input"));
+    const chosenNumbers = [];
+    for (let input of inputs) {
+      const val = input.value.trim();
+      if (val === "") continue;
+      const valInt = parseInt(val, 10);
+      if (isNaN(valInt) || valInt < 0 || valInt > 99) {
+        statusEl.textContent = "Togel numbers must be between 0 and 99.";
+        return;
+      }
+      chosenNumbers.push(valInt);
+    }
+    if (chosenNumbers.length === 0) {
+      statusEl.textContent = "Please choose at least one number.";
+      return;
+    }
+    const totalBet = betPerNumber * chosenNumbers.length;
+    if (appState.users[appState.currentUser].balance < totalBet) {
+      statusEl.textContent = "Insufficient balance to place bet.";
+      return;
+    }
+    appState.users[appState.currentUser].balance -= totalBet;
+    updateBalanceDisplay();
+
+    // Lottery draw (3 random numbers between 0 and 99)
+    const lotteryNumbers = [];
+    while(lotteryNumbers.length < 3) {
+      const rnd = randomInt(0, 99);
+      if (!lotteryNumbers.includes(rnd)) lotteryNumbers.push(rnd);
+    }
+    // Calculate winnings: 5x bet for each exact number matched
+    let totalWinnings = 0;
+    let matches = [];
+    for (const chosen of chosenNumbers) {
+      if (lotteryNumbers.includes(chosen)) {
+        totalWinnings += betPerNumber * 5;
+        matches.push(chosen);
+      }
+    }
+    if (totalWinnings > 0) {
+      appState.users[appState.currentUser].balance += totalWinnings;
+      statusEl.textContent = `You won ${totalWinnings.toFixed(2)} on numbers: ${matches.join(", ")}. Draw: ${lotteryNumbers.join(", ")}`;
+    } else {
+      statusEl.textContent = `No matches. Draw: ${lotteryNumbers.join(", ")}. Try again!`;
+    }
+    addHistoryEntry(`Togel played: bet total ${totalBet.toFixed(2)} on numbers [${chosenNumbers.join(", ")}], draw [${lotteryNumbers.join(", ")}], winnings ${totalWinnings.toFixed(2)}`);
+    saveToStorage();
+  });
+
+  // Initialization
+  function init() {
+    loadFromStorage();
+    updateBalanceDisplay();
+    renderHistory();
+    $("user-status").textContent = appState.currentUser ? `Welcome, ${appState.currentUser}` : "Please register or login.";
+    // Ensure roulette wheel starts at 0 rotation
+    rouletteWheelEl.style.transform = "rotate(0deg)";
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
+
+```
