@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anti-DDoS Protected Page</title>
+<style>
+  body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a2e;
+    color: #eaeaea;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+  }
+  #challenge {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 2rem 3rem;
+    box-shadow: 0 0 15px rgba(50, 115, 220, 0.6);
+    width: 100%;
+    max-width: 400px;
+  }
+  #message {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+  #countdown {
+    font-weight: 700;
+    color: #58a6ff;
+  }
+  #content {
+    display: none;
+    font-size: 1.25rem;
+  }
+</style>
+</head>
+<body>
+<div id="challenge" role="main" aria-live="polite">
+  <div id="message">Please wait while we verify your connection.</div>
+  <div id="countdown">5</div>
+  <div id="content">
+    <h1>Welcome to Your Protected Website</h1>
+    <p>You have passed the anti-DDoS verification.</p>
+  </div>
+</div>
+<script>
+  // Simple JavaScript challenge acting like a wait page to reduce direct flood hits
+  (function(){
+    var countdownElement = document.getElementById('countdown');
+    var messageElement = document.getElementById('message');
+    var contentElement = document.getElementById('content');
+    var challengeElement = document.getElementById('challenge');
+    var seconds = 5;
+
+    function tick(){
+      seconds--;
+      if(seconds > 0){
+        countdownElement.textContent = seconds;
+      } else {
+        // Show content after wait time
+        messageElement.style.display = 'none';
+        countdownElement.style.display = 'none';
+        contentElement.style.display = 'block';
+        // Upgrade security headers or tokens can be handled server-side beyond this page
+      }
+    }
+    var intervalId = setInterval(tick, 1000);
+
+    // IP check and rate limiting cannot be done in pure client-side HTML; this acts as minimal delay to reduce bots/DDoS effect
+  })();
+</script>
+</body>
+</html>
+
+```
