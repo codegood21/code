@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Malware Control Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  header {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+    color: #ff3c3c;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px #ff3c3ccc;
+  }
+  section {
+    background: #1f1f1f;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 0 15px #ff3c3c44;
+    width: 100%;
+    max-width: 480px;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid #ff3c3c;
+    padding-bottom: 0.25rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+  .status {
+    background: #333;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: monospace;
+    height: 120px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    user-select: text;
+  }
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #222;
+    color: #eee;
+  }
+  button {
+    background: #ff3c3c;
+    border: none;
+    color: white;
+    padding: 0.75rem 1.25rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+  button:hover {
+    background: #e33232;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #555;
+    user-select: none;
+  }
+  @media (max-width: 540px) {
+    section {
+      padding: 1rem 1rem;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>Malware Control Panel</header>
+<section>
+  <h2>Target Control</h2>
+  <label for="targetIp">Target IP Address</label>
+  <input type="text" id="targetIp" placeholder="e.g., 192.168.1.10" />
+  
+  <label for="commandSelect">Command</label>
+  <select id="commandSelect">
+    <option value="screenshot">Take Screenshot</option>
+    <option value="keylogger_start">Start Keylogger</option>
+    <option value="keylogger_stop">Stop Keylogger</option>
+    <option value="get_files">Download Files</option>
+    <option value="execute_cmd">Execute Command</option>
+    <option value="system_info">Get System Info</option>
+    <option value="restart">Restart PC</option>
+    <option value="shutdown">Shutdown PC</option>
+  </select>
+
+  <label for="cmdInput" id="cmdLabel" style="display:none;">Command</label>
+  <input type="text" id="cmdInput" placeholder="Enter command here" style="display:none;" />
+
+  <button id="sendBtn">Send Command</button>
+
+  <h2>Status & Logs</h2>
+  <div class="status" id="logArea" tabindex="0" aria-live="polite" aria-label="Command log"></div>
+</section>
+<div class="footer">© 2024 Malware Panel - For authorized use only</div>
+
+<script>
+  (function(){
+    const logArea = document.getElementById('logArea');
+    const sendBtn = document.getElementById('sendBtn');
+    const cmdInput = document.getElementById('cmdInput');
+    const cmdLabel = document.getElementById('cmdLabel');
+    const commandSelect = document.getElementById('commandSelect');
+    const targetIpInput = document.getElementById('targetIp');
+
+    function log(message, isError = false) {
+      const time = new Date().toLocaleTimeString();
+      const span = document.createElement('span');
+      span.textContent = `[${time}] ${message}\n`;
+      if (isError) {
+        span.style.color = '#ff6b6b';
+      }
+      logArea.appendChild(span);
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    // Show or hide command input depending on selected command
+    function checkCommandInput() {
+      if (commandSelect.value === 'execute_cmd' || commandSelect.value === 'get_files') {
+        cmdInput.style.display = '';
+        cmdLabel.style.display = '';
+      } else {
+        cmdInput.style.display = 'none';
+        cmdLabel.style.display = 'none';
+        cmdInput.value = '';
+      }
+    }
+    commandSelect.addEventListener('change', checkCommandInput);
+    checkCommandInput();
+
+    // Simulate sending command - replace with actual backend websocket/fetch api code
+    function sendCommand() {
+      const ip = targetIpInput.value.trim();
+      if (!ip) {
+        alert('Please enter a target IP address.');
+        return;
+      }
+      const command = commandSelect.value;
+      const cmdArg = cmdInput.value.trim();
+      let payload = { target: ip, command: command };
+      if (cmdArg) payload.arg = cmdArg;
+
+      log(`Sending command "${command}"${cmdArg ? ` with argument "${cmdArg}"` : ''} to ${ip}`);
+
+      // Simulated response delay
+      setTimeout(() => {
+        log(`Response from ${ip}: Command "${command}" executed successfully.`);
+      }, 1200);
+    }
+
+    sendBtn.addEventListener('click', sendCommand);
+  })();
+</script>
+</body>
+</html>
+
+```
