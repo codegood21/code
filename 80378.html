@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Payment Button</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .payment-container {
+    background: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 320px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  .amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2575fc;
+    margin-bottom: 2rem;
+  }
+
+  button.payment-btn {
+    background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 1.2rem 2rem;
+    width: 100%;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(38, 43, 123, 0.5);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+  button.payment-btn:hover,
+  button.payment-btn:focus {
+    background: linear-gradient(90deg, #1e5bdc 0%, #5a09bf 100%);
+    box-shadow: 0 12px 25px rgba(38, 43, 123, 0.7);
+  }
+
+  button.payment-btn:active {
+    transform: scale(0.98);
+  }
+
+  .confirmation {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: #28a745;
+    font-weight: 700;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="payment-container" role="main" aria-label="Payment Section">
+    <h1 class="title">Complete Your Payment</h1>
+    <div class="amount" aria-live="polite" aria-atomic="true">$49.99</div>
+    <button class="payment-btn" id="payButton" aria-label="Pay $49.99 now">
+      Pay Now
+    </button>
+    <div class="confirmation" id="confirmationMessage" role="alert" aria-live="assertive">
+      Payment successful! Thank you for your purchase.
+    </div>
+  </div>
+
+<script>
+  const payButton = document.getElementById('payButton');
+  const confirmationMessage = document.getElementById('confirmationMessage');
+
+  payButton.addEventListener('click', () => {
+    payButton.disabled = true;
+    payButton.textContent = 'Processing...';
+
+    setTimeout(() => {
+      payButton.style.display = 'none';
+      confirmationMessage.style.display = 'block';
+    }, 2000);
+  });
+</script>
+</body>
+</html>
+
+```
