@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stalk Dana - Cek Informasi Pengguna Dana</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    width: 360px;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    background-color: #1b5e20;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #a5d6a7;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(27,94,32,0.5);
+  }
+  button:hover {
+    background-color: #4caf50;
+    color: #1b5e20;
+    box-shadow: 0 6px 20px rgba(76,175,80,0.6);
+  }
+  .result {
+    margin-top: 1.5rem;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #a5d6a7cc;
+  }
+  .footer a {
+    color: #a5d6a7cc;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Stalk Dana</h1>
+    <label for="phone">Masukkan Nomor Dana</label>
+    <input type="text" id="phone" name="phone" placeholder="Contoh: 081234567890" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="off" />
+    <button id="checkBtn" aria-label="Cek informasi Dana">Cek Dana</button>
+    <div id="result" class="result" aria-live="polite" aria-atomic="true"></div>
+    <div class="footer">
+      Powered by <a href="https://dana.id" target="_blank" rel="noopener noreferrer">Dana.id</a>
+    </div>
+  </div>
+<script>
+  (() => {
+    const phoneInput = document.getElementById('phone');
+    const checkBtn = document.getElementById('checkBtn');
+    const resultDiv = document.getElementById('result');
+
+    // Simple validation for Indonesian phone numbers (start with 08 or +628)
+    function isValidPhoneNumber(number) {
+      const cleaned = number.replace(/\D/g, '');
+      return /^(08|628)\d{6,13}$/.test(cleaned);
+    }
+
+    // Simulated API call function with mock data
+    function fetchDanaInfo(phone) {
+      return new Promise((resolve) => {
+        // Mock some fake user info based on phone number
+        const cleaned = phone.replace(/\D/g, '');
+        const userData = {
+          '081234567890': {
+            name: 'Budi Santoso',
+            balance: 'Rp 1.250.000',
+            registered: '2021-08-15',
+            status: 'Aktif'
+          },
+          '082112345678': {
+            name: 'Sari Dewi',
+            balance: 'Rp 3.870.000',
+            registered: '2020-11-02',
+            status: 'Aktif'
+          }
+        };
+        setTimeout(() => {
+          if(userData.hasOwnProperty(cleaned)) {
+            resolve({...userData[cleaned], phone: cleaned});
+          } else {
+            resolve(null);
+          }
+        }, 1200);
+      });
+    }
+
+    // Clear results
+    function clearResult() {
+      resultDiv.textContent = '';
+    }
+
+    // Show loading state
+    function showLoading() {
+      resultDiv.textContent = 'Memuat data...';
+    }
+
+    // Show error message
+    function showError(msg) {
+      resultDiv.textContent = msg;
+    }
+
+    // Display user info nicely
+    function displayInfo(data) {
+      if (!data) {
+        showError('Data tidak ditemukan untuk nomor Dana ini.');
+        return;
+      }
+      resultDiv.textContent =
+        `Informasi Dana\n` +
+        `--------------------------\n` +
+        `Nama       : ${data.name}\n` +
+        `Nomor      : +62${data.phone.startsWith('0') ? data.phone.slice(1) : data.phone}\n` +
+        `Saldo      : ${data.balance}\n` +
+        `Terdaftar  : ${data.registered}\n` +
+        `Status     : ${data.status}`;
+    }
+
+    // Handler on button click
+    checkBtn.addEventListener('click', async () => {
+      clearResult();
+      const phone = phoneInput.value.trim();
+      if (!isValidPhoneNumber(phone)) {
+        showError('Nomor Dana tidak valid. Masukkan nomor dengan format yang benar, misalnya 081234567890.');
+        return;
+      }
+      showLoading();
+      try {
+        const data = await fetchDanaInfo(phone);
+        displayInfo(data);
+      } catch (err) {
+        showError('Terjadi kesalahan saat mengambil data. Silakan coba lagi.');
+      }
+    });
+
+    // Optional: allow enter key on input to trigger check
+    phoneInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        checkBtn.click();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
