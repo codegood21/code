@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Tanya Jawab Pintar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            user-select: none;
+        }
+        .container {
+            background: #1c1c1e;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        header {
+            background: #2c2c2e;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #50e3c2;
+        }
+        #chat {
+            flex-grow: 1;
+            padding: 1rem 1.5rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            min-height: 400px;
+        }
+        .message {
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            max-width: 85%;
+        }
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        .avatar {
+            background: #50e3c2;
+            color: #1c1c1e;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            user-select: none;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            box-shadow: 0 0 6px #50e3c2aa;
+        }
+        .avatar.ai {
+            background: #4a90e2;
+            box-shadow: 0 0 8px #4a90e2cc;
+            color: white;
+        }
+        .text {
+            padding: 0.7rem 1rem;
+            border-radius: 20px;
+            background: #2c2c2e;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgb(0 0 0 / 0.3);
+            word-break: break-word;
+        }
+        .message.user .text {
+            background: #50e3c2;
+            color: #1c1c1e;
+            box-shadow: 0 2px 8px rgb(80 227 194 / 0.6);
+        }
+        form {
+            display: flex;
+            background: #2c2c2e;
+            padding: 1rem 1.5rem;
+            border-top: 2px solid #50e3c2;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            border-radius: 40px;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            outline-offset: 4px;
+            font-family: inherit;
+        }
+        input[type="text"]:focus {
+            outline: 2px solid #4a90e2;
+        }
+        button {
+            margin-left: 1rem;
+            background: #4a90e2;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        button:hover:not(:disabled) {
+            background: #3678d6;
+        }
+        button:disabled {
+            cursor: not-allowed;
+            background: #6b6b6b;
+        }
+        /* Scrollbar */
+        #chat::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat::-webkit-scrollbar-track {
+            background: #1c1c1e;
+        }
+        #chat::-webkit-scrollbar-thumb {
+            background: #50e3c2;
+            border-radius: 4px;
+        }
+        @media (max-width: 480px) {
+            header {
+                font-size: 1.2rem;
+            }
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" role="main" aria-label="AI Tanya Jawab">
+        <header>AI Tanya Jawab Pintar</header>
+        <div id="chat" aria-live="polite" aria-atomic="false" role="log"></div>
+        <form id="form" aria-label="Formulir tanya jawab">
+            <input type="text" id="input" autocomplete="off" placeholder="Tanya apa saja..." aria-label="Input pertanyaan" required/>
+            <button type="submit" aria-label="Kirim pertanyaan">Kirim</button>
+        </form>
+    </div>
+
+    <script>
+        const chat = document.getElementById('chat');
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+
+        // Simple AI response generator (simulate smarter AI with keyword checks and fallback)
+        function generateAIResponse(question) {
+            question = question.toLowerCase().trim();
+
+            const greetings = ['hai', 'halo', 'selamat pagi', 'selamat siang', 'selamat malam', 'halo ai'];
+            for (let greet of greetings) {
+                if (question.includes(greet)) {
+                    return "Halo! Ada yang bisa saya bantu hari ini?";
+                }
+            }
+
+            if (question.includes('siapa kamu') || question.includes('kamu siapa')) {
+                return "Saya adalah AI Tanya Jawab Pintar yang siap membantu Anda.";
+            }
+
+            if (question.includes('apa itu openai')) {
+                return "OpenAI adalah perusahaan riset dan pengembangan AI yang membuat teknologi seperti saya.";
+            }
+
+            if (question.includes('cuaca')) {
+                return "Maaf, saya belum bisa mengakses data cuaca secara real-time.";
+            }
+
+            if (question.includes('terima kasih') || question.includes('makasih')) {
+                return "Sama-sama! Senang bisa membantu.";
+            }
+
+            if (question.endsWith('?')) {
+                return "Pertanyaan yang menarik! Namun saya adalah AI sederhana, mohon maaf bila belum bisa menjawabnya dengan sempurna.";
+            }
+
+            return "Maaf, saya tidak mengerti. Bisa coba tanyakan dengan cara lain?";
+        }
+
+        function appendMessage(text, sender) {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message', sender);
+
+            const avatarEl = document.createElement('div');
+            avatarEl.classList.add('avatar');
+            avatarEl.classList.add(sender === 'ai' ? 'ai' : 'user');
+            avatarEl.textContent = sender === 'ai' ? 'AI' : 'K';
+
+            const textEl = document.createElement('div');
+            textEl.classList.add('text');
+            textEl.textContent = text;
+
+            messageEl.appendChild(avatarEl);
+            messageEl.appendChild(textEl);
+            chat.appendChild(messageEl);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function simulateTyping(text, sender) {
+            return new Promise(resolve => {
+                const messageEl = document.createElement('div');
+                messageEl.classList.add('message', sender);
+
+                const avatarEl = document.createElement('div');
+                avatarEl.classList.add('avatar');
+                avatarEl.classList.add(sender === 'ai' ? 'ai' : 'user');
+                avatarEl.textContent = sender === 'ai' ? 'AI' : 'K';
+
+                const textEl = document.createElement('div');
+                textEl.classList.add('text');
+                messageEl.appendChild(avatarEl);
+                messageEl.appendChild(textEl);
+                chat.appendChild(messageEl);
+                chat.scrollTop = chat.scrollHeight;
+
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        textEl.textContent += text.charAt(i);
+                        i++;
+                        chat.scrollTop = chat.scrollHeight;
+                        setTimeout(type, 20 + Math.random() * 40);
+                    } else {
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const question = input.value.trim();
+            if (!question) return;
+            appendMessage(question, 'user');
+            input.value = '';
+            input.disabled = true;
+            form.querySelector('button').disabled = true;
+
+            const response = generateAIResponse(question);
+            await simulateTyping(response, 'ai');
+
+            input.disabled = false;
+            form.querySelector('button').disabled = false;
+            input.focus();
+        });
+
+        // Focus input on load
+        window.onload = () => {
+            input.focus();
+        };
+    </script>
+</body>
+</html>
+
+```
