@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hosting Store - VPS, Pterodactyl Panel, Nokos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+  header p {
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+  main {
+    max-width: 1200px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+  }
+  .grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .card {
+    background: white;
+    padding: 1.8rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(70,130,180,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(70,130,180,0.2);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #0052d4;
+  }
+  .card p {
+    flex-grow: 1;
+    margin: 1rem 0 1.5rem;
+    color: #555;
+  }
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4364f7;
+    margin-bottom: 1.5rem;
+  }
+  .btn {
+    background: #4364f7;
+    color: white;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .btn:hover {
+    background: #2a48c6;
+  }
+  footer {
+    background: #0052d4;
+    color: white;
+    text-align: center;
+    padding: 1rem 1rem;
+    font-size: 0.9rem;
+  }
+  /* Section Titles */
+  .section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #0052d4;
+    letter-spacing: 1px;
+  }
+  /* Feature list inside cards */
+  ul.features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+  ul.features li {
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-left: 22px;
+    color: #333;
+    font-weight: 500;
+  }
+  ul.features li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #4364f7;
+    font-weight: 700;
+  }
+  /* Responsive Header text */
+  @media (max-width: 450px) {
+    header h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <h1>Hosting Store</h1>
+  <p>Jual VPS, Panel Pterodactyl, dan Nokos dengan harga terbaik</p>
+</header>
+<main>
+  <section>
+    <h2 class="section-title">Layanan VPS Kami</h2>
+    <div class="grid">
+      <article class="card">
+        <h2>VPS Basic</h2>
+        <p>Solusi VPS yang cocok untuk website pribadi dan aplikasi kecil, dengan performa stabil dan harga terjangkau.</p>
+        <ul class="features">
+          <li>1 CPU Core</li>
+          <li>1 GB RAM</li>
+          <li>20 GB SSD Storage</li>
+          <li>1 TB Bandwidth</li>
+          <li>OS pilihan Linux/Windows</li>
+        </ul>
+        <div class="price">Rp 120.000 / bulan</div>
+        <button class="btn" onclick="alert('Terima kasih sudah memilih VPS Basic!')">Pesan Sekarang</button>
+      </article>
+      <article class="card">
+        <h2>VPS Pro</h2>
+        <p>VPS dengan sumber daya lebih besar, sangat baik untuk bisnis menengah dan aplikasi yang lebih berat.</p>
+        <ul class="features">
+          <li>2 CPU Cores</li>
+          <li>4 GB RAM</li>
+          <li>80 GB SSD Storage</li>
+          <li>4 TB Bandwidth</li>
+          <li>OS pilihan Linux/Windows</li>
+        </ul>
+        <div class="price">Rp 450.000 / bulan</div>
+        <button class="btn" onclick="alert('Terima kasih sudah memilih VPS Pro!')">Pesan Sekarang</button>
+      </article>
+      <article class="card">
+        <h2>VPS Enterprise</h2>
+        <p>Solusi VPS tingkat lanjut untuk kebutuhan bisnis besar dan deployment aplikasi berskala besar.</p>
+        <ul class="features">
+          <li>4 CPU Cores</li>
+          <li>16 GB RAM</li>
+          <li>320 GB SSD Storage</li>
+          <li>10 TB Bandwidth</li>
+          <li>OS pilihan Linux/Windows</li>
+        </ul>
+        <div class="price">Rp 1.500.000 / bulan</div>
+        <button class="btn" onclick="alert('Terima kasih sudah memilih VPS Enterprise!')">Pesan Sekarang</button>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Panel Pterodactyl</h2>
+    <div class="grid">
+      <article class="card">
+        <h2>Lisensi Panel Pterodactyl</h2>
+        <p>Panel game server terbaik, open source, mudah di gunakan dan sangat powerful untuk manajemen VPS dan server game Anda.</p>
+        <ul class="features">
+          <li>Full akses dan kontrol server</li>
+          <li>Dashboard pengguna modern</li>
+          <li>Dukungan container dan virtualization</li>
+          <li>Integrasi dengan sistem pembayaran</li>
+          <li>Backup dan restore mudah</li>
+        </ul>
+        <div class="price">Rp 1.000.000 / lisensi</div>
+        <button class="btn" onclick="alert('Terima kasih sudah memilih Lisensi Panel Pterodactyl!')">Pesan Sekarang</button>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Nokos</h2>
+    <div class="grid">
+      <article class="card">
+        <h2>Paket Apk Nokos</h2>
+        <p>Paket lengkap aplikasi Nokos untuk mengelola hosting dengan fitur terbaik dan kemudahan operasional.</p>
+        <ul class="features">
+          <li>Manajemen server lengkap</li>
+          <li>Integrasi billing otomatis</li>
+          <li>Monitoring sumber daya real-time</li>
+          <li>Multi user dan tingkat keamanan tinggi</li>
+          <li>Support 24/7 dari tim ahli</li>
+        </ul>
+        <div class="price">Rp 750.000 / paket</div>
+        <button class="btn" onclick="alert('Terima kasih sudah memilih Paket Apk Nokos!')">Pesan Sekarang</button>
+      </article>
+    </div>
+  </section>
+</main>
+<footer>
+  &copy; 2024 Hosting Store. Semua hak cipta dilindungi.
+</footer>
+</body>
+</html>
+
+```
