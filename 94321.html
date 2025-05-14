@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Virtusim Style Web</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #0e0e0e;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #1f1f1f;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #6272ff;
+    text-transform: uppercase;
+    color: #6272ff;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
+    margin: 2rem auto;
+    background: #181818;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #6272ff44;
+    padding: 2rem;
+  }
+  main h2 {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    color: #50fa7b;
+    text-align: center;
+  }
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .contact-list li {
+    background: #222222;
+    margin: 0.75rem 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .contact-list li:hover {
+    background: #44475a;
+  }
+  .icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 1rem;
+    filter: invert(63%) sepia(95%) saturate(509%) hue-rotate(157deg) brightness(89%) contrast(88%);
+  }
+  .contact-text {
+    flex-grow: 1;
+    font-weight: 500;
+    color: #f8f8f2;
+    font-size: 1.1rem;
+    user-select: text;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: #6272ffaa;
+  }
+</style>
+</head>
+<body>
+<header>Virtusim Contacts</header>
+<main>
+  <h2>Contact Info</h2>
+  <ul class="contact-list">
+    <li onclick="window.open('https://wa.me/1234567890','_blank')">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.65 15.05a4.5 4.5 0 0 1-6.3-6.3m3.6-1.005a7.53 7.53 0 0 1 5.175 2.175 7.53 7.53 0 0 1 2.175 5.175 7.62 7.62 0 0 1-1.65 5.625L18.6 21zm-7.05-4.95v1.5M4 4v1.5M20 4v1.5M7.5 4.5v1.5M10.5 4.5v1.5"/></svg>
+      <span class="contact-text">WhatsApp: +1234567890</span>
+    </li>
+    <li onclick="window.open('https://t.me/username','_blank')">
+      <svg class="icon" viewBox="0 0 24 24" fill="#0088cc" xmlns="http://www.w3.org/2000/svg"><path d="M21 3.004a1 1 0 0 0-1.09 1.09l-3.485 12.078a.983.983 0 0 1-.742.742l-3.536 1.174a.75.75 0 0 1-1.007-.716v-3.335l-6.716-5.273a.75.75 0 0 1 .254-1.27l17.302-6.33z"/></svg>
+      <span class="contact-text">Telegram: @username</span>
+    </li>
+    <li onclick="window.open('https://instagram.com/username','_blank')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.73-4.73 4 4 0 0 1 4.73 4.73z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+      <span class="contact-text">Instagram: @username</span>
+    </li>
+  </ul>
+</main>
+<footer>© 2024 Virtusim. All rights reserved.</footer>
+</body>
+</html>
+
+```
