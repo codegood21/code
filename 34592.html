@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Topup Game - Cepat dan Aman</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f2027;  /* fallback for old browsers */
+    background: linear-gradient(135deg, #2c5364, #203a43, #0f2027);
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    background-color: #1a515d;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    color: #ffe600;
+    text-shadow: 0 0 8px #ffe600;
+  }
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 480px;
+    background-color: rgba(255,255,255,0.05);
+    margin: 2rem;
+    border-radius: 12px;
+    padding: 1.5rem 2rem 2rem;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  }
+  main h2 {
+    color: #ffcc00;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+    text-shadow: 0 0 5px #ffcc00;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #fff;
+  }
+  select, input[type="text"], input[type="number"] {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+  }
+  select {
+    background-color: #1e3a47;
+    color: #fff;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0L5 5L10 0H0Z" fill="%23fff"/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 10px 5px;
+  }
+  input[type="text"], input[type="number"] {
+    background-color: #213a46;
+    color: #ddd;
+  }
+  button {
+    background: #ffc600;
+    color: #222;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 0 12px #ffc600;
+  }
+  button:hover {
+    background-color: #e6b800;
+    color: #111;
+  }
+  .item-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .game-item {
+    background: #0a2e3e;
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    flex: 1 0 45%;
+    max-width: 45%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .game-item.selected,
+  .game-item:hover {
+    background: #ffc600;
+    color: #222;
+    box-shadow: 0 6px 16px #ffdd33;
+  }
+  .game-item h3 {
+    margin: 0 0 0.6rem;
+    font-weight: 600;
+  }
+  .game-item p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: inherit;
+  }
+  .summary {
+    margin-top: 2rem;
+    border-top: 1px solid #ffc600aa;
+    padding-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffc600;
+    text-align: center;
+  }
+  footer {
+    width: 100%;
+    background-color: #1a515d;
+    color: #eee;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.85rem;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+  }
+  @media (max-width: 480px) {
+    main {
+      margin: 1rem;
+      padding: 1rem 1.3rem 1.5rem;
+    }
+    .game-item {
+      max-width: 100%;
+      flex: none;
+    }
+    button {
+      font-size: 1rem;
+      padding: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Topup Game Cepat &amp; Aman</h1>
+</header>
+<main>
+  <h2>Pilih Game dan Paket Topup</h2>
+  <form id="topupForm">
+    <label for="gameSelect">Pilih Game</label>
+    <select id="gameSelect" name="game" required>
+      <option value="" disabled selected>-- Pilih Game --</option>
+      <option value="mobile_legends">Mobile Legends</option>
+      <option value="free_fire">Free Fire</option>
+      <option value="pubg_mobile">PUBG Mobile</option>
+      <option value="valorant">Valorant</option>
+      <option value="call_of_duty">Call of Duty Mobile</option>
+    </select>
+
+    <label for="userId">ID Pemain / Username</label>
+    <input type="text" id="userId" name="userId" placeholder="Masukkan ID pemian / username" required />
+
+    <label for="topupAmount">Jumlah Topup (Diamond / UC)</label>
+    <select id="topupAmount" name="amount" required>
+      <option value="" disabled selected>-- Pilih Jumlah Topup --</option>
+    </select>
+
+    <button type="submit">Lanjutkan Pembayaran</button>
+  </form>
+  <div class="summary" id="summary"></div>
+</main>
+<footer>
+  &copy; 2024 Topup Game - Semua Hak Dilindungi
+</footer>
+<script>
+  const topupOptions = {
+    mobile_legends: [
+      { amount: "12 Diamond", price: 12000 },
+      { amount: "50 Diamond", price: 48000 },
+      { amount: "100 Diamond", price: 95000 },
+      { amount: "250 Diamond", price: 235000 },
+      { amount: "500 Diamond", price: 460000 }
+    ],
+    free_fire: [
+      { amount: "10 Diamond", price: 14000 },
+      { amount: "50 Diamond", price: 67000 },
+      { amount: "100 Diamond", price: 130000 },
+      { amount: "500 Diamond", price: 650000 }
+    ],
+    pubg_mobile: [
+      { amount: "60 UC", price: 12000 },
+      { amount: "300 UC", price: 58000 },
+      { amount: "600 UC", price: 114000 },
+      { amount: "1200 UC", price: 228000 }
+    ],
+    valorant: [
+      { amount: "420 Points", price: 59000 },
+      { amount: "850 Points", price: 120000 },
+      { amount: "1700 Points", price: 230000 }
+    ],
+    call_of_duty: [
+      { amount: "60 CP", price: 13500 },
+      { amount: "300 CP", price: 65000 },
+      { amount: "600 CP", price: 125000 }
+    ]
+  };
+
+  const gameSelect = document.getElementById('gameSelect');
+  const topupAmountSelect = document.getElementById('topupAmount');
+  const form = document.getElementById('topupForm');
+  const summaryDiv = document.getElementById('summary');
+
+  function formatRupiah(number) {
+    return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  gameSelect.addEventListener('change', () => {
+    const selectedGame = gameSelect.value;
+    topupAmountSelect.innerHTML = '<option value="" disabled selected>-- Pilih Jumlah Topup --</option>';
+    if (topupOptions[selectedGame]) {
+      topupOptions[selectedGame].forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option.amount;
+        opt.textContent = `${option.amount} - ${formatRupiah(option.price)}`;
+        topupAmountSelect.appendChild(opt);
+      });
+      topupAmountSelect.disabled = false;
+    } else {
+      topupAmountSelect.disabled = true;
+    }
+    summaryDiv.textContent = '';
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const game = gameSelect.options[gameSelect.selectedIndex].text;
+    const userId = form.userId.value.trim();
+    const amount = topupAmountSelect.value;
+    if (!gameSelect.value || !amount || !userId) {
+      summaryDiv.textContent = 'Mohon lengkapi semua data yang diperlukan.';
+      summaryDiv.style.color = '#ff4444';
+      return;
+    }
+    // Get price for selected amount
+    const priceObj = topupOptions[gameSelect.value].find(o => o.amount === amount);
+    const price = priceObj ? priceObj.price : 0;
+
+    summaryDiv.style.color = '#ffc600';
+    summaryDiv.innerHTML = `
+      <p>Topup untuk game: <strong>${game}</strong></p>
+      <p>ID Pemain / Username: <strong>${userId}</strong></p>
+      <p>Jumlah Topup: <strong>${amount}</strong></p>
+      <p>Total Harga: <strong>${formatRupiah(price)}</strong></p>
+      <p style="margin-top:1rem; font-weight:700; color:#00ff99;">Silakan lanjutkan dengan pembayaran melalui metode yang tersedia.</p>
+    `;
+  });
+</script>
+</body>
+</html>
+
+```
