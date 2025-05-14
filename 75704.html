@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CoolStore - Your Online Shop</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f7f9fc;
+    margin: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #0077ff;
+    padding: 1rem 2rem;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  main {
+    flex-grow: 1;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    width: 100%;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 1.5rem;
+  }
+  .product {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .product:hover {
+    transform: translateY(-5px);
+  }
+  .product img {
+    max-width: 100%;
+    object-fit: cover;
+    height: 200px;
+    border-bottom: 1px solid #eee;
+  }
+  .product-info {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .product-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #0077ff;
+  }
+  .price {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 1rem;
+  }
+  button.buy {
+    background: #0077ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  button.buy:hover {
+    background: #005fcc;
+  }
+  #cart {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: 2rem auto 4rem auto;
+  }
+  #cart h2 {
+    margin-top: 0;
+    font-weight: 600;
+    color: #0077ff;
+  }
+  #cart-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 1rem 0 1.5rem 0;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  #cart-list li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #cart-list li:last-child {
+    border-bottom: none;
+  }
+  #cart-list li .item-name {
+    flex: 1;
+  }
+  #cart-list li .item-qty {
+    margin: 0 0.5rem;
+    color: #444;
+  }
+  #cart-list li .item-price {
+    font-weight: 600;
+    color: #222;
+  }
+  #total {
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: right;
+    margin-bottom: 1rem;
+    color: #0077ff;
+  }
+  #checkout-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 0.8rem 0;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #checkout-btn:hover {
+    background: #1e7e34;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 1rem 0;
+    background: #f1f3f6;
+    color: #666;
+    margin-top: auto;
+  }
+</style>
+</head>
+<body>
+<header>CoolStore Online Shop</header>
+<main>
+  <section class="products" aria-label="Product list">
+    <article class="product" data-id="1" data-name="Wireless Headphones" data-price="750000" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1518441902111-6a25551a5d5b?auto=format&fit=crop&w=400&q=80" alt="Wireless Headphones" />
+      <div class="product-info">
+        <h3>Wireless Headphones</h3>
+        <p class="price">IDR 750,000</p>
+        <button class="buy" type="button" tabindex="0">Buy Now</button>
+      </div>
+    </article>
+    <article class="product" data-id="2" data-name="Smart Watch" data-price="1350000" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" alt="Smart Watch" />
+      <div class="product-info">
+        <h3>Smart Watch</h3>
+        <p class="price">IDR 1,350,000</p>
+        <button class="buy" type="button" tabindex="0">Buy Now</button>
+      </div>
+    </article>
+    <article class="product" data-id="3" data-name="Portable Speaker" data-price="500000" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1502885636545-5e8b4536876d?auto=format&fit=crop&w=400&q=80" alt="Portable Speaker" />
+      <div class="product-info">
+        <h3>Portable Speaker</h3>
+        <p class="price">IDR 500,000</p>
+        <button class="buy" type="button" tabindex="0">Buy Now</button>
+      </div>
+    </article>
+    <article class="product" data-id="4" data-name="Gaming Mouse" data-price="320000" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1568646658038-f742c5861431?auto=format&fit=crop&w=400&q=80" alt="Gaming Mouse" />
+      <div class="product-info">
+        <h3>Gaming Mouse</h3>
+        <p class="price">IDR 320,000</p>
+        <button class="buy" type="button" tabindex="0">Buy Now</button>
+      </div>
+    </article>
+  </section>
+
+  <section id="cart" aria-label="Shopping Cart" tabindex="0">
+    <h2>Your Cart</h2>
+    <ul id="cart-list" role="list" aria-live="polite" aria-relevant="all"></ul>
+    <p id="total">Total: IDR 0</p>
+    <button id="checkout-btn" type="button" disabled>Checkout</button>
+  </section>
+</main>
+<footer>
+  &copy; 2024 CoolStore. All rights reserved.
+</footer>
+<script>
+  (() => {
+    const products = document.querySelectorAll('.product');
+    const cartList = document.getElementById('cart-list');
+    const totalEl = document.getElementById('total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    let cart = {};
+
+    function formatCurrency(num) {
+      return 'IDR ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function updateCartUI() {
+      cartList.innerHTML = '';
+      let total = 0;
+      const cartKeys = Object.keys(cart);
+      if (cartKeys.length === 0) {
+        cartList.innerHTML = '<li>Your cart is empty.</li>';
+        checkoutBtn.disabled = true;
+        totalEl.textContent = 'Total: IDR 0';
+        return;
+      }
+      cartKeys.forEach((id) => {
+        const item = cart[id];
+        const lineTotal = item.price * item.qty;
+        total += lineTotal;
+
+        const li = document.createElement('li');
+        li.setAttribute('data-id', id);
+
+        const spanName = document.createElement('span');
+        spanName.textContent = item.name;
+        spanName.className = 'item-name';
+
+        const spanQty = document.createElement('span');
+        spanQty.textContent = `x${item.qty}`;
+        spanQty.className = 'item-qty';
+
+        const spanPrice = document.createElement('span');
+        spanPrice.textContent = formatCurrency(lineTotal);
+        spanPrice.className = 'item-price';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = "✕";
+        removeBtn.title = `Remove ${item.name} from cart`;
+        removeBtn.style.background = 'transparent';
+        removeBtn.style.border = 'none';
+        removeBtn.style.color = '#cc0000';
+        removeBtn.style.cursor = 'pointer';
+        removeBtn.style.fontWeight = '700';
+        removeBtn.style.marginLeft = '0.5rem';
+        removeBtn.addEventListener('click', () => {
+          removeFromCart(id);
+        });
+
+        li.appendChild(spanName);
+        li.appendChild(spanQty);
+        li.appendChild(spanPrice);
+        li.appendChild(removeBtn);
+
+        cartList.appendChild(li);
+      });
+      totalEl.textContent = `Total: ${formatCurrency(total)}`;
+      checkoutBtn.disabled = false;
+    }
+
+    function addToCart(id, name, price) {
+      if (cart[id]) {
+        cart[id].qty++;
+      } else {
+        cart[id] = { name, price, qty: 1 };
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(id) {
+      if (cart[id]) {
+        if (cart[id].qty > 1) {
+          cart[id].qty--;
+        } else {
+          delete cart[id];
+        }
+        updateCartUI();
+      }
+    }
+
+    products.forEach(prod => {
+      const btn = prod.querySelector('button.buy');
+      btn.addEventListener('click', () => {
+        const id = prod.getAttribute('data-id');
+        const name = prod.getAttribute('data-name');
+        const price = parseInt(prod.getAttribute('data-price'), 10);
+        addToCart(id, name, price);
+      });
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+      if (Object.keys(cart).length === 0) return;
+      let message = 'Thank you for your purchase!\n\nYour Order:\n';
+      Object.values(cart).forEach(item => {
+        message += `${item.name} x${item.qty} = ${formatCurrency(item.price * item.qty)}\n`;
+      });
+      message += `\nTotal amount: ${totalEl.textContent.replace('Total: ', '')}`;
+      alert(message);
+      cart = {};
+      updateCartUI();
+    });
+
+    updateCartUI();
+  })();
+</script>
+</body>
+</html>
+
+```
