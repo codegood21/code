@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dark Web Marketplace</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Share Tech Mono', monospace;
+    background-color: #121212;
+    color: #ccc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #1a1a1a;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: #0ef;
+    text-shadow: 0 0 7px #0ef;
+  }
+  main {
+    flex: 1;
+    max-width: 960px;
+    margin: 2rem auto;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    gap: 2rem;
+  }
+  .product {
+    background-color: #222222;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 0 12px #0ef6;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease;
+  }
+  .product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px #0ff;
+  }
+  .product h2 {
+    color: #0ff;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+  .product p {
+    flex-grow: 1;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  .price {
+    color: #0f9;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+  }
+  button {
+    background-color: #0ff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    color: #121212;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #06c;
+    color: #d0f;
+    box-shadow: 0 0 8px #0ff;
+  }
+  /* Modal styles */
+  .modal-background {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom:0;
+    background-color: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .modal-background.active {
+    display: flex;
+  }
+  .modal {
+    background-color: #1a1a1a;
+    border: 1px solid #0ff;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px #0ff;
+  }
+  .modal h3 {
+    margin-top: 0;
+    color: #0ff;
+    letter-spacing: 1.2px;
+  }
+  .modal label {
+    display: block;
+    margin: 1rem 0 0.25rem;
+    font-size: 0.9rem;
+    color: #0ff;
+  }
+  .modal input[type="text"],
+  .modal input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #121212;
+    border: 1px solid #0ff;
+    color: #0ff;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .modal button {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: #0ff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: #444;
+    border-top: 1px solid #333;
+    margin-top: auto;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dark Web Marketplace</h1>
+</header>
+<main>
+  <section class="products" aria-label="product listings">
+    <article class="product" data-name="Zero-Day Exploit" data-price="1500">
+      <h2>Zero-Day Exploit</h2>
+      <p>Highly sought-after zero-day exploit for undisclosed software vulnerabilities. Use with caution.</p>
+      <div class="price">₿ 0.045</div>
+      <button type="button" class="buy-btn">Buy</button>
+    </article>
+    <article class="product" data-name="Encrypted Chat Service" data-price="300">
+      <h2>Encrypted Chat Service</h2>
+      <p>Secure and anonymous chat service access with end-to-end encryption and no logs.</p>
+      <div class="price">₿ 0.009</div>
+      <button type="button" class="buy-btn">Buy</button>
+    </article>
+    <article class="product" data-name="Digital Identity Pack" data-price="750">
+      <h2>Digital Identity Pack</h2>
+      <p>Complete digital identity with fake passports, IDs, and utility bills for anonymity.</p>
+      <div class="price">₿ 0.022</div>
+      <button type="button" class="buy-btn">Buy</button>
+    </article>
+    <article class="product" data-name="Custom Malware" data-price="1200">
+      <h2>Custom Malware</h2>
+      <p>Tailor-made stealth malware packages aimed at infiltration and data exfiltration.</p>
+      <div class="price">₿ 0.035</div>
+      <button type="button" class="buy-btn">Buy</button>
+    </article>
+  </section>
+</main>
+
+<div class="modal-background" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" aria-label="Close purchase dialog">&times;</button>
+    <h3 id="modalTitle">Complete Purchase</h3>
+    <form id="purchaseForm">
+      <label for="productName">Product</label>
+      <input type="text" id="productName" name="productName" readonly />
+      <label for="price">Price (₿ Bitcoin)</label>
+      <input type="text" id="price" name="price" readonly />
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" name="quantity" min="1" value="1" required />
+      <label for="buyerAddress">Your Bitcoin Wallet Address</label>
+      <input type="text" id="buyerAddress" name="buyerAddress" placeholder="Enter your wallet address" required />
+      <button type="submit">Confirm Purchase</button>
+    </form>
+    <div id="receipt" style="display:none; margin-top: 1rem; color: #0f9;"></div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('modal');
+  const modalCloseBtn = modal.querySelector('.modal-close');
+  const purchaseForm = document.getElementById('purchaseForm');
+  const receipt = document.getElementById('receipt');
+  const productNameField = document.getElementById('productName');
+  const priceField = document.getElementById('price');
+  const quantityField = document.getElementById('quantity');
+  const buyerAddressField = document.getElementById('buyerAddress');
+  let currentPrice = 0;
+
+  document.querySelectorAll('.buy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const productEl = e.target.closest('.product');
+      const name = productEl.getAttribute('data-name');
+      const price = productEl.getAttribute('data-price');
+      currentPrice = parseFloat(price);
+      productNameField.value = name;
+      priceField.value = price;
+      quantityField.value = 1;
+      buyerAddressField.value = '';
+      receipt.style.display = 'none';
+      modal.classList.add('active');
+      quantityField.focus();
+    });
+  });
+
+  modalCloseBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+
+  purchaseForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const product = productNameField.value;
+    const qty = parseInt(quantityField.value, 10);
+    const buyer = buyerAddressField.value.trim();
+    if (!buyer) {
+      alert('Please enter your Bitcoin wallet address.');
+      buyerAddressField.focus();
+      return;
+    }
+    const total = (currentPrice * qty).toFixed(8);
+    // Fake transaction process simulation
+    receipt.style.color = '#0f9';
+    receipt.style.display = 'block';
+    receipt.textContent = `Purchase successful! You bought ${qty} x "${product}" for ₿${total}. Payment will be sent to wallet: ${buyer}`;
+    purchaseForm.reset();
+  });
+</script>
+
+<footer>
+  &copy; 2024 Dark Web Marketplace - Confidential & Secure
+</footer>
+</body>
+</html>
+
+```
