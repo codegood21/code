@@ -1,0 +1,23 @@
+case 'spamngl': {
+ const [link, message, count] = args.join(" ").split(",").map(v => v.trim());
+ if (!link || !message || !count) {
+ return m.reply('Masukkan parameter dengan benar.\nContoh: .spamngl linkngl,message,jumlah\nContoh: .spamngl https://ngl.link/username,woyy bang,5');
+ }
+
+ try {
+ const apiURL = `https://fastrestapis.fasturl.cloud/tool/spamngl?link=${encodeURIComponent(link)}&message=${encodeURIComponent(message)}&type=random&count=${encodeURIComponent(count)}`;
+ 
+ const res = await fetch(apiURL);
+ const json = await res.json();
+ 
+ if (json.status === 200) {
+ m.reply(`✅ Spam NGL berhasil!\n\n🔹 Pesan: ${json.result.message}\n🔹 Terkirim ke: ${json.result.sentTo}\n🔹 Jumlah: ${json.result.count}`);
+ } else {
+ m.reply(`❌ Gagal melakukan spam NGL.\n${json.content}`);
+ }
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat melakukan spam NGL.');
+ }
+}
+break
