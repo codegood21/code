@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Order Payment</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 360px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+  }
+  h1 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 1.2px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  input, select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+  input:focus, select:focus {
+    box-shadow: 0 0 8px 2px #a59bfe;
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+    background: #9f7aea;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 15px rgba(159,122,234,0.7);
+  }
+  button:hover {
+    background: #7e57c2;
+    box-shadow: 0 6px 20px rgba(126,87,194,0.9);
+  }
+  .success-message {
+    background: #48bb78;
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: none;
+    margin-bottom: 20px;
+  }
+  footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #d1c4e9;
+  }
+  audio {
+    display: block;
+    margin: 25px auto 0 auto;
+    width: 100%;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Make Payment</h1>
+    <form id="paymentForm" aria-label="Payment form for order">
+      <div role="alert" aria-live="polite" class="success-message" id="successMessage">Thank you! Your payment has been received.</div>
+      <label for="name">Name on Card</label>
+      <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name" />
+      
+      <label for="order">Order Item</label>
+      <select id="order" name="order" required>
+        <option value="" disabled selected>Select your item</option>
+        <option value="product1">Product 1 - $20</option>
+        <option value="product2">Product 2 - $35</option>
+        <option value="product3">Product 3 - $50</option>
+      </select>
+
+      <label for="cardNumber">Card Number</label>
+      <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9876 5432" pattern="\d{13,19}" inputmode="numeric" required autocomplete="cc-number" aria-describedby="cardInfo" />
+      <small id="cardInfo" style="font-size: 0.75rem; color: #ddd;">Enter digits only, no spaces or dashes.</small>
+
+      <label for="expiry">Expiration Date</label>
+      <input type="month" id="expiry" name="expiry" placeholder="MM/YYYY" required aria-describedby="expiryInfo" />
+      <small id="expiryInfo" style="font-size: 0.75rem; color: #ddd;">Select month and year</small>
+
+      <label for="cvv">CVV</label>
+      <input type="password" id="cvv" name="cvv" placeholder="123" pattern="\d{3,4}" inputmode="numeric" required autocomplete="cc-csc" aria-describedby="cvvInfo" />
+      <small id="cvvInfo" style="font-size: 0.75rem; color: #ddd;">3 or 4 digit code</small>
+
+      <button type="submit" aria-label="Submit payment">Pay Now</button>
+    </form>
+    <audio controls autoplay loop>
+      <source src="https://cdn.pixabay.com/download/audio/2022/03/04/audio_e4b00878b3.mp3?filename=hip-hop-ambient-10282.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <footer>
+      &copy; 2024 Your Company. All rights reserved.
+    </footer>
+  </div>
+  <script>
+    (function() {
+      const form = document.getElementById('paymentForm');
+      const successMessage = document.getElementById('successMessage');
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Simple validation for expiry in the future
+        const expiryInput = form.expiry.value;
+        if (!expiryInput) {
+          alert('Please provide Expiration Date.');
+          return;
+        }
+        const today = new Date();
+        const [year, month] = expiryInput.split('-').map(Number);
+        const expiryDate = new Date(year, month - 1);
+        if (expiryDate < new Date(today.getFullYear(), today.getMonth())) {
+          alert('Expiration date must be in the future.');
+          return;
+        }
+
+        // Simulate payment process
+        // In a real scenario, here would be the API call for payment processing
+        successMessage.style.display = 'block';
+        form.reset();
+        form.querySelector('button').disabled = true;
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+          form.querySelector('button').disabled = false;
+        }, 5000);
+      });
+    })();
+  </script>
+</body>
+</html>
+
+```
