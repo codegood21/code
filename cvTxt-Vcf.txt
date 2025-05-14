@@ -1,0 +1,26 @@
+case 'txttovcf': {
+ if (!m.quoted || m.quoted.mimetype !== 'text/plain') return m.reply('Balas file .txt dengan perintah ini!');
+ 
+ const txtBuffer = await conn.downloadMediaMessage(m.quoted);
+ const txtContent = txtBuffer.toString();
+ 
+ const lines = txtContent.split('\n');
+ let vcfData = "BEGIN:VCARD\nVERSION:3.0\n";
+
+ for (let line of lines) {
+ const [name, phone] = line.split(',');
+ if (!name || !phone) continue;
+ 
+ vcfData += `FN:${name.trim()}\nTEL;TYPE=CELL:${phone.trim()}\n`;
+ }
+
+ vcfData += "END:VCARD";
+ 
+ await conn.sendMessage(from, {
+ document: Buffer.from(vcfData),
+ mimetype: 'text/vcard',
+ fileName: 'contacts.vcf'
+ }, { quoted: m });
+ 
+ m.reply('✅ File VCF berhasil dibuat!');
+} break
