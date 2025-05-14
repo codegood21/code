@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pembayaran Digital</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f4f7fc;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #4a90e2, #50e3c2);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 2.25rem;
+      letter-spacing: 0.04em;
+    }
+    .container {
+      max-width: 960px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    .payment-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.75rem;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow:
+        0 2px 8px rgb(0 0 0 / 0.08),
+        0 12px 24px rgb(0 0 0 / 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow:
+        0 12px 30px rgb(0 0 0 / 0.15),
+        0 24px 48px rgb(0 0 0 / 0.10);
+    }
+    .card img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #222;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    button.pay-btn {
+      background: #50e3c2;
+      color: #fff;
+      border: none;
+      border-radius: 28px;
+      padding: 0.6rem 1.8rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      box-shadow: 0 6px 14px rgb(80 227 194 / 0.4);
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      width: fit-content;
+      margin-top: auto;
+    }
+    button.pay-btn:hover,
+    button.pay-btn:focus {
+      background: #3bb89b;
+      outline: none;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      user-select: none;
+    }
+    /* QRIS QR Code container */
+    .qris-qr {
+      margin: 1rem 0 0.5rem;
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      background: #ececec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Metode Pembayaran Digital</h1>
+  </header>
+  <main class="container" role="main" aria-label="Daftar metode pembayaran digital">
+    <section class="payment-list" aria-label="Pilihan metode pembayaran">
+      <!-- Dana -->
+      <article class="card" tabindex="0" aria-describedby="desc-dana">
+        <img src="https://seeklogo.com/images/D/dana-logo-5C5139964D-seeklogo.com.png" alt="Logo Dana" />
+        <h3>Dana</h3>
+        <p id="desc-dana">Pembayaran mudah dan cepat melalui Dana e-wallet.</p>
+        <button class="pay-btn" data-method="Dana" aria-label="Bayar dengan Dana">Bayar dengan Dana</button>
+      </article>
+      <!-- GoPay -->
+      <article class="card" tabindex="0" aria-describedby="desc-gopay">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/GoPay_logo.svg/512px-GoPay_logo.svg.png" alt="Logo GoPay" />
+        <h3>GoPay</h3>
+        <p id="desc-gopay">Gunakan GoPay untuk pembayaran cepat dalam beberapa ketukan.</p>
+        <button class="pay-btn" data-method="GoPay" aria-label="Bayar dengan GoPay">Bayar dengan GoPay</button>
+      </article>
+      <!-- OVO -->
+      <article class="card" tabindex="0" aria-describedby="desc-ovo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/OVO_Indonesia.svg/512px-OVO_Indonesia.svg.png" alt="Logo OVO" />
+        <h3>OVO</h3>
+        <p id="desc-ovo">Bayar dengan OVO, solusi pembayaran digital yang mudah dan aman.</p>
+        <button class="pay-btn" data-method="OVO" aria-label="Bayar dengan OVO">Bayar dengan OVO</button>
+      </article>
+      <!-- QRIS -->
+      <article class="card" tabindex="0" aria-describedby="desc-qris">
+        <div class="qris-qr" aria-label="QRIS QR Code"><!-- Placeholder for QR code --><svg aria-hidden="true" width="96" height="96" fill="none" stroke="#555" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+        <h3>QRIS</h3>
+        <p id="desc-qris">Pembayaran QR Code standar nasional Indonesia, scan dan bayar.</p>
+        <button class="pay-btn" data-method="QRIS" aria-label="Bayar dengan QRIS">Bayar dengan QRIS</button>
+      </article>
+    </section>
+  </main>
+  <footer>
+    &copy; 2024 Pembayaran Digital. Semua hak cipta dilindungi.
+  </footer>
+  <script>
+    document.querySelectorAll('.pay-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const method = button.getAttribute('data-method');
+        alert(`Anda memilih metode pembayaran: ${method}\n\n(Tagihan akan diproses menggunakan ${method}).`);
+      });
+    });
+  </script>
+</body>
+</html>
+
+```
