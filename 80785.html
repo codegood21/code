@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DDoS Attack Simulation</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+  }
+  header {
+    padding: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    user-select: none;
+  }
+  main {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 800px;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  #logArea {
+    background: #101820;
+    border: 1px solid #2c5364;
+    border-radius: 8px;
+    height: 400px;
+    overflow-y: scroll;
+    padding: 1rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+  #startBtn, #stopBtn {
+    cursor: pointer;
+    background-color: #ff4b5c;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    margin: 0.5rem;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  #startBtn:hover {
+    background-color: #ff1f3a;
+  }
+  #stopBtn {
+    background-color: #3aafa9;
+  }
+  #stopBtn:hover {
+    background-color: #2c8c8a;
+  }
+  footer {
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: #aaaaaa;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<header>DDoS Attack Real-time Simulation (Browser Generated)</header>
+<main>
+  <div style="text-align:center;">
+    <button id="startBtn">Start Attack</button>
+    <button id="stopBtn" disabled>Stop Attack</button>
+  </div>
+  <div id="logArea" aria-live="polite" aria-atomic="true" role="log"></div>
+</main>
+<footer>Note: All traffic is simulated locally and does NOT attack any real targets.</footer>
+
+<script>
+(() => {
+  const logArea = document.getElementById('logArea');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+
+  // Simulation parameters
+  const targetURL = 'https://example.com'; // Simulated target URL
+  let attackInterval = null;
+  let requestCount = 0;
+
+  function randomIp() {
+    return Array(4).fill().map(() => Math.floor(Math.random() * 256)).join('.');
+  }
+
+  function randomUserAgent() {
+    const browsers = [
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+      "Mozilla/5.0 (X11; Ubuntu; Linux x86_64)",
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X)",
+      "Mozilla/5.0 (Linux; Android 11; SM-G980F)",
+      "Mozilla/5.0 (iPad; CPU OS 14_6 like Mac OS X)"
+    ];
+    const randIndex = Math.floor(Math.random() * browsers.length);
+    return browsers[randIndex];
+  }
+
+  function logMessage(message) {
+    const time = new Date().toLocaleTimeString();
+    logArea.textContent += `[${time}] ${message}\n`;
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+
+  function simulateRequest() {
+    requestCount++;
+    const ip = randomIp();
+    const ua = randomUserAgent();
+    // Simulated HTTP headers and info
+    const method = Math.random() < 0.5 ? 'GET' : 'POST';
+    const path = ['/','/login','/admin','/api/data','/home','/contact'][Math.floor(Math.random()*6)];
+    const payloadSize = Math.floor(Math.random()*2000); // bytes
+
+    // Log simulation line
+    const logLine = `Request #${requestCount} from ${ip} - ${method} ${targetURL}${path} - UA: "${ua}" - Payload: ${payloadSize}B`;
+    logMessage(logLine);
+  }
+
+  function startAttack() {
+    if (attackInterval) return;
+    requestCount = 0;
+    logArea.textContent = '';
+    logMessage('Starting DDoS simulation...');
+    attackInterval = setInterval(simulateRequest, 75); // ~13 requests per second
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+  }
+
+  function stopAttack() {
+    if (attackInterval) {
+      clearInterval(attackInterval);
+      attackInterval = null;
+      logMessage('Simulation stopped.');
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+  }
+
+  startBtn.addEventListener('click', startAttack);
+  stopBtn.addEventListener('click', stopAttack);
+})();
+</script>
+</body>
+</html>
+
+```
