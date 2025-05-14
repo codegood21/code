@@ -1,0 +1,44 @@
+case 'mediafire': {
+ if (!text) return reply(`Masukkan URL MediaFire!\n\nContoh: .mediafire https://www.mediafire.com/file/ffffc6z3zzy/Nama_File/file`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/mediafiredl?url=${encodeURIComponent(text)}`;
+ 
+ let res = await fetch(apiUrl);
+ let json = await res.json();
+ 
+ console.log("API JSON Response:", json); 
+
+ if (!json.status || json.status !== 200 || !json.result || !json.result.length) {
+ return reply('Gagal mengambil data. Pastikan link MediaFire valid!');
+ }
+
+ let fileData = json.result[0]; 
+ let { nama, mime, size, link } = fileData;
+
+ let caption = `*「 MediaFire Downloader 」*\n\n` +
+ `📂 *Nama*: ${nama}\n` +
+ `📦 *Size*: ${size}\n\n` +
+ `Download By Bagus API`;
+
+ let fileRes = await fetch(link, { redirect: 'follow' }); // Pastikan mengikuti redirect
+ if (!fileRes.ok) {
+ console.error("File Fetch Error:", fileRes.status, fileRes.statusText);
+ return reply('Gagal mengunduh file, coba lagi nanti.');
+ }
+
+ let fileBuffer = await fileRes.arrayBuffer();
+
+ await conn.sendMessage(m.chat, { 
+ document: Buffer.from(fileBuffer), 
+ mimetype: mime || 'application/octet-stream', 
+ fileName: nama || 'file.zip', 
+ caption: caption 
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error("Main Error:", e);
+ reply('Terjadi kesalahan saat mengambil data.');
+ }
+ break
