@@ -1,0 +1,39 @@
+async function makeStickerFromUrl(imageUrl, Bagus, m) {
+ try {
+ let buffer;
+ if (imageUrl.startsWith("data:")) {
+ const base64Data = imageUrl.split(",")[1];
+ buffer = Buffer.from(base64Data, 'base64');
+ } else {
+ const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+ buffer = Buffer.from(response.data, "binary");
+ }
+ 
+ const webpBuffer = await sharp(buffer)
+ .resize(512, 512, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
+ .webp({ quality: 70 })
+ .toBuffer();
+ 
+ const penis = await addExif(webpBuffer, global.packname, global.author)
+
+ const fileName = getRandomFile(".webp");
+ fs.writeFileSync(fileName, webpBuffer);
+
+ await conn.sendMessage(m.chat, {
+ sticker: webpBuffer
+}, { quoted: m });
+
+ fs.unlinkSync(fileName);
+ } catch (error) {
+ console.error("Error creating sticker:", error);
+ reply('Terjadi kesalahan saat membuat stiker. Coba lagi nanti.');
+ }
+}
+
+case'brat':{
+ if (!text) return reply(`mana text nya? contoh ${prefix + command} apanih cok`)
+ const encodedText = encodeURIComponent(text);
+const imageUrl = `https://brat.caliphdev.com/api/brat?text=${encodedText}`;
+await makeStickerFromUrl(imageUrl, conn, m);
+}
+ break
