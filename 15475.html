@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Topup Game Banner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap');
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .banner {
+    position: relative;
+    width: 900px;
+    height: 300px;
+    color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 40px #000000cc;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 90%);
+  }
+  .banner::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://mobilelegends.binus.ac.id/wp-content/uploads/2021/03/HERO-Mobile-Legends-Mystic.png') center center/cover no-repeat;
+    opacity: 0.15;
+    z-index: 1;
+    filter: brightness(0.4) saturate(1.2);
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 48px;
+    margin: 0 0 10px;
+    text-shadow: 0 0 12px #f0bc13, 0 0 6px #c77800;
+  }
+  p {
+    font-size: 18px;
+    margin: 0 0 25px;
+    color: #e0dedecc;
+  }
+  ul.topup-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    gap: 18px;
+  }
+  ul.topup-list li {
+    background: linear-gradient(145deg, #292929, #1a1a1a);
+    padding: 18px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px #0005 inset;
+    font-weight: 600;
+    font-size: 20px;
+    color: #f9d342;
+    text-shadow: 0 0 5px #b37800;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  ul.topup-list li:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 16px #f9d342cc, 0 0 10px #f9d342cc;
+  }
+</style>
+</head>
+<body>
+  <div class="banner" role="banner" aria-label="Topup Game List with Mobile Legends Hero Background">
+    <div class="content">
+      <h1>Topup Mobile Legends</h1>
+      <p>Speed up your game with these popular topup options!</p>
+      <ul class="topup-list" aria-label="List of topup denominations">
+        <li>Diamond 50</li>
+        <li>Diamond 100</li>
+        <li>Diamond 250</li>
+        <li>Diamond 500</li>
+        <li>Diamond 1000</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
+
+```
