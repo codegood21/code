@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Modern Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    color: #e0e0e0;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(90deg, #080a2f, #000015);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-bottom: 2px solid #334155;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    margin: 0;
+    color: #38bdf8;
+  }
+  header p {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: #94a3b8;
+  }
+  nav {
+    margin-top: 1rem;
+  }
+  nav a {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: #94a3b8;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  nav a:hover {
+    color: #38bdf8;
+  }
+  main {
+    max-width: 960px;
+    margin: 3rem auto 5rem;
+    padding: 0 1rem;
+  }
+  section {
+    margin-bottom: 4rem;
+  }
+  h2 {
+    font-size: 2rem;
+    color: #38bdf8;
+    border-left: 6px solid #38bdf8;
+    padding-left: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .intro {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    max-width: 720px;
+  }
+  .skills-list, .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 1.5rem;
+  }
+  .skill, .project {
+    background: #1e293b;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 10px rgb(56 189 248 / 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .skill:hover, .project:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 15px rgb(56 189 248 / 0.4);
+  }
+  .skill {
+    text-align: center;
+    font-weight: 600;
+    color: #38bdf8;
+    font-size: 1.1rem;
+  }
+  .project img {
+    width: 100%;
+    border-radius: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .project h3 {
+    margin: 0 0 0.5rem;
+    color: #e0e0e0;
+    font-weight: 700;
+  }
+  .project p {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 0 0 1rem;
+  }
+  .project a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  .project a:hover {
+    border-color: #38bdf8;
+  }
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #64748b;
+    border-top: 1px solid #334155;
+    font-size: 0.9rem;
+    background: linear-gradient(90deg, #000015, #080a2f);
+  }
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    header h1 {
+      font-size: 2rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>John Doe</h1>
+  <p>Front-End Developer & UI/UX Enthusiast</p>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<main>
+  <section id="about">
+    <h2>About Me</h2>
+    <p class="intro">
+      Passionate front-end developer with 4+ years of experience in building modern, responsive, and user-centered websites and applications. Skilled in JavaScript, React, and design principles with a flair for clean, accessible UI.
+    </p>
+  </section>
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-list">
+      <div class="skill">HTML5</div>
+      <div class="skill">CSS3 / SCSS</div>
+      <div class="skill">JavaScript (ES6+)</div>
+      <div class="skill">React.js</div>
+      <div class="skill">Vue.js</div>
+      <div class="skill">Git & GitHub</div>
+      <div class="skill">UI/UX Design</div>
+      <div class="skill">Responsive Design</div>
+    </div>
+  </section>
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <div class="project">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Project One Screenshot" />
+        <h3>Portfolio Website</h3>
+        <p>A clean and modern portfolio website built with React and styled-components.</p>
+        <a href="https://github.com/johndoe/portfolio" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+      <div class="project">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" alt="Project Two Screenshot" />
+        <h3>E-Commerce Store</h3>
+        <p>Fully responsive e-commerce site with shopping cart and payment integration built with Vue.js.</p>
+        <a href="https://github.com/johndoe/ecommerce-store" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+      <div class="project">
+        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80" alt="Project Three Screenshot" />
+        <h3>Blog Template</h3>
+        <p>Customizable blog template with markdown support and SEO optimization, built with Gatsby.</p>
+        <a href="https://github.com/johndoe/blog-template" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <p>If you'd like to work with me, reach out on any platform below or send me an email.</p>
+    <p>
+      <strong>Email:</strong> <a href="mailto:johndoe@example.com" style="color:#38bdf8;">johndoe@example.com</a><br />
+      <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/johndoe" target="_blank" style="color:#38bdf8;">linkedin.com/in/johndoe</a><br />
+      <strong>GitHub:</strong> <a href="https://github.com/johndoe" target="_blank" style="color:#38bdf8;">github.com/johndoe</a>
+    </p>
+  </section>
+</main>
+<footer>
+  &copy; 2024 John Doe. All rights reserved.
+</footer>
+</body>
+</html>
+
+```
