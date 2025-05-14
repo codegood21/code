@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Doxing HP - Informasi Detail</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: #0a2342;
+    border-radius: 15px;
+    padding: 30px 40px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  }
+  h1 {
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 1.5px;
+  }
+  .info-group {
+    margin-bottom: 20px;
+  }
+  .label {
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #88c0d0;
+  }
+  .value {
+    background: #144870;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 1.1em;
+    word-break: break-all;
+    box-shadow: inset 0 0 5px #0f1f2f;
+    user-select: all;
+  }
+  .footer {
+    margin-top: 30px;
+    font-size: 0.9em;
+    text-align: center;
+    color: #4c7899;
+  }
+  @media (max-width: 520px) {
+    .container {
+      padding: 25px 20px;
+    }
+    h1 {
+      font-size: 1.8em;
+    }
+    .label {
+      font-size: 1em;
+    }
+    .value {
+      font-size: 1em;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main">
+  <h1>Doxing HP Detail</h1>
+  <div class="info-group" aria-label="Nomor Telepon">
+    <div class="label">Nomor Telepon:</div>
+    <div class="value" tabindex="0">+62 812-3456-7890</div>
+  </div>
+  <div class="info-group" aria-label="Pemilik">
+    <div class="label">Pemilik:</div>
+    <div class="value" tabindex="0">Budi Santoso</div>
+  </div>
+  <div class="info-group" aria-label="Alamat">
+    <div class="label">Alamat:</div>
+    <div class="value" tabindex="0">Jl. Merdeka No. 45, Jakarta Selatan, DKI Jakarta</div>
+  </div>
+  <div class="info-group" aria-label="Operator Seluler">
+    <div class="label">Operator Seluler:</div>
+    <div class="value" tabindex="0">Telkomsel</div>
+  </div>
+  <div class="info-group" aria-label="Email Terkait">
+    <div class="label">Email Terkait:</div>
+    <div class="value" tabindex="0">budi.santoso@email.com</div>
+  </div>
+  <div class="footer">* Data ini hanya contoh dan bukan informasi asli.</div>
+</div>
+</body>
+</html>
+
+```
