@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pembayaran Online</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .payment-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+  }
+  h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .payment-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .payment-option {
+    flex: 1 1 130px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 20px 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+  }
+  .payment-option.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 12px #667eea88;
+  }
+  .payment-option img {
+    width: 60px;
+    height: auto;
+    margin-bottom: 12px;
+  }
+  .payment-option span {
+    font-weight: 600;
+    color: #555;
+  }
+  button.pay-btn {
+    margin-top: 30px;
+    background: #667eea;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    padding: 14px 0;
+    width: 100%;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: background 0.3s ease;
+  }
+  button.pay-btn:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+  }
+  button.pay-btn:hover:not(:disabled) {
+    background: #5a6ad9;
+  }
+  .result-message {
+    margin-top: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+<div class="payment-container" role="main" aria-label="Form Pembayaran Online">
+  <h2>Pilih Metode Pembayaran</h2>
+  <div class="payment-options" role="list" aria-label="Pilihan Metode Pembayaran">
+    <div class="payment-option" role="listitem" tabindex="0" data-method="Dana" aria-pressed="false">
+      <img src="https://seeklogo.com/images/D/dana-logo-22B29EDE6A-seeklogo.com.png" alt="Dana" />
+      <span>Dana</span>
+    </div>
+    <div class="payment-option" role="listitem" tabindex="0" data-method="GoPay" aria-pressed="false">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Go-Pay_Logo.svg/2560px-Go-Pay_Logo.svg.png" alt="GoPay" />
+      <span>GoPay</span>
+    </div>
+    <div class="payment-option" role="listitem" tabindex="0" data-method="QRIS" aria-pressed="false">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/QRIS_Logo.svg/1200px-QRIS_Logo.svg.png" alt="QRIS" />
+      <span>QRIS</span>
+    </div>
+    <div class="payment-option" role="listitem" tabindex="0" data-method="OVO" aria-pressed="false">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/OVO_logo_2018.svg/1200px-OVO_logo_2018.svg.png" alt="OVO" />
+      <span>OVO</span>
+    </div>
+  </div>
+  <button class="pay-btn" type="button" disabled aria-disabled="true" aria-label="Bayar dengan metode yang dipilih">Bayar</button>
+  <div class="result-message" role="alert" aria-live="polite"></div>
+</div>
+
+<script>
+  (() => {
+    const options = document.querySelectorAll('.payment-option');
+    const payBtn = document.querySelector('.pay-btn');
+    const resultMessage = document.querySelector('.result-message');
+    let selectedMethod = null;
+
+    function clearSelection() {
+      options.forEach(opt => {
+        opt.classList.remove('selected');
+        opt.setAttribute('aria-pressed', 'false');
+      });
+      selectedMethod = null;
+      payBtn.disabled = true;
+      payBtn.setAttribute('aria-disabled', 'true');
+      resultMessage.textContent = '';
+    }
+
+    function selectOption(option) {
+      clearSelection();
+      option.classList.add('selected');
+      option.setAttribute('aria-pressed', 'true');
+      selectedMethod = option.getAttribute('data-method');
+      payBtn.disabled = false;
+      payBtn.setAttribute('aria-disabled', 'false');
+    }
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        selectOption(option);
+      });
+      option.addEventListener('keydown', (e) => {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          selectOption(option);
+        }
+      });
+    });
+
+    payBtn.addEventListener('click', () => {
+      if (!selectedMethod) return;
+      // Simulate payment process without redirect or app launching
+      resultMessage.textContent = `Pembayaran melalui ${selectedMethod} berhasil diproses tanpa keluar aplikasi. Terima kasih!`;
+      payBtn.disabled = true;
+      payBtn.setAttribute('aria-disabled', 'true');
+      options.forEach(opt => opt.setAttribute('tabindex', '-1'));
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
