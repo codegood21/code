@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modern Payment Page</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .payment-container {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    max-width: 420px;
+    width: 100%;
+    padding: 2.5rem 2rem 3rem;
+  }
+  .payment-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .payment-header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #3b3063;
+  }
+  .payment-header p {
+    color: #7a7a9d;
+    margin-top: 0.3rem;
+    font-weight: 300;
+  }
+  .amount {
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: #764ba2;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #4b3b6a;
+  }
+  select {
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+  select:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 8px rgba(118, 75, 162, 0.4);
+  }
+  button {
+    background: #764ba2;
+    color: #fff;
+    border: none;
+    padding: 0.9rem 0;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #5c3c91;
+  }
+  .payment-methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .method-card {
+    cursor: pointer;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    user-select: none;
+  }
+  .method-card img {
+    max-height: 40px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+  .method-card span {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .method-card.selected {
+    border-color: #764ba2;
+    background: #f8f4ff;
+  }
+  .footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 2rem;
+  }
+  /* Responsive */
+  @media (max-width: 480px) {
+    .payment-container {
+      max-width: 95vw;
+      padding: 2rem 1rem 2.5rem;
+    }
+    .payment-methods {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="payment-container" role="main" aria-label="Payment form">
+  <header class="payment-header">
+    <h1>Pay Your Invoice</h1>
+    <p>Select your preferred payment method</p>
+  </header>
+  <div class="amount" aria-live="polite" aria-atomic="true" aria-relevant="additions">
+    Rp 250.000,00
+  </div>
+  <form id="payment-form" aria-describedby="payment-desc">
+    <div class="payment-methods" role="radiogroup" aria-labelledby="payment-desc">
+      <div id="payment-desc" class="sr-only">Payment Methods: Choose an e-wallet or bank payment option</div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="gopay" aria-label="Gopay">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/GoPay_Logo.svg" alt="Gopay Logo" />
+        <span>Gopay</span>
+      </div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="ovo" aria-label="OVO">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/OVO_Icon.png" alt="OVO Logo" />
+        <span>OVO</span>
+      </div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="dana" aria-label="Dana">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Dana_Logo.svg" alt="Dana Logo" />
+        <span>Dana</span>
+      </div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="bca" aria-label="Bank BCA">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/BCA_logo.svg" alt="Bank BCA Logo" />
+        <span>Bank BCA</span>
+      </div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="mandiri" aria-label="Bank Mandiri">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Mandiri_logo.svg" alt="Bank Mandiri Logo" />
+        <span>Bank Mandiri</span>
+      </div>
+      <div class="method-card" tabindex="0" role="radio" aria-checked="false" data-value="bni" aria-label="Bank BNI">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Logo_BNI.svg" alt="Bank BNI Logo" />
+        <span>Bank BNI</span>
+      </div>
+    </div>
+    <label for="payment-amount">Amount (Rp)</label>
+    <input
+      type="number"
+      id="payment-amount"
+      name="payment-amount"
+      value="250000"
+      min="1000"
+      max="10000000"
+      step="1000"
+      aria-required="true"
+    />
+    <button type="submit" disabled id="pay-button" aria-disabled="true">Pay Now</button>
+  </form>
+</div>
+<script>
+  (() => {
+    const methods = document.querySelectorAll('.method-card');
+    const payButton = document.getElementById('pay-button');
+    let selectedMethod = null;
+
+    function selectMethod(card) {
+      methods.forEach(m => {
+        m.classList.remove('selected');
+        m.setAttribute('aria-checked', 'false');
+      });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+      selectedMethod = card.dataset.value;
+      payButton.disabled = false;
+      payButton.setAttribute('aria-disabled', 'false');
+    }
+
+    methods.forEach(card => {
+      card.addEventListener('click', () => {
+        selectMethod(card);
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectMethod(card);
+          card.focus();
+        }
+      });
+    });
+
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!selectedMethod) return alert('Please select a payment method.');
+
+      const amountInput = document.getElementById('payment-amount');
+      const amount = amountInput.value;
+
+      if (amount < 1000) {
+        alert('Minimum payment is Rp 1,000');
+        amountInput.focus();
+        return;
+      }
+
+      // Simulate payment processing
+      payButton.disabled = true;
+      payButton.textContent = 'Processing...';
+
+      setTimeout(() => {
+        alert(`Payment of Rp ${Number(amount).toLocaleString('id-ID')} via ${selectedMethod.toUpperCase()} successful!`);
+        payButton.textContent = 'Pay Now';
+        payButton.disabled = false;
+      }, 2000);
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
