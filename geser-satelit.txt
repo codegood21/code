@@ -1,0 +1,4 @@
+case 'geser': {
+m.reply('Satelit Succes Di Geser Boskuuu');
+}
+break
