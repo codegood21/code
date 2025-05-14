@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Verification Check</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #222;
+  }
+  .container {
+    background: white;
+    padding: 2rem 3rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    width: 320px;
+    text-align: center;
+  }
+  .container h1 {
+    margin-top: 0;
+    font-weight: 700;
+    color: #444;
+  }
+  .loader {
+    margin: 20px auto 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 6px solid #ccc;
+    border-top-color: #667eea;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .message {
+    font-weight: 400;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  .success {
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .error {
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-live="polite" aria-atomic="true">
+  <h1>Just a moment...</h1>
+  <div class="loader" aria-label="Loading spinner"></div>
+  <p class="message">Checking your browser before accessing our site.</p>
+</div>
+
+<script>
+  // Simulate browser verification delay
+  const container = document.querySelector('.container');
+  const message = container.querySelector('.message');
+  const loader = container.querySelector('.loader');
+  const heading = container.querySelector('h1');
+
+  function simulateVerification() {
+    // Simulate async check of browser, replace or extend here if you want real logic
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Random success or failure simulation (90% success)
+        resolve(Math.random() < 0.9);
+      }, 3000);
+    });
+  }
+
+  async function verify() {
+    const verified = await simulateVerification();
+    loader.style.display = 'none';
+    if (verified) {
+      heading.textContent = 'Verification Successful';
+      message.textContent = 'You are being redirected...';
+      message.className = "message success";
+      setTimeout(() => {
+        window.location.href = '/'; // Redirect to your main site
+      }, 2000);
+    } else {
+      heading.textContent = 'Verification Failed';
+      message.textContent = 'Please allow cookies and enable JavaScript to access the site.';
+      message.className = "message error";
+    }
+  }
+
+  // Start verification on page load
+  window.onload = verify;
+</script>
+</body>
+</html>
+
+```
