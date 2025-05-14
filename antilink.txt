@@ -1,0 +1,90 @@
+const antilink = JSON.parse(fs.readFileSync('./lib/database/antilink.json'))
+
+if (antilink.includes(m.chat)) {
+ console.log("✅ Grup ini terdaftar di antilink:", m.chat);
+
+ if (!isBotAdmin) {
+ console.log("❌ Bot bukan admin, tidak bisa hapus pesan.");
+ return;
+ }
+
+ if (!isAdmin && !isOwner && !m.fromMe) {
+ console.log("✅ Pengirim bukan admin, owner, atau bot.");
+
+ if (!m.text) {
+ console.log("❌ Pesan kosong, tidak diproses.");
+ return;
+ }
+
+ var link = /(https?:\/\/)?(www\.)?(chat\.whatsapp\.com|whatsapp\.com)\/[a-zA-Z0-9]/gi;
+
+ if (link.test(m.text)) {
+ console.log("✅ Pesan mengandung link:", m.text);
+
+ try {
+ var gcCode = await Rafael.groupInviteCode(m.chat);
+ console.log("🔹 Kode undangan grup ini:", gcCode);
+
+ var gclink = new RegExp(`https://(chat\\.whatsapp\\.com|whatsapp\\.com)/${gcCode}`, 'i');
+ var isgclink = gclink.test(m.text);
+
+ if (isgclink) {
+ console.log("✅ Link adalah undangan grup ini, tidak dihapus.");
+ return;
+ }
+ } catch (error) {
+ console.log("⚠️ Gagal mendapatkan kode undangan grup:", error);
+ return;
+ }
+
+ console.log("⚠️ Menghapus pesan dari", m.sender);
+
+ let delet = m.key.participant;
+ let bang = m.key.id;
+
+ await Rafael.sendMessage(m.chat, {
+ text: `@${m.sender.split("@")[0]} jangan share link dong coy ! 😑`,
+ contextInfo: {
+ mentionedJid: [m.sender],
+ externalAdReply: {
+ thumbnailUrl: ppuser,
+ title: "⚠️ Bagus Api",
+ body: "Jangan diulangi lagi ya! 😅",
+ previewType: "PHOTO"
+ }
+ }
+ }, { quoted: m });
+
+ await Rafael.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
+ console.log("✅ Pesan berhasil dihapus.");
+ } else {
+ console.log("❌ Pesan tidak mengandung link.");
+ }
+ } else {
+ console.log("❌ Pengirim adalah admin, owner, atau bot. Tidak dihapus.");
+ }
+} else {
+ console.log("❌ Grup ini tidak terdaftar dalam antilink.");
+}
+
+case 'antilink': {
+ if (!m.isGroup) return m.reply('Fitur ini hanya bisa digunakan di grup.');
+ if (!isAdmin) return m.reply('Kamu bukan admin!');
+ if (!isBotAdmin) return m.reply('Bot harus menjadi admin untuk mengaktifkan antilink!');
+ 
+ if (args[0] === 'on') {
+ if (antilink.includes(m.chat)) return m.reply('Antilink sudah aktif di grup ini!');
+ antilink.push(m.chat);
+ fs.writeFileSync('./lib/database/antilink.json', JSON.stringify(antilink));
+ m.reply('✅ Antilink berhasil diaktifkan di grup ini!');
+ } else if (args[0] === 'off') {
+ if (!antilink.includes(m.chat)) return m.reply('Antilink belum aktif di grup ini!');
+ let index = antilink.indexOf(m.chat);
+ antilink.splice(index, 1);
+ fs.writeFileSync('./lib/database/antilink.json', JSON.stringify(antilink));
+ m.reply('❌ Antilink berhasil dimatikan di grup ini!');
+ } else {
+ m.reply('Gunakan:\n\n*#antilink on* → Mengaktifkan Antilink\n*#antilink off* → Mematikan Antilink');
+ }
+}
+break;
