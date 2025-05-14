@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart AI Chat - Like ChatGPT Plus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  body {
+    margin: 0; 
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  header {
+    background: #4c3c7a;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 1.2px;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.3);
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 1.5rem auto;
+    background: #2a254f;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 0.3);
+    overflow: hidden;
+  }
+  #chat-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem 2rem;
+    scroll-behavior: smooth;
+  }
+  .message {
+    margin-bottom: 1.4rem;
+    max-width: 75%;
+    line-height: 1.5;
+    padding: 0.8rem 1rem;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.15);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .user {
+    background: #805ad5;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+  }
+  .ai {
+    background: #4a90e2;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+  }
+  #input-area {
+    background: #3b2f6b;
+    display: flex;
+    padding: 1rem 1.5rem;
+    align-items: center;
+  }
+  #user-input {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    background: #6058aa;
+    color: #f0f0f0;
+    box-shadow: inset 1px 1px 3px rgb(0 0 0 / 0.3);
+    transition: background-color 0.3s ease;
+  }
+  #user-input:hover, #user-input:focus {
+    background: #7a69e5;
+  }
+  button#send-btn {
+    margin-left: 1rem;
+    background: #ff5f6d;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px #ff5f6dcc;
+    transition: background-color 0.2s ease;
+    user-select: none;
+  }
+  button#send-btn:hover {
+    background: #ff404f;
+    box-shadow: 0 6px 15px #ff404fcc;
+  }
+  #loading-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    margin-left: 5px;
+    animation: blink 1.4s infinite;
+    position: relative;
+    top: 3px;
+  }
+  #loading-dot::before, #loading-dot::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+  }
+  #loading-dot::before {
+    left: -12px;
+    animation: blink 1.4s infinite 0.2s;
+  }
+  #loading-dot::after {
+    left: 12px;
+    animation: blink 1.4s infinite 0.4s;
+  }
+  @keyframes blink {
+    0%, 80%, 100% {
+      opacity: 0.2;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+  
+  /* Scrollbar styling */
+  #chat-container::-webkit-scrollbar {
+    width: 10px;
+  }
+  #chat-container::-webkit-scrollbar-track {
+    background: #2a254f;
+  }
+  #chat-container::-webkit-scrollbar-thumb {
+    background: #805ad5;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+<header>Smart AI Chat</header>
+<main>
+  <div id="chat-container" aria-live="polite" role="log" aria-relevant="additions">
+    <!-- Chat messages go here -->
+  </div>
+  <form id="input-area" aria-label="Send message form">
+    <input autofocus autocomplete="off" id="user-input" type="text" placeholder="Ask me anything..." aria-label="Type your message here" required />
+    <button type="submit" id="send-btn" aria-label="Send message">Send</button>
+  </form>
+</main>
+<script>
+  (() => {
+    const chatContainer = document.getElementById('chat-container');
+    const form = document.getElementById('input-area');
+    const input = document.getElementById('user-input');
+
+    // Basic AI simulation with enhanced flair - mimic a smarter assistant with simple logic
+    function generateAIResponse(userText) {
+      // simulate thinking delay
+      return new Promise(resolve => {
+        setTimeout(() => {
+          // Markov-chain style or preset patterns for demo "smart" responses:
+          const lower = userText.toLowerCase();
+          let answer = "I'm not quite sure how to answer that. Could you try asking differently?";
+
+          if(!userText.trim()) {
+            answer = "Say something, I'm listening...";
+          } else if (lower.includes('hello') || lower.includes('hi')) {
+            answer = "Hello! How can I help you today?";
+          } else if (lower.includes('how are you')) {
+            answer = "I'm just a bunch of code, but I'm running perfectly, thank you!";
+          } else if (lower.includes('your name')) {
+            answer = "I'm Smart AI Chat, a clever conversational agent at your service.";
+          } else if (lower.includes('help')) {
+            answer = "Sure! You can ask me to explain concepts, help you brainstorm ideas, or just chat!";
+          } else if (lower.includes('weather')) {
+            answer = "I don't have real-time data, but hopefully it's sunny wherever you are!";
+          } else if (lower.includes('joke')) {
+            answer = "Why do programmers prefer dark mode? Because light attracts bugs! 😄";
+          } else if (userText.endsWith('?')) {
+            answer = "That's a great question. Let me think... How about we explore it together?";
+          } else {
+            // smart generic answer with some variation
+            const responses = [
+              "Interesting point! Could you tell me more?",
+              "That's a fascinating thought!",
+              "Let's dive deeper into that.",
+              "I appreciate you sharing that. What else is on your mind?",
+              "Hmm, I need to chew on that a bit!"
+            ];
+            answer = responses[Math.floor(Math.random() * responses.length)];
+          }
+          resolve(answer);
+        }, 1200 + Math.random() * 800);
+      });
+    }
+
+    function createMessageElement(text, isUser) {
+      const msgEl = document.createElement('div');
+      msgEl.classList.add('message');
+      msgEl.classList.add(isUser ? 'user' : 'ai');
+      msgEl.textContent = text;
+      return msgEl;
+    }
+
+    function createLoadingDots() {
+      const el = document.createElement('span');
+      el.id = 'loading-dot';
+      return el;
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      let userText = input.value.trim();
+      if(!userText) return;
+      
+      // Add user message
+      const userMsg = createMessageElement(userText, true);
+      chatContainer.appendChild(userMsg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      input.value = '';
+      input.disabled = true;
+      document.getElementById('send-btn').disabled = true;
+
+      // Add AI loading message
+      const aiMsg = createMessageElement('', false);
+      const loading = createLoadingDots();
+      aiMsg.appendChild(loading);
+      chatContainer.appendChild(aiMsg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      const response = await generateAIResponse(userText);
+
+      // Remove loading dots and show AI response with typing effect
+      aiMsg.removeChild(loading);
+      
+      // Typing effect
+      let idx = 0;
+      aiMsg.textContent = '';
+      function type() {
+        if(idx < response.length) {
+          aiMsg.textContent += response.charAt(idx);
+          idx++;
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          setTimeout(type, 35);
+        } else {
+          input.disabled = false;
+          document.getElementById('send-btn').disabled = false;
+          input.focus();
+        }
+      }
+      type();
+    }
+
+    form.addEventListener('submit', handleSubmit);
+
+    // Focus input on load
+    input.focus();
+
+    // Add welcome message
+    window.addEventListener('load', () => {
+      const welcomeMsg = createMessageElement("Welcome to the Smart AI Chat! Ask me anything.", false);
+      chatContainer.appendChild(welcomeMsg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  })();
+</script>
+</body>
+</html>
+
+```
