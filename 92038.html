@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>REST API Endpoint - API Key Checker</title>
+<style>
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.2em;
+    color: #00bcd4;
+    text-shadow: 0 0 6px #00bcd4;
+  }
+  p.subtitle {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    color: #80deea;
+  }
+  .container {
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 0 15px rgb(0 188 212 / 0.5);
+    width: 320px;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #80deea;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #00bcd4;
+    background: #121212;
+    color: #eee;
+    outline-offset: 2px;
+    transition: outline-color 0.3s;
+  }
+  input[type="text"]:focus {
+    outline: 3px solid #00bcd4;
+  }
+  button {
+    margin-top: 1.3rem;
+    background-color: #00bcd4;
+    color: #121212;
+    border:none;
+    padding: 0.7rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 8px #00bcd4;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0097a7;
+  }
+  #result {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    box-shadow: 0 0 12px rgb(0 188 212 / 0.4);
+  }
+  #result.valid {
+    background-color: #388e3c;
+    color: #d0f8ce;
+  }
+  #result.invalid {
+    background-color: #d32f2f;
+    color: #f9dcdc;
+  }
+</style>
+</head>
+<body>
+<h1>REST API Endpoint</h1>
+<p class="subtitle">Check API Key Validity</p>
+<div class="container">
+  <label for="apikey">Enter API Key:</label>
+  <input type="text" id="apikey" placeholder="Insert your API key here" autocomplete="off" />
+  <button id="checkBtn">Check API Key</button>
+  <div id="result" aria-live="polite"></div>
+</div>
+
+<script>
+  const apiKeyInput = document.getElementById('apikey');
+  const checkBtn = document.getElementById('checkBtn');
+  const resultDiv = document.getElementById('result');
+
+  // Dummy function to simulate API key validation
+  // Replace this with actual API call if needed
+  function validateApiKey(key) {
+    // For demonstration:
+    // Valid keys start with 'key-' and length 12+
+    if (!key) return false;
+    return /^key-[A-Za-z0-9]{7,}$/.test(key);
+  }
+
+  checkBtn.addEventListener('click', () => {
+    const key = apiKeyInput.value.trim();
+    if (key.length === 0) {
+      resultDiv.textContent = 'Please enter an API key.';
+      resultDiv.className = '';
+      return;
+    }
+
+    const isValid = validateApiKey(key);
+    if (isValid) {
+      resultDiv.textContent = 'API Key is VALID.';
+      resultDiv.className = 'valid';
+    } else {
+      resultDiv.textContent = 'API Key is INVALID.';
+      resultDiv.className = 'invalid';
+    }
+  });
+
+  // Optional: enter key triggers check
+  apiKeyInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      checkBtn.click();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
