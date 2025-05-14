@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Web Request Creator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  .container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+  h1 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #444;
+  }
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    margin-top: 0.4rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: monospace;
+    background-color: #f9f9f9;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  .response-container {
+    margin-top: 2rem;
+    background-color: #222;
+    color: #eee;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .footer {
+    text-align: center;
+    color: #888;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Web Request Creator</h1>
+    <form id="requestForm">
+      <label for="url">Request URL</label>
+      <input type="text" id="url" name="url" placeholder="https://api.example.com/data" required />
+
+      <label for="method">HTTP Method</label>
+      <select id="method" name="method">
+        <option value="GET" selected>GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="PATCH">PATCH</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+
+      <label for="headers">Headers (JSON format)</label>
+      <textarea id="headers" name="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
+
+      <label for="body">Request Body (for POST, PUT, PATCH)</label>
+      <textarea id="body" name="body" placeholder='{"key": "value"}'></textarea>
+
+      <button type="submit">Send Request</button>
+    </form>
+
+    <div class="response-container" id="responseContainer" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('requestForm');
+    const responseContainer = document.getElementById('responseContainer');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const url = form.url.value.trim();
+      const method = form.method.value;
+      let headers = {};
+      let body = form.body.value.trim();
+
+      try {
+        if (form.headers.value.trim()) {
+          headers = JSON.parse(form.headers.value.trim());
+        }
+      } catch (error) {
+        responseContainer.textContent = 'Invalid JSON in headers field.';
+        return;
+      }
+
+      if (body) {
+        try {
+          // Try parsing body to detect if it's JSON
+          const parsedBody = JSON.parse(body);
+          body = JSON.stringify(parsedBody);
+          headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+        } catch {
+          // Body is not JSON, send as is (e.g. text/plain)
+          headers['Content-Type'] = headers['Content-Type'] || 'text/plain';
+        }
+      } else {
+        body = null;
+      }
+
+      const fetchOptions = {
+        method,
+        headers
+      };
+
+      if (method !== 'GET' && method !== 'HEAD' && body) {
+        fetchOptions.body = body;
+      }
+
+      responseContainer.textContent = 'Loading...';
+
+      try {
+        const response = await fetch(url, fetchOptions);
+        const contentType = response.headers.get('content-type') || '';
+
+        let responseText;
+        if (contentType.includes('application/json')) {
+          const json = await response.json();
+          responseText = JSON.stringify(json, null, 2);
+        } else {
+          responseText = await response.text();
+        }
+
+        responseContainer.textContent = 
+          `Status: ${response.status} ${response.statusText}\n\nHeaders:\n` +
+          [...response.headers.entries()].map(([k, v]) => `${k}: ${v}`).join('\n') + 
+          `\n\nBody:\n${responseText}`;
+
+      } catch (error) {
+        responseContainer.textContent = `Request failed:\n${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
