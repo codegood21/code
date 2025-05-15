@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PC-Like Coding Editor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Fira Code', monospace, monospace;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    overflow: hidden;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+  }
+  header {
+    background: #007acc;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    font-size: 1.25rem;
+    user-select: none;
+    display: flex;
+    align-items: center;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: #252526;
+  }
+  .panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.75);
+    overflow: hidden;
+  }
+  .panel header {
+    background: #333333;
+    padding: 6px 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #cccccc;
+  }
+  textarea {
+    background: #1e1e1e;
+    border: none;
+    resize: none;
+    color: #d4d4d4;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    padding: 10px;
+    flex-grow: 1;
+    outline: none;
+    overflow: auto;
+  }
+  textarea::selection {
+    background: #264f78;
+  }
+  iframe {
+    flex-grow: 1;
+    border: none;
+    background: white;
+    border-radius: 0 0 4px 4px;
+  }
+  footer {
+    background: #007acc;
+    color: white;
+    text-align: center;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    user-select:none;
+  }
+  button {
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+  button:hover {
+    background: #005f9e;
+  }
+  .button-bar {
+    padding: 6px 10px;
+    background: #333333;
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>PC-Style Coding Editor</header>
+    <main>
+      <div class="panel">
+        <header>HTML</header>
+        <textarea id="htmlEditor" spellcheck="false">&lt;!-- Write your HTML here --&gt;
+&lt;div&gt;Hello, world!&lt;/div&gt;
+</textarea>
+        <div class="button-bar">
+          <button id="runBtn">Run</button>
+          <button id="clearHtml">Clear</button>
+        </div>
+      </div>
+      <div class="panel">
+        <header>CSS</header>
+        <textarea id="cssEditor" spellcheck="false">/* Write your CSS here */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+</textarea>
+        <div class="button-bar">
+          <button id="clearCss">Clear</button>
+        </div>
+      </div>
+      <div class="panel">
+        <header>JavaScript</header>
+        <textarea id="jsEditor" spellcheck="false">// Write your JavaScript here
+console.log('Hello from JS!');
+</textarea>
+        <div class="button-bar">
+          <button id="clearJs">Clear</button>
+        </div>
+      </div>
+    </main>
+    <div class="panel" style="height:40vh; margin:8px;">
+      <header>Output</header>
+      <iframe id="output"></iframe>
+    </div>
+    <footer>PC-Like Coding Editor | Write & Run your code instantly</footer>
+  </div>
+
+<script>
+  const htmlEditor = document.getElementById('htmlEditor');
+  const cssEditor = document.getElementById('cssEditor');
+  const jsEditor = document.getElementById('jsEditor');
+  const runBtn = document.getElementById('runBtn');
+  const output = document.getElementById('output');
+
+  function createOutput() {
+    const html = htmlEditor.value;
+    const css = `<style>${cssEditor.value}</style>`;
+    const js = `<script>${jsEditor.value}<\/script>`;
+    const fullContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">${css}</head>
+<body>
+${html}
+${js}
+</body>
+</html>`;
+    const outputDoc = output.contentDocument || output.contentWindow.document;
+    outputDoc.open();
+    outputDoc.write(fullContent);
+    outputDoc.close();
+  }
+
+  runBtn.addEventListener('click', createOutput);
+
+  // Run by default once page loads
+  window.onload = createOutput;
+
+  // Clear buttons functionality
+  document.getElementById('clearHtml').addEventListener('click', () => {
+    htmlEditor.value = '';
+    createOutput();
+  });
+  document.getElementById('clearCss').addEventListener('click', () => {
+    cssEditor.value = '';
+    createOutput();
+  });
+  document.getElementById('clearJs').addEventListener('click', () => {
+    jsEditor.value = '';
+    createOutput();
+  });
+</script>
+</body>
+</html>
+
+```
