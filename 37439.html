@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Pintar Chat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    background: #121212;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #e0e0e0;
+  }
+  #container {
+    width: 100%;
+    max-width: 700px;
+    height: 90vh;
+    background: #1e1e1e;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  header {
+    padding: 16px 24px;
+    background: #252525;
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-radius: 12px 12px 0 0;
+    user-select: none;
+    text-align:center;
+  }
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .message {
+    max-width: 80%;
+    line-height: 1.5;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    padding: 14px 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .user {
+    align-self: flex-end;
+    background: #3a86ff;
+    color: white;
+    border-bottom-right-radius: 0;
+  }
+  .ai {
+    align-self: flex-start;
+    background: #333;
+    color: #d0d0d0;
+    border-bottom-left-radius: 0;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #inputForm {
+    display: flex;
+    padding: 12px 24px;
+    background: #252525;
+    border-radius: 0 0 12px 12px;
+    align-items: center;
+    gap: 12px;
+  }
+  #inputField {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    padding: 12px 16px;
+    border-radius: 24px;
+    border: none;
+    outline: none;
+    background: #121212;
+    color: white;
+    font-family: 'Inter', sans-serif;
+  }
+  #inputField::placeholder {
+    color: #777;
+  }
+  button {
+    background: #3a86ff;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    transition: background 0.2s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #265ecf;
+  }
+  button:disabled {
+    background: #555;
+    cursor: default;
+  }
+  #footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    padding: 8px;
+  }
+  #loadingDots {
+    display: inline-block;
+    font-weight: 700;
+    color: #3a86ff;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    width: 40px;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div id="container" role="main" aria-label="AI chat interface">
+    <header>AI Pintar Chat</header>
+    <section id="chat" aria-live="polite" aria-relevant="additions">
+      <!-- messages appended here -->
+    </section>
+    <form id="inputForm" aria-label="Send a message">
+      <input
+        type="text"
+        id="inputField"
+        aria-label="Message input"
+        autocomplete="off"
+        placeholder="Ketik pertanyaan Anda di sini..."
+        required
+        minlength="1"
+      />
+      <button type="submit" aria-label="Kirim pertanyaan">Kirim</button>
+    </form>
+  </div>
+<script>
+  const chat = document.getElementById('chat');
+  const inputForm = document.getElementById('inputForm');
+  const inputField = document.getElementById('inputField');
+
+  // Add message element to chat
+  function addMessage(text, sender) {
+    const msg = document.createElement('div');
+    msg.className = 'message ' + sender;
+    msg.textContent = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // Show loading dots
+  function createLoadingDots() {
+    const loading = document.createElement('div');
+    loading.className = 'message ai';
+    loading.setAttribute('aria-live', 'polite');
+    loading.id = 'loadingDots';
+    chat.appendChild(loading);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // Remove loading dots
+  function removeLoadingDots() {
+    const loading = document.getElementById('loadingDots');
+    if(loading) {
+      loading.remove();
+    }
+  }
+
+  // Call AI API function
+  async function callAI(question) {
+    // Use OpenAI API v1 chat completions endpoint for GPT-4 or GPT-3.5-turbo
+    // Note: As you request an AI as smart as ChatGPT Pro, we will use OpenAI's chat completions with gpt-4 model.
+    // This requires an API key; to keep this fully client-side runnable, a free public proxy is used here just as a demo.
+    // WARNING: Using a real API key on client side is unsafe; in real deployment, use a backend proxy/protected environment.
+
+    // Public proxy service for demo - limited and might fail; replace with your own backend proxy in production.
+    const API_URL = 'https://api.openai-proxy.wanderaid.workers.dev/v1/chat/completions';
+
+    const payload = {
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: question }],
+      max_tokens: 1000,
+      temperature: 0.7,
+      n: 1,
+      stream: false,
+      top_p:1 
+    };
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // No authorization header for proxy service
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error('Error from AI API: ' + errText);
+      }
+
+      const data = await response.json();
+      if (data.choices && data.choices.length > 0) {
+        return data.choices[0].message.content.trim();
+      } else {
+        throw new Error('Invalid response format from AI API');
+      }
+    } catch (error) {
+      return '[Terjadi kesalahan pada AI: ' + error.message + ']';
+    }
+  }
+
+  inputForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const question = inputField.value.trim();
+    if (!question) return;
+    addMessage(question, 'user');
+    inputField.value = '';
+    inputField.disabled = true;
+    inputForm.querySelector('button').disabled = true;
+    createLoadingDots();
+
+    const answer = await callAI(question);
+
+    removeLoadingDots();
+    addMessage(answer, 'ai');
+
+    inputField.disabled = false;
+    inputForm.querySelector('button').disabled = false;
+    inputField.focus();
+  });
+
+  // Focus input on load
+  window.onload = () => {
+    inputField.focus();
+  };
+</script>
+</body>
+</html>
+
+```
