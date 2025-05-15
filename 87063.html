@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Produk & Kontak Penjual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #333;
+  }
+  header {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(38,70,162,0.3);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+  main {
+    max-width: 1200px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+  }
+  section.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 1.75rem;
+  }
+  article.product {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  article.product:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  .product img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+  }
+  .product-content {
+    padding: 1rem;
+    flex-grow: 1;
+  }
+  .product-content h3 {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    color: #2575fc;
+  }
+  .product-content p {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    color: #555;
+  }
+  .product-price {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.15rem;
+  }
+  section.contact {
+    background: #2575fc;
+    color: #fff;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 3rem auto 2rem;
+    box-shadow: 0 8px 20px rgba(37,117,252,0.4);
+  }
+  section.contact h2 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .contact-info {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .contact-info p {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+  }
+  .contact-info p svg {
+    margin-right: 0.6rem;
+    fill: #fff;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #777;
+  }
+  @media (max-width: 480px) {
+    header h1 {
+      font-size: 1.8rem;
+    }
+    main {
+      margin: 1rem auto 2rem;
+    }
+    .product img {
+      height: 140px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Produk Berkualitas & Kontak Penjual</h1>
+</header>
+
+<main>
+  <section class="products" aria-label="Daftar Produk">
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=500&q=80" alt="Kamera DSLR Professional" />
+      <div class="product-content">
+        <h3>Kamera DSLR Professional</h3>
+        <p>Kamera dengan resolusi tinggi dan fitur lengkap untuk fotografi profesional.</p>
+        <div class="product-price">Rp7.500.000</div>
+      </div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1514995669114-d81bcf0eae5d?auto=format&fit=crop&w=500&q=80" alt="Sneakers Stylish" />
+      <div class="product-content">
+        <h3>Sneakers Stylish</h3>
+        <p>Sepatu sneakers nyaman dengan desain trendy dan warna yang modern.</p>
+        <div class="product-price">Rp1.200.000</div>
+      </div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80" alt="Headphone Wireless" />
+      <div class="product-content">
+        <h3>Headphone Wireless</h3>
+        <p>Headphone nirkabel dengan suara jernih dan baterai tahan lama.</p>
+        <div class="product-price">Rp900.000</div>
+      </div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1503602642321-bea89b0a9ab1?auto=format&fit=crop&w=500&q=80" alt="Jam Tangan Elegan" />
+      <div class="product-content">
+        <h3>Jam Tangan Elegan</h3>
+        <p>Jam tangan dengan desain minimalis dan bahan stainless steel premium.</p>
+        <div class="product-price">Rp2.750.000</div>
+      </div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=500&q=80" alt="Tas Ransel Outdoor" />
+      <div class="product-content">
+        <h3>Tas Ransel Outdoor</h3>
+        <p>Tas ransel tahan air dengan banyak ruang untuk kegiatan outdoor dan travel.</p>
+        <div class="product-price">Rp850.000</div>
+      </div>
+    </article>
+  </section>
+
+  <section class="contact" aria-label="Kontak Penjual">
+    <h2>Kontak Penjual</h2>
+    <div class="contact-info">
+      <p>
+        <svg viewBox="0 0 24 24"><path d="M21 10h-3l-3-3H5v10l3-3h10z"/></svg>
+        Email: <a href="mailto:mya.penjual@example.com" style="color:#fff; text-decoration: underline;">mya.penjual@example.com</a>
+      </p>
+      <p>
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.11-.27 11.36 11.36 0 0 0 3.56.57 1 1 0 0 1 1 1v3.67a1 1 0 0 1-1 1A17.92 17.92 0 0 1 3 6a1 1 0 0 1 1-1h3.67a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.56 1 1 0 0 1-.27 1.11z"/></svg>
+        Telepon: <a href="tel:+6281234567890" style="color:#fff; text-decoration: underline;">+62 812 3456 7890</a>
+      </p>
+      <p>
+        <svg viewBox="0 0 24 24"><path d="M12 2.67a8 8 0 0 1 5.82 13.66 7.94 7.94 0 0 1-1.76 1.39 7.98 7.98 0 0 1-8.24 0 7.94 7.94 0 0 1-1.76-1.39A8 8 0 0 1 12 2.67m0-2A10 10 0 0 0 2 12a9.81 9.81 0 0 0 3.17 7.43A10 10 0 0 0 22 12 10 10 0 0 0 12 0.67z"/></svg>
+        Alamat: Jalan Melati No.45, Jakarta, Indonesia
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2024 Mya - Semua hak cipta dilindungi.
+</footer>
+
+</body>
+</html>
+
+```
