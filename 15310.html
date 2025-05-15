@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Auto Answer Chat</title>
+<style>
+  /* Modern dark theme with sophisticated typography and spacing */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #1e1e2f, #3a3a57);
+    font-family: 'Inter', sans-serif;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  #app {
+    background: #2c2c47;
+    width: 450px;
+    max-width: 95vw;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    background: #18182f;
+    padding: 16px 24px;
+    font-size: 1.35rem;
+    font-weight: 600;
+    border-bottom: 1px solid #444466;
+    letter-spacing: 1.2px;
+    user-select: none;
+  }
+  #messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+    scroll-behavior: smooth;
+  }
+  .message {
+    margin-bottom: 16px;
+    display: flex;
+  }
+  .message.user {
+    justify-content: flex-end;
+  }
+  .message .bubble {
+    max-width: 70%;
+    padding: 12px 18px;
+    border-radius: 18px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    font-size: 1rem;
+  }
+  .message.user .bubble {
+    background: #4f7fff;
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .message.ai .bubble {
+    background: #4b4b77;
+    color: #d6d6ff;
+    border-bottom-left-radius: 4px;
+  }
+  #input-area {
+    display: flex;
+    padding: 16px 24px;
+    background: #1d1d36;
+    gap: 12px;
+  }
+  #input-area textarea {
+    flex-grow: 1;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #eee;
+    background-color: #31315d;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.7);
+    transition: background-color 0.3s ease;
+  }
+  #input-area textarea:focus {
+    outline: none;
+    background-color: #40406e;
+  }
+  #input-area button {
+    background: #4f7fff;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 8px rgba(79,127,255,0.6);
+    transition: background-color 0.25s ease;
+  }
+  #input-area button:disabled {
+    background: #7a9cf7;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  #input-area button:hover:not(:disabled) {
+    background: #3e6ee8;
+  }
+  /* Scrollbar style for messages pane */
+  #messages::-webkit-scrollbar {
+    width: 8px;
+  }
+  #messages::-webkit-scrollbar-track {
+    background: #2c2c47;
+  }
+  #messages::-webkit-scrollbar-thumb {
+    background: #4f7fff;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<div id="app" role="main" aria-label="AI Auto Answer Chat">
+  <header>AI Auto Answer Chat</header>
+  <div id="messages" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+  <form id="input-area" aria-label="Send message form">
+    <textarea id="user-input" placeholder="Tulis pertanyaan kamu..." rows="1" required aria-required="true" aria-label="Tulis pertanyaan"></textarea>
+    <button type="submit" id="send-button" aria-label="Kirim pertanyaan">Kirim</button>
+  </form>
+</div>
+
+<script>
+(() => {
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('user-input');
+  const formEl = document.getElementById('input-area');
+  const sendBtn = document.getElementById('send-button');
+
+  // Minimalistic simulated AI "auto answer" feature - basic knowledge base with fallback
+  const knowledgeBase = [
+    {
+      questions: ["apa itu chatgpt?", "jelaskan chatgpt"],
+      answer: "ChatGPT adalah model bahasa buatan yang dibuat oleh OpenAI yang dapat berkomunikasi dan menjawab pertanyaan secara alami."
+    },
+    {
+      questions: ["siapa presiden indonesia?", "presiden indonesia siapa"],
+      answer: "Presiden Indonesia saat ini adalah Joko Widodo."
+    },
+    {
+      questions: ["cara membuat web?", "bagaimana cara membuat website?"],
+      answer: "Untuk membuat website, kamu bisa mulai dengan HTML, CSS, dan JavaScript. Gunakan editor teks dan browser untuk menguji hasilnya."
+    },
+    {
+      questions: ["apa itu AI?", "jelaskan AI"],
+      answer: "AI atau kecerdasan buatan adalah teknologi yang memungkinkan komputer untuk belajar dan melakukan tugas yang biasanya membutuhkan kecerdasan manusia."
+    }
+  ];
+
+  function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
+  function createMessage(text, sender = 'ai') {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message ' + sender;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = sanitizeHTML(text);
+    msgDiv.appendChild(bubble);
+    return msgDiv;
+  }
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  // Basic auto-answer logic: match question, else fallback
+  function getAnswer(question) {
+    question = question.toLowerCase().trim();
+    for (const data of knowledgeBase) {
+      for (const q of data.questions) {
+        if (question.includes(q)) {
+          return data.answer;
+        }
+      }
+    }
+    // Fallback: simple echo or fallback answer
+    return "Maaf, saya belum mengerti pertanyaan tersebut. Bisa coba tanyakan dengan cara lain?";
+  }
+
+  // Auto-expand textarea height
+  function autoExpandTextarea(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 2 + 'px';
+  }
+
+  inputEl.addEventListener('input', () => {
+    autoExpandTextarea(inputEl);
+  });
+
+  async function simulateTypingEffect(text, container) {
+    container.textContent = '';
+    const letters = Array.from(text);
+    for (let i=0; i<letters.length; i++) {
+      container.textContent += letters[i];
+      scrollToBottom();
+      await new Promise(r => setTimeout(r, 20 + Math.random()*25));
+    }
+  }
+
+  formEl.addEventListener('submit', async e => {
+    e.preventDefault();
+    const question = inputEl.value.trim();
+    if (!question) return;
+    // Add user's message
+    const userMsg = createMessage(question, 'user');
+    messagesEl.appendChild(userMsg);
+    scrollToBottom();
+    inputEl.value = '';
+    autoExpandTextarea(inputEl);
+    sendBtn.disabled = true;
+    inputEl.disabled = true;
+
+    // Prepare AI message container
+    const aiMsg = createMessage("", 'ai');
+    messagesEl.appendChild(aiMsg);
+    scrollToBottom();
+
+    // Get answer
+    const answer = getAnswer(question);
+
+    // Simulate AI typing effect
+    await simulateTypingEffect(answer, aiMsg.querySelector('.bubble'));
+
+    inputEl.disabled = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  });
+
+  // Focus input on load
+  window.onload = () => {
+    inputEl.focus();
+  };
+})();
+</script>
+</body>
+</html>
+
+```
