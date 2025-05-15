@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Auto Play Video</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  video {
+    max-width: 100%;
+    max-height: 100%;
+    outline: none;
+    user-select: none;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<video id="autoplay-video" autoplay muted playsinline>
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+<script>
+  const video = document.getElementById('autoplay-video');
+
+  // Disable right-click context menu on video
+  video.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Prevent pause with keyboard or mouse
+  window.addEventListener('keydown', e => {
+    if (!video.paused) {
+      e.preventDefault();
+    }
+  });
+  window.addEventListener('mousedown', e => {
+    if (!video.paused) {
+      e.preventDefault();
+    }
+  });
+  window.addEventListener('touchstart', e => {
+    if (!video.paused) {
+      e.preventDefault();
+    }
+  });
+
+  // Ensure video can't be paused or stopped
+  function disallowPause() {
+    if (video.paused && !video.ended) {
+      video.play();
+    }
+  }
+  video.addEventListener('pause', disallowPause);
+  video.addEventListener('seeking', () => {
+    if (video.currentTime < video.duration) {
+      video.play();
+    }
+  });
+
+  // Remove controls and disable shortcuts
+  video.controls = false;
+</script>
+</body>
+</html>
+
+```
