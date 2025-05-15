@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HTML to Web App with Auto Deploy</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+  header {
+    background: #0078d7;
+    width: 100%;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  main {
+    flex-grow: 1;
+    width: 90%;
+    max-width: 960px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #b0b0b0aa;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 1.1rem;
+  }
+  textarea {
+    width: 100%;
+    height: 220px;
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    resize: vertical;
+  }
+  button {
+    background: #0078d7;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    padding: 0.75rem 1.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: flex-start;
+  }
+  button:hover {
+    background: #005ea0;
+  }
+  section#app-preview {
+    margin-top: 2rem;
+  }
+  iframe {
+    width: 100%;
+    height: 400px;
+    border: 2px solid #0078d7;
+    border-radius: 6px;
+  }
+  #status {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #232323;
+  }
+</style>
+</head>
+<body>
+<header>HTML to Progressive Web App &amp; Auto Deploy</header>
+<main>
+  <label for="htmlInput">Paste your HTML code here:</label>
+  <textarea id="htmlInput" spellcheck="false" placeholder="Enter your HTML code..."></textarea>
+  <button id="buildBtn">Generate &amp; Install PWA</button>
+  <div id="status"></div>
+  <section id="app-preview" hidden>
+    <label>App Preview:</label>
+    <iframe id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+  </section>
+</main>
+
+<script>
+(() => {
+  const htmlInput = document.getElementById('htmlInput');
+  const buildBtn = document.getElementById('buildBtn');
+  const statusEl = document.getElementById('status');
+  const previewSection = document.getElementById('app-preview');
+  const previewFrame = document.getElementById('previewFrame');
+
+  const manifestTemplate = {
+    name: "Custom HTML App",
+    short_name: "HTMLApp",
+    description: "Generated Progressive Web App from your HTML",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0078d7",
+    theme_color: "#0078d7",
+    icons: [{
+      src: "icon-192.png",
+      sizes: "192x192",
+      type: "image/png"
+    },{
+      src: "icon-512.png",
+      sizes: "512x512",
+      type: "image/png"
+    }]
+  };
+
+  function createServiceWorker() {
+    return `
+      const CACHE_NAME = 'html-to-pwa-cache-v1';
+      const urlsToCache = [
+        '.',
+      ];
+      self.addEventListener('install', event => {
+        event.waitUntil(
+          caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(urlsToCache);
+          })
+        );
+      });
+      self.addEventListener('fetch', event => {
+        event.respondWith(
+          caches.match(event.request).then(response => {
+            return response || fetch(event.request);
+          })
+        );
+      });
+      self.addEventListener('activate', event => {
+        const cacheWhitelist = [CACHE_NAME];
+        event.waitUntil(
+          caches.keys().then(cacheNames => {
+            return Promise.all(
+              cacheNames.map(cacheName => {
+                if (!cacheWhitelist.includes(cacheName)) {
+                  return caches.delete(cacheName);
+                }
+              })
+            );
+          })
+        );
+      });
+    `;
+  }
+
+  function showStatus(message, isError = false) {
+    statusEl.textContent = message;
+    statusEl.style.color = isError ? 'crimson' : '#232323';
+  }
+
+  function buildPWA(html) {
+    try {
+      // Create Blob URL for user's HTML
+      const blob = new Blob([html], { type: 'text/html' });
+      const blobURL = URL.createObjectURL(blob);
+
+      // Show preview
+      previewFrame.src = blobURL;
+      previewSection.hidden = false;
+
+      // Create manifest JSON and set as Blob URL
+      const manifestJSON = JSON.stringify(manifestTemplate, null, 2);
+      const manifestBlob = new Blob([manifestJSON], { type: 'application/json' });
+      const manifestURL = URL.createObjectURL(manifestBlob);
+
+      // Inject manifest link tag in preview iframe document head
+      previewFrame.onload = () => {
+        try {
+          const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+
+          // Remove previous manifest links
+          let prevManifestLink = doc.querySelector('link[rel="manifest"]');
+          if (prevManifestLink) prevManifestLink.remove();
+
+          const link = doc.createElement('link');
+          link.rel = 'manifest';
+          link.href = manifestURL;
+          doc.head.appendChild(link);
+
+          // Add meta theme-color
+          let themeMeta = doc.querySelector('meta[name="theme-color"]');
+          if (!themeMeta) {
+            themeMeta = doc.createElement('meta');
+            themeMeta.name = 'theme-color';
+            doc.head.appendChild(themeMeta);
+          }
+          themeMeta.content = manifestTemplate.theme_color;
+
+          // Register Service Worker for PWA in main window (if supported)
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+              for (let registration of registrations) {
+                registration.unregister();
+              }
+            }).finally(() => {
+              // Create blob URL for service worker code
+              const swBlob = new Blob([createServiceWorker()], {type: 'text/javascript'});
+              const swURL = URL.createObjectURL(swBlob);
+
+              navigator.serviceWorker.register(swURL).then(() => {
+                showStatus('PWA generated and Service Worker installed! You can install the app using your browser options.', false);
+              }).catch(err => {
+                showStatus('Failed to register Service Worker: ' + err.message, true);
+              });
+            });
+          } else {
+            showStatus('Service Workers not supported in this browser. App will not be fully installable.', true);
+          }
+        } catch(e) {
+          showStatus('Error applying PWA features: ' + e.message, true);
+        }
+      };
+
+    } catch(e) {
+      showStatus('Error building app: ' + e.message, true);
+    }
+  }
+
+  buildBtn.addEventListener('click', () => {
+    const htmlCode = htmlInput.value.trim();
+    if (!htmlCode) {
+      showStatus('Please enter some HTML code', true);
+      return;
+    }
+    showStatus('Building the app...');
+    buildPWA(htmlCode);
+  });
+})();
+</script>
+</body>
+</html>
+
+```
