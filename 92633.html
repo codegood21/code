@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bang Kinz Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 2.5rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 5px #00000060;
+  }
+  header p {
+    font-weight: 400;
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-top: 0;
+  }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 1.5rem;
+    padding: 1rem 2rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .product-card {
+    background: #fff;
+    border-radius: 12px;
+    color: #222;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.25);
+  }
+  .product-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+  .product-content {
+    padding: 1rem 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .product-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin: 0 0 0.25rem 0;
+  }
+  .product-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #764ba2;
+  }
+  footer {
+    background: #2a1a57;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    font-size: 1rem;
+    color: #eee;
+  }
+  footer a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.25s ease;
+  }
+  footer a:hover {
+    color: #99aaff;
+  }
+  footer svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+  @media(max-width: 400px) {
+    body {
+      font-size: 14px;
+    }
+    main {
+      padding: 1rem 1rem 3rem;
+      gap: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Bang Kinz Store</h1>
+  <p>Pilih produk dan klik untuk segera pesan via WhatsApp</p>
+</header>
+<main>
+  <div class="product-card" onclick="buy('Produk A')">
+    <img class="product-image" src="https://images.unsplash.com/photo-1590080877777-e3737e212f04?auto=format&fit=crop&w=800&q=80" alt="Produk A" />
+    <div class="product-content">
+      <h2 class="product-name">Produk A</h2>
+      <span class="product-price">Rp 150.000</span>
+    </div>
+  </div>
+
+  <div class="product-card" onclick="buy('Produk B')">
+    <img class="product-image" src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80" alt="Produk B" />
+    <div class="product-content">
+      <h2 class="product-name">Produk B</h2>
+      <span class="product-price">Rp 250.000</span>
+    </div>
+  </div>
+
+  <div class="product-card" onclick="buy('Produk C')">
+    <img class="product-image" src="https://images.unsplash.com/photo-1582407947304-f1f1deade7f0?auto=format&fit=crop&w=800&q=80" alt="Produk C" />
+    <div class="product-content">
+      <h2 class="product-name">Produk C</h2>
+      <span class="product-price">Rp 100.000</span>
+    </div>
+  </div>
+</main>
+<footer>
+  <a href="https://t.me/bangkinz" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M9.046 17.568c-.4 0-.607-.262-.578-.548l.773-7.33-2.874-2.747c-.124-.104-.213-.179-.436-.179-.57 0-.974.466-.974 1.004 0 .164.02.228.039.276.02.046.68 1.155 1.055 1.768l3.35 5.157 6.18-5.51c.27-.236.516-.015.32.263l-8.16 8.545c-.142.15-.316.224-.557.224z"/></svg> Telegram</a>
+  <a href="https://wa.me/6281361142340?text=Bang%20Kinz%20gw%20mau%20buy" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M20.52 3.48a11.885 11.885 0 00-18.373 15.68l-1.84 5.38 5.518-1.81a11.872 11.872 0 0014.695-19.25zm-3.158 17.305a9.816 9.816 0 01-5.228 1.563c-1.674 0-3.255-.462-4.638-1.345l-.34-.213-3.302 1.083 1.11-3.204-.221-.355a9.782 9.782 0 015.556-14.738 9.843 9.843 0 014.805 18.309zm1.67-7.64c-.09-.15-.326-.23-.68-.404-.354-.176-2.084-1.03-2.408-1.15-.323-.123-.56-.184-.797.175-.234.313-.905 1.15-1.11 1.386-.205.236-.41.265-.76.09-.354-.176-1.493-.55-2.85-1.75-1.053-.935-1.76-2.093-1.97-2.41-.21-.316-.022-.486.15-.637.154-.131.35-.342.525-.512.172-.17.23-.283.346-.47.112-.188.056-.353-.028-.51-.09-.15-.797-1.92-1.092-2.62-.288-.682-.58-.59-.798-.6l-.68-.015c-.21 0-.55.08-.838.383-.29.302-1.11 1.08-1.11 2.624 0 1.545 1.14 3.036 1.3 3.25.154.21 2.245 3.42 5.44 4.79.76.327 1.351.522 1.81.668.76.23 1.45.197 2 .12.61-.09 1.87-.76 2.13-1.49.267-.733.267-1.36.185-1.49z"/></svg> WhatsApp</a>
+</footer>
+<script>
+  function buy(productName) {
+    const phone = "6281361142340";
+    const text = encodeURIComponent("Bang Kinz gw mau buy " + productName);
+    const url = `https://wa.me/${phone}?text=${text}`;
+    window.open(url, "_blank");
+  }
+</script>
+</body>
+</html>
+
+```
