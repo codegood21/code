@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unlimited RAM Bot Panel</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    height: 100vh;
+  }
+  .panel {
+    background: rgba(15, 32, 39, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    width: 360px;
+    padding: 30px 25px 40px 25px;
+    text-align: center;
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #40c4ff;
+  }
+  button {
+    background-color: #40c4ff;
+    border: none;
+    padding: 15px 40px;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 40px;
+    color: #0f2027;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 5px 15px rgba(64,196,255,0.6);
+  }
+  button:hover {
+    background-color: #1ea6ff;
+    box-shadow: 0 8px 20px rgba(30,166,255,0.8);
+  }
+  #status {
+    margin-top: 25px;
+    font-size: 1rem;
+    min-height: 1.2em;
+    font-weight: 600;
+    color: #a0e7ff;
+  }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Unlimited RAM Bot</h1>
+    <p>Click the button below to run the bot with unlimited RAM.</p>
+    <button id="runBtn">Run Bot</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const runBtn = document.getElementById('runBtn');
+    const statusDiv = document.getElementById('status');
+
+    function simulateBotRun() {
+      statusDiv.textContent = 'Initializing bot...';
+
+      // Simulate RAM unlimited usage with a fake progress and status
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if(progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          statusDiv.textContent = 'Bot is running with unlimited RAM! 🚀';
+          runBtn.disabled = false;
+          runBtn.textContent = "Run Bot Again";
+        } else {
+          statusDiv.textContent = `Running bot... RAM usage unlimited: ${progress}%`;
+        }
+      }, 400);
+    }
+
+    runBtn.addEventListener('click', () => {
+      runBtn.disabled = true;
+      runBtn.textContent = 'Running...';
+      simulateBotRun();
+    });
+  </script>
+</body>
+</html>
+
+```
