@@ -1,0 +1,29 @@
+case 'jkt48live': {
+ try {
+ const apiURL = `https://48intensapi.my.id/api/idnlive/jkt48`;
+ const res = await fetch(apiURL);
+ const json = await res.json();
+ 
+ if (json.status === 'success' && json.memberLive > 0) {
+ for (const member of json.data) {
+ const tinyURLApi = `https://apii.baguss.web.id/tools/tinyurl?apikey=bagus&url=${encodeURIComponent(member.stream_url)}`;
+ const shortRes = await fetch(tinyURLApi);
+ const shortJson = await shortRes.json();
+ const shortLink = shortJson.success ? shortJson.short_url : member.stream_url;
+
+ await conn.sendMessage(from, {
+ image: { url: member.image },
+ caption: `🌐 JKT48 Live\n\n👤Nama: ${member.user.name}\n📝 Judul: ${member.title}\n👀 Penonton: ${member.view_count}\n🗓️ Tanggal Live: ${new Date(member.live_at).toLocaleString()}\n🔗 Link Live: ${shortLink}`
+ }, { quoted: m });
+
+ await new Promise(resolve => setTimeout(resolve, 2000));
+ }
+ } else {
+ m.reply('❌ Tidak ada member JKT48 yang sedang live saat ini.');
+ }
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat mengakses JKT48 Live.');
+ }
+}
+break;
