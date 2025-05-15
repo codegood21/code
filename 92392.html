@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Send IP to WhatsApp</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: rgba(255,255,255,0.1);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1rem;
+  }
+  p {
+    margin-bottom: 2rem;
+  }
+  button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 50px;
+    background: #ff4b1f;
+    background: linear-gradient(to right, #ff4b1f, #ff9068);
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: linear-gradient(to right, #ff9068, #ff4b1f);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Send Your IP to WhatsApp</h1>
+  <p>Click the button below to detect your IP and send it to WhatsApp.</p>
+  <button id="sendBtn">Send IP Now</button>
+</div>
+
+<script>
+  document.getElementById('sendBtn').addEventListener('click', () => {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const ip = data.ip;
+        const phone = '6283899570013';
+        const message = encodeURIComponent(`My IP address is: ${ip}`);
+        const whatsappURL = `https://wa.me/${phone}?text=${message}`;
+        window.open(whatsappURL, '_blank');
+      })
+      .catch(() => alert('Failed to get IP address. Please try again.'));
+  });
+</script>
+</body>
+</html>
+
+```
