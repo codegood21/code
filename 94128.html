@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RijalGanzz AI GPT</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Comfortaa', cursive;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  header {
+    padding: 1.5rem 2rem;
+    background: rgba(0,0,0,0.25);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.08em;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    user-select: none;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  #chatbox {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  .message {
+    margin: 0.5rem 0;
+    display: flex;
+    max-width: 80%;
+  }
+  .message.user {
+    align-self: flex-end;
+    justify-content: flex-end;
+  }
+  .message.user .bubble {
+    background: #764ba2;
+    color: #ffe;
+    border-bottom-right-radius: 0;
+  }
+  .message.assistant .bubble {
+    background: #45567d;
+    color: #ddd;
+    border-bottom-left-radius: 0;
+  }
+  .bubble {
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+  form {
+    display: flex;
+    margin-top: 1rem;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border-radius: 30px;
+    border: none;
+    font-size: 1.1rem;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    transition: background 0.3s;
+  }
+  input[type="text"]:focus {
+    background: rgba(255,255,255,0.3);
+  }
+  button {
+    background: #ffc107;
+    border: none;
+    margin-left: 0.8rem;
+    padding: 0 1.4rem;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #333;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    background: #f3d58e;
+    cursor: default;
+  }
+  button:hover:not(:disabled) {
+    background: #ffca28;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.8rem;
+    color: #ccc;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<header>RijalGanzz AI GPT</header>
+<main>
+  <div id="chatbox" aria-live="polite" aria-label="Chat messages"></div>
+  <form id="form" aria-label="Send message form">
+    <input type="text" id="input" autocomplete="off" placeholder="Tanya sesuatu..." aria-required="true" aria-label="Input your question" />
+    <button type="submit" aria-label="Send message">Kirim</button>
+  </form>
+</main>
+<footer>© 2024 RijalGanzz</footer>
+<script>
+  const chatbox = document.getElementById('chatbox');
+  const form = document.getElementById('form');
+  const input = document.getElementById('input');
+
+  // Basic simulated AI GPT response function
+  function generateResponse(question) {
+    question = question.toLowerCase().trim();
+    if (!question) return "Silakan ketik sesuatu untuk bertanya.";
+    const greetings = ['hai', 'halo', 'haii', 'hello', 'hallo'];
+    if (greetings.some(greet => question.includes(greet))) {
+      return "Halo! Ada yang bisa saya bantu?";
+    }
+    if (question.includes('apa kabar')) {
+      return "Saya baik, terima kasih sudah bertanya!";
+    }
+    if (question.includes('siapa kamu')) {
+      return "Saya adalah RijalGanzz, AI GPT buatan kamu.";
+    }
+    if (question.includes('terima kasih') || question.includes('makasih')) {
+      return "Sama-sama! Senang bisa membantu.";
+    }
+    return "Maaf, saya tidak mengerti pertanyaanmu. Bisa coba ulangi?";
+  }
+
+  function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.classList.add('message', sender);
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    div.appendChild(bubble);
+    chatbox.appendChild(div);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const userText = input.value.trim();
+    if (!userText) return;
+    addMessage(userText, 'user');
+    input.value = '';
+    // Simulate AI thinking delay
+    setTimeout(() => {
+      const response = generateResponse(userText);
+      addMessage(response, 'assistant');
+    }, 700);
+  });
+
+  // Welcome message on load
+  window.onload = () => {
+    addMessage("Halo! Saya RijalGanzz, AI GPT siap membantu kamu. Silakan ketik pertanyaan apapun.", 'assistant');
+    input.focus();
+  };
+</script>
+</body>
+</html>
+
+```
