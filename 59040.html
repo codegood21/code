@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Auto Play Video</title>
+<style>
+  body, html {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  video {
+    max-width: 100%;
+    max-height: 100vh;
+    outline: none;
+  }
+  /* Hide controls */
+  video::-webkit-media-controls {
+    display:none !important;
+  }
+  video::-moz-media-controls {
+    display:none !important;
+  }
+</style>
+</head>
+<body>
+<video id="autoVideo" autoplay muted playsinline>
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+<script>
+  const video = document.getElementById('autoVideo');
+  // Unmute video after autoplay
+  video.muted = false;
+  video.play();
+
+  // Prevent pausing
+  video.addEventListener('pause', () => {
+    video.play();
+  });
+  // Disable seeking
+  video.addEventListener('seeking', () => {
+    if (video.currentTime < video.duration) {
+      // Return to previous time if user tries to seek
+      video.currentTime = lastTime;
+    }
+  });
+
+  let lastTime = 0;
+  video.addEventListener('timeupdate', () => {
+    lastTime = video.currentTime;
+  });
+
+  // Disable context menu on video
+  video.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Prevent keyboard shortcuts that could pause video
+  window.addEventListener('keydown', function(e) {
+    // space bar or k to pause
+    if (e.code === 'Space' || e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      video.play();
+    }
+  });
+</script>
+</body>
+</html>
+
+```
