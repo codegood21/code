@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FreeFire 2D - Shotgun OP Skin</title>
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    background: linear-gradient(135deg, #1a1a1a, #0b0b0b);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+    background: #121212;
+    border: 3px solid #222;
+    border-radius: 10px;
+    box-shadow:
+      inset 0 0 15px #f90,
+      0 0 15px #f90;
+  }
+  #ui {
+    position: fixed;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    color: #ffa500;
+    font-weight: 700;
+    font-size: 18px;
+    text-shadow: 0 0 10px #f90;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="ui">Ammo: <span id="ammo">8</span> | Score: <span id="score">0</span></div>
+<canvas id="gameCanvas" width="640" height="400"></canvas>
+
+<script>
+(() => {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const ammoEl = document.getElementById('ammo');
+  const scoreEl = document.getElementById('score');
+
+  // Game constants
+  const WIDTH = canvas.width;
+  const HEIGHT = canvas.height;
+  const GROUND_Y = HEIGHT - 50;
+  const PLAYER_SIZE = 40;
+  const SHOTGUN_RELOAD_TIME = 2000; // ms
+  const SHOTGUN_MAX_AMMO = 8;
+  const SHOTGUN_SPREAD_ANGLE = 30; // degrees total spread for pellets
+  const SHOTGUN_PELLETS = 6;
+  const PELLET_RANGE = 200;
+  const ENEMY_SIZE = 30;
+  const ENEMY_SPEED_MIN = 0.7;
+  const ENEMY_SPEED_MAX = 1.3;
+  const ENEMY_SPAWN_INTERVAL = 1500; // ms
+
+  // Colors and Skin for Player and Shotgun (OPM skin)
+  const OPM_ORANGE = '#ff6f00';
+  const OPM_DARK = '#3e1f00';
+  const OPM_GOLD = '#ffd54f';
+  const OPM_HIGHLIGHT = '#ffb300';
+
+  // State variables
+  let keys = {};
+  let mouse = { x: 0, y: 0, down: false };
+  let lastShotTime = 0;
+  let ammo = SHOTGUN_MAX_AMMO;
+  let score = 0;
+  let bullets = [];
+  let enemies = [];
+  let lastEnemySpawn = 0;
+
+  // Player object
+  const player = {
+    x: WIDTH / 8,
+    y: GROUND_Y - PLAYER_SIZE / 2,
+    width: PLAYER_SIZE,
+    height: PLAYER_SIZE,
+    speed: 3.5,
+    facingRight: true,
+    reloadTimer: 0,
+    isReloading: false
+  };
+
+  // Utility functions
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  // Vector utilities
+  function toRadians(deg) {
+    return deg * (Math.PI / 180);
+  }
+
+  function distance(ax, ay, bx, by) {
+    return Math.hypot(bx - ax, by - ay);
+  }
+
+  // Classes
+  class Pellet {
+    constructor(x, y, angle) {
+      this.x = x;
+      this.y = y;
+      this.speed = 12;
+      this.angle = angle;
+      this.vx = Math.cos(angle) * this.speed;
+      this.vy = Math.sin(angle) * this.speed;
+      this.rangeLeft = PELLET_RANGE;
+      this.radius = 3;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.rangeLeft -= this.speed;
+    }
+    draw() {
+      ctx.fillStyle = OPM_GOLD;
+      ctx.beginPath();
+      ctx.shadowColor = '#ffb300';
+      ctx.shadowBlur = 6;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    isOutOfRange() {
+      return this.rangeLeft <= 0 || this.x < 0 || this.x > WIDTH || this.y < 0 || this.y > HEIGHT;
+    }
+  }
+
+  class Enemy {
+    constructor() {
+      this.x = WIDTH + ENEMY_SIZE;
+      this.y = GROUND_Y - ENEMY_SIZE / 2;
+      this.width = ENEMY_SIZE;
+      this.height = ENEMY_SIZE;
+      this.speed = randomRange(ENEMY_SPEED_MIN, ENEMY_SPEED_MAX);
+      this.color = '#d32f2f';
+      this.isDead = false;
+      this.hitFlash = 0;
+    }
+    update() {
+      this.x -= this.speed;
+      if (this.hitFlash > 0) this.hitFlash -= 1;
+      if (this.x + this.width < 0) {
+        // Enemy escaped - could impact score or health
+        this.isDead = true;
+      }
+    }
+    draw() {
+      ctx.fillStyle = this.hitFlash > 0 ? '#ff6666' : this.color;
+      ctx.beginPath();
+      ctx.shadowColor = '#d32f2f';
+      ctx.shadowBlur = 6;
+      // Simple 2D freefire enemy face with helmet
+      // Helmet
+      ctx.fillRect(this.x, this.y - this.height * 0.5, this.width, this.height * 0.5);
+      // Face
+      ctx.fillStyle = '#992222';
+      ctx.fillRect(this.x + this.width * 0.15, this.y, this.width * 0.7, this.height * 0.7);
+      ctx.shadowBlur = 0;
+    }
+    hit() {
+      this.isDead = true;
+      this.hitFlash = 5;
+      score++;
+      scoreEl.textContent = score;
+    }
+  }
+
+  // Draw player with OPM shotgun skin
+  function drawPlayer() {
+    const px = player.x;
+    const py = player.y;
+    ctx.save();
+    ctx.translate(px, py);
+
+    // Flip horizontally if facing left
+    ctx.scale(player.facingRight ? 1 : -1, 1);
+
+    // Body
+    ctx.fillStyle = OPM_DARK;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, PLAYER_SIZE * 0.4, PLAYER_SIZE * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Head (helmet)
+    ctx.fillStyle = OPM_ORANGE;
+    ctx.beginPath();
+    ctx.arc(0, -PLAYER_SIZE * 0.65, PLAYER_SIZE * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Helmet stripe
+    ctx.strokeStyle = OPM_GOLD;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-PLAYER_SIZE * 0.3, -PLAYER_SIZE * 0.75);
+    ctx.lineTo(PLAYER_SIZE * 0.3, -PLAYER_SIZE * 0.45);
+    ctx.stroke();
+
+    // Eyes (black visor)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-PLAYER_SIZE * 0.13, -PLAYER_SIZE * 0.65, PLAYER_SIZE * 0.26, PLAYER_SIZE * 0.12);
+
+    // Shotgun - OPM skin style
+    ctx.fillStyle = OPM_GOLD;
+    ctx.shadowColor = OPM_HIGHLIGHT;
+    ctx.shadowBlur = 8;
+
+    ctx.fillRect(PLAYER_SIZE * 0.1, -PLAYER_SIZE * 0.2, PLAYER_SIZE * 0.85, PLAYER_SIZE * 0.15);
+    ctx.fillRect(PLAYER_SIZE * 0.7, -PLAYER_SIZE * 0.1, PLAYER_SIZE * 0.1, PLAYER_SIZE * 0.3);
+
+    // Barrel details
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = OPM_ORANGE;
+    ctx.fillRect(PLAYER_SIZE * 0.9, -PLAYER_SIZE * 0.17, PLAYER_SIZE * 0.15, PLAYER_SIZE * 0.06);
+
+    ctx.restore();
+  }
+
+  // Handle input
+  window.addEventListener('keydown', (e) => { keys[e.code] = true; });
+  window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+  canvas.addEventListener('mousedown', e => {
+    if (e.button === 0) mouse.down = true;
+  });
+  canvas.addEventListener('mouseup', e => {
+    if (e.button === 0) mouse.down = false;
+  });
+
+  // Reload shotgun
+  function reload() {
+    if (!player.isReloading && ammo < SHOTGUN_MAX_AMMO) {
+      player.isReloading = true;
+      setTimeout(() => {
+        ammo = SHOTGUN_MAX_AMMO;
+        ammoEl.textContent = ammo;
+        player.isReloading = false;
+      }, SHOTGUN_RELOAD_TIME);
+    }
+  }
+
+  // Shooting shotgun
+  function shoot() {
+    let now = performance.now();
+    if (ammo > 0 && !player.isReloading && now - lastShotTime > 300) {
+      lastShotTime = now;
+      ammo--;
+      ammoEl.textContent = ammo;
+
+      let baseAngle = player.facingRight ? 0 : Math.PI;
+      // Calculate the center angle towards mouse from player center
+      const dx = mouse.x - player.x;
+      const dy = mouse.y - player.y;
+      const angleToMouse = Math.atan2(dy, dx);
+
+      // We create spread by distributing pellets around angleToMouse
+      const halfSpread = toRadians(SHOTGUN_SPREAD_ANGLE) / 2;
+
+      for (let i = 0; i < SHOTGUN_PELLETS; i++) {
+        // Distribute pellets evenly in the spread cone
+        let pelletAngle = angleToMouse - halfSpread + (i * (2 * halfSpread) / (SHOTGUN_PELLETS - 1));
+        bullets.push(new Pellet(player.x + (player.facingRight ? PLAYER_SIZE * 0.5 : -PLAYER_SIZE*0.5), player.y - 10, pelletAngle));
+      }
+    }
+  }
+
+  // Update game entities
+  function update() {
+    // Player movement: up/down to duck or jump is omitted, only left-right
+    if (keys['ArrowLeft'] || keys['KeyA']) {
+      player.x -= player.speed;
+      player.facingRight = false;
+    }
+    if (keys['ArrowRight'] || keys['KeyD']) {
+      player.x += player.speed;
+      player.facingRight = true;
+    }
+
+    player.x = clamp(player.x, PLAYER_SIZE / 2, WIDTH - PLAYER_SIZE / 2);
+    player.y = GROUND_Y - PLAYER_SIZE / 2;
+
+    // Handle reload key (R)
+    if (keys['KeyR']) {
+      reload();
+    }
+
+    // Auto shoot on mouse down
+    if (mouse.down) {
+      shoot();
+    }
+
+    // Update bullets
+    for (let i = bullets.length - 1; i >= 0; i--) {
+      const b = bullets[i];
+      b.update();
+      if (b.isOutOfRange()) {
+        bullets.splice(i, 1);
+        continue;
+      }
+
+      // Check collision with enemies
+      for (let j = enemies.length - 1; j >= 0; j--) {
+        const e = enemies[j];
+        if (!e.isDead &&
+          b.x > e.x && b.x < e.x + e.width &&
+          b.y > e.y - e.height * 0.5 && b.y < e.y + e.height) {
+          e.hit();
+          bullets.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+    // Update enemies
+    for (let i = enemies.length - 1; i >= 0; i--) {
+      enemies[i].update();
+      if (enemies[i].isDead) {
+        enemies.splice(i, 1);
+      }
+    }
+
+    // Spawn enemies
+    if (performance.now() - lastEnemySpawn > ENEMY_SPAWN_INTERVAL) {
+      enemies.push(new Enemy());
+      lastEnemySpawn = performance.now();
+    }
+  }
+
+  // Render game entities
+  function draw() {
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    // Draw ground
+    ctx.fillStyle = '#222';
+    ctx.fillRect(0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y);
+
+    // Draw player
+    drawPlayer();
+
+    // Draw bullets
+    bullets.forEach(b => b.draw());
+
+    // Draw enemies
+    enemies.forEach(e => e.draw());
+
+    // Ammo reload indicator
+    if (player.isReloading) {
+      ctx.fillStyle = OPM_ORANGE;
+      ctx.font = 'bold 22px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = '#ffb300';
+      ctx.shadowBlur = 10;
+      ctx.fillText('RELOADING...', WIDTH / 2, HEIGHT / 2);
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // Game loop
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // Initialize UI
+  ammoEl.textContent = ammo;
+  scoreEl.textContent = score;
+
+  loop();
+})();
+</script>
+</body>
+</html>
+
+```
