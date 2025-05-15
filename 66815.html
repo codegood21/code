@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portal Berita</title>
+<style>
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    color: #212529;
+    line-height: 1.6;
+  }
+  a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+  a:hover, a:focus {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  /* Header */
+  header {
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #333;
+    letter-spacing: 1px;
+  }
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 22px;
+  }
+  nav ul li {
+  }
+  nav ul li a {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.8px;
+  }
+
+  /* Main content grid */
+  main {
+    margin-top: 25px;
+    margin-bottom: 50px;
+  }
+  .main-grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+  }
+
+  /* Featured article */
+  .featured-article {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+    display: flex;
+    flex-direction: column;
+  }
+  .featured-article img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .featured-article-content {
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .featured-article-content h1 {
+    font-size: 1.8rem;
+    margin: 0 0 12px 0;
+    color: #121212;
+    font-weight: 700;
+  }
+  .featured-article-content p {
+    color: #555;
+    font-size: 1rem;
+    flex-grow: 1;
+  }
+  .featured-article-content .read-more {
+    align-self: flex-start;
+    margin-top: 16px;
+    font-weight: 600;
+    background-color: #007bff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  .featured-article-content .read-more:hover,
+  .featured-article-content .read-more:focus {
+    background-color: #0056b3;
+    text-decoration: none;
+  }
+
+  /* News list */
+  .news-list {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+    padding: 25px;
+  }
+  .news-list h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-weight: 700;
+    color: #212529;
+  }
+  .news-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 18px;
+  }
+  .news-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .news-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 75px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .news-info {
+    flex-grow: 1;
+  }
+  .news-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+  }
+  .news-info p {
+    margin: 0;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  .news-info .timestamp {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #868e96;
+  }
+
+  /* Sidebar */
+  aside {
+    background: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+    height: fit-content;
+  }
+  aside h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #212529;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+  }
+
+  /* Popular news in sidebar */
+  .popular-news {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .popular-news li {
+    margin-bottom: 15px;
+  }
+  .popular-news li a {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    line-height: 1.3;
+    border-radius: 4px;
+    padding: 5px;
+    transition: background-color 0.2s ease;
+  }
+  .popular-news li a:hover, .popular-news li a:focus {
+    background-color: #e9f1ff;
+    outline: none;
+  }
+
+  /* Footer */
+  footer {
+    background: #343a40;
+    color: #ddd;
+    text-align: center;
+    padding: 20px 15px;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+    aside {
+      margin-top: 35px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner container">
+    <a href="#" class="logo" aria-label="Portal Berita Utama">BERITA.ID</a>
+    <nav aria-label="Navigasi Utama">
+      <ul>
+        <li><a href="#">Beranda</a></li>
+        <li><a href="#">Nasional</a></li>
+        <li><a href="#">Internasional</a></li>
+        <li><a href="#">Teknologi</a></li>
+        <li><a href="#">Ekonomi</a></li>
+        <li><a href="#">Olahraga</a></li>
+        <li><a href="#">Hiburan</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container" role="main">
+  <section class="main-grid" aria-label="Berita Utama dan Sidebar">
+    <article class="featured-article" aria-label="Berita Unggulan">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="Ilustrasi berita utama cuaca ekstrem"/>
+      <div class="featured-article-content">
+        <h1>Cuaca Ekstrem Melanda Indonesia, Warga Diminta Waspada</h1>
+        <p>Pemantauan intensif dilakukan oleh BMKG menyusul gelombang hujan deras dan angin kencang yang melanda sejumlah daerah di Indonesia. Pastikan selalu memantau perkembangan cuaca melalui kanal resmi.</p>
+        <a href="#" class="read-more" aria-label="Baca lengkap berita cuaca ekstrem melanda Indonesia">Baca Selengkapnya</a>
+      </div>
+    </article>
+
+    <section class="news-list" aria-label="Daftar Berita Terbaru">
+      <h2>Berita Terbaru</h2>
+      
+      <article class="news-item">
+        <div class="news-image">
+          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80" alt="Aktivitas rapat parlemen"/>
+        </div>
+        <div class="news-info">
+          <h3><a href="#" aria-label="Baca berita Rapat Parlemen Terkait Kebijakan Ekonomi">Rapat Parlemen Terkait Kebijakan Ekonomi Diselenggarakan Hari Ini</a></h3>
+          <p>Para anggota parlemen hari ini mengadakan rapat penting membahas berbagai stimulus yang diharapkan dapat memacu perekonomian nasional.</p>
+          <span class="timestamp" aria-label="Dipublikasi 2 jam lalu">2 jam lalu</span>
+        </div>
+      </article>
+
+      <article class="news-item">
+        <div class="news-image">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="Konser musik malam hari"/>
+        </div>
+        <div class="news-info">
+          <h3><a href="#" aria-label="Baca berita Konser Musik Kembali Digelar Tahun Ini">Konser Musik Kembali Digelar Tahun Ini dengan Protokol Ketat</a></h3>
+          <p>Setelah vakum selama pandemi, berbagai konser musik mulai digelar kembali dengan penerapan protokol kesehatan yang ketat demi keamanan penonton dan penyelenggara.</p>
+          <span class="timestamp" aria-label="Dipublikasi 4 jam lalu">4 jam lalu</span>
+        </div>
+      </article>
+
+      <article class="news-item">
+        <div class="news-image">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Lapangan sepak bola dengan pemain bermain"/>
+        </div>
+        <div class="news-info">
+          <h3><a href="#" aria-label="Baca berita Liga Sepak Bola Musim Ini Semakin Seru">Liga Sepak Bola Musim Ini Semakin Seru dengan Persaingan Ketat</a></h3>
+          <p>Musim kompetisi sepak bola nasional semakin memanas dengan pertandingan-pertandingan yang menampilkan aksi spektakuler dari para pemain terbaik.</p>
+          <span class="timestamp" aria-label="Dipublikasi 6 jam lalu">6 jam lalu</span>
+        </div>
+      </article>
+
+    </section>
+  </section>
+
+  <aside aria-label="Berita Populer">
+    <h2>Berita Populer</h2>
+    <ul class="popular-news">
+      <li><a href="#" aria-label="Baca berita Harga BBM Naik Mulai Besok">Harga BBM Naik Mulai Besok, Ini Penjelasannya</a></li>
+      <li><a href="#" aria-label="Baca berita Pemerintah Umumkan Program Vaksin Booster">Pemerintah Umumkan Program Vaksin Booster Gratis</a></li>
+      <li><a href="#" aria-label="Baca berita Festival Kuliner Kembali Digelar di Jakarta">Festival Kuliner Kembali Digelar di Jakarta Minggu Ini</a></li>
+      <li><a href="#" aria-label="Baca berita Teknologi 5G Resmi Diluncurkan di Kota Besar">Teknologi 5G Resmi Diluncurkan di Kota Besar</a></li>
+      <li><a href="#" aria-label="Baca berita Tips Menjaga Kesehatan di Musim Hujan">Tips Menjaga Kesehatan di Musim Hujan</a></li>
+    </ul>
+  </aside>
+</main>
+
+<footer>
+  &copy; 2024 BERITA.ID - All rights reserved
+</footer>
+
+</body>
+</html>
+
+```
