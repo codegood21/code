@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dark Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: #e0e0e0;
+  }
+  header {
+    background: #1f1f1f;
+    padding: 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid #2c2c2c;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+  nav {
+    margin-top: 10px;
+  }
+  nav a {
+    color: #bb86fc;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  nav a:hover {
+    color: #9a4dff;
+  }
+  main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 30px;
+  }
+  .product-card {
+    background: #222222;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    transition: transform 0.2s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.8);
+  }
+  .product-image {
+    height: 180px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center center;
+    margin-bottom: 15px;
+  }
+  .product-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #bb86fc;
+  }
+  .product-desc {
+    flex-grow: 1;
+    font-size: 0.9rem;
+    color: #bbbbbb;
+    margin-bottom: 15px;
+  }
+  .product-price {
+    color: #03dac6;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+  .btn-primary {
+    background: #bb86fc;
+    color: #121212;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: #9a4dff;
+  }
+  footer {
+    background: #1f1f1f;
+    padding: 30px 40px;
+    text-align: center;
+    border-top: 1px solid #2c2c2c;
+    margin-top: 50px;
+  }
+  footer h3 {
+    color: #bb86fc;
+    margin-bottom: 20px;
+  }
+  footer .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  footer .contact-item {
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    color: #e0e0e0;
+  }
+  footer a.contact-link {
+    color: #03dac6;
+    text-decoration: none;
+    margin-top: 8px;
+    font-weight: 600;
+    word-break: break-all;
+  }
+  footer a.contact-link:hover {
+    color: #00b3a6;
+  }
+  @media (max-width: 600px) {
+    nav a {
+      margin: 0 8px;
+      font-size: 0.9rem;
+    }
+    .products {
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dark Store</h1>
+  <nav>
+    <a href="#products">Products</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<main>
+  <section id="products" aria-label="Products">
+    <div class="products">
+      <article class="product-card" tabindex="0">
+        <div class="product-image" style="background-image:url('https://images.unsplash.com/photo-1580910051074-fb35c0d80a5c?auto=format&fit=crop&w=600&q=80');"></div>
+        <h2 class="product-title">Wireless Headphones</h2>
+        <p class="product-desc">High quality wireless headphones with noise cancellation and long battery life.</p>
+        <div class="product-price">$89.99</div>
+        <a href="https://wa.me/6281234567890?text=I%20am%20interested%20in%20Wireless%20Headphones" target="_blank" class="btn-primary" rel="noopener">Order on WhatsApp</a>
+      </article>
+      <article class="product-card" tabindex="0">
+        <div class="product-image" style="background-image:url('https://images.unsplash.com/photo-1542293787937-73d1b67b75d2?auto=format&fit=crop&w=600&q=80');"></div>
+        <h2 class="product-title">Gaming Keyboard</h2>
+        <p class="product-desc">Mechanical gaming keyboard with customizable RGB lighting and ergonomic design.</p>
+        <div class="product-price">$129.99</div>
+        <a href="https://wa.me/6281234567890?text=I%20am%20interested%20in%20Gaming%20Keyboard" target="_blank" class="btn-primary" rel="noopener">Order on WhatsApp</a>
+      </article>
+      <article class="product-card" tabindex="0">
+        <div class="product-image" style="background-image:url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80');"></div>
+        <h2 class="product-title">Smart Watch</h2>
+        <p class="product-desc">Stay connected with this elegant smartwatch equipped with fitness tracking features.</p>
+        <div class="product-price">$149.99</div>
+        <a href="https://wa.me/6281234567890?text=I%20am%20interested%20in%20Smart%20Watch" target="_blank" class="btn-primary" rel="noopener">Order on WhatsApp</a>
+      </article>
+      <article class="product-card" tabindex="0">
+        <div class="product-image" style="background-image:url('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80');"></div>
+        <h2 class="product-title">Portable Speaker</h2>
+        <p class="product-desc">Compact Bluetooth speaker providing rich sound and deep bass for on-the-go music.</p>
+        <div class="product-price">$59.99</div>
+        <a href="https://wa.me/6281234567890?text=I%20am%20interested%20in%20Portable%20Speaker" target="_blank" class="btn-primary" rel="noopener">Order on WhatsApp</a>
+      </article>
+    </div>
+  </section>
+</main>
+<footer id="contact">
+  <h3>Contact Us</h3>
+  <div class="contact-links">
+    <div class="contact-item">
+      <strong>WhatsApp:</strong>
+      <a class="contact-link" href="https://wa.me/6281234567890" target="_blank" rel="noopener">+62 812-3456-7890</a>
+    </div>
+    <div class="contact-item">
+      <strong>Telephone:</strong>
+      <a class="contact-link" href="tel:+622134567890">+62 21 3456 7890</a>
+    </div>
+    <div class="contact-item">
+      <strong>WhatsApp Group:</strong>
+      <a class="contact-link" href="https://chat.whatsapp.com/ExampleGroupInviteCode" target="_blank" rel="noopener">Join Our Group</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
+
+```
