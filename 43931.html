@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Create Nama Keren</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2.5rem 3rem;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'Urbanist', sans-serif;
+    font-size: 3.2rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  }
+
+  label {
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  }
+
+  input[type="text"] {
+    width: 100%;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    box-shadow: inset 0 0 8px rgba(255,255,255,0.3);
+    outline: none;
+    transition: box-shadow 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #222;
+  }
+
+  input[type="text"]:focus {
+    box-shadow: inset 0 0 12px #f8f9fa, 0 0 12px #66f;
+  }
+
+  button {
+    margin-top: 1.6rem;
+    background: #ff416c;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255,75,43,0.6);
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  button:hover {
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    box-shadow: 0 6px 20px rgba(255,65,108,0.8);
+  }
+
+  .result {
+    margin-top: 2rem;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 3.6rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+      3px 3px 10px rgba(255,255,255,0.8),
+      -3px -3px 10px rgba(255,255,255,0.8),
+      4px 4px 14px #ff416c;
+    user-select: all;
+    min-height: 4.5rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Buat Nama Keren</h1>
+    <label for="namaInput">Masukkan Nama Anda:</label>
+    <input type="text" id="namaInput" placeholder="Tulis nama kerenmu di sini..." autocomplete="off" />
+    <button id="createBtn">Buat Nama</button>
+    <div class="result" id="result"></div>
+  </div>
+
+<script>
+  const input = document.getElementById('namaInput');
+  const btn = document.getElementById('createBtn');
+  const result = document.getElementById('result');
+
+  function transformName(name) {
+    // Transform to uppercase with spaced out letters and funky style
+    let spaced = name.toUpperCase().split('').join(' ');
+    return spaced;
+  }
+
+  btn.onclick = () => {
+    const name = input.value.trim();
+    if (!name) {
+      result.textContent = '';
+      alert('Mohon masukkan nama terlebih dahulu!');
+      return;
+    }
+    result.textContent = transformName(name);
+  };
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') btn.click();
+  });
+</script>
+</body>
+</html>
+
+```
