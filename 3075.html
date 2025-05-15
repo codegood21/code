@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Remote Access Tool (RAT) and Application Control</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2f3e46, #354f52);
+    margin: 0; padding: 20px;
+    color: #d8e2dc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #84a98c;
+  }
+  #connection-section, #command-section, #response-section {
+    background-color: #52796f;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 0 15px #40916c;
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="password"], textarea {
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    padding: 8px 12px;
+    font-size: 1rem;
+  }
+  button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #2a9d8f;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 5px 10px #264653;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #21867a;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 150px;
+    background-color: #17252a;
+    color: #d8e2dc;
+    border: 1px solid #84a98c;
+  }
+  #status {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #ade8f4;
+  }
+</style>
+</head>
+<body>
+<header>Remote Access Tool & Application</header>
+
+<section id="connection-section">
+  <label for="target-ip">Target IP Address:</label>
+  <input type="text" id="target-ip" placeholder="Enter target IP (e.g. 192.168.1.100)" />
+  <label for="target-port">Target Port:</label>
+  <input type="text" id="target-port" placeholder="Enter target port (e.g. 8080)" />
+  <label for="auth-key">Authorization Key:</label>
+  <input type="password" id="auth-key" placeholder="Key to authenticate" />
+  <button id="connect-btn">Connect to Target</button>
+  <div id="status"></div>
+</section>
+
+<section id="command-section" style="display:none;">
+  <label for="command-input">Enter Command for Target:</label>
+  <input type="text" id="command-input" placeholder="Type command here" />
+  <button id="send-cmd-btn">Send Command</button>
+</section>
+
+<section id="response-section" style="display:none;">
+  <label>Target Response:</label>
+  <textarea id="response-output" readonly></textarea>
+</section>
+
+<script>
+  const connectBtn = document.getElementById('connect-btn');
+  const sendCmdBtn = document.getElementById('send-cmd-btn');
+  const statusDiv = document.getElementById('status');
+  const commandSection = document.getElementById('command-section');
+  const responseSection = document.getElementById('response-section');
+  const responseOutput = document.getElementById('response-output');
+
+  let socket = null;
+
+  connectBtn.addEventListener('click', () => {
+    const ip = document.getElementById('target-ip').value.trim();
+    const port = document.getElementById('target-port').value.trim();
+    const key = document.getElementById('auth-key').value;
+
+    if (!ip || !port || !key) {
+      statusDiv.textContent = 'Please fill in all connection fields.';
+      statusDiv.style.color = '#f94144';
+      return;
+    }
+
+    statusDiv.textContent = 'Connecting...';
+    statusDiv.style.color = '#ffd166';
+
+    // For demonstration purposes: Using WebSocket connection assuming target supports it.
+    const wsUrl = `ws://${ip}:${port}`;
+
+    try {
+      socket = new WebSocket(wsUrl);
+
+      socket.onopen = () => {
+        statusDiv.textContent = 'Connected. Authenticating...';
+        // Send auth key for simple authentication
+        socket.send(JSON.stringify({ type: 'auth', key: key }));
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if(data.type === 'auth_result') {
+            if(data.success) {
+              statusDiv.textContent = 'Authentication successful. Ready to send commands.';
+              statusDiv.style.color = '#06d6a0';
+              commandSection.style.display = 'block';
+              responseSection.style.display = 'block';
+            } else {
+              statusDiv.textContent = 'Authentication failed. Check your key.';
+              statusDiv.style.color = '#f94144';
+              socket.close();
+            }
+          } else if (data.type === 'command_response') {
+            responseOutput.value += `> ${data.response}\n`;
+            responseOutput.scrollTop = responseOutput.scrollHeight;
+          }
+        } catch (err) {
+          responseOutput.value += `Received: ${event.data}\n`;
+          responseOutput.scrollTop = responseOutput.scrollHeight;
+        }
+      };
+
+      socket.onerror = () => {
+        statusDiv.textContent = 'Connection error. Please check the IP/Port and try again.';
+        statusDiv.style.color = '#f94144';
+      };
+
+      socket.onclose = () => {
+        statusDiv.textContent = 'Disconnected from target.';
+        statusDiv.style.color = '#f94144';
+        commandSection.style.display = 'none';
+        responseSection.style.display = 'none';
+      };
+    } catch (err) {
+      statusDiv.textContent = 'Failed to create connection.';
+      statusDiv.style.color = '#f94144';
+    }
+  });
+
+  sendCmdBtn.addEventListener('click', () => {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      statusDiv.textContent = 'Not connected to target.';
+      statusDiv.style.color = '#f94144';
+      return;
+    }
+
+    const cmdInput = document.getElementById('command-input');
+    const command = cmdInput.value.trim();
+    if (!command) return;
+
+    try {
+      socket.send(JSON.stringify({ type: 'command', command: command }));
+      responseOutput.value += `Sending command: ${command}\n`;
+      responseOutput.scrollTop = responseOutput.scrollHeight;
+      cmdInput.value = '';
+    } catch(err) {
+      responseOutput.value += `Failed to send command.\n`;
+      responseOutput.scrollTop = responseOutput.scrollHeight;
+    }
+  });
+</script>
+</body>
+</html>
+
+```
