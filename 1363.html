@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lock System UI</title>
+<style>
+  /* Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .lock-screen {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(44, 62, 80, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ecf0f1;
+    user-select: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+  .lock-screen h1 {
+    font-weight: 700;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+  .time {
+    font-size: 5rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+  }
+  .date {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .lock-icon {
+    width: 80px;
+    height: 80px;
+    stroke: #ecf0f1;
+    stroke-width: 2.5;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  /* Disable text inputs and right-click */
+  body, html {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+     -khtml-user-select: none;   /* Konqueror HTML */
+       -moz-user-select: none;   /* Old versions of Firefox */
+        -ms-user-select: none;   /* Internet Explorer/Edge */
+            user-select: none;   /* Non-prefixed version */
+  }
+</style>
+</head>
+<body>
+<div class="lock-screen" tabindex="0" aria-label="Screen locked">
+  <svg class="lock-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+    <rect x="5" y="11" width="14" height="10" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+  <h1>SCREEN LOCKED</h1>
+  <div class="time" aria-live="polite" aria-atomic="true" aria-relevant="text">--:--</div>
+  <div class="date" aria-live="polite" aria-atomic="true" aria-relevant="text">---</div>
+</div>
+<script>
+  // Prevent context menu
+  window.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Disable key presses that could exit or open dev tools or other UI
+  window.addEventListener('keydown', function(e) {
+    // Allow only tab to keep focus toggle inside lock screen
+    const allowedKeys = ['Tab'];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  function updateTime() {
+    const now = new Date();
+
+    // Format time HH:MM with zero padding
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    // Format date: Weekday, Month Day, Year
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateString = now.toLocaleDateString(undefined, options).toUpperCase();
+
+    document.querySelector('.time').textContent = timeString;
+    document.querySelector('.date').textContent = dateString;
+  }
+
+  // Update every second for smooth time updates of minutes
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // Keep focus on lock screen div to trap keyboard
+  const lockScreenDiv = document.querySelector('.lock-screen');
+  lockScreenDiv.focus();
+</script>
+</body>
+</html>
+
+```
