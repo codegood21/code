@@ -1,0 +1,35 @@
+case 'tourl': {
+ try {
+const mediaMessage = m.quoted || m; const mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+if (!mime) return reply('Silakan kirim atau reply gambar/video/mp3/file dengan caption .tourl');
+
+ const form = new FormData();
+ const media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+ form.append("file", fs.createReadStream(media));
+
+ const res = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders()
+ },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ const url = res.data?.url || 'Gagal Upload CloudGood';
+
+ if (!url || url === 'Gagal Upload CloudGood') {
+ return reply('Gagal mengunggah file ke CloudGood.');
+ }
+
+ const caption = `𝗙𝗶𝗹𝗲 𝗕𝗲𝗿𝗵𝗮𝘀𝗶𝗹 𝗗𝗶 𝗨𝗽𝗹𝗼𝗮𝗱 ! 😎\n\n> url : ${url}\n> expired : gatau\n\n𝗖𝗿𝗲𝗮𝘁𝗲 𝗕𝘆 𝗕𝗮𝗴𝘂𝘀𝘀 ⚡`;
+
+ await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+
+} catch (err) {
+ return reply(`Error Good Site: ${err.message}`);
+}
+
+break;
+
+}
