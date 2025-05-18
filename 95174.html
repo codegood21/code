@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Creator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #preview {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .file-download{
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .file-download a {
+            display: inline-block;
+            background-color: #28a745;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-download a:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Modern HTML Creator</h1>
+        <textarea id="htmlCode" placeholder="Enter your HTML code here..."></textarea>
+        <button onclick="updatePreview()">Update Preview</button>
+        <div id="preview">
+            <!-- Preview will be displayed here -->
+        </div>
+
+        <div class="file-download">
+            <a id="downloadLink" href="#" download="index.html">Download HTML File</a>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const htmlCode = document.getElementById('htmlCode').value;
+            const preview = document.getElementById('preview');
+            preview.innerHTML = htmlCode;
+            updateDownloadLink(htmlCode);
+        }
+
+        function updateDownloadLink(htmlCode) {
+            const downloadLink = document.getElementById('downloadLink');
+            const blob = new Blob([htmlCode], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+        }
+    </script>
+
+</body>
+</html>
+```
