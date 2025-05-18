@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Stylizer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CSS Stylizer</h1>
+        <textarea id="inputText" placeholder="Enter text to style..."></textarea>
+        <button onclick="generateCSS()">Generate CSS</button>
+        <div id="alert" class="alert">Please enter some text!</div>
+        <div id="output">/* CSS Output Here */</div>
+    </div>
+
+    <script>
+        function generateCSS() {
+            const inputText = document.getElementById("inputText").value.trim();
+            const outputDiv = document.getElementById("output");
+            const alertDiv = document.getElementById("alert");
+
+            if (!inputText) {
+                alertDiv.style.display = "block";
+                outputDiv.textContent = "/* CSS Output Here */";
+                return;
+            } else {
+                alertDiv.style.display = "none";
+            }
+
+            const cssOutput = `\n.styled-text {\n  font-size: 16px; /* Adjust as needed */\n  color: #333; /* Adjust as needed */\n  /* Add more styles here */\n}\n\n/*  Your Text:\n  ${inputText}\n*/`;
+            outputDiv.textContent = cssOutput;
+        }
+    </script>
+
+</body>
+</html>
+```
