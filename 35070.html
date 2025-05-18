@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Botnet Interface</title>
+  <style>
+  body {
+  font-family: 'Arial', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  }
+
+  .container {
+  width: 90%;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  h1 {
+  text-align: center;
+  color: #64b5f6;
+  margin-bottom: 20px;
+  }
+
+  .botnet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  }
+
+  .bot-card {
+  background-color: #2c2c2c;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  }
+
+  .bot-card:hover {
+  transform: translateY(-5px);
+  }
+
+  .bot-card h3 {
+  color: #81d4fa;
+  margin-bottom: 10px;
+  }
+
+  .bot-card p {
+  color: #bdbdbd;
+  font-size: 14px;
+  margin-bottom: 8px;
+  }
+
+  .bot-card .status {
+  font-weight: bold;
+  }
+
+  .bot-card .online {
+  color: #66bb6a;
+  }
+
+  .bot-card .offline {
+  color: #ef5350;
+  }
+
+  /* Styling for the loader */
+  .loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Adjust as needed */
+  }
+
+  .loader {
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+  }
+
+  </style>
+ </head>
+ <body>
+  <div class="container">
+  <h1>Botnet Control Panel</h1>
+
+  <div id="botnetGrid" class="botnet-grid">
+  <div class="loader-container">
+  <div class="loader"></div>
+  </div>
+  </div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const botnetGrid = document.getElementById('botnetGrid');
+
+  // Function to generate a single bot card
+  function createBotCard(botId, status) {
+  const botCard = document.createElement('div');
+  botCard.classList.add('bot-card');
+
+  const botName = document.createElement('h3');
+  botName.textContent = `Bot #${botId}`;
+
+  const ipAddress = document.createElement('p');
+  ipAddress.textContent = `IP Address: ${generateRandomIP()}`;
+
+  const os = document.createElement('p');
+  os.textContent = `OS: ${getRandomOS()}`;
+
+  const statusText = document.createElement('p');
+  statusText.innerHTML = `Status: <span class="status ${status}">${status}</span>`;
+
+  botCard.appendChild(botName);
+  botCard.appendChild(ipAddress);
+  botCard.appendChild(os);
+  botCard.appendChild(statusText);
+
+  return botCard;
+  }
+
+  // Function to generate random IP address
+  function generateRandomIP() {
+  return `${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`;
+  }
+
+  // Function to get a random OS
+  function getRandomOS() {
+  const osList = ['Windows', 'Linux', 'macOS', 'Android'];
+  return osList[Math.floor(Math.random() * osList.length)];
+  }
+
+  // Generate thousands of bot cards
+  const numberOfBots = 1000;  // Adjust number here
+  for (let i = 1; i <= numberOfBots; i++) {
+  const status = Math.random() < 0.9 ? 'online' : 'offline'; // 90% online
+  const botCard = createBotCard(i, status);
+  botnetGrid.appendChild(botCard);
+  }
+
+  // Remove the loader after bots are loaded.  Important for UX
+  document.querySelector('.loader-container').remove();
+  });
+  </script>
+ </body>
+ </html>
+```
