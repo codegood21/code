@@ -1,0 +1,36 @@
+case 'fakecall': {
+ try {
+ const [name] = args.join(" ").split(",").map(v => v.trim());
+ if (!name) return m.reply('Masukkan nama untuk fake call.\nContoh: .fakecall Marsha Lenathea');
+
+ const mediaMessage = m.quoted || m;
+ const mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+ let avatarURL;
+
+ if (mime) {
+ const form = new FormData();
+ const media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+ form.append("file", fs.createReadStream(media));
+
+ const res = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders()
+ },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ avatarURL = res.data?.url || 'https://files.catbox.moe/2ryaif.jpg'; 
+ } else {
+ avatarURL = 'https://files.catbox.moe/2ryaif.jpg';
+ }
+
+ const apiURL = `https://velyn.biz.id/api/maker/calling?name=${encodeURIComponent(name)}&duration=10:08&avatar=${encodeURIComponent(avatarURL)}&apikey=velyn`;
+
+ await conn.sendMessage(m.chat, { image: { url: apiURL }, caption: `📞 Fake Call dari ${name}` }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply(`❌ Terjadi kesalahan saat membuat Fake Call.\nError: ${err.message}`);
+ }
+}
+break;
