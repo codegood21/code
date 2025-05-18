@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Website</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #5cb85c;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #449d44;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .grid-item {
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #fff;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to Our Modern Website</h1>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <div class="container">
+        <section>
+            <h2>About Us</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <a href="#" class="button">Learn More</a>
+        </section>
+
+        <section>
+            <h2>Our Services</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h3>Web Design</h3>
+                    <p>We create stunning and responsive websites tailored to your needs.</p>
+                </div>
+                <div class="grid-item">
+                    <h3>SEO Optimization</h3>
+                    <p>Improve your search engine rankings and attract more customers.</p>
+                </div>
+                <div class="grid-item">
+                    <h3>Content Marketing</h3>
+                    <p>Engage your audience with valuable and informative content.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Featured Products</h2>
+            <div class="card">
+                <img src="https://via.placeholder.com/350x200" alt="Product 1">
+                <h3>Product 1</h3>
+                <p>A short description of the product.</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+
+            <div class="card">
+                <img src="https://via.placeholder.com/350x200" alt="Product 2">
+                <h3>Product 2</h3>
+                <p>A short description of the product.</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Modern Website. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+```
