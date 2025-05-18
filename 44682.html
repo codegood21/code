@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Screenshot & Telegram Bot</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        #screenshotArea {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Our Modern Website!</h1>
+        <p>This is a sample page designed to be captured and sent via Telegram bot.</p>
+
+        <div id="screenshotArea">
+            <h2>Screenshot This Area</h2>
+            <p>This content will be included in the screenshot.</p>
+            <ul>
+                <li>List item 1</li>
+                <li>List item 2</li>
+                <li>List item 3</li>
+            </ul>
+        </div>
+
+        <button onclick="captureAndSend()">Capture & Send to Telegram</button>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        async function captureAndSend() {
+            const element = document.getElementById('screenshotArea');
+
+            html2canvas(element)
+                .then(async function(canvas) {
+                    const imgData = canvas.toDataURL('image/png');
+                    const botToken = '8011320429:AAGozvscDyRHBQQRK_vOKlEYY3K8u_CDCwI';
+                    const chatId = '7739144010';
+                    const apiUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', dataURLtoBlob(imgData), 'screenshot.png');
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            alert('Screenshot sent to Telegram successfully!');
+                        } else {
+                            alert('Failed to send screenshot to Telegram.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while sending the screenshot.');
+                    }
+                });
+        }
+
+        function dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {type:mime});
+        }
+    </script>
+
+</body>
+</html>
+```
