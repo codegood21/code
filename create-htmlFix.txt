@@ -1,0 +1,57 @@
+case 'createhtml': {
+const fs = require('fs'); 
+const path = require('path'); 
+const axios = require('axios');
+
+const Username = " isi username github mu ";
+const Token = " isi api github mu "
+const Repo = " isi nama repo ";
+
+if (!text) return reply('❌ Masukkan perintah dengan deskripsi website.\nContoh: .createhtml Buatkan website portofolio dengan tema modern');
+
+try {
+m.reply('⏳ Proses Bang Tunggu Bentar!! \nGausah Spam');
+ 
+let apiUrl = `https://apii.baguss.web.id/tools/createhtml?apikey=bagus&query=${encodeURIComponent(text)}`;
+let response = await axios.get(apiUrl);
+let data = response.data;
+
+if (!data.success) return reply('❌ Terjadi kesalahan saat membuat HTML.');
+
+let htmlCode = data.code.match(/<!DOCTYPE html[\s\S]*/)?.[0];
+if (!htmlCode) return reply('❌ Kode HTML tidak valid atau tidak ditemukan!');
+
+let randomId = Math.floor(Math.random() * (99999 - 1 + 1)) + 1;
+let fileName = `${randomId}.html`;
+let filePath = path.join('./', fileName);
+await fs.writeFileSync(filePath, htmlCode);
+const fileContent = fs.readFileSync(filePath);
+const base64 = fileContent.toString('base64');
+
+const upload = await axios.put(`https://api.github.com/repos/${Username}/${Repo}/contents/${fileName}`, {
+ message: `upload HTML ${fileName}`,
+ content: base64
+}, {
+ headers: {
+ Authorization: `token ${Token}`,
+ 'Content-Type': 'application/json',
+ 'User-Agent': 'Bot'
+ }
+});
+
+if (upload.data.content && upload.data.content.download_url) {
+ await conn.sendMessage(m.chat, {
+ document: { url: upload.data.content.download_url },
+ mimetype: 'text/html',
+ fileName: fileName,
+ caption: `✅ Success Tot! \nNi Udah Gw Deployin Juga 😎\n\n🔗 Link: https://codegood21.github.io/code/${fileName}`
+ }, { quoted: m });
+} else {
+ await reply('❌ Gagal.');
+}
+if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+} catch (err) { console.error(err); reply('❌ Terjadi kesalahan saat membuat HTML!'); 
+} 
+} 
+break
