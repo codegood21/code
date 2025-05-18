@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ransomware</title>
+<style>
+body {
+    font-family: sans-serif;
+    background-color: #111;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    background-color: #222;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #f00;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    animation: pulse 1s infinite alternate;
+}
+
+p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.timer {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff0;
+    margin-bottom: 30px;
+}
+
+.payment-info {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.payment-info h2 {
+    font-size: 1.3em;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.payment-info p {
+    font-size: 1em;
+}
+
+.payment-button {
+    background-color: #f00;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.payment-button:hover {
+    background-color: #d00;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>YOUR FILES HAVE BEEN ENCRYPTED</h1>
+    <p>All your important documents, photos, and databases have been encrypted with a strong encryption algorithm. Without our decryption key, they are lost forever.</p>
+    <div class="timer">Time remaining: <span id="countdown">24:00:00</span></div>
+    <div class="payment-info">
+        <h2>Payment Instructions:</h2>
+        <p>To receive the decryption key, you must send <span style="color: #ff0">0.5 Bitcoin</span> to the following address:</p>
+        <p style="color: #ff0">1BitcoinEaterAddressDontSendf59kuE</p>
+        <p>After payment, contact us at <a href="mailto:recovery@example.com" style="color: #ff0">recovery@example.com</a> with the transaction ID.</p>
+    </div>
+    <button class="payment-button">I have paid</button>
+</div>
+
+<script>
+    function countdownTimer() {
+        var now = new Date().getTime();
+        var deadline = now + (24 * 60 * 60 * 1000); // 24 hours from now
+
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = deadline - now;
+
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = hours + ":"
+            + minutes + ":" + seconds;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "TIME EXPIRED";
+            }
+        }, 1000);
+    }
+
+    countdownTimer();
+</script>
+
+</body>
+</html>
+```
