@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        #game-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        #score {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        #message {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #choices {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        #choices button {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            #game-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            #choices {
+                flex-direction: column;
+            }
+
+            #choices button {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>Rock Paper Scissors</h1>
+        <div id="score">Score: 0</div>
+        <div id="message">Make your choice!</div>
+        <div id="choices">
+            <button onclick="playRound('rock')">Rock</button>
+            <button onclick="playRound('paper')">Paper</button>
+            <button onclick="playRound('scissors')">Scissors</button>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+
+        function playRound(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            let resultMessage;
+
+            if (playerChoice === computerChoice) {
+                resultMessage = `It's a tie! You both chose ${playerChoice}.`;
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                score++;
+                resultMessage = `You win! You chose ${playerChoice} and the computer chose ${computerChoice}.`;
+            } else {
+                resultMessage = `You lose! You chose ${playerChoice} and the computer chose ${computerChoice}.`;
+            }
+
+            document.getElementById('message').textContent = resultMessage;
+            document.getElementById('score').textContent = `Score: ${score}`;
+        }
+    </script>
+
+</body>
+</html>
+```
