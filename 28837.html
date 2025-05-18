@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Executor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Web Executor</h1>
+        <textarea id="code" placeholder="Enter your HTML, JavaScript or Python code here..."></textarea>
+
+        <div class="button-group">
+            <button onclick="executeHTML()">Execute HTML</button>
+            <button onclick="executeJavaScript()">Execute JavaScript</button>
+            <button onclick="executePython()">Execute Python (Simulated)</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function executeHTML() {
+            let code = document.getElementById("code").value;
+            document.getElementById("output").innerHTML = code;
+        }
+
+        function executeJavaScript() {
+            let code = document.getElementById("code").value;
+            try {
+                let result = eval(code);
+                document.getElementById("output").innerText = result === undefined ? "No output" : result;
+            } catch (error) {
+                document.getElementById("output").innerText = "Error: " + error;
+            }
+        }
+
+        function executePython() {
+            // In a real environment, this would need a server-side Python interpreter
+            // This is a VERY basic simulation.  REAL Python execution is NOT possible in browser alone.
+            let code = document.getElementById("code").value;
+            document.getElementById("output").innerText = "Python execution is simulated.  This would normally run on a server.";
+            // Basic demo of a simple "print" command simulation
+            if (code.includes("print(")) {
+                let start = code.indexOf("print(") + 6;
+                let end = code.indexOf(")", start);
+                if (start > 5 && end > start) {
+                    let pythonOutput = code.substring(start, end);
+                    document.getElementById("output").innerText += "\nSimulated Python Output: " + pythonOutput;
+                }
+
+            }
+
+        }
+    </script>
+
+</body>
+</html>
+```
