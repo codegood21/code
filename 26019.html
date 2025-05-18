@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kece Store</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #e74c3c;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+            color: #777;
+        }
+
+        .product-card button {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-card button:hover {
+            background-color: #219653;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            nav a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Kece Store</h1>
+        <p>Your ultimate destination for stylish goods.</p>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Products</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <div class="container">
+        <h2>Featured Products</h2>
+        <div class="product-grid">
+
+            <div class="product-card">
+                <img src="https://via.placeholder.com/200x150" alt="Product 1">
+                <h3>Product Title 1</h3>
+                <p>Description of product 1 goes here.</p>
+                <p>Price: $19.99</p>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="https://via.placeholder.com/200x150" alt="Product 2">
+                <h3>Product Title 2</h3>
+                <p>Description of product 2 goes here.</p>
+                <p>Price: $29.99</p>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="https://via.placeholder.com/200x150" alt="Product 3">
+                <h3>Product Title 3</h3>
+                <p>Description of product 3 goes here.</p>
+                <p>Price: $39.99</p>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="https://via.placeholder.com/200x150" alt="Product 4">
+                <h3>Product Title 4</h3>
+                <p>Description of product 4 goes here.</p>
+                <p>Price: $49.99</p>
+                <button>Add to Cart</button>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Kece Store. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+```
