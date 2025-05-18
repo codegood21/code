@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komdigi Clone</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-left: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: #e9ecef;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: #495057;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 60px 0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            width: 300px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .feature i {
+            font-size: 3em;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .feature h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            color: #495057;
+        }
+
+        /* Call to Action Section */
+        .cta {
+            background-color: #007bff;
+            color: #fff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .cta .btn {
+            background-color: #fff;
+            color: #007bff;
+        }
+
+        .cta .btn:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav ul {
+                margin-top: 10px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 10px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature {
+                width: 80%;
+            }
+
+            .cta h2 {
+                font-size: 2em;
+            }
+        }
+
+        /* Font Awesome (You'll need to include the Font Awesome CSS in the head or link to a CDN) */
+        /*  Example:  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> */
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Komdigi</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Welcome to Komdigi</h1>
+        <p>Your partner in digital solutions.</p>
+        <a href="#" class="btn">Learn More</a>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+           <!-- Example using Font Awesome -->
+           <!--  <i class="fas fa-code"></i> -->
+            <h3>Web Development</h3>
+            <p>We create stunning and functional websites.</p>
+        </div>
+        <div class="feature">
+           <!--  <i class="fas fa-chart-line"></i> -->
+            <h3>Digital Marketing</h3>
+            <p>Boost your online presence and reach more customers.</p>
+        </div>
+        <div class="feature">
+           <!--  <i class="fas fa-mobile-alt"></i> -->
+            <h3>Mobile App Development</h3>
+            <p>Develop innovative mobile apps for your business.</p>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to get started?</h2>
+        <p>Contact us today for a free consultation.</p>
+        <a href="#" class="btn">Contact Us</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Komdigi Clone. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+```
