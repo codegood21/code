@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chatbot-container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #3f51b5;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            clear: both;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #e3f2fd;
+            color: #000;
+            text-align: right;
+            float: right;
+        }
+
+        .bot-message {
+            background-color: #bbdefb;
+            color: #000;
+            text-align: left;
+            float: left;
+        }
+
+        .chat-input {
+            padding: 15px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            background-color: #3f51b5;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background-color: #303f9f;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chatbot-container">
+        <div class="chat-header">
+            AI Chatbot
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var input = document.getElementById('message-input');
+            var message = input.value;
+            if (message.trim() !== '') {
+                addMessage('user', message);
+                // Simulate bot response (replace with actual AI integration)
+                setTimeout(function() {
+                    var botResponse = getBotResponse(message);
+                    addMessage('bot', botResponse);
+                }, 500);
+                input.value = '';
+            }
+        }
+
+        function addMessage(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender + '-message');
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        function getBotResponse(userMessage) {
+            // This is a placeholder for your AI logic. Replace with your actual AI interaction.
+            userMessage = userMessage.toLowerCase(); // Convert to lowercase for easier matching
+
+            if (userMessage.includes("hello") || userMessage.includes("hi")) {
+                return "Hello there! How can I help you today?";
+            } else if (userMessage.includes("how are you")) {
+                return "I am doing well, thank you for asking!";
+            } else if (userMessage.includes("what is your name")) {
+                return "I am an AI Chatbot, I don't have a name.";
+            }
+            else {
+                return "I'm sorry, I don't understand.  Please rephrase your question.";
+            }
+
+        }
+
+
+        document.getElementById('message-input').addEventListener('keyup', function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>
+```
