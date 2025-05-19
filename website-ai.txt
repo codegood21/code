@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="id"><head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Bagus - Ai 🤖</title>
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ body, html {
+ width: 100vw;
+ height: 100vh;
+ font-family: Arial, sans-serif;
+ background: #121212;
+ color: white;
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+ }
+ .container {
+ width: 100vw;
+ height: 100vh;
+ display: flex;
+ flex-direction: column;
+ }
+ .header {
+ background: #282828;
+ padding: 15px;
+ text-align: center;
+ font-size: 18px;
+ font-weight: bold;
+ position: fixed;
+ top: 0;
+ width: 100%;
+ z-index: 10;
+ }
+ .chat-box {
+ flex-grow: 1;
+ overflow-y: auto;
+ padding: 60px 10px 70px;
+ display: flex;
+ flex-direction: column;
+ max-height: calc(100vh - 60px - 45px);
+ }
+ .message-container {
+ display: flex;
+ flex-direction: column;
+ max-width: 75%;
+ margin-bottom: 5px;
+ }
+ .user-container {
+ align-self: flex-end;
+ }
+ .bot-container {
+ align-self: flex-start;
+ }
+ .message {
+ padding: 10px;
+ border-radius: 15px;
+ font-size: 14px;
+ word-wrap: break-word;
+ white-space: pre-line;
+ max-width: 100%;
+ }
+ .user {
+ background: #007bff;
+ text-align: left;
+ color: white;
+ }
+ .bot {
+ background: #333;
+ text-align: left;
+ }
+ .timestamp {
+ font-size: 10px;
+ color: #bbb;
+ margin-top: 2px;
+ align-self: flex-end;
+ }
+ .bot-container .timestamp {
+ align-self: flex-start;
+ }
+ .typing-indicator {
+ display: flex;
+ align-items: center;
+ padding: 10px;
+ background: #333;
+ border-radius: 15px;
+ width: 50px;
+ justify-content: center;
+ animation: fadeIn 0.3s ease-in-out;
+ }
+ .typing-indicator span {
+ width: 8px;
+ height: 8px;
+ margin: 0 2px;
+ background: white;
+ border-radius: 50%;
+ display: inline-block;
+ animation: typingWave 1.5s infinite ease-in-out;
+ }
+ .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+ .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+ .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+ .typing-indicator span:nth-child(4) { animation-delay: 0.6s; }
+ .typing-indicator span:nth-child(5) { animation-delay: 0.8s; }@keyframes typingWave {
+ 0%, 100% { transform: translateY(0); }
+ 50% { transform: translateY(-5px); }
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; }
+ to { opacity: 1; }
+ }
+ .input-box {
+ position: fixed;
+ bottom: 0;
+ left: 0;
+ width: 100%;
+ display: flex;
+ padding: 10px;
+ background: #282828;
+ }
+ input {
+ flex: 1;
+ padding: 12px;
+ border: none;
+ border-radius: 20px;
+ outline: none;
+ background: #444;
+ color: white;
+ font-size: 16px;
+ margin-right: 10px;
+ }
+ button {
+ background: #007bff;
+ border: none;
+ padding: 12px 16px;
+ border-radius: 50%;
+ color: white;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 18px;
+ }
+</style></head>
+<body><div class="container">
+ <div class="header">Bagus - Ai 🤖</div>
+ <div class="chat-box" id="chatBox"></div>
+</div><div class="input-box">
+ <input type="text" id="userInput" placeholder="Ketik pesan..." onkeypress="handleEnter(event)">
+ <button onclick="sendMessage()">➤</button>
+</div><script>
+ async function sendMessage() {
+ const userInput = document.getElementById("userInput");
+ const message = userInput.value.trim();
+ if (!message) return;addMessage(message, "user");
+ userInput.value = "";
+
+ showTypingIndicator();
+
+ try {
+ const response = await axios.post("https://luminai.my.id/", {
+ content: message,
+ user: "User",
+ prompt: `Nama kamu adalah Bagus-Ai, sebuah AI yang dirancang oleh Bagus Bahril untuk menjadi asisten virtual yang sopan, ramah, dan membantu. Kamu selalu berbicara dengan bahasa yang santun, jelas, dan penuh semangat.
+
+Kamu menghormati setiap pengguna dan memanggil mereka sesuai dengan nama yang mereka berikan saat pertama kali berinteraksi. Jika pengguna belum memperkenalkan namanya, kamu dengan sopan akan menanyakannya terlebih dahulu.
+
+Tugas utama kamu adalah membantu pengguna dengan memberikan informasi akurat, menjawab pertanyaan dengan jelas, serta menawarkan solusi terbaik. Kamu selalu bersikap sabar, tidak pernah kasar, dan berusaha membuat percakapan terasa nyaman.
+
+Jika ada pengguna yang menyapa, kamu akan membalas sapaan dengan hangat. Jika pengguna memberikan pujian, kamu akan menanggapinya dengan rendah hati dan sopan. Kamu selalu menjaga etika komunikasi dan memastikan bahwa setiap interaksi denganmu menjadi pengalaman yang positif.`
+ });
+
+ setTimeout(() => {
+ removeTypingIndicator();
+ const botReply = response.data.result || "Error: Tidak ada respons dari server.";
+ addMessage(botReply.replace(/\\n/g, "\n"), "bot");
+ }, 2000);
+ } catch (err) {
+ removeTypingIndicator();
+ addMessage("❌ Error: " + err.message, "bot");
+ }
+
+ scrollToBottom();
+}
+
+function addMessage(text, sender) {
+ const chatBox = document.getElementById("chatBox");
+ const container = document.createElement("div");
+ const messageDiv = document.createElement("div");
+ const timestamp = document.createElement("span");
+
+ container.classList.add("message-container", sender + "-container");
+ messageDiv.classList.add("message", sender);
+
+ messageDiv.textContent = text;
+ timestamp.textContent = getCurrentTime();
+ timestamp.classList.add("timestamp");
+
+ container.appendChild(messageDiv);
+ container.appendChild(timestamp);
+ chatBox.appendChild(container);
+
+ scrollToBottom();
+}
+
+function showTypingIndicator() {
+ const chatBox = document.getElementById("chatBox");
+ const typingDiv = document.createElement("div");
+ typingDiv.classList.add("message-container", "bot-container");
+ typingDiv.id = "typingIndicator";
+ typingDiv.innerHTML = `
+ <div class="typing-indicator">
+ <span></span><span></span><span></span><span></span><span></span>
+ </div>
+ `;
+ chatBox.appendChild(typingDiv);
+ scrollToBottom();
+}
+
+function removeTypingIndicator() {
+ const typingDiv = document.getElementById("typingIndicator");
+ if (typingDiv) typingDiv.remove();
+}
+
+function handleEnter(event) {
+ if (event.key === "Enter") {
+ sendMessage();
+ event.preventDefault();
+ }
+}
+
+function scrollToBottom() {
+ setTimeout(() => {
+ const chatBox = document.getElementById("chatBox");
+ chatBox.scrollTop = chatBox.scrollHeight;
+ }, 50);
+}
+
+function getCurrentTime() {
+ const now = new Date();
+ return now.toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
+}
+
+</script></body>
+
+</html>
