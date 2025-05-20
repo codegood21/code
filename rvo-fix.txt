@@ -1,0 +1,66 @@
+case 'rvo2': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime) return reply('Reply gambar/video/audio yang view-once!');
+
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+
+ let results = [];
+ try {
+ 
+ const toCloudGood = async (filePath) => {
+ try {
+ const FormData = require('form-data');
+ const fs = require('fs');
+ const axios = require('axios');
+
+ const form = new FormData();
+ form.append("file", fs.createReadStream(filePath));
+
+ const res = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders()
+ },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ return res.data?.url || 'Gagal Bang';
+ } catch (err) {
+ return `Error CG: ${err.message}`;
+ }
+ };
+
+ results.push({
+ name: 'CloudGood',
+ url: await toCloudGood(media)
+ });
+ } catch (error) {
+ console.log('Error Bang:', error);
+ }
+
+ if (results.length === 0 || !results[0].url || results[0].url.startsWith('Error')) {
+ return reply('Eror Bang.');
+ }
+
+ try {
+ const axios = require('axios');
+ let buffer = (await axios.get(results[0].url, { responseType: 'arraybuffer' })).data;
+
+ if (/video/.test(mime)) {
+ await conn.sendMessage(m.chat, { video: buffer, caption: 'Nih bang.' }, { quoted: m });
+ } else if (/image/.test(mime)) {
+ await conn.sendMessage(m.chat, { image: buffer, caption: 'Nih bang.' }, { quoted: m });
+ } else if (/audio/.test(mime)) {
+ await conn.sendMessage(m.chat, { audio: buffer, mimetype: 'audio/mpeg', ptt: true }, { quoted: m });
+ } else {
+ reply('Tipe media tidak didukung.');
+ }
+
+ } catch (err) {
+ console.error(err);
+ reply('Eror Bang');
+ }
+}
+break;
