@@ -1,0 +1,22 @@
+case 'ai': {
+ if (!text) return reply('Masukkan teksnya! Contoh: .ai siapa presiden pertama indonesia');
+
+await reply('bentar bang lagi pesan suara..🤭');
+ try {
+ const res = await axios.get(`https://apii.baguss.web.id/tools/aiaudio?apikey=bagus&text=${encodeURIComponent(text)}`, {
+ responseType: 'arraybuffer'
+ });
+
+ const audioBuffer = Buffer.from(res.data, 'binary');
+ await conn.sendMessage(m.chat, {
+ audio: audioBuffer,
+ mimetype: 'audio/mp4', 
+ ptt: true
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error(e);
+ reply('❌ Gagal mengambil audio.');
+ }
+ }
+break;
