@@ -1,0 +1,20 @@
+case 'pinterest': case 'pin': {
+ if (!text) return reply(`Kirim kata kunci!\nContoh: *.${command} tentara*`);
+
+ try {
+ reply('🔎 Mencari di Pinterest...');
+ let apiUrl = `https://apii.baguss.web.id/search/pinterest?apikey=bagus&q=${encodeURIComponent(text)}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data.success) return reply('Gagal menemukan gambar.');
+
+ let caption = `📌 *Pinterest Search*\n\n📜 *Judul:* ${data.pinterest.title}\n📅 *Tanggal:* ${data.pinterest.created_at}\n🔗 *Link:* ${data.pinterest.pin_url}`;
+
+ let imageBuffer = await getBuffer(data.pinterest.image_url);
+ conn.sendMessage(m.chat, { image: imageBuffer, caption }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
