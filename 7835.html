@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Ordering</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c79b63;
+        }
+
+        .coffee-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .coffee-card {
+            width: 200px;
+            margin: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .coffee-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .coffee-card h3 {
+            margin-top: 0;
+            color: #555;
+        }
+
+        .coffee-card p {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .coffee-card button {
+            background-color: #c79b63;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .coffee-card button:hover {
+            background-color: #a88453;
+        }
+
+        #order-form {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        #order-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        #order-form input[type="text"],
+        #order-form input[type="email"],
+        #order-form textarea {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        #order-form button {
+            background-color: #c79b63;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        #order-form button:hover {
+            background-color: #a88453;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Order Your Coffee</h1>
+
+        <section class="coffee-options">
+            <div class="coffee-card">
+                <img src="https://images.unsplash.com/photo-1517256860421-d524081bc655?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Espresso">
+                <h3>Espresso</h3>
+                <p>Strong and concentrated coffee.</p>
+                <button>Add to Order</button>
+            </div>
+
+            <div class="coffee-card">
+                <img src="https://images.unsplash.com/photo-1559405389-778019421ff4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Latte">
+                <h3>Latte</h3>
+                <p>Espresso with steamed milk and a thin layer of foam.</p>
+                <button>Add to Order</button>
+            </div>
+
+            <div class="coffee-card">
+                <img src="https://images.unsplash.com/photo-1497515114629-f71d760c5c57?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cappuccino">
+                <h3>Cappuccino</h3>
+                <p>Espresso with steamed milk and a thick layer of foam.</p>
+                <button>Add to Order</button>
+            </div>
+
+            <div class="coffee-card">
+                <img src="https://images.unsplash.com/photo-1541167760496-1623588a5b0e?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Iced Coffee">
+                <h3>Iced Coffee</h3>
+                <p>Chilled coffee served over ice.</p>
+                <button>Add to Order</button>
+            </div>
+        </section>
+
+        <section id="order-form">
+            <h2>Place Your Order</h2>
+            <form action="#" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+
+                <label for="comments">Special Instructions:</label>
+                <textarea id="comments" name="comments" rows="4"></textarea>
+
+                <button type="submit">Submit Order</button>
+            </form>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Coffee Ordering</p>
+    </footer>
+
+</body>
+</html>
+```
