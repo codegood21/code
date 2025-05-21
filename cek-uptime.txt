@@ -1,0 +1,69 @@
+case 'ping': case 'uptime': {
+ if (!isOwner) return reply('❌ Hanya owner yang bisa menambahkan perintah!');
+ let os = require('os');
+ let speed = require('performance-now');
+ let { execSync } = require("child_process");
+ let fetch = require("node-fetch");
+
+ let timestamp = speed();
+ let latensi = speed() - timestamp;
+
+ function runtime(seconds) {
+ let d = Math.floor(seconds / (3600 * 24));
+ let h = Math.floor((seconds % (3600 * 24)) / 3600);
+ let m = Math.floor((seconds % 3600) / 60);
+ let s = Math.floor(seconds % 60);
+ return `${d}d ${h}h ${m}m ${s}s`;
+ }
+
+ formatp(bytes) {
+ return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+ }
+
+ let totalDisk = "N/A";
+ try {
+ totalDisk = execSync("df -BG --total | grep 'total' | awk '{print $3\"/\"$2\" GB\"}'").toString().trim();
+ } catch (e) {}
+
+ // Load CPU (rata-rata 1 menit)
+ let cpuLoad = os.loadavg()[0].toFixed(2);
+
+ let cpuModel = os.cpus()[0].model;
+ let cpuCores = os.cpus().length;
+
+ let ipInfo = await fetch("https://ipinfo.io/json").then(res => res.json());
+ let ipMasked = ipInfo.ip.replace(/\.\d+$/, ".***");
+
+ let pingGoogle = "N/A";
+ try {
+ let pingResult = execSync("ping -c 1 google.com").toString();
+ let match = pingResult.match(/time=([\d.]+) ms/);
+ pingGoogle = match ? match[1] + " ms" : "N/A";
+ } catch (e) {}
+
+ let respon = `
+🔴 𝗦𝘁𝗮𝘁𝘂𝘀 𝗦𝗲𝗿𝘃𝗲𝗿 🔴
+
+> Platform: ${os.type()} (${os.arch()})
+> RAM: ${formatp(os.totalmem())}
+> Disk: ${totalDisk}
+> CPU: ${cpuModel} (${cpuCores} Core)
+> CPU Load: ${cpuLoad}%
+> Ping Google: ${pingGoogle}
+> Uptime VPS: ${runtime(os.uptime())}
+
+🔵 𝗡𝗲𝘁𝘄𝗼𝗿𝗸 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻 🔵
+
+> IP Publik: ${ipMasked}
+> Negara: ${ipInfo.country}
+> ISP: ${ipInfo.org}
+
+🟢 𝗕𝗼𝘁 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻 🟢
+
+> Response Speed: ${latensi.toFixed(4)} detik
+> Runtime Bot: ${runtime(process.uptime())}
+`;
+ 
+ await m.reply(respon);
+}
+break
