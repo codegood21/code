@@ -1,0 +1,26 @@
+case 'instagram': case 'ig': case 'igdl':{
+ if (!text) return reply(`Kirim link Instagram!\nContoh: *.${command} https://www.instagram.com/reel/DDqZnIYPsRX/*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://apii.baguss.web.id/downloader/igdl?apikey=bagus&url=${text}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data.success) return reply('Gagal mengambil data dari Instagram.');
+
+ let { video, detail } = data;
+ let captionText = `📌 *Username:* @${detail.username}\n❤️ *Suka:* ${detail.like}\n💬 *Komentar:* ${detail.comment}\n👀 *Dilihat:* ${detail.view || 'Tidak tersedia'}\n\n🔗 *Link:* ${text}\n\n📝 *Caption:*\n${detail.title || 'Tidak ada caption'}`;
+
+ if (video?.url) {
+ let media = await getBuffer(video.url);
+ conn.sendMessage(m.chat, { video: media, caption: captionText }, { quoted: m });
+ } else {
+ reply('Tidak ada video yang bisa diunduh.');
+ }
+
+ } catch (err) {
+ console.error(err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+}
+ break
