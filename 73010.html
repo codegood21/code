@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpariszzx - Lua Scripting for GTA SA:MP (Android)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2 {
+            color: #00ff00;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #2c2c2c;
+            border-radius: 5px;
+        }
+
+        .code-snippet {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+            color: #f0f0f0;
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(0, 255, 0, 0.5);
+            font-size: 12px;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Alpariszzx - GTA SA:MP Lua Scripting</h1>
+        <p>Welcome to Alpariszzx, your ultimate source for powerful and undetectable Lua scripts for GTA San Andreas Multiplayer on Android. Our scripts are designed to enhance your gameplay experience while bypassing server anti-cheat measures.  Dominate the streets with our advanced features!</p>
+
+        <h2>Key Features</h2>
+
+        <ul class="feature-list">
+            <li><strong>Brutal Anti-Cheat Bypass:</strong>  Our scripts are meticulously crafted to evade detection, giving you the edge you need.</li>
+            <li><strong>Vehicle Name Tags:</strong>  Display vehicle names above each car for easy identification.</li>
+            <li><strong>Player Name Tags (Green):</strong>  Show player names in vibrant green for enhanced visibility.</li>
+            <li><strong>Customizable Options:</strong>  Tailor the scripts to your preferences for a personalized gaming experience.</li>
+        </ul>
+
+        <h2>Example Lua Snippet (Name Tag):</h2>
+        <div class="code-snippet">
+            <code>
+            -- Example: Draw player name tag<br>
+            function onDraw()  <br>
+                for i = 0, sampGetMaxPlayers() do <br>
+                    if sampIsPlayerConnected(i) then<br>
+                        local x, y, z = sampGetPlayer3dCoordinates(i)<br>
+                        local name = sampGetPlayerNickname(i)<br>
+                        renderDrawText3D(x, y, z + 1.0, name, 0xFF00FF00) -- Green Color Name Tag<br>
+                    end<br>
+                end<br>
+            end<br>
+            addEventHandler("onDraw", onDraw)
+            </code>
+        </div>
+
+        <h2>Download & Installation</h2>
+        <p>Scripts are available for download from our secure <a href="#">download server</a>.  Follow the installation instructions provided with each script for seamless integration into your SA:MP client.</p>
+
+        <h2>Disclaimer</h2>
+        <p>Use these scripts at your own risk. We are not responsible for any bans or penalties incurred while using our scripts. Always respect server rules and other players.</p>
+    </div>
+
+    <div class="watermark">Alpariszzx</div>
+
+</body>
+</html>
+```
