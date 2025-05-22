@@ -1,0 +1,4 @@
+case 'ssweb':
+ if (!text) return reply('Masukkan URL website yang ingin di-screenshot.');
+ conn.sendMessage(m.chat, { image: { url: `https://apii.baguss.web.id/tools/ssweb?apikey=bagus&url=${encodeURIComponent(text)}&type=desktop` }, caption: 'Berikut adalah screenshot website.' });
+ break
