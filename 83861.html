@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muslim Quote Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        #quote-container {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        #quote {
+            font-style: italic;
+            font-size: 1.2em;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        #author {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #95a5a6;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Muslim Quote Generator</h1>
+        <div id="quote-container">
+            <p id="quote">"The best among you are those who have the best character and manners."</p>
+            <p id="author">- Prophet Muhammad (peace be upon him)</p>
+        </div>
+        <button onclick="generateQuote()">Generate New Quote</button>
+        <footer>Quotes sourced from authentic Islamic texts.</footer>
+    </div>
+
+    <script>
+        const quotes = [
+            {
+                quote: "The best among you are those who have the best character and manners.",
+                author: "- Prophet Muhammad (peace be upon him)"
+            },
+            {
+                quote: "Be mindful of Allah wherever you are.",
+                author: "- Prophet Muhammad (peace be upon him)"
+            },
+            {
+                quote: "Strive always to excel in virtue and truth.",
+                author: "- Ali ibn Abi Talib"
+            },
+			{
+				quote: "Do not lose hope, nor be sad.",
+				author: "- Quran (3:139)"
+			},
+			{
+				quote: "Allah does not burden a soul beyond that it can bear.",
+				author: "- Quran (2:286)"
+			}
+        ];
+
+        function generateQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const randomQuote = quotes[randomIndex];
+
+            document.getElementById('quote').textContent = randomQuote.quote;
+            document.getElementById('author').textContent = randomQuote.author;
+        }
+    </script>
+
+</body>
+</html>
+```
