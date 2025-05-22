@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Mirror</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        #container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #externalContent {
+            overflow-x: auto; /* Handle potentially wide content */
+        }
+
+        /* Loading Spinner */
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1>Website Mirror</h1>
+        <div id="loading">
+            <div class="spinner"></div>
+            Loading content...
+        </div>
+        <div id="externalContent">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const externalContentDiv = document.getElementById('externalContent');
+        const loadingDiv = document.getElementById('loading');
+        const targetUrl = 'https://www.example.com'; // Replace with the URL of the website you want to mirror
+
+        fetch('https://corsproxy.io/?' + encodeURIComponent(targetUrl)) // Use a CORS proxy!  Important!
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                externalContentDiv.innerHTML = html;
+                loadingDiv.style.display = 'none'; // Hide loading message
+            })
+            .catch(error => {
+                console.error('Error fetching content:', error);
+                externalContentDiv.innerHTML = `<p style="color: red;">Error loading content. Please check the URL and your internet connection.  Also, ensure the target website allows CORS requests.</p>`;
+                loadingDiv.style.display = 'none'; // Hide loading message even on error
+            });
+    </script>
+
+</body>
+</html>
+```
