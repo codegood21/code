@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YolsShop AI - Your Personal AI Assistant</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #e6e6fa; /* Lavender */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #483d8b; /* Dark Slate Blue */
+        }
+
+        .ai-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .ai-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .ai-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ai-response {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            color: #555;
+        }
+
+        .user-input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .user-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .user-input:focus {
+            outline: none;
+            border-color: #8a2be2; /* Blue Violet */
+        }
+
+        .send-button {
+            background-color: #8a2be2; /* Blue Violet */
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .send-button:hover {
+            background-color: #483d8b; /* Dark Slate Blue */
+        }
+
+        .message-container {
+            margin-top: 20px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .user-message {
+            background-color: #d8bfd8; /* Thistle */
+            text-align: right;
+        }
+
+        .ai-message {
+            background-color: #98fb98; /* Pale Green */
+            text-align: left;
+        }
+
+        #image-display {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #image-display img {
+            max-width: 100%;
+            max-height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>YolsShop AI Assistant</h1>
+        <div class="ai-container">
+            <div class="ai-image">
+                <img src="https://thispersondoesnotexist.com/" alt="AI Avatar">
+            </div>
+            <div class="ai-response" id="ai-response">
+                Hello! I'm your AI assistant.  Ask me anything. I can also display images if you ask.
+            </div>
+        </div>
+
+        <div class="user-input-container">
+            <input type="text" class="user-input" id="user-input" placeholder="Type your message here...">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="message-container" id="message-container">
+        </div>
+
+        <div id="image-display">
+            <img id="displayed-image" src="" alt="Display Image" style="display: none;">
+        </div>
+
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const aiResponseDiv = document.getElementById('ai-response');
+            const messageContainer = document.getElementById('message-container');
+            const imageDisplay = document.getElementById('displayed-image');
+
+            // Add User Message to Message Container
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user-message');
+            userMessageDiv.textContent = userInput;
+            messageContainer.appendChild(userMessageDiv);
+
+            document.getElementById('user-input').value = '';
+
+            // Simulate AI Response (Replace with actual API call later)
+            let aiResponse = "";
+            let imageUrl = null;
+
+            if (userInput.toLowerCase().includes("image") || userInput.toLowerCase().includes("gambar")) {
+                // Basic image request handling (replace with DALL-E or similar API later)
+                aiResponse = "Displaying a generated image based on your request...";
+                imageUrl = `https://source.unsplash.com/random?${userInput}`; // Use Unsplash API for random images
+
+            } else if(userInput.toLowerCase().includes("YolsShop")){
+                aiResponse = "YolsShop is an e-commerce store that specializes in your needs, what are your shopping for?";
+            }
+            else{
+              aiResponse = "Sure, what would you like me to do?"
+            }
+
+             // Add AI Message to Message Container
+             const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('message', 'ai-message');
+            aiMessageDiv.textContent = aiResponse;
+            messageContainer.appendChild(aiMessageDiv);
+
+
+            aiResponseDiv.textContent = aiResponse;
+
+            if (imageUrl) {
+                imageDisplay.src = imageUrl;
+                imageDisplay.style.display = 'block';
+            } else {
+                imageDisplay.src = "";
+                imageDisplay.style.display = 'none';
+            }
+
+            messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom
+        }
+    </script>
+
+</body>
+</html>
+```
