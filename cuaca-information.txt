@@ -1,0 +1,28 @@
+case 'cuaca': {
+ const axios = require('axios');
+ if (!text) return reply('❌ Masukkan nama lokasi!\nContoh: .cuaca Palembang');
+
+ try {
+ const api = `https://fastrestapis.fasturl.cloud/search/weather?location=${encodeURIComponent(text)}`;
+ const { data } = await axios.get(api);
+
+ if (data.status !== 200 || !data.result) return reply('❌ Data cuaca tidak ditemukan!');
+
+ const r = data.result;
+ let res = `*Cuaca di ${r.city}*\n\n`;
+ res += `Suhu: ${r.temperature}\n`;
+ res += `Kondisi: ${r.condition}\n`;
+ res += `Kelembaban: ${r.humidity}\n`;
+ res += `Angin: ${r.wind}\n`;
+ res += `Presipitasi: ${r.precipitation}\n`;
+ res += `Tutup Awan: ${r.cloudCover}\n`;
+ res += `Jarak Pandang: ${r.visibility}\n`;
+ res += `Matahari Terbit: ${r.sunrise}\n`;
+ res += `Matahari Terbenam: ${r.sunset}`;
+
+ reply(res);
+ } catch (err) {
+ reply('❌ Gagal mengambil data cuaca.');
+ }
+}
+ break;
