@@ -1,0 +1,31 @@
+case 'brat': {
+ if (!text) return reply(`Mana text-nya? Contoh: ${prefix + command} Bagus ganteng`);
+ try {
+ const encodedText = encodeURIComponent(text);
+ const imageUrl = `https://apii.baguss.web.id/stick/brat?apikey=bagus&text=${encodedText}`;
+
+ const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+ const buffer = Buffer.from(response.data, "binary");
+
+ const webpBuffer = await sharp(buffer)
+ .resize(512, 512, {
+ fit: 'contain',
+ background: { r: 255, g: 255, b: 255, alpha: 0 }
+ })
+ .webp({ quality: 70 })
+ .toBuffer();
+
+ const fileName = getRandomFile(".webp");
+ fs.writeFileSync(fileName, webpBuffer);
+
+ await conn.sendMessage(m.chat, {
+ sticker: webpBuffer
+ }, { quoted: m });
+
+ fs.unlinkSync(fileName);
+ } catch (error) {
+ console.error("Error creating sticker:", error);
+ reply('Terjadi kesalahan saat membuat stiker. Coba lagi nanti.');
+ }
+}
+break;
