@@ -1,0 +1,71 @@
+case 'ytmp4': {
+ if (!text) return reply(`Masukkan URL YouTube!\n\nContoh: .ytmp4 https://youtube.com/watch?v=KHgllosZ3kA`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/ytmp4?url=${encodeURIComponent(text)}`;
+ 
+ let res = await fetch(apiUrl);
+ let json = await res.json();
+ 
+ console.log("API JSON Response:", json); 
+
+ if (!json.status || !json.result || !json.result.download) {
+ return reply('Gagal mengambil data. Pastikan link YouTube valid!');
+ }
+
+ let { metadata, download } = json.result;
+ let { title } = metadata;
+ let { url, filename } = download;
+ let videoBuffer = await getBuffer(url);
+ await conn.sendMessage(m.chat, { 
+ video: videoBuffer, 
+ mimetype: 'video/mp4', 
+ fileName: filename || `${title}.mp4`,
+ caption: `*「 YouTube MP4 」*\n\n📺 *Judul*: ${title}`
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error("Error ytmp4:", e);
+ reply('Terjadi kesalahan saat mengambil data.');
+ }
+ break
+
+// Ini Batas Fitur Ytmp3 sob
+
+case 'ytmp3': {
+ if (!text) return reply(`Masukkan URL YouTube!\n\nContoh: .ytmp3 https://www.youtube.com/watch?v=IcrbM1l_BoI`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(text)}`;
+
+ let res = await fetch(apiUrl);
+ let json = await res.json();
+
+ console.log("API JSON Response:", json);
+
+ if (!json.status || !json.result || !json.result.download) {
+ return reply('Gagal mengambil data. Pastikan link YouTube valid!');
+ }
+
+ let data = json.result;
+ let download = data.download;
+ 
+ let caption = `*「 YouTube MP3 」*\n\n` +
+ `🎵 *Judul*: ${data.metadata.title}\n` +
+ `⏳ *Durasi*: ${data.metadata.timestamp}\n` +
+ `👀 *Views*: ${data.metadata.views.toLocaleString()} kali\n` +
+ `📝 *Channel*: ${data.metadata.author.name}\n` +
+ `🔗 *Link Video*: ${data.metadata.url}`;
+ let audioBuffer = await getBuffer(download.url); conn.sendMessage(m.chat, { 
+ audio: audioBuffer, 
+ mimetype: 'audio/mpeg', 
+ fileName: `${download.filename || 'audio.mp3'}` 
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error("Error ytmp3:", e);
+ reply('Terjadi kesalahan saat mengambil data.');
+ }
+ break
