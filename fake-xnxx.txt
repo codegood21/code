@@ -1,0 +1,42 @@
+case 'fakexnxx': {
+ const mediaMessage = m.quoted || m;
+ const mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime) return reply('Silakan kirim atau reply gambar/video/mp3/file dengan caption .tourl');
+ if (!text) return m.reply('Contoh: .fakexnxx hallo');
+
+ try {
+ const axios = require('axios');
+ const FormData = require('form-data');
+ const fs = require('fs');
+ 
+ const media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+ const form = new FormData();
+ form.append("file", fs.createReadStream(media));
+
+ const res = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders()
+ },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ const urll = res.data?.url || 'Gagal Upload Good Site';
+
+ if (!urll || urll === 'Gagal Upload Good Site') {
+ return reply('Gagal mengunggah file ke Cdn Bagus.');
+ }
+
+ const url = `https://api.siputzx.my.id/api/canvas/xnxx?title=${encodeURIComponent(text)}&image=${urll}`;
+
+ const result = await axios.get(url, { responseType: 'arraybuffer' });
+ const buffer = Buffer.from(result.data, 'binary');
+
+ await conn.sendMessage(m.chat, { image: buffer, caption: `✅ FakeXnxx berhasil dibuat!` }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat membuat FakeXnxx.');
+ }
+}
+break
