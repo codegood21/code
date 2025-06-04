@@ -1,0 +1,7 @@
+case'brat':{
+ if (!text) return reply(`mana text nya? contoh ${prefix + command} apanih cok`)
+ const encodedText = encodeURIComponent(text);
+const imageUrl = `https://apii.baguss.web.id/stick/brat?apikey=bagus&text=${encodedText}`;
+await makeStickerFromUrl(imageUrl, conn, m);
+}
+ break
