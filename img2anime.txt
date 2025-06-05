@@ -1,0 +1,51 @@
+case 'toanime': {
+ const fs = require('fs');
+ const FormData = require('form-data');
+ const axios = require('axios');
+
+ try {
+ const q = m.quoted || m;
+ const mime = (q.msg || q).mimetype || '';
+ if (!mime.startsWith('image/')) return m.reply("❌ Kirim atau reply gambar terlebih dahulu.");
+
+ const mediaPath = await conn.downloadAndSaveMediaMessage(q);
+
+ const form = new FormData();
+ form.append("reqtype", "fileupload");
+ form.append("fileToUpload", fs.createReadStream(mediaPath));
+
+ const uploadRes = await axios.post("https://catbox.moe/user/api.php", form, {
+ headers: form.getHeaders(),
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ if (!uploadRes.data || !uploadRes.data.startsWith("https://")) {
+ throw new Error("❌ Gagal upload ke Catbox");
+ }
+
+ const imageUrl = uploadRes.data;
+ if (fs.existsSync(mediaPath)) fs.unlinkSync(mediaPath);
+
+ await m.reply('🎨 Mengubah foto menjadi gaya Anime...');
+
+ const gender = 'male'; 
+ const prompt = 'Elegant and majestic';
+
+ const apiUrl = `https://fastrestapis.fasturl.cloud/aiimage/toanime?imageUrl=${encodeURIComponent(imageUrl)}&gender=${gender}&specificPrompt=${encodeURIComponent(prompt)}`;
+
+ const resultImage = await axios.get(apiUrl, {
+ responseType: 'arraybuffer'
+ });
+
+ await conn.sendMessage(m.chat, {
+ image: Buffer.from(resultImage.data),
+ caption: '✨ Foto berhasil diubah ke versi Anime!'
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error(e);
+ m.reply("⚠️ Terjadi kesalahan: " + e.message);
+ }
+}
+break
