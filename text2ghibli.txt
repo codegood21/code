@@ -1,0 +1,27 @@
+case 'txt2ghibli': {
+ try {
+ if (!text) return m.reply('📝 Kirim prompt Ghibli-nya, contoh:\n.txt2ghibli pemandangan danau malam hari');
+
+ await m.reply('🌠 Mengubah prompt menjadi gaya Ghibli, tunggu sebentar...');
+
+ const res = await axios.get('https://apii.baguss.web.id/tools/txt2ghibli', {
+ params: {
+ apikey: 'bagus',
+ prompt: text
+ }
+ });
+
+ const resultUrl = res.data?.result;
+ if (!resultUrl || !resultUrl.startsWith('http')) throw new Error('❌ Gagal mendapatkan hasil dari API.');
+
+ await conn.sendMessage(m.chat, {
+ image: { url: resultUrl },
+ caption: `✨ Hasil Ghibli dari prompt: "${text}"`
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error(e);
+ m.reply("⚠️ Terjadi kesalahan: " + e.message);
+ }
+}
+break;
