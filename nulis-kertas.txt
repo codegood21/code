@@ -1,0 +1,27 @@
+case 'nulis': {
+ try {
+ if (!text) return m.reply('✏️ Kirim teks yang mau ditulis, contoh:\n.nulis Aku suka kamu.');
+
+ await m.reply('🌀 Proses Nulissssss...');
+
+ const res = await axios.get('https://apii.baguss.web.id/maker/nulis', {
+ params: {
+ apikey: 'bagus',
+ text: text
+ }
+ });
+
+ const resultUrl = res.data?.result;
+ if (!resultUrl || !resultUrl.startsWith('http')) throw new Error('❌ Gagal mendapatkan hasil dari API.');
+
+ await conn.sendMessage(m.chat, {
+ image: { url: resultUrl },
+ caption: '📝 Successss Bosss !!'
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error(e);
+ m.reply("⚠️ Terjadi kesalahan: " + e.message);
+ }
+}
+break
