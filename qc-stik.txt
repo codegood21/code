@@ -1,0 +1,7 @@
+case'qc':{
+ if (!text) return reply(`mana text nya? contoh ${prefix + command} apanih cok`)
+ const encodedText = encodeURIComponent(text);
+const imageUrl = `https://apii.baguss.web.id/stick/qc?apikey=bagus&text=${encodedText}&username=${pushname}&avatar=https://files.catbox.moe/ssn8wv.jpg`;
+await makeStickerFromUrl(imageUrl, conn, m);
+}
+ break
