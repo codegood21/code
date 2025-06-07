@@ -1,0 +1,16 @@
+case 'totalfitur': {
+ let fs = require('fs');
+ let filePath = './bgs.js';
+
+ try {
+ let fileContent = fs.readFileSync(filePath, 'utf8');
+ let matchCases = fileContent.match(/case\s+['"](.*?)['"]:|case\s+['"](.*?)['"]/g);
+ let totalCases = matchCases ? matchCases.length : 0;
+
+ reply(`✅ Total fitur saat ini: *${totalCases}* fitur`);
+ } catch (err) {
+ console.error(err);
+ reply('❌ Gagal membaca total fitur!');
+ }
+}
+break
