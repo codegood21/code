@@ -1,0 +1,18 @@
+case 'ai': {
+ if (!text) return reply('Masukkan teksnya!\n\nContoh: .ai apa itu manusia serigala');
+
+ try {
+ let res = await fetch(`https://apii.baguss.web.id/ai/bagusai?apikey=bagus&text=${encodeURIComponent(text)}`);
+ let json = await res.json();
+
+ if (!json.success || !json.result) {
+ return reply('Gagal mendapatkan respon dari AI.');
+ }
+
+ reply(json.result);
+ } catch (e) {
+ console.error(e);
+ reply('Terjadi kesalahan saat menghubungi Bagus-Ai.');
+ }
+}
+break;
