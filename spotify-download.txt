@@ -1,0 +1,33 @@
+case 'spotify': case 'spotifydl': {
+ if (!text) return reply(`Kirim link Spotify!\nContoh: *.${command} https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax*`);
+
+ try {
+ reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/spotify?url=${encodeURIComponent(text)}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (data.status !== 200 || !data.result || !data.result.status) 
+ return reply('Gagal mengambil data dari Spotify.');
+
+ let { title, music } = data.result;
+
+ let audioBuffer = await axios.get(music, { responseType: 'arraybuffer' })
+ .then(res => res.data)
+ .catch(err => {
+ console.error('Error mengambil audio:', err);
+ return null;
+ });
+
+ if (!audioBuffer) return reply('Gagal mengunduh audio.');
+
+ await conn.sendMessage(m.chat, { 
+ audio: audioBuffer, 
+ mimetype: 'audio/mpeg', 
+ fileName: `${title}.mp3` 
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error('Error utama:', err);
+ reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
