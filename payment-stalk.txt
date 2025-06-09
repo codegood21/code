@@ -1,0 +1,63 @@
+case 'danastalk': {
+ if (!text) return m.reply(`Kirim nomor Dana!\nContoh: *.${command} 08123456789*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/bank?number=${encodeURIComponent(text)}&bank=dana`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return m.reply('Gagal mengambil data Dana.');
+
+ let { account_number, name, bank_code } = data.result.data;
+
+ let captionText = `💳 *Stalker Dana*\n\n📌 *Nomor:* ${account_number}\n👤 *Nama:* ${name}\n🏦 *Bank:* ${bank_code}`;
+ conn.sendMessage(m.chat, { text: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
+
+// Gopay Stalkk
+
+case 'gopaystalk': {
+ if (!text) return m.reply(`Kirim nomor GoPay!\nContoh: *.${command} 08123456789*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/bank?number=${encodeURIComponent(text)}&bank=gopay`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return m.reply('Gagal mengambil data GoPay.');
+
+ let { account_number, name, bank_code } = data.result.data;
+
+ let captionText = `💳 *Stalker GoPay*\n\n📌 *Nomor:* ${account_number}\n👤 *Nama:* ${name}\n🏦 *Bank:* ${bank_code}`;
+ conn.sendMessage(m.chat, { text: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
+
+// Ovo Stalk
+
+case 'ovostalk': {
+ if (!text) return m.reply(`Kirim nomor OVO!\nContoh: *.${command} 08123456789*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://fastrestapis.fasturl.cloud/stalk/bank?number=${encodeURIComponent(text)}&bank=ovo`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data || data.status !== 200 || !data.result) return m.reply('Gagal mengambil data OVO.');
+
+ let { account_number, name, bank_code } = data.result.data;
+
+ let captionText = `💳 *Stalker OVO*\n\n📌 *Nomor:* ${account_number}\n👤 *Nama:* ${name}\n🏦 *Bank:* ${bank_code}`;
+ conn.sendMessage(m.chat, { text: captionText }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break
