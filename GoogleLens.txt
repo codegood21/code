@@ -1,0 +1,39 @@
+case 'scan':
+case 'googlelens': {
+ const FormData = require('form-data')
+ const fs = require('fs')
+
+ try {
+ const q = m.quoted || m
+ const mime = (q.msg || q).mimetype || ''
+ if (!mime.startsWith('image/')) return m.reply("❌ Kirim atau reply gambar terlebih dahulu.")
+
+ const mediaPath = await conn.downloadAndSaveMediaMessage(q)
+
+ const form = new FormData()
+ form.append("file", fs.createReadStream(mediaPath))
+ const uploadRes = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: { ...form.getHeaders() },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ })
+ if (!uploadRes.data?.url) throw new Error('❌ Upload ke CloudGood gagal')
+ const imageUrl = uploadRes.data.url
+
+ if (fs.existsSync(mediaPath)) fs.unlinkSync(mediaPath)
+
+ m.reply('🔎 Mencari gambar menggunakan Google Lens...')
+
+ const { data } = await axios.get(`https://apii.baguss.web.id/search/glens?apikey=bagus&url=${encodeURIComponent(imageUrl)}`)
+ if (!data.success || !data.result || data.result.length === 0) return m.reply('❌ Tidak ditemukan hasil pencarian.')
+
+ const result = data.result[Math.floor(Math.random() * data.result.length)]
+ const text = `🔍 *Google Lens Result*\n\n📌 *Judul:* ${result.title}\n🌐 *Sumber:* ${result.source}\n🔗 *Link:* ${result.link}`
+
+ conn.sendMessage(m.chat, { image: { url: result.thumbnail }, caption: text }, { quoted: m })
+
+ } catch (e) {
+ m.reply('❌ Terjadi kesalahan: ' + e.message)
+ }
+}
+break
