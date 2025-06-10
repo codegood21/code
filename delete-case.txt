@@ -1,0 +1,27 @@
+case 'delcase': {
+ if (!isOwner) return reply('❌ Hanya owner yang bisa menghapus perintah!');
+
+ let caseName = text.trim();
+ if (!caseName) return reply('❌ Harap masukkan nama case yang ingin dihapus!');
+
+ let filePath = './bgs.js';
+ let fs = require('fs');
+
+ try {
+ let fileContent = fs.readFileSync(filePath, 'utf8');
+
+ let caseRegex = new RegExp(`case '${caseName}': {([\\s\\S]*?)}\\s*break;`, 'g');
+
+ if (!caseRegex.test(fileContent)) return reply('❌ Case tidak ditemukan!');
+
+ let newContent = fileContent.replace(caseRegex, '');
+
+ fs.writeFileSync(filePath, newContent, 'utf8');
+
+ reply(`✅ Perintah *${caseName}* berhasil dihapus!`);
+ } catch (err) {
+ console.error(err);
+ reply('❌ Gagal menghapus perintah!');
+ }
+}
+break;
