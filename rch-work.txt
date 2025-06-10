@@ -1,0 +1,31 @@
+case "reactch": case "rch": {
+ if (!isCreator) return m.reply('Khusus Owner');
+ if (!text) return m.reply("Gini Cok Caranya\n\ncontoh: .reactch linkpesan 😂");
+ if (!args[0] || !args[1]) return m.reply("Wrong Format");
+ if (!args[0].includes("https://whatsapp.com/channel/")) return m.reply("Link tautan tidak valid");
+
+ let result = args[0].split('/')[4];
+ let serverId = args[0].split('/')[5];
+ let res = await conn.newsletterMetadata("invite", result);
+
+ function convertToStyledFont(text) {
+ const base = {
+ '-': '➖', a: '🅐', b: '🅑', c: '🅒', d: '🅓', e: '🅔',
+ f: '🅕', g: '🅖', h: '🅗', i: '🅘', j: '🅙',
+ k: '🅚', l: '🅛', m: '🅜', n: '🅝', o: '🅞',
+ p: '🅟', q: '🅠', r: '🅡', s: '🅢', t: '🅣',
+ u: '🅤', v: '🅥', w: '🅦', x: '🅧', y: '🅨', z: '🅩',
+ A: '🅐', B: '🅑', C: '🅒', D: '🅓', E: '🅔',
+ F: '🅕', G: '🅖', H: '🅗', I: '🅘', J: '🅙',
+ K: '🅚', L: '🅛', M: '🅜', N: '🅝', O: '🅞',
+ P: '🅟', Q: '🅠', R: '🅡', S: '🅢', T: '🅣',
+ U: '🅤', V: '🅥', W: '🅦', X: '🅧', Y: '🅨', Z: '🅩'
+ };
+ return text.split('').map(char => base[char] || char).join('');
+ }
+
+ let reaction = convertToStyledFont(args.slice(1).join(' '));
+ await conn.newsletterReactMessage(res.id, serverId, reaction);
+ m.reply(`Berhasil mengirim reaction "${reaction}" ke dalam channel ${res.name}`);
+}
+break;
