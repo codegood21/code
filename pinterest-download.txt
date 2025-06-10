@@ -1,0 +1,57 @@
+case 'pindl': {
+ try {
+ if (!text) return m.reply('Kirim link Pinterest-nya!\nContoh: .pindl https://www.pinterest.com/pin/174866398026280494');
+
+ const res = await axios.get('https://apii.baguss.web.id/downloader/pindl', {
+ params: {
+ apikey: 'bagus',
+ url: text
+ }
+ });
+
+ if (!res.data?.success || !res.data?.media) {
+ return m.reply('❌ Gagal mengambil media dari link tersebut.');
+ }
+
+ const mediaList = res.data.media;
+ if (!Array.isArray(mediaList) || mediaList.length === 0) {
+ return m.reply('❌ Tidak ada media ditemukan dari link Pinterest tersebut.');
+ }
+
+ const media = mediaList[Math.floor(Math.random() * mediaList.length)];
+
+ const isImage = media.extension === 'jpg' || media.extension === 'png' || media.extension === 'jpeg';
+ const isVideo = media.extension === 'mp4' || media.extension === 'mov' || media.extension === 'webm';
+
+ const caption = `
+📌 *Pinterest Downloader*
+🎞 Quality: ${media.quality}
+💾 Size: ${media.formattedSize}
+🧩 Extension: ${media.extension}
+`.trim();
+
+ if (isImage) {
+ await conn.sendMessage(m.chat, {
+ image: { url: media.url },
+ caption
+ }, { quoted: m });
+ } else if (isVideo) {
+ await conn.sendMessage(m.chat, {
+ video: { url: media.url },
+ caption
+ }, { quoted: m });
+ } else {
+ await conn.sendMessage(m.chat, {
+ document: { url: media.url },
+ fileName: `pinterest.${media.extension}`,
+ mimetype: `application/octet-stream`,
+ caption
+ }, { quoted: m });
+ }
+
+ } catch (e) {
+ console.error(e);
+ m.reply('❌ Terjadi kesalahan saat memproses permintaan.');
+ }
+}
+break;
