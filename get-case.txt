@@ -1,0 +1,15 @@
+case 'getcase': {
+const getCase = (cases) => {
+ return "case "+`'${cases}'`+fs.readFileSync("./case.js").toString().split('case \''+cases+'\'')[1].split("break")[0]+"break"
+ }
+ try{
+ if (!isCreator) return m.reply('ngapain')
+ if (!q) return m.reply(`*Example :* ${prefix + command} antilink`)
+ let nana = await getCase(q)
+ m.reply(nana)
+ } catch(err){
+ console.log(err)
+ m.reply(`Case ${q} tidak di temukan`)
+ }
+}
+ break
