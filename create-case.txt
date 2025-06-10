@@ -1,0 +1,60 @@
+case 'createcase': {
+ const fs = require('fs');
+ const path = require('path');
+ const axios = require('axios');
+
+ if (!text) return m.reply('❌ Masukkan perintah pembuatan case.\nContoh: .createcase Buatkan saya fitur .ssweb pakai api html2image');
+
+ try {
+ m.reply('⏳ Sedang membuat fitur sesuai permintaanmu...');
+
+ const finalPrompt = `
+Saya sedang membuat bot WhatsApp menggunakan JavaScript (Node.js).
+Tolong buatkan saya sebuah fitur handler dari perintah berikut ini:
+
+"${text}"
+
+Gunakan format seperti ini:
+case 'namafitur': {
+ try {
+ // disini kodenya cok ajg
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses permintaan.');
+ }
+}
+break;
+
+Sertakan semua kode yang diperlukan di dalam blok, misalnya require, validasi, pengambilan data, pengiriman file atau text, dll.
+
+Jangan beri tambahan penjelasan atau kata apa pun. Hanya kirimkan kodenya saja.
+ `;
+
+ const apiUrl = `https://apizell.web.id/ai/blackbox?text=${encodeURIComponent(finalPrompt)}`;
+ const response = await axios.get(apiUrl);
+ const result = response.data?.result;
+
+ if (!result?.includes("case '")) return m.reply('❌ Gagal membuat case dari prompt.');
+
+ const caseCode = result.trim();
+ const fiturName = (caseCode.match(/case\s+'(.+?)'/) || [])[1] || `fitur${Date.now()}`;
+ const fileName = `${fiturName}.txt`;
+ const filePath = path.join('./', fileName);
+
+ fs.writeFileSync(filePath, caseCode);
+
+ await conn.sendMessage(m.chat, {
+ document: fs.readFileSync(filePath),
+ mimetype: 'text/plain',
+ fileName: fileName,
+ caption: `✅ Fitur *.${fiturName}* berhasil dibuat dari prompt:\n\n"${text}"\n\nLangsung tempel ke handler botmu.`
+ }, { quoted: m });
+
+ if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat membuat fitur.');
+ }
+}
+break;
