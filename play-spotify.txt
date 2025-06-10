@@ -1,0 +1,50 @@
+.addcase case 'playspotify': {
+ try {
+ if (!text) return m.reply('❌ Masukkan nama lagu!\nContoh: .playspotify klebus');
+
+ m.reply('🔍 Mencari lagu di Spotify...');
+
+ const searchRes = await axios.get(`https://apii.baguss.web.id/search/spotify`, {
+ params: {
+ apikey: 'bagus',
+ q: text
+ }
+ });
+
+ const searchData = searchRes.data;
+
+ if (
+ !searchData.success || 
+ !searchData.spotify || 
+ !searchData.spotify.spotify_link ||
+ searchData.spotify.spotify_link === "Tidak tersedia"
+ ) return m.reply('❌ Lagu tidak ditemukan di Spotify.');
+
+ const spotifyUrl = searchData.spotify.spotify_link;
+
+ const dlRes = await axios.get(`https://apii.baguss.web.id/downloader/spotifydl`, {
+ params: {
+ apikey: 'bagus',
+ url: spotifyUrl
+ }
+ });
+
+ const dlData = dlRes.data;
+ if (!dlData.success || !dlData.download_link) return m.reply('❌ Gagal mengunduh lagu dari Spotify.');
+
+ const audioBuffer = await axios.get(dlData.download_link, {
+ responseType: 'arraybuffer'
+ }).then(res => res.data);
+
+ await conn.sendMessage(m.chat, {
+ audio: audioBuffer,
+ mimetype: 'audio/mpeg',
+ fileName: `${dlData.title}.mp3`
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses permintaan.');
+ }
+}
+break;
