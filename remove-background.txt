@@ -1,0 +1,39 @@
+case 'removebg': {
+ let mediaMessage = m.quoted || m;
+ let mime = (mediaMessage.msg || mediaMessage).mimetype || '';
+
+ if (!mime.startsWith('image/')) return m.reply('❌ Kirim atau reply gambar dengan .removebg');
+
+ try {
+ m.reply('🌀 Prosessss');
+ let media = await conn.downloadAndSaveMediaMessage(mediaMessage);
+
+ const form = new FormData();
+ form.append("file", fs.createReadStream(media));
+
+ const uploadRes = await axios.post("https://cloudgood.web.id/upload.php", form, {
+ headers: {
+ ...form.getHeaders()
+ },
+ maxContentLength: Infinity,
+ maxBodyLength: Infinity
+ });
+
+ const imageUrl = uploadRes.data?.url;
+ if (!imageUrl) return m.reply('❌ Gagal upload gambar ke server!');
+
+ let apiUrl = `https://apizell.web.id/tools/removebg?url=${encodeURIComponent(imageUrl)}`;
+ let response = await fetch(apiUrl);
+ let buffer = await response.buffer();
+
+ await conn.sendMessage(m.chat, {
+ image: buffer,
+ caption: '✅ Background berhasil dihapus bro!'
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses gambar!');
+ }
+}
+break;
