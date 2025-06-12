@@ -1,0 +1,6 @@
+case 'hidetag': {
+if (!isOwner) return reply(mess.creator)
+if (!isGroup) return reply(mess.group)
+conn.sendMessage(from, { text : q ? q : '' , mentions: participants.map(a => a.id)}, {quoted:m})
+}
+break
