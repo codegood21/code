@@ -1,0 +1,19 @@
+let handler = async (m, { conn, text, command }) => {
+ if (!text) return m.reply(`Masukkan URL website!\nContoh: .${command} https://example.com`)
+
+ try {
+ await conn.sendMessage(m.chat, {
+ image: { url: `https://apii.baguss.web.id/tools/ssweb?apikey=bagus&url=${encodeURIComponent(text)}&type=desktop` },
+ caption: '🖼️ Berikut adalah screenshot dari website tersebut.'
+ }, { quoted: m })
+ } catch (e) {
+ console.error(e)
+ m.reply('❌ Gagal mengambil screenshot website.')
+ }
+}
+
+handler.help = ['ssweb'].map(v => v + ' <url>')
+handler.tags = ['tools']
+handler.command = /^ssweb$/i
+
+module.exports = handler
