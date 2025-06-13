@@ -1,0 +1,16 @@
+case 'kick': case 'dor': {
+if (!isGroup) return reply(mess.group)
+if (!isCreator && !isAdmins) return reply(mess.admin)
+if (!isBotAdmins) return reply(mess.botAdmin)
+if (text || m.quoted) {
+const input = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text ? text.replace(/[^0-9]/g, "") + "@s.whatsapp.net" : false
+var onWa = await conn.onWhatsApp(input.split("@")[0])
+if (onWa.length < 1) return reply("Nomor tidak terdaftar di whatsapp")
+const res = await conn.groupParticipantsUpdate(m.chat, [input], 'remove')
+await reply(`Berhasil mengeluarkan ${input.split("@")[0]} dari grup ini`)
+} else {
+return reply("@tag/reply")
+}
+}
+db.data.users[m.sender].exp += await randomNomor(60)
+break
