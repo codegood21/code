@@ -1,0 +1,68 @@
+const antilink = JSON.parse(fs.readFileSync('./lib/database/antilink.json')) 
+const linkBlocked = new Set()
+
+if (antilink.includes(m.chat) && m.text) {
+ const isGroupLink = m.text.includes('https://chat.whatsapp.com/')
+ const isChannelLink = m.text.includes('https://whatsapp.com/channel/')
+
+ if ((isGroupLink || isChannelLink) && !isAdmins && !isCreator && !m.fromMe) {
+ if (!isBotAdmins) return
+
+ if (linkBlocked.has(m.key.id)) return
+ linkBlocked.add(m.key.id)
+ setTimeout(() => linkBlocked.delete(m.key.id), 5000)
+
+ try {
+ let isOwnGroupLink = false
+
+ if (isGroupLink && m.chat.endsWith('@g.us')) {
+ const ownCode = await conn.groupInviteCode(m.chat)
+ const ownLink = 'https://chat.whatsapp.com/' + ownCode
+ if (m.text.includes(ownLink)) isOwnGroupLink = true
+ }
+
+ if (!isOwnGroupLink) {
+ await conn.sendMessage(m.chat, {
+ text: `@${m.sender.split("@")[0]} jangan share link ya sob 😅`,
+ contextInfo: {
+ mentionedJid: [m.sender]
+ }
+ })
+
+ await conn.sendMessage(m.chat, {
+ delete: {
+ remoteJid: m.chat,
+ fromMe: false,
+ id: m.key.id,
+ participant: m.sender
+ }
+ })
+ }
+ } catch (err) {
+ console.error('Gagal proses anti-link:', err)
+ }
+ }
+}
+
+// Case Nya (Taruh Setelah Switch Case)
+
+case 'antilink': {
+ if (!m.isGroup) return m.reply('Fitur ini hanya bisa digunakan di grup.');
+ if (!isAdmins) return m.reply('Kamu bukan admin!');
+ if (!isBotAdmins) return m.reply('Bot harus jadi admin!');
+
+ if (args[0] === 'on') {
+ if (antilink.includes(m.chat)) return m.reply('Antilink sudah aktif!');
+ antilink.push(m.chat);
+ fs.writeFileSync('./lib/database/antilink.json', JSON.stringify(antilink));
+ m.reply('✅ Antilink berhasil diaktifkan!');
+ } else if (args[0] === 'off') {
+ if (!antilink.includes(m.chat)) return m.reply('Antilink belum aktif!');
+ antilink = antilink.filter(id => id !== m.chat);
+ fs.writeFileSync('./lib/database/antilink.json', JSON.stringify(antilink));
+ m.reply('❌ Antilink dimatikan!');
+ } else {
+ m.reply('Gunakan:\n\n*#antilink on* → Aktifkan\n*#antilink off* → Matikan');
+ }
+}
+break;
