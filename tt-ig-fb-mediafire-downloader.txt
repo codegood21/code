@@ -1,0 +1,136 @@
+case 'tiktok': case 'tt': case 'ttdl': case 'tiktokdl': {
+ if (!text) return m.reply(`Kirim link TikTok!\nContoh: *.${command} https://vt.tiktok.com/ZS63vXfnn/*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://apii.baguss.web.id/downloader/ttdl?apikey=bagus&url=${text}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data.success) return m.reply('Gagal mengambil data video.');
+
+ let { title, video, cover, author, stats } = data;
+ let caption = `📌 *Judul:* ${title}\n👤 *Pembuat:* ${author.nickname} (@${author.fullname})\n👀 *Dilihat:* ${stats.views}\n❤️ *Suka:* ${stats.likes}\n💬 *Komentar:* ${stats.comment}\n🔗 *Link Asli:* ${text}`;
+
+ if (video.nowatermark_hd) {
+ let media = await getBuffer(video.nowatermark_hd);
+ conn.sendMessage(m.chat, { video: media, caption }, { quoted: m });
+ } else {
+ let media = await getBuffer(cover);
+ conn.sendMessage(m.chat, { image: media, caption }, { quoted: m });
+ }
+
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break;
+}
+
+case 'instagram': case 'ig': case 'igdl': {
+ if (!text) return m.reply(`Kirim link Instagram!\nContoh: *.${command} https://www.instagram.com/reel/DDqZnIYPsRX/*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://apii.baguss.web.id/downloader/igdl?apikey=bagus&url=${text}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (!data.success) return m.reply('Gagal mengambil data dari Instagram.');
+
+ let { video, detail } = data;
+ let captionText = `📌 *Username:* @${detail.username}\n❤️ *Suka:* ${detail.like}\n💬 *Komentar:* ${detail.comment}\n👀 *Dilihat:* ${detail.view || 'Tidak tersedia'}\n\n🔗 *Link:* ${text}\n\n📝 *Caption:*\n${detail.title || 'Tidak ada caption'}`;
+
+ if (video?.url) {
+ let media = await getBuffer(video.url);
+ conn.sendMessage(m.chat, { video: media, caption: captionText }, { quoted: m });
+ } else {
+ m.reply('Tidak ada video yang bisa diunduh.');
+ }
+
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break;
+}
+
+case 'facebook': {
+ if (!text) return m.reply(`Kirim link Facebook!\nContoh: *.${command} https://www.facebook.com/watch?v=123456789*`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ const axios = require('axios');
+ let apiUrl = `https://api.vreden.my.id/api/fbdl?url=${encodeURIComponent(text)}`;
+ let { data } = await axios.get(apiUrl);
+
+ if (data.status !== 200 || !data.data.status) return m.reply('Gagal mengambil data dari Facebook.');
+
+ let { title, durasi, hd_url, sd_url } = data.data;
+ let captionText = `🎬 *Judul:* ${title}\n⏳ *Durasi:* ${durasi}\n🔗 *Link:* ${text}`;
+
+ async function sendVideo(url) {
+ try {
+ let media = { video: { url }, caption: captionText };
+ await conn.sendMessage(m.chat, media, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('Gagal mengirim video.');
+ }
+ }
+
+ if (hd_url) {
+ await sendVideo(hd_url);
+ } else if (sd_url) {
+ await sendVideo(sd_url);
+ } else {
+ m.reply('Gagal mengunduh video! Tidak ada format tersedia.');
+ }
+
+ } catch (err) {
+ console.error(err);
+ m.reply('Terjadi kesalahan, coba lagi nanti.');
+ }
+ break;
+}
+
+case 'mediafire': {
+ if (!text) return m.reply(`Masukkan URL MediaFire!\n\nContoh: .mediafire https://www.mediafire.com/file/bahgm4e7c6z3zzy/TELE-DDOS-BY-BAGUS.zip/file`);
+
+ try {
+ m.reply('⏳ Sedang memproses...');
+ let apiUrl = `https://api.vreden.my.id/api/mediafiredl?url=${encodeURIComponent(text)}`;
+ let res = await fetch(apiUrl);
+ let json = await res.json();
+
+ if (!json.status || json.status !== 200 || !json.result || !json.result.length) {
+ return m.reply('Gagal mengambil data. Pastikan link MediaFire valid!');
+ }
+
+ let fileData = json.result[0];
+ let { nama, mime, size, link } = fileData;
+
+ let caption = `*「 MediaFire Downloader 」*\n\n` +
+ `📂 *Nama*: ${nama}\n` +
+ `📦 *Size*: ${size}\n\n` +
+ `Download By Bagus API`;
+
+ let fileRes = await fetch(link, { redirect: 'follow' });
+ if (!fileRes.ok) {
+ console.error("File Fetch Error:", fileRes.status, fileRes.statusText);
+ return m.reply('Gagal mengunduh file, coba lagi nanti.');
+ }
+
+ let fileBuffer = await fileRes.arrayBuffer();
+
+ await conn.sendMessage(m.chat, { 
+ document: Buffer.from(fileBuffer), 
+ mimetype: mime || 'application/octet-stream', 
+ fileName: nama || 'file.zip', 
+ caption: caption 
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error("Main Error:", e);
+ m.reply('Terjadi kesalahan saat mengambil data.');
+ }
+ break;
+}
