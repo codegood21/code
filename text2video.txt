@@ -1,0 +1,27 @@
+case 'cvideo': {
+ try {
+ if (!text) return m.reply('❌ Masukkan prompt!\nContoh: .cvideo kucing terbang di langit malam');
+
+ m.reply('⏳ Sedang membuat video dari prompt, mohon tunggu...');
+
+ const axios = require('axios');
+ const res = await axios.get(`https://apii.baguss.web.id/tools/txt2vid?apikey=bagus&prompt=${encodeURIComponent(text)}`);
+ const data = res.data;
+
+ if (!data.success || !data.result) return m.reply('❌ Gagal membuat video.');
+
+ const videoUrl = data.result;
+
+ const video = await axios.get(videoUrl, { responseType: 'arraybuffer' });
+ await conn.sendMessage(m.chat, {
+ video: Buffer.from(video.data),
+ caption: `🎬 *Video Generated*\nPrompt: ${text}`,
+ mimetype: 'video/mp4'
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat membuat video.');
+ }
+}
+break;
