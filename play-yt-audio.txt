@@ -1,0 +1,25 @@
+case 'play': {
+ if (!text) return m.reply(`Kirim kata kunci!\nContoh: .play bagusxixepen`);
+ try {
+ m.reply('🌀 Prosess Woyy...');
+ const searchUrl = `https://apii.baguss.web.id/search/youtube?apikey=bagus&q=${encodeURIComponent(text)}`;
+ const searchRes = await axios.get(searchUrl);
+ if (!searchRes.data.success || !searchRes.data.youtube?.url) return m.reply('❌ Tidak ditemukan hasil.');
+ const videoUrl = searchRes.data.youtube.url;
+ const videoTitle = searchRes.data.youtube.title;
+ const downloadUrl = `https://apii.baguss.web.id/downloader/ytmp3?apikey=bagus&url=${encodeURIComponent(videoUrl)}`;
+ const dlRes = await axios.get(downloadUrl);
+ const dlData = dlRes.data;
+ if (!dlData.success || !dlData.link) return m.reply('❌ Gagal mengunduh audio.');
+ await conn.sendMessage(m.chat, {
+ audio: { url: dlData.link },
+ mimetype: 'audio/mpeg',
+ fileName: `${videoTitle}.mp3`,
+ ptt: false
+ }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses permintaanmu.');
+ }
+ }
+ break
