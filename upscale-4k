@@ -1,0 +1,35 @@
+case 'remini':
+case 'hd': {
+  try {
+    const quoted = m.quoted || m;
+    const mime = (quoted.msg || quoted).mimetype || '';
+    if (!mime.startsWith('image/')) return m.reply('❌ Kirim atau reply gambar dengan caption *.hd*');
+
+    const buffer = await conn.downloadMediaMessage(quoted);
+    if (!buffer) return m.reply('❌ Gagal mengunduh gambar.');
+
+    const FormData = require('form-data');
+    const form = new FormData();
+    form.append('file', buffer, 'upload.jpg');
+    const uploadRes = await axios.post('https://cloudgood.web.id/upload.php', form, {
+      headers: form.getHeaders()
+    });
+
+    const uploadedUrl = uploadRes.data?.url || uploadRes.data?.result;
+    if (!uploadedUrl || !uploadedUrl.startsWith('http')) return m.reply('❌ Gagal upload ke cloudgood');
+
+    const apiUrl = `https://apii.baguss.web.id/tools/remini?apikey=bagus&image=${encodeURIComponent(uploadedUrl)}`;
+    const { data } = await axios.get(apiUrl);
+    if (!data.success || !data.result) return m.reply('❌ Gagal memproses gambar dengan Remini');
+
+    await conn.sendMessage(m.chat, {
+      image: { url: data.result },
+      caption: `✅ *Gambar berhasil diperjelas!*\n📦 Size: ${data.size}`
+    }, { quoted: m });
+
+  } catch (err) {
+    console.error(err);
+    m.reply('❌ Terjadi kesalahan saat proses HD.');
+  }
+}
+break;
