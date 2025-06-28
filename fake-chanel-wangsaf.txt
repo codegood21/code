@@ -1,0 +1,46 @@
+case 'fakechwa': {
+ const axios = require('axios');
+ const FormData = require('form-data');
+ const fs = require('fs');
+ const path = require('path');
+
+ if (!text) return m.reply('❌ Format salah!\nContoh: .fakechwa NamaChannel|Deskripsi|500Rb|true');
+
+ const [nama, deskripsi, pengikut, verif] = text.split('|');
+ if (!nama || !deskripsi || !pengikut || !verif) return m.reply('❌ Format tidak lengkap!\nContoh: .fakechwa NamaChannel|Deskripsi|500Rb|true');
+
+ const media = m.quoted || m;
+ const mime = (media.msg || media).mimetype || '';
+ if (!mime.startsWith('image/')) return m.reply('❌ Kirim atau reply gambar profil channel!');
+
+ try {
+ const buffer = await conn.downloadMediaMessage(media);
+ const form = new FormData();
+ form.append('file', buffer, { filename: `pp_${Date.now()}.jpg` });
+
+ const upload = await axios.post('https://cloudgood.web.id/upload.php', form, {
+ headers: form.getHeaders(),
+ });
+
+ const uploaded = upload.data;
+ if (!uploaded.url) return m.reply('❌ Gagal upload gambar ke CloudGood.');
+
+ const imageUrl = uploaded.url;
+
+ const api = `https://apii.baguss.web.id/tools/fakechwa?apikey=bagus&nama=${encodeURIComponent(nama)}&pengikut=${encodeURIComponent(pengikut)}&deskripsi=${encodeURIComponent(deskripsi)}&jangkau=5Rb&bersih=+120&image=${encodeURIComponent(imageUrl)}&verified=${verif}`;
+
+ const { data } = await axios.get(api);
+
+ if (!data.success || !data.result) return m.reply('❌ Gagal membuat fake channel WhatsApp.');
+
+ await conn.sendMessage(m.chat, {
+ image: { url: data.result },
+ caption: `✅ *Fake Channel WhatsApp*\n\n📛 Nama: ${nama}\n📄 Deskripsi: ${deskripsi}\n👥 Pengikut: ${pengikut}\n✔️ Verified: ${verif}`,
+ }, { quoted: m });
+
+ } catch (e) {
+ console.error(e);
+ m.reply('❌ Terjadi kesalahan saat memproses!');
+ }
+}
+break;
