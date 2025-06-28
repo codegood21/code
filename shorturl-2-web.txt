@@ -1,0 +1,34 @@
+case 'shorturl': {
+ const axios = require('axios');
+ if (!text) return m.reply('❌ Masukkan URL yang ingin di-short!\nContoh: .shorturl https://example.com');
+
+ try {
+ const url = encodeURIComponent(text);
+ const [shortcloud, tiny] = await Promise.all([
+ axios.get(`https://apii.baguss.web.id/tools/shortcloudku?apikey=bagus&url=${url}`),
+ axios.get(`https://apii.baguss.web.id/tools/tinyurl?apikey=bagus&url=${url}`)
+ ]);
+
+ const cloud = shortcloud.data;
+ const tny = tiny.data;
+
+ if (!cloud.status || !tny.success) return m.reply('❌ Gagal memendekkan URL.');
+
+ const caption = `🔗 *Success Short URL:*
+
+1. 🌩️ *CloudKu:* 
+${cloud.result}
+🕒 Dibuat: ${cloud.created}
+
+2. 🧿 *TinyURL:* 
+${tny.short_url}`;
+🕒 Dibuat: ${cloud.created}
+
+ await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Gagal short URL!');
+ }
+}
+break;
