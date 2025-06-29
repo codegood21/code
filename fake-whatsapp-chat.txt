@@ -1,0 +1,47 @@
+case 'fakechat': {
+ const mediaMessage = m.quoted || m;
+ const mime = (mediaMessage.msg || mediaMessage)?.mimetype || '';
+ if (!text.includes('|')) return m.reply(`Contoh:\n.fakechat Risma|Halo|Kamu siapa|Gpp|Sama|v2`);
+
+ const args = text.split('|').map(v => v.trim());
+ const versiRaw = args[args.length - 1]?.toLowerCase();
+ const versi = (versiRaw === 'v1' || versiRaw === 'v2') ? versiRaw.replace('v', '') : '2';
+
+ if (versiRaw === 'v1' || versiRaw === 'v2') args.pop(); // Hapus versi dari list chat
+
+ const nama = args[0];
+ const chats = args.slice(1);
+
+ if (chats.length < 2 || chats.length > 6) return m.reply('Minimal 2 bubble dan maksimal 6 bubble');
+
+ try {
+ if (!mediaMessage || !mime.startsWith('image/')) return m.reply('Reply foto profil dulu!');
+ const media = await conn.downloadMediaMessage(mediaMessage);
+ const form = new FormData();
+ form.append('file', media, { filename: 'pp.jpg' });
+
+ const up = await axios.post('https://cloudgood.web.id/upload.php', form, {
+ headers: form.getHeaders()
+ });
+
+ const imageurl = up.data.url;
+ if (!imageurl) return m.reply('Gagal upload foto profil');
+
+ const base = `https://apii.baguss.web.id/tools/fakechat?apikey=bagus&nama=${encodeURIComponent(nama)}&imageurl=${encodeURIComponent(imageurl)}&versi=${versi}`;
+ const query = chats.map((v, i) => `chat${i + 1}=${encodeURIComponent(v)}`).join('&');
+ const fullUrl = `${base}&${query}`;
+
+ const res = await axios.get(fullUrl);
+ if (!res.data.success) return m.reply('Gagal membuat fakechat');
+
+ await conn.sendMessage(m.chat, {
+ image: { url: res.data.result },
+ caption: `✅ Fakechat v${versi} berhasil dibuat!`
+ }, { quoted: m });
+
+ } catch (e) {
+ console.log(e);
+ m.reply('❌ Gagal membuat fakechat.');
+ }
+}
+break;
