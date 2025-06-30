@@ -1,0 +1,60 @@
+//1 buat file antich.json di ./lib/database
+//2 isi file antich.json dengan : []
+//3 tempel code di bawah di file case kalian 
+
+// Taruh Sebelum Switch case
+
+let antichList = JSON.parse(fs.readFileSync('./lib/database/antich.json')); 
+ 
+if (antichList.includes(m.chat)) {
+ const forwardedFromChannel = Object.values(m.message || {}).some(msg =>
+ msg?.contextInfo?.forwardedNewsletterMessageInfo
+ );
+
+ if (forwardedFromChannel && !isAdmins && !isCreator && !m.fromMe) {
+ if (!isBotAdmins) return;
+
+ if (linkBlocked.has(m.key.id)) return;
+ linkBlocked.add(m.key.id);
+ setTimeout(() => linkBlocked.delete(m.key.id), 5000);
+
+ try {
+ await conn.sendMessage(m.chat, {
+ text: `@${m.sender.split('@')[0]} jangan kirim pesan terusan dari *Channel*!`,
+ contextInfo: { mentionedJid: [m.sender] }
+ });
+
+ await conn.sendMessage(m.chat, {
+ delete: {
+ remoteJid: m.chat,
+ fromMe: false,
+ id: m.key.id,
+ participant: m.sender
+ }
+ });
+ } catch (err) {
+ console.error('❌ Gagal hapus pesan dari channel:', err);
+ }
+ }
+}
+
+// Case ( taruh setelah switch case )
+
+case 'antich': {
+ if (!isGroup) return m.reply('❌ Hanya untuk grup!');
+ if (!isAdmins) return m.reply('❌ Hanya admin yang bisa pakai perintah ini!');
+
+ const id = m.chat;
+ const enable = text === 'on';
+
+ if (enable) {
+ if (!antichList.includes(id)) antichList.push(id);
+ m.reply('✅ Anti Channel aktif di grup ini!');
+ } else {
+ antichList = antichList.filter(gid => gid !== id);
+ m.reply('✅ Anti Channel dinonaktifkan di grup ini!');
+ }
+
+ fs.writeFileSync('./lib/database/antich.json', JSON.stringify(antichList, null, 2));
+}
+break;
