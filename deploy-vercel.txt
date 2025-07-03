@@ -1,0 +1,45 @@
+case 'deploy': {
+ try {
+ const quoted = m.quoted || m;
+ const mime = quoted?.mimetype || '';
+ if (!mime.includes('text/html')) return m.reply('❌ Kirim atau reply file .html ya!');
+
+ const buffer = await quoted.download();
+
+ if (!text || !text.trim()) return m.reply('❌ Masukkan nama subdomain!\nContoh: .deploy namasubdomain');
+
+ const rawInput = text.trim().toLowerCase().replace(/\s+/g, '-');
+ const inputName = rawInput.replace(/[^a-z0-9-]/g, '');
+ if (!/^[a-z0-9-]{3,64}$/.test(inputName)) return m.reply('❌ Nama domain tidak valid. Gunakan huruf kecil, angka, dan strip (-) saja.\nMinimal 3 karakter.');
+
+ const subdomain = inputName;
+
+ m.reply('🌀 Prosesss Bossqqquuu');
+
+ const form = new FormData();
+ form.append('subdomain', subdomain);
+ form.append('file', buffer, { filename: 'index.html' });
+
+ const resApi = await fetch('https://apii.baguss.web.id/deploy', {
+ method: 'POST',
+ body: form
+ });
+
+ const json = await resApi.json();
+
+ if (!json.success) {
+ return m.reply(`❌ Gagal deploy:\n${json.message || 'Unknown error'}`);
+ }
+
+ m.reply(
+ `✅ *Situs Berhasil Dideploy!*\n\n` +
+ `🌐 Website: ${json.fullDomain}\n\n` +
+ `🕒 Website aktif dalam 1–5 menit.\n` +
+ `Kalau belum muncul, tunggu sebentar lalu coba lagi.`
+ );
+
+ } catch (err) {
+ m.reply(`❌ Terjadi kesalahan:\n${err.message}`);
+ }
+}
+break
