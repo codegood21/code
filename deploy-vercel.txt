@@ -1,8 +1,12 @@
 case 'deploy': {
  try {
  const quoted = m.quoted || m;
- const mime = quoted?.mimetype || '';
- if (!mime.includes('text/html')) return m.reply('❌ Kirim atau reply file .html ya!');
+const mime = quoted?.mimetype || '';
+const isHtml = mime.includes('html');
+const isZip = mime.includes('zip');
+
+if (!isHtml && !isZip)
+  return m.reply('❌ Mana Scriptnya Woy');
 
  const buffer = await quoted.download();
 
@@ -18,7 +22,8 @@ case 'deploy': {
 
  const form = new FormData();
  form.append('subdomain', subdomain);
- form.append('file', buffer, { filename: 'index.html' });
+ const filename = isZip ? 'project.zip' : 'index.html';
+form.append('file', buffer, { filename });
 
  const resApi = await fetch('https://apii.baguss.web.id/deploy', {
  method: 'POST',
