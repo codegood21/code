@@ -1,0 +1,24 @@
+case 'cekgmail': {
+ if (!text) return m.reply(`Kirim email yang ingin dicek!\nContoh: *.cekgmail jokowi@gmail.com*`);
+
+ try {
+ const res = await axios.get(`https://apii.baguss.web.id/tools/gmailbocor?apikey=bagus&email=${encodeURIComponent(text)}`);
+ const data = res.data;
+
+ if (!data.success) return m.reply('❌ Gagal memeriksa email.');
+
+ const { email, total, breaches } = data;
+ let caption = `📧 *Hasil Cek Email Bocor*\n\n🆔 *Email:* ${email}\n📦 *Total Kebocoran:* ${total}\n\n`;
+
+ for (let i = 0; i < breaches.length; i++) {
+ const item = breaches[i];
+ caption += `🔎Sumber: ${item.title}\n📅 Tanggal: ${item.date}\n📄 Data Bocor: ${item.breached_data}\n📊 Total Akun: ${item.total_breach}\n\n`;
+ }
+
+ await conn.sendMessage(m.chat, { text: caption.trim() }, { quoted: m });
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat mengecek email.');
+ }
+}
+break;
