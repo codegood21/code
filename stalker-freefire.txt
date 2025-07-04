@@ -1,0 +1,45 @@
+case 'ffstalk': {
+ if (!text) return m.reply(`Kirim UID Free Fire!\nContoh: .${command} 2134554847`);
+
+ try {
+ m.reply('🌀 Prosess Bossquuu');
+
+ const res = await axios.get(`https://apii.baguss.web.id/stalker/ffstalk?apikey=bagus&uid=${encodeURIComponent(text)}`);
+ const data = res.data;
+
+ if (!data.success) return m.reply('Gagal mengambil data dari Free Fire.');
+
+ const {
+ uid,
+ nickname,
+ level,
+ exp,
+ like,
+ region,
+ title,
+ seasonId,
+ createTime,
+ lastLogin,
+ diamondCost,
+ creditScore,
+ signature,
+ guild,
+ rank
+ } = data;
+
+ const caption = `🎮 *Free Fire Stalker*\n\n` +
+ `👤 *Nickname:* ${nickname}\n🆔 *UID:* ${uid}\n📅 *Akun Dibuat:* ${createTime}\n🕓 *Login Terakhir:* ${lastLogin}\n` +
+ `🗺️ *Region:* ${region}\n🏷️ *Signature:* ${signature || 'Tidak ada'}\n\n` +
+ `📈 *Level:* ${level}\n🔢 *Exp:* ${exp}\n❤️ *Like:* ${like}\n💎 *Diamond Cost:* ${diamondCost}\n` +
+ `⭐ *Credit Score:* ${creditScore}\n🏆 *Season:* ${seasonId}\n` +
+ `🎖️ *Rank Battle Royale:* ${rank.battleRoyale.max || '-'} | Point: ${rank.battleRoyale.point || '-'}\n` +
+ `🛡️ *Rank Clash Squad:* ${rank.clashSquad.max || '-'} | Point: ${rank.clashSquad.point || '-'}`;
+
+ await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Terjadi kesalahan saat memproses UID tersebut.');
+ }
+}
+break;
