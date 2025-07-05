@@ -1,0 +1,48 @@
+case 'ffstalk': {
+ if (!text) return m.reply(`Kirim UID Free Fire!\nContoh: .${command} 2134554847`);
+
+ try {
+ m.reply("🌀 Proses bossquu");
+
+ const uid = text.trim();
+ const res = await axios.get(`https://discordbot.freefirecommunity.com/player_info_api?uid=${uid}&region=id`, {
+ headers: {
+ 'Origin': 'https://www.freefirecommunity.com',
+ 'Referer': 'https://www.freefirecommunity.com/ff-account-info/',
+ 'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K)',
+ 'Accept': '*/*',
+ 'Accept-Encoding': 'gzip, deflate, br'
+ }
+ });
+
+ const data = res.data?.player_info;
+ if (!data) return m.reply('Gagal mengambil data akun Free Fire.');
+
+ const b = data.basicInfo || {};
+ const nickname = b.nickname || 'Tidak diketahui';
+ const accountId = b.accountId || uid;
+ const level = b.level || '-';
+ const rank = b.rank || '-';
+ const csRank = b.csRank || '-';
+ const exp = b.exp || '-';
+ const createAt = b.createAt ? moment.unix(b.createAt).format('YYYY-MM-DD HH:mm:ss') : '-';
+ const lastLogin = b.lastLoginAt ? moment.unix(b.lastLoginAt).format('YYYY-MM-DD HH:mm:ss') : '-';
+
+ const bannerImage = `https://discordbot.freefirecommunity.com/banner_image_api?uid=${uid}&region=id`;
+ const caption = `🎮 *Free Fire Account Info*\n\n` +
+ `👤 *Nickname:* ${nickname}\n🆔 *UID:* ${accountId}\n⭐ *Level:* ${level}\n` +
+ `🎖️ *Rank:* ${rank} | *CS Rank:* ${csRank}\n\n📅 *Di Buat Pada:* ${createAt}\n🕓 *TerakhirLogin:* ${lastLogin}`;
+
+ const bannerBuffer = await getBuffer(bannerImage);
+
+ await conn.sendMessage(m.chat, {
+ image: bannerBuffer,
+ caption
+ }, { quoted: m });
+
+ } catch (err) {
+ console.error(err);
+ m.reply('❌ Gagal mengambil data dari server Free Fire.');
+ }
+}
+break;
