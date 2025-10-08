@@ -1,0 +1,24 @@
+nama=Tiktok Downloader
+language=javascript
+lines=20
+date=08/10/2025
+code=/**
+Cr : CodeGood
+Note : Kalo Reupload jangan lupa kasih cr plss, cape nyari web 
+*/
+
+const axios = require('axios')
+
+async function getTikTokData(url) {
+  try {
+    const match = url.match(/tiktok\.com\/([a-zA-Z0-9]+)/)
+    if (!match) throw new Error('Invalid TikTok URL')
+    const tiktokId = match[1]
+    const { data } = await axios.get(`https://api.twitterpicker.com/tiktok/mediav2?id=${tiktokId}`)
+    return data
+  } catch (error) {
+    return { error: error.message }
+  }
+}
+
+getTikTokData('https://vt.tiktok.com/ZSkok3jLU/').then(console.log)
