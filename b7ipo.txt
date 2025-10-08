@@ -1,0 +1,5 @@
+nama=Zr
+language=css
+lines=1
+date=08/10/2025
+code=Hello
