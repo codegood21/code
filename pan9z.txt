@@ -1,0 +1,979 @@
+nama=Lighting
+language=html
+lines=976
+date=08/10/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>GEBER LIGHTING — FIXED (Rainbow & Chase) + Wallwasher/Parled/Import BG + Resize/Rotate</title>
+    <style>
+    :root{
+      --bg:#000;
+      --panel:#07121a;
+      --accent:#00d4ff;
+      --muted:#9fb0c4;
+      --btn:#0b3740;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#eaf6ff;font-family:Inter,system-ui,Arial,sans-serif}
+    #app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+    #stageWrap{flex:1;position:relative;background:#000;overflow:hidden}
+    canvas#stage{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;touch-action:none}
+    /* Panel */
+    .panel{flex:0 0 auto;background:var(--panel);padding:10px;overflow-y:auto;max-height:44%;display:flex;flex-direction:column;gap:10px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .col{flex:1;display:flex;flex-direction:column}
+    .label{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .small{font-size:12px;color:var(--muted);text-align:center}
+    input[type=range]{width:100%}
+    input[type=color]{appearance:none;border:none;padding:0;margin:0;width:44px;height:36px;border-radius:6px;cursor:pointer}
+    button,select{padding:10px;border-radius:10px;border:none;background:var(--btn);color:#eaf6ff;font-weight:700;cursor:pointer}
+    .bigBtn{background:linear-gradient(90deg,var(--accent),#006b7a);color:#001922;font-weight:900}
+    .presetRow{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+    .presetBox{background:#092023;padding:6px;border-radius:10px;display:flex;flex-direction:column;align-items:center;min-width:64px}
+    .presetFader{height:120px;writing-mode:bt-lr;-webkit-appearance:slider-vertical}
+    .fileRow{display:flex;gap:8px;align-items:center}
+    .footer{text-align:center;font-size:11px;color:#7da;margin-top:6px}
+    .smallBtn{padding:6px;border-radius:8px;background:#0e2b2f;font-weight:700}
+    .controlGroup{display:flex;gap:6px;align-items:center}
+    @media(min-width:920px){
+      #app{flex-direction:row}
+      #stageWrap{flex:1}
+      .panel{width:420px;height:100vh;max-height:none;overflow:auto}
+    }
+    </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="stageWrap">
+    <canvas id="stage" aria-label="Lighting Stage"></canvas>
+  </div>
+  <div class="panel" id="panel">
+    <button id="powerBtn" class="bigBtn">POWER ON</button>
+    <div class="row">
+      <div class="col">
+        <div class="label">Jumlah Beam</div>
+        <input id="beamCount" type="range" min="4" max="12" step="2" value="8">
+        <div class="small">Beams: <span id="beamCountLabel">8</span></div>
+      </div>
+      <div class="col">
+        <div class="label">Dimmer</div>
+        <input id="dimmer" type="range" min="0" max="100" value="95">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><div class="label">Beam Angle (°)</div><input id="beamAngle" type="range" min="5" max="40" value="12"></div>
+      <div class="col"><div class="label">Beam Range (px)</div><input id="beamRange" type="range" min="200" max="1600" value="900"></div>
+    </div>
+    <div class="row">
+      <div class="col"><div class="label">Global Warna</div><input id="globalColor" type="color" value="#ffffff"></div>
+      <div class="col"><div class="label">Rainbow</div><button id="rainbowBtn">RAINBOW OFF</button></div>
+      <div class="col"><div class="label">Gobo Aurora</div><button id="goboBtn">AURORA OFF</button></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="label">Prisma</div>
+        <select id="prismaMode">
+          <option value="none">None</option>
+          <option value="split3">gobo1</option>
+          <option value="split5">prisma 5</option>
+          <option value="split7">prisma kepyar</option>
+          <option value="linear">Linear</option>
+          <option value="combo">combo</option>
+        </select>
+      </div>
+      <div class="col"><div class="label">Prisma Rotate(bug) </div><button id="prismaRotate">ROTATE OFF</button></div>
+      <div class="col"><div class="label">Mini Brute</div><button id="miniBruteBtn">BRUTE OFF</button></div>
+    </div>
+    <div class="row">
+      <div class="col"><div class="label">Strobe Mode</div>
+        <select id="strobeMode">
+            <option value="off">Off</option>
+            <option value="blink">Blink</option>
+            <option value="flow">Flow</option>
+            <option value="random">Random</option>
+            <option value="alternate">Alternate</option>
+            <option value="chase">Chase</option>
+            <option value="converge">Converge</option>
+        </select>
+      </div>
+      <div class="col"><div class="label">Strobe Speed (Hz)</div><input id="strobeSpeed" type="range" min="1" max="80" value="14"></div>
+    </div>
+    <div><div class="label">Presets Gerakan (dorong 100% untuk aktif)</div><div class="presetRow" id="autoPresets"></div></div>
+    <div class="row">
+      <div class="col"><div class="label">Mode</div><select id="modeSelect"><option value="auto">Auto</option><option value="manual">Manual</option></select></div>
+      <div class="col"><div class="label">Manual Head</div><select id="manualHeadSelect"></select></div>
+    </div>
+    <div id="manualArea" style="display:none">
+      <div class="label">Pan / Tilt</div>
+      <div class="row"><input id="manualPan" type="range" min="-180" max="180" value="0"><input id="manualTilt" type="range" min="-60" max="10" value="-12"></div>
+      <div class="label">Quick Colors</div>
+      <div class="row" id="colorPresets">
+        <button class="smallBtn" data-color="#ff0000" style="background:#ff0000;color:#000">R</button>
+        <button class="smallBtn" data-color="#00ff00" style="background:#00ff00;color:#000">G</button>
+        <button class="smallBtn" data-color="#0000ff" style="background:#0000ff;color:#fff">B</button>
+        <button class="smallBtn" data-color="#ffffff" style="background:#fff;color:#000">W</button>
+        <button class="smallBtn" data-color="#ffff00" style="background:#ffff00;color:#000">Y</button>
+      </div>
+      <div style="margin-top:8px"><input id="manualColor" type="color" value="#ffffff"></div>
+      <div class="row" style="margin-top:8px">
+        <button id="saveHeadA" class="smallBtn">Save→A</button>
+        <button id="loadHeadA" class="smallBtn">Load←A</button>
+        <button id="saveHeadB" class="smallBtn">Save→B</button>
+        <button id="loadHeadB" class="smallBtn">Load←B</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button id="saveAll" class="smallBtn">Save All</button>
+        <button id="loadAll" class="smallBtn">Load All</button>
+        <button id="clearSlots" class="smallBtn">Clear</button>
+      </div>
+    </div>
+    <hr style="border-color:#0b2b30">
+    <div class="label">Background (Import dari galeri) — akan di-crop 1:1</div>
+    <div class="fileRow">
+      <input id="bgFile" type="file" accept="image/*">
+      <button id="clearBg" class="smallBtn">Clear BG</button>
+    </div>
+    <div style="margin-top:6px">
+      <div class="label">Wallwasher Controls</div>
+      <div class="row">
+        <div class="col">
+          <div class="label">Jumlah Wallwasher</div>
+          <input id="wallCount" type="range" min="0" max="8" step="1" value="3">
+          <div class="small">Wallwashers: <span id="wallCountLabel">3</span></div>
+        </div>
+        <div class="col">
+          <div class="label">Spawn / Reset</div>
+          <div class="controlGroup">
+            <button id="spawnWall" class="smallBtn">Spawn</button>
+            <button id="clearWall" class="smallBtn">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:6px">
+      <div class="label">ParLED Controls</div>
+      <div class="row">
+        <div class="col">
+          <div class="label">Jumlah Parled</div>
+          <input id="parCount" type="range" min="0" max="12" step="1" value="4">
+          <div class="small">Parleds: <span id="parCountLabel">4</span></div>
+        </div>
+        <div class="col">
+          <div class="label">Spawn / Reset</div>
+          <div class="controlGroup">
+            <button id="spawnPar" class="smallBtn">Spawn</button>
+            <button id="clearPar" class="smallBtn">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:6px">
+      <div class="label">Chase Recorder (5 slot)</div>
+      <div class="row" id="chaseControls"></div>
+    </div>
+    <div style="margin-top:8px" class="row">
+      <div class="col">
+        <div class="label">Ukuran Wallwasher</div>
+        <input id="wallScale" type="range" min="0.5" max="2" step="0.1" value="1">
+      </div>
+      <div class="col">
+        <div class="label">Rotasi Wallwasher (°)</div>
+        <input id="wallRotate" type="range" min="-180" max="180" step="5" value="0">
+      </div>
+    </div>
+    <div class="footer">GEBER LIGHTING — TEAM GEBER</div>
+  </div>
+</div>
+
+<script>
+/* ========== Core from original (kept mostly intact) ========== */
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = Math.round(window.innerHeight * 0.62);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+const ui = {
+  powerBtn: document.getElementById('powerBtn'),
+  beamCount: document.getElementById('beamCount'),
+  beamCountLabel: document.getElementById('beamCountLabel'),
+  dimmer: document.getElementById('dimmer'),
+  beamAngle: document.getElementById('beamAngle'),
+  beamRange: document.getElementById('beamRange'),
+  globalColor: document.getElementById('globalColor'),
+  rainbowBtn: document.getElementById('rainbowBtn'),
+  goboBtn: document.getElementById('goboBtn'),
+  prismaMode: document.getElementById('prismaMode'),
+  prismaRotate: document.getElementById('prismaRotate'),
+  miniBruteBtn: document.getElementById('miniBruteBtn'),
+  strobeMode: document.getElementById('strobeMode'),
+  strobeSpeed: document.getElementById('strobeSpeed'),
+  autoPresets: document.getElementById('autoPresets'),
+  modeSelect: document.getElementById('modeSelect'),
+  manualArea: document.getElementById('manualArea'),
+  manualHeadSelect: document.getElementById('manualHeadSelect'),
+  manualPan: document.getElementById('manualPan'),
+  manualTilt: document.getElementById('manualTilt'),
+  manualColor: document.getElementById('manualColor'),
+  saveHeadA: document.getElementById('saveHeadA'),
+  loadHeadA: document.getElementById('loadHeadA'),
+  saveHeadB: document.getElementById('saveHeadB'),
+  loadHeadB: document.getElementById('loadHeadB'),
+  saveAll: document.getElementById('saveAll'),
+  loadAll: document.getElementById('loadAll'),
+  clearSlots: document.getElementById('clearSlots'),
+  chaseControls: document.getElementById('chaseControls'),
+  bgFile: document.getElementById('bgFile'),
+  clearBg: document.getElementById('clearBg'),
+  wallCount: document.getElementById('wallCount'),
+  wallCountLabel: document.getElementById('wallCountLabel'),
+  spawnWall: document.getElementById('spawnWall'),
+  clearWall: document.getElementById('clearWall'),
+  parCount: document.getElementById('parCount'),
+  parCountLabel: document.getElementById('parCountLabel'),
+  spawnPar: document.getElementById('spawnPar'),
+  clearPar: document.getElementById('clearPar'),
+  wallScale: document.getElementById('wallScale'),
+  wallRotate: document.getElementById('wallRotate')
+};
+
+const PRESET_THRESHOLD = 95;
+const SMOOTH = 0.12;
+let strobeAccum = 0;
+const state = {
+  power: true,
+  dimmer: Number(ui.dimmer ? ui.dimmer.value : 95)/100,
+  angle: Number(ui.beamAngle ? ui.beamAngle.value : 12),
+  range: Number(ui.beamRange ? ui.beamRange.value : 900),
+  globalColor: ui.globalColor ? ui.globalColor.value : '#ffffff',
+  rainbow: false,
+  gobo: false,
+  strobeMode: ui.strobeMode ? ui.strobeMode.value : 'off',
+  strobeSpeed: Number(ui.strobeSpeed ? ui.strobeSpeed.value : 14),
+  prismaMode: ui.prismaMode ? ui.prismaMode.value : 'none',
+  prismaRotate: false,
+  time: 0,
+  presetActive: new Array(8).fill(false),
+  heads: [],
+  manualSelected: 0,
+  miniBruteOn: false,
+  bruteIntensity: 1.0,
+  chases: [null,null,null,null,null],
+  wallwashers: [],
+  parleds: [],
+  bgImageCanvas: null,
+  miniBrutePos: { x: null, y: null },
+  dragging: false,
+  dragTarget: null,
+  dragOffset: {x:0,y:0}
+};
+
+function withAlpha(color, alpha){
+  if(!color) color = '#ffffff';
+  color = String(color).trim();
+  const hslMatch = color.match(/^hsl\(\s*([^\)]+)\s*\)$/i);
+  if(hslMatch){ return `hsla(${hslMatch[1].trim()}, ${alpha})`; }
+  if(/^hsla?\(/i.test(color) || /^rgba?\(/i.test(color)){
+    const inner = color.replace(/^[^\(]+\(/,'').replace(/\)$/, '');
+    const parts = inner.split(',').map(s=>s.trim());
+    const baseParts = parts.slice(0,3).join(', ');
+    if(/^hsl/i.test(color)){
+      return `hsla(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+    } else {
+      return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+    }
+  }
+  const rgbMatch = color.match(/^rgb\(\s*([^\)]+)\s*\)$/i);
+  if(rgbMatch){ return `rgba(${rgbMatch[1].trim()}, ${alpha})`; }
+  const hexMatch = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if(hexMatch){
+    let hex = hexMatch[1];
+    if(hex.length === 3) hex = hex.split('').map(ch=>ch+ch).join('');
+    const r = parseInt(hex.slice(0,2),16);
+    const g = parseInt(hex.slice(2,4),16);
+    const b = parseInt(hex.slice(4,6),16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  return `rgba(255,255,255,${alpha})`;
+}
+
+function colorStop(color, a){ return withAlpha(color, a); }
+function lerp(a,b,f){ return a + (b-a)*f; }
+function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+function initHeads(count=8){
+  ui.beamCountLabel.textContent = String(count);
+  state.heads = [];
+  const trY = Math.round(canvas.height * 0.12);
+  const margin = Math.min(80, canvas.width * 0.06);
+  const usable = canvas.width - margin*2;
+  const spacing = count > 1 ? usable / (count - 1) : 0;
+  for(let i=0;i<count;i++){
+    const x = Math.round(margin + i*spacing);
+    const pan = (i - (count-1)/2) * 8;
+    const tilt = -12;
+    state.heads.push({
+      id: i, x, y: trY, pan, tilt, targetPan: pan, targetTilt: tilt,
+      color: '#ffffff', intensity: state.dimmer, angle: state.angle, range: state.range, prismRotation: 0
+    });
+  }
+  buildManualSelect();
+  buildPresetsUI();
+}
+initHeads(Number(ui.beamCount ? ui.beamCount.value : 8));
+
+function presetName(i){ return ['Pargoy1','Pargoy2','Fan','Circle','SlowTilt','Circle2','Spiral','Wave'][i] || `P${i+1}`; }
+function buildPresetsUI(){
+  ui.autoPresets.innerHTML = '';
+  for(let i=0;i<8;i++){
+    const box = document.createElement('div'); box.className='presetBox';
+    const f = document.createElement('input'); f.type='range'; f.min=0; f.max=100; f.value=0; f.dataset.id=i; f.className='presetFader';
+    const lbl = document.createElement('div'); lbl.className='small'; lbl.textContent = `P${i+1} ${presetName(i)}`;
+    f.addEventListener('input', (e)=>{
+      const id = Number(e.target.dataset.id), v = Number(e.target.value);
+      const prev = state.presetActive[id];
+      state.presetActive[id] = v >= PRESET_THRESHOLD;
+      if(state.presetActive[id] && !prev) setStatus(`Preset ${id+1} ON`);
+      if(!state.presetActive[id] && prev) setStatus(`Preset ${id+1} OFF`);
+    });
+    box.appendChild(f); box.appendChild(lbl); ui.autoPresets.appendChild(box);
+  }
+}
+
+function buildManualSelect(){
+  ui.manualHeadSelect.innerHTML = '';
+  for(const h of state.heads){
+    const o = document.createElement('option'); o.value = h.id; o.textContent = `Head ${h.id+1}`; ui.manualHeadSelect.appendChild(o);
+  }
+  ui.manualHeadSelect.value = state.manualSelected;
+}
+
+function updateManualControls(id){
+  const h = state.heads.find(x=>x.id === Number(id));
+  if(!h) return;
+  ui.manualPan.value = Math.round(h.pan);
+  ui.manualTilt.value = Math.round(h.tilt);
+  ui.manualColor.value = h.color || '#ffffff';
+}
+
+function presetOffset(p, t, i){
+  const mid = (state.heads.length - 1)/2;
+  const dist = Math.abs(i-mid);
+  switch(p){
+    case 0: { const panSpeed = 0.7; const pan = Math.sin(t * panSpeed + i * 0.28) * 48; const tiltBase = -12; const tiltSpeed = 2.6 + (1 - dist/(mid||1)) * 1.6; const s = Math.sin(t * tiltSpeed + i * 0.6); const amp = 20; const tilt = tiltBase + (Math.sign(s) * (6 + Math.abs(s) * amp)) * -1; return { pan, tilt }; }
+    case 1: { const sp=5.0; const pan=Math.sign(Math.sin(t*sp + i*0.4))*56; const tilt=-12 + Math.cos(t*0.7 + i*0.3)*-4; return {pan,tilt}; }
+    case 2: { const spread=Math.sin(t*0.7)*26; const pan=(i-mid)*spread/((state.heads.length/2)||1); const tilt=-10 + Math.cos(t*0.9 + i*0.2)*-6; return {pan,tilt}; }
+    case 3: { const speed=1.0+dist*0.04; const ang=t*2.3*speed + i*(Math.PI*2/state.heads.length); return {pan:Math.sin(ang)*28, tilt:-12 + Math.cos(ang)*8}; }
+    case 4: { const speed=2.4*(1+(1-dist/(mid||1))*0.5); const ang=t*speed + i*0.35; return {pan:Math.sin(ang)*32, tilt:-14 + Math.cos(ang)*10}; }
+    case 5: { const s=0.9+(i%3)*0.25; return {pan:Math.sin(t*1.6*s + i*0.3) * (10 + (i%3)*6), tilt:-10 + Math.cos(t*0.4 + i*0.3) * -8}; }
+    case 6: { const speed=1.4*(1+(1-dist/(mid||1))*0.7); const ang=t*speed + i*0.45; const radius=6 + (mid-dist)*3; return {pan:Math.sin(ang)*radius*2.2, tilt:-12 + Math.sin(t*1.6 + i*0.6)*-14}; }
+    case 7: { const base=Math.sin(t*2.0 + i*0.4)*14; const wave=Math.sin(t*1.8 + i*0.9)*8; return {pan: base + Math.sin(t*1.2 + i*0.3)*6, tilt: -12 + Math.sin(t*2.4 + i*0.5)*10 + wave*0.4}; }
+    default: return {pan:0, tilt:-12};
+  }
+}
+
+function drawBackground(){
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(state.bgImageCanvas){
+    const size = canvas.width;
+    const yoffset = Math.max(0, Math.round((canvas.height - size) / 2));
+    ctx.drawImage(state.bgImageCanvas, 0, 0, state.bgImageCanvas.width, state.bgImageCanvas.height, 0, yoffset, canvas.width, size);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, yoffset, canvas.width, size);
+  }
+  ctx.fillStyle = '#041017'; ctx.fillRect(0, canvas.height*0.82, canvas.width, canvas.height*0.18);
+  const tY = canvas.height*0.12; ctx.fillStyle = '#111217'; ctx.fillRect(0, tY-10, canvas.width, 14);
+}
+
+function drawHeadMounts(){
+  const trY = canvas.height*0.12;
+  for(const h of state.heads){
+    ctx.fillStyle = '#23282c'; ctx.fillRect(h.x-12, trY-26, 24, 12);
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.strokeRect(h.x-12, trY-26, 24, 12);
+  }
+}
+
+function drawHeadMarkers(){
+  for(const h of state.heads){
+    ctx.beginPath(); ctx.arc(h.x,h.y,12,0,Math.PI*2); ctx.fillStyle='#0b0e11'; ctx.fill();
+    const fillColor = state.rainbow ? `hsl(${Math.round((state.time*60 + h.id*28) % 360)},100%,60%)` : (h.color || state.globalColor || '#9fb0c4');
+    ctx.beginPath(); ctx.arc(h.x,h.y,6,0,Math.PI*2); ctx.fillStyle = fillColor; ctx.fill();
+    if(state.selectedHead === h.id){ ctx.strokeStyle='rgba(0,212,255,0.95)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(h.x,h.y,18,0,Math.PI*2); ctx.stroke(); }
+  }
+}
+
+function computeEndpoint(h, panDeg, tiltDeg, scale, angleDeg){
+  const pR = panDeg * Math.PI/180;
+  const tR = tiltDeg * Math.PI/180;
+  const dx = Math.sin(pR) * Math.cos(tR); 
+  const dy = -Math.sin(tR);
+  const dz = Math.cos(pR) * Math.cos(tR); 
+  const lenBase = Number(h.range || state.range);
+  const len = lenBase * scale * (1 - Math.abs(Math.sin(tR)) * 0.18); 
+  const endX = h.x + dx * len;
+  const endY = h.y + dy * len;
+  const spread = Math.tan(angleDeg * Math.PI/180) * len;
+  return { endX, endY, spread };
+}
+
+function drawBeam(h){
+  if(state.miniBruteOn) return;
+  const baseX = h.x, baseY = h.y;
+  const angle = h.angle || state.angle;
+  const layers = [{scale:0.92,alpha:1.0},{scale:1.12,alpha:0.36},{scale:1.45,alpha:0.12},{scale:1.9,alpha:0.06}];
+  const computedColor = state.rainbow ? `hsl(${Math.round((state.time * 60 + h.id*28) % 360)},100%,60%)` : (h.color || state.globalColor || '#ffffff');
+  function drawCone(scale, alpha, panOffset=0){
+    const e = computeEndpoint(h, h.pan + panOffset, h.tilt, scale, angle);
+    const grad = ctx.createLinearGradient(baseX, baseY, e.endX, e.endY);
+    grad.addColorStop(0, colorStop(computedColor, state.dimmer * alpha));
+    grad.addColorStop(0.5, colorStop(computedColor, state.dimmer * alpha * 0.12));
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY);
+    ctx.lineTo(e.endX - e.spread*0.6, e.endY);
+    ctx.lineTo(e.endX + e.spread*0.6, e.endY);
+    ctx.closePath();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  drawCone(layers[0].scale, layers[0].alpha);
+  const pm = state.prismaMode;
+  if(pm.startsWith('split')){
+    const n = Number(pm.replace('split','')) || 3;
+    const spreadDeg = 14;
+    const rot = state.prismaRotate ? (h.prismRotation || 0) : 0;
+    for(let k=0;k<n;k++){
+      const frac = n===1?0.5:k/(n-1);
+      const offDeg = (frac - 0.5) * spreadDeg + rot;
+      drawCone(1.06, 0.28, offDeg);
+    }
+    drawCone(1.12, 0.22); drawCone(1.45, 0.08);
+  } else if(pm === 'linear'){
+    for(let k=0;k<4;k++){ const off = (k - (4-1)/2) * 10; drawCone(1 + Math.abs(off)/50, 0.26, off); }
+  } else if(pm === 'combo'){
+    for(let k=0;k<3;k++) drawCone(1 + k*0.06, 0.22);
+    const rot = state.prismaRotate ? (h.prismRotation || 0) : 0;
+    for(let p=0;p<4;p++) drawCone(1.1 + p*0.05, 0.16, rot + p*2);
+  }
+  drawCone(layers[3].scale, layers[3].alpha);
+  if(state.gobo){
+    const e = computeEndpoint(h, h.pan, h.tilt, 0.85, angle);
+    ctx.save();
+    ctx.globalAlpha = 0.28 * state.dimmer;
+    ctx.translate(e.endX, e.endY);
+    ctx.rotate((state.time*0.4 + h.id*0.35) % (Math.PI*2));
+    const aur = ctx.createRadialGradient(0,0,0,0,0, Math.max(60, Math.tan(angle * Math.PI/180) * (h.range||state.range) * 0.55));
+    aur.addColorStop(0, 'rgba(120,220,255,0.45)'); aur.addColorStop(0.45, 'rgba(220,120,255,0.28)'); aur.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = aur;
+    ctx.beginPath(); ctx.ellipse(0,0,(h.range||state.range)*0.06,(h.range||state.range)*0.04,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  const ep = computeEndpoint(h, h.pan, h.tilt, 0.95, angle);
+  const radius = 10 + (h.intensity||1) * 8;
+  const spotGrad = ctx.createRadialGradient(ep.endX, ep.endY, 0, ep.endX, ep.endY, radius);
+  spotGrad.addColorStop(0, colorStop(computedColor, 0.36 * state.dimmer));
+  spotGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = spotGrad;
+  ctx.fillRect(ep.endX - radius, ep.endY - radius, radius*2, radius*2);
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function drawMiniBrute(){
+  if(!state.miniBruteOn) return;
+  const w = canvas.width, h = canvas.height;
+  const size = Math.min(64, Math.round(w * 0.06));
+  if(state.miniBrutePos.x === null){ state.miniBrutePos.x = Math.round(w/2); state.miniBrutePos.y = Math.round(h * 0.20); }
+  const cx = state.miniBrutePos.x, cy = state.miniBrutePos.y;
+  const hw = size * 1.6, hh = size * 0.95;
+  const hx = cx - Math.round(hw/2), hy = cy - Math.round(hh/2);
+  ctx.fillStyle = 'rgba(14,14,16,0.98)'; ctx.fillRect(hx, hy, hw, hh);
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.strokeRect(hx, hy, hw, hh);
+  const gap = 6;
+  const lampSize = Math.round(Math.min(hw, hh) / 2.6);
+  const startX = hx + Math.round((hw - (lampSize*2 + gap))/2);
+  const startY = hy + Math.round((hh - (lampSize*2 + gap))/2);
+  for(let r=0;r<2;r++){
+    for(let c=0;c<2;c++){
+      const x = startX + c*(lampSize + gap) + lampSize/2;
+      const y = startY + r*(lampSize + gap) + lampSize/2;
+      const g = ctx.createRadialGradient(x,y,0,x,y,lampSize*1.2);
+      const intensity = clamp(state.bruteIntensity, 0.6, 1.8);
+      g.addColorStop(0, `rgba(255,255,240,${1.0 * intensity})`);
+      g.addColorStop(0.35, `rgba(255,240,200,${0.9 * intensity})`);
+      g.addColorStop(1, 'rgba(255,200,120,0)');
+      const visible = strobeVisible(1000);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x,y,lampSize*1.1,0,Math.PI*2); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.beginPath(); ctx.arc(x,y,lampSize*0.28,0,Math.PI*2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill();
+    }
+  }
+}
+
+// STROBE LOGIC (MODIFIED)
+function strobeVisible(index){
+  const mode = state.strobeMode;
+  const speed = clamp(Number(state.strobeSpeed), 0.5, 200);
+  if(mode === 'off' || !state.power) return true;
+  if(mode === 'blink') return Math.floor(strobeAccum * speed) % 2 === 0;
+  if(mode === 'flow'){ const phase = (strobeAccum * speed * 2 * Math.PI) + (index * 0.6); return Math.sin(phase) > 0; }
+  if(mode === 'random'){ const v = Math.sin((strobeAccum * speed * 3.14) + index * 7.13); return v > Math.cos(index * 0.3); }
+  
+  // --- NEW MODES ---
+  const totalHeads = state.heads.length;
+  if(mode === 'alternate'){
+    const group = index % 2; // 0 for even, 1 for odd
+    const timeStep = Math.floor(strobeAccum * speed);
+    return timeStep % 2 === group;
+  }
+  if(mode === 'chase'){
+    const timeStep = Math.floor(strobeAccum * speed * 2) % totalHeads;
+    return index === timeStep;
+  }
+  if(mode === 'converge'){
+    const midPoint = Math.floor(totalHeads / 2);
+    const timeStep = Math.floor(strobeAccum * speed * 2) % midPoint;
+    return index === timeStep || index === (totalHeads - 1 - timeStep);
+  }
+
+  return true;
+}
+
+
+/* ====== NEW: Wallwasher & Parled implementation ====== */
+function spawnWallwashers(count){
+  state.wallwashers = [];
+  const margin = 40;
+  const usable = canvas.width - margin*2;
+  const spacing = count > 1 ? usable / (count - 1) : 0;
+  const baseY = Math.round(canvas.height * 0.55);
+  for(let i=0;i<count;i++){
+    const x = Math.round(margin + i*spacing);
+    const w = { id:i, x, y: baseY, rotation:0, scale:1, ledCount: 12, color: '#ffffff', intensity: state.dimmer };
+    state.wallwashers.push(w);
+  }
+  saveStateUI();
+}
+
+function drawWallwashers(){
+  for(let i=0;i<state.wallwashers.length;i++){
+    const w = state.wallwashers[i];
+    const barH = Math.round(canvas.height * 0.36);
+    const barW = Math.max(18, Math.round(canvas.width * 0.02));
+    const top = w.y - Math.round(barH/2);
+    ctx.save();
+    ctx.translate(w.x, top + barH/2);
+    ctx.rotate((w.rotation||0) * Math.PI/180);
+    ctx.scale(w.scale || 1, w.scale || 1);
+    ctx.fillStyle = '#0b0f11'; ctx.fillRect(-Math.round(barW/2), -Math.round(barH/2), barW, barH);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.strokeRect(-Math.round(barW/2), -Math.round(barH/2), barW, barH);
+    const ledCols = 2;
+    const ledRows = w.ledCount || 12;
+    const gap = Math.round((barH - ledRows*8) / Math.max(1, ledRows));
+    for(let r=0;r<ledRows;r++){
+      const ly = -Math.round(barH/2) + gap/2 + r*(8 + gap) + 8;
+      const lx = -Math.round(barW/2) + 8;
+      const visible = strobeVisible(i*3 + r);
+      const alpha = visible ? clamp(w.intensity, 0.08, 1) : 0.04;
+      const ledColor = state.rainbow ? `hsl(${Math.round((state.time*60 + i*22 + r*6) % 360)},100%,60%)` : (w.color || state.globalColor || '#ffffff');
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2); ctx.fillStyle = withAlpha(ledColor, alpha); ctx.fill();
+      ctx.beginPath(); ctx.arc(lx, ly, 2, 0, Math.PI*2); ctx.fillStyle = withAlpha('#fff', alpha*0.9); ctx.fill();
+    }
+    const stripW = Math.round(barW * 0.36);
+    const stripX = Math.round(barW/2) - stripW - 6;
+    const stripGrad = ctx.createLinearGradient(stripX - barW/2, -barH/2, stripX - barW/2, barH/2);
+    const color = state.rainbow ? `hsl(${Math.round((state.time*60 + i*40) % 360)},100%,60%)` : (w.color || state.globalColor || '#fff');
+    stripGrad.addColorStop(0, withAlpha(color, 0.8 * w.intensity));
+    stripGrad.addColorStop(0.5, withAlpha(color, 0.28 * w.intensity));
+    stripGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = stripGrad;
+    ctx.fillRect(stripX - barW/2, -Math.round(barH/3), stripW, Math.round(barH*2/3));
+    ctx.restore();
+  }
+}
+
+function spawnParleds(count){
+  state.parleds = [];
+  const margin = 40;
+  const usable = canvas.width - margin*2;
+  const spacing = count > 1 ? usable / (count - 1) : 0;
+  const baseY = Math.round(canvas.height * 0.72);
+  for(let i=0;i<count;i++){
+    const x = Math.round(margin + i*spacing);
+    const p = { id:i, x, y: baseY, ledCount: 7, color: '#ffffff', intensity: state.dimmer };
+    state.parleds.push(p);
+  }
+  saveStateUI();
+}
+
+function drawParleds(){
+  for(let i=0;i<state.parleds.length;i++){
+    const p = state.parleds[i];
+    const radius = Math.max(18, Math.round(canvas.width * 0.03));
+    ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, Math.PI*2); ctx.fillStyle = '#0b0f10'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.stroke();
+    const n = p.ledCount || 7;
+    for(let k=0;k<n;k++){
+      const ang = (k / n) * Math.PI*2 - Math.PI/2;
+      const lx = p.x + Math.cos(ang) * (radius*0.6);
+      const ly = p.y + Math.sin(ang) * (radius*0.6);
+      const visible = strobeVisible(200 + i*7 + k);
+      const alpha = visible ? clamp(p.intensity, 0.08, 1) : 0.05;
+      const ledColor = state.rainbow ? `hsl(${Math.round((state.time*60 + i*28 + k*8) % 360)},100%,60%)` : (p.color || state.globalColor || '#ffffff');
+      const g = ctx.createRadialGradient(lx,ly,0,lx,ly,8);
+      g.addColorStop(0, withAlpha('#fff', alpha));
+      g.addColorStop(0.2, withAlpha(ledColor, alpha));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(lx, ly, 6, 0, Math.PI*2); ctx.fill();
+    }
+  }
+}
+
+canvas.addEventListener('pointerdown', (e)=>{
+  const r = canvas.getBoundingClientRect(); const px = e.clientX - r.left, py = e.clientY - r.top;
+  let nearest = -1, nd = 1e9;
+  for(const h of state.heads){
+    const d = Math.hypot(px - h.x, py - h.y);
+    if(d < 30 && d < nd){ nd=d; nearest=h.id; }
+  }
+  if(nearest >= 0){
+    state.selectedHead = nearest; state.dragging = true; state.dragTarget = {type:'head', id:nearest};
+    const hh = state.heads.find(x=>x.id===nearest);
+    state.dragOffset = { x: px - hh.x, y: py - hh.y };
+    ui.manualHeadSelect.value = nearest; updateManualControls(nearest); setStatus('Selected Head '+(nearest+1),700);
+    return;
+  }
+  for(const w of state.wallwashers){
+    const barH = Math.round(canvas.height * 0.36);
+    const barW = Math.max(18, Math.round(canvas.width * 0.02));
+    const left = w.x - Math.round(barW/2);
+    const top = w.y - Math.round(barH/2);
+    if(px >= left - 8 && px <= left + barW + 8 && py >= top - 8 && py <= top + barH + 8){
+      state.dragging = true; state.dragTarget = {type:'wall', id: w.id};
+      state.dragOffset = { x: px - w.x, y: py - w.y };
+      state.selectedWall = w.id;
+      ui.wallScale.value = w.scale || 1;
+      ui.wallRotate.value = w.rotation || 0;
+      setStatus('Selected Wallwasher '+(w.id+1),700);
+      return;
+    }
+  }
+  for(const p of state.parleds){
+    const radius = Math.max(18, Math.round(canvas.width * 0.03));
+    const d = Math.hypot(px - p.x, py - p.y);
+    if(d < radius + 8){
+      state.dragging = true; state.dragTarget = {type:'par', id: p.id};
+      state.dragOffset = { x: px - p.x, y: py - p.y };
+      setStatus('Selected ParLED '+(p.id+1),700);
+      return;
+    }
+  }
+  if(state.miniBruteOn && state.miniBrutePos.x !== null){
+    const size = Math.min(64, Math.round(canvas.width * 0.06));
+    const hw = size * 1.6, hh = size * 0.95;
+    const hx = state.miniBrutePos.x - Math.round(hw/2), hy = state.miniBrutePos.y - Math.round(hh/2);
+    if(px >= hx && px <= hx + hw && py >= hy && py <= hy + hh){
+      state.dragging = true; state.dragTarget = {type:'brute', id: 'main'};
+      state.dragOffset = { x: px - state.miniBrutePos.x, y: py - state.miniBrutePos.y };
+      setStatus('Selected Mini Brute',700);
+      return;
+    }
+  }
+});
+
+canvas.addEventListener('pointermove', (e)=>{
+  if(!state.dragging || !state.dragTarget) return;
+  const r = canvas.getBoundingClientRect(); const px = e.clientX - r.left, py = e.clientY - r.top;
+  const t = state.dragTarget;
+  if(t.type === 'head'){
+    const h = state.heads.find(x=>x.id === t.id);
+    if(h){ h.x = Math.max(20, Math.min(canvas.width - 20, Math.round(px - state.dragOffset.x))); h.y = Math.max(10, Math.min(canvas.height*0.6, Math.round(py - state.dragOffset.y))); }
+  } else if(t.type === 'wall'){
+    const w = state.wallwashers.find(x=>x.id === t.id);
+    if(w){ w.x = Math.max(20, Math.min(canvas.width - 20, Math.round(px - state.dragOffset.x))); w.y = Math.max(60, Math.min(canvas.height*0.85, Math.round(py - state.dragOffset.y))); saveStateUI(); }
+  } else if(t.type === 'par'){
+    const p = state.parleds.find(x=>x.id === t.id);
+    if(p){ p.x = Math.max(20, Math.min(canvas.width - 20, Math.round(px - state.dragOffset.x))); p.y = Math.max(40, Math.min(canvas.height*0.9, Math.round(py - state.dragOffset.y))); saveStateUI(); }
+  } else if(t.type === 'brute'){
+    state.miniBrutePos.x = Math.max(20, Math.min(canvas.width - 20, Math.round(px - state.dragOffset.x)));
+    state.miniBrutePos.y = Math.max(20, Math.min(canvas.height - 20, Math.round(py - state.dragOffset.y)));
+    saveStateUI();
+  }
+});
+
+window.addEventListener('pointerup', ()=> { state.dragging = false; state.dragTarget = null; });
+
+const STORAGE_KEY = 'geber_light_fix_v2';
+function loadStorage(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }catch(e){ return {}; } }
+function saveStorage(obj){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); setStatus('Saved',900);}catch(e){ setStatus('Storage failed',900);} }
+
+function saveStateUI(){
+  const st = loadStorage();
+  st.wallwashers = state.wallwashers;
+  st.parleds = state.parleds;
+  st.miniBrutePos = state.miniBrutePos;
+  saveStorage(st);
+}
+
+function restoreStateUI(){
+  const st = loadStorage();
+  if(st.wallwashers) state.wallwashers = st.wallwashers;
+  if(st.parleds) state.parleds = st.parleds;
+  if(st.miniBrutePos) state.miniBrutePos = st.miniBrutePos;
+}
+restoreStateUI();
+
+function createChaseUI(){
+  ui.chaseControls.innerHTML = '';
+  for(let i=0;i<5;i++){
+    const w = document.createElement('div'); w.style.display='flex'; w.style.flexDirection='column'; w.style.gap='6px';
+    const t = document.createElement('div'); t.className='small'; t.textContent='Chase '+(i+1);
+    const row = document.createElement('div'); row.style.display='flex'; row.style.gap='6px';
+    const rec = document.createElement('button'); rec.textContent='REC'; rec.dataset.slot=i; rec.style.background='#8b1a1a';
+    const play = document.createElement('button'); play.textContent='PLAY'; play.dataset.slot=i;
+    const clr = document.createElement('button'); clr.textContent='CLEAR'; clr.dataset.slot=i;
+    row.appendChild(rec); row.appendChild(play); row.appendChild(clr);
+    w.appendChild(t); w.appendChild(row); ui.chaseControls.appendChild(w);
+    let recorder = null;
+    rec.addEventListener('click', ()=>{
+      const s = Number(rec.dataset.slot);
+      if(rec.dataset.rec === '1'){ rec.dataset.rec='0'; rec.style.background=''; if(recorder){ recorder.stop(); recorder=null; setStatus('Recording stopped',900); } }
+      else { rec.dataset.rec='1'; rec.style.background='#d33'; recorder = startRecorder(s, rec); setStatus('Recording chase '+(s+1),900); }
+    });
+    play.addEventListener('click', ()=> playChaseSlot(Number(play.dataset.slot)));
+    clr.addEventListener('click', ()=> clearChaseSlot(Number(clr.dataset.slot)));
+  }
+}
+createChaseUI();
+
+function startRecorder(slot, btn){
+  const frames = [];
+  const fps = 20;
+  const interval = 1000 / fps;
+  let running = true;
+  const t0 = performance.now();
+  function sample(){
+    if(!running) return;
+    const t = Math.round(performance.now() - t0);
+    const snap = state.heads.map(h=>({pan: h.pan, tilt: h.tilt}));
+    frames.push({t, heads: snap});
+    if(t >= 12000){ stop(); return; }
+    setTimeout(sample, interval);
+  }
+  setTimeout(sample, 0);
+  function stop(){
+    running = false;
+    btn.dataset.rec = '0';
+    state.chases[slot] = { frames, fps, ts: Date.now() };
+    const st = loadStorage(); st.chases = st.chases || {}; st.chases[slot] = state.chases[slot]; saveStorage(st);
+    setStatus('Chase saved to slot '+(slot+1),1200);
+  }
+  return { stop };
+}
+
+function playChaseSlot(slot){
+  const chase = state.chases[slot] || (loadStorage().chases && loadStorage().chases[slot]);
+  if(!chase || !chase.frames || chase.frames.length===0){ setStatus('Chase empty',800); return; }
+  setStatus('Playing chase '+(slot+1),900);
+  const frames = chase.frames;
+  const start = performance.now();
+  function step(){
+    const now = performance.now();
+    const rel = now - start;
+    let idx = 0;
+    while(idx < frames.length - 1 && frames[idx+1].t <= rel) idx++;
+    const f = frames[Math.min(idx, frames.length-1)];
+    if(f){
+      for(let i=0;i<state.heads.length;i++){
+        const h = state.heads[i];
+        const hf = f.heads[i] || f.heads[0] || {pan:h.pan, tilt:h.tilt};
+        h.targetPan = hf.pan; h.targetTilt = hf.tilt;
+      }
+    }
+    if(rel >= frames[frames.length-1].t + 40){ setStatus('Chase finished',900); return; }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function clearChaseSlot(slot){ state.chases[slot] = null; const st = loadStorage(); if(st.chases && st.chases[slot]){ delete st.chases[slot]; saveStorage(st); } setStatus('Chase '+(slot+1)+' cleared',900); }
+(function loadChases(){ const st = loadStorage(); if(st.chases){ for(let i=0;i<5;i++) if(st.chases[i]) state.chases[i] = st.chases[i]; }})();
+
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if(state.power) state.time += dt;
+  strobeAccum += dt;
+
+  if(ui.dimmer) state.dimmer = Number(ui.dimmer.value)/100;
+  if(ui.beamAngle) state.angle = Number(ui.beamAngle.value);
+  if(ui.beamRange) state.range = Number(ui.beamRange.value);
+  if(ui.globalColor) state.globalColor = ui.globalColor.value;
+  if(ui.rainbowBtn) state.rainbow = ui.rainbowBtn.textContent.indexOf('ON') >= 0;
+  if(ui.goboBtn) state.gobo = ui.goboBtn.textContent.indexOf('ON') >= 0;
+  if(ui.strobeMode) state.strobeMode = ui.strobeMode.value;
+  if(ui.strobeSpeed) state.strobeSpeed = Number(ui.strobeSpeed.value);
+  if(ui.prismaMode) state.prismaMode = ui.prismaMode.value;
+  if(ui.prismaRotate) state.prismaRotate = ui.prismaRotate.textContent.indexOf('ON') >= 0;
+
+  for(let i=0;i<state.heads.length;i++){
+    const h = state.heads[i];
+    let sumPan=0, sumTilt=0, cnt=0;
+    for(let p=0;p<state.presetActive.length;p++){
+      if(state.presetActive[p]){ const off = presetOffset(p, state.time, i); sumPan += off.pan; sumTilt += off.tilt; cnt++; }
+    }
+    if(cnt>0){ h.targetPan = sumPan / cnt; h.targetTilt = sumTilt / cnt; }
+    if(ui.modeSelect && ui.modeSelect.value === 'manual' && Number(ui.manualHeadSelect.value) === h.id){
+      h.targetPan = Number(ui.manualPan.value);
+      h.targetTilt = Number(ui.manualTilt.value);
+    }
+    h.pan = lerp(h.pan !== undefined ? h.pan : h.targetPan, h.targetPan, SMOOTH);
+    h.tilt = lerp(h.tilt !== undefined ? h.tilt : h.targetTilt, h.targetTilt, SMOOTH);
+    h.intensity = state.dimmer;
+    if(state.prismaRotate){ h.prismRotation = (h.prismRotation || 0) + dt * 60; } else { h.prismRotation = 0; }
+    h.angle = state.angle; h.range = state.range;
+  }
+
+  drawBackground();
+  drawHeadMounts();
+  drawWallwashers();
+  drawParleds();
+  drawMiniBrute();
+  for(const h of state.heads){
+    if(strobeVisible(h.id)) drawBeam(h);
+  }
+  drawHeadMarkers();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+ui.beamCount && ui.beamCount.addEventListener('input', e=>{ initHeads(Number(e.target.value)); setStatus('Beams '+e.target.value,700); });
+ui.dimmer && ui.dimmer.addEventListener('input', ()=> setStatus('Dimmer '+Math.round(Number(ui.dimmer.value))+'%',700));
+ui.beamAngle && ui.beamAngle.addEventListener('input', ()=> setStatus('Angle '+ui.beamAngle.value+'°',700));
+ui.beamRange && ui.beamRange.addEventListener('input', ()=> setStatus('Range '+ui.beamRange.value+'px',700));
+ui.rainbowBtn && ui.rainbowBtn.addEventListener('click', ()=>{
+  const on = ui.rainbowBtn.textContent.indexOf('ON') >= 0;
+  if(on){ ui.rainbowBtn.textContent = 'RAINBOW OFF'; setStatus('Rainbow OFF',700); } else { ui.rainbowBtn.textContent = 'RAINBOW ON'; setStatus('Rainbow ON',700); }
+});
+ui.goboBtn && ui.goboBtn.addEventListener('click', ()=>{ const on = ui.goboBtn.textContent.indexOf('ON') >= 0; if(on){ ui.goboBtn.textContent='AURORA OFF'; setStatus('Aurora OFF',700); } else { ui.goboBtn.textContent='AURORA ON'; setStatus('Aurora ON',700); } });
+ui.prismaRotate && ui.prismaRotate.addEventListener('click', ()=>{ const on = ui.prismaRotate.textContent.indexOf('ON') >= 0; if(on){ ui.prismaRotate.textContent='ROTATE OFF'; setStatus('Prisma Rotate OFF',700);} else { ui.prismaRotate.textContent='ROTATE ON'; setStatus('Prisma Rotate ON',700);} });
+ui.powerBtn && ui.powerBtn.addEventListener('click', ()=>{ state.power = !state.power; ui.powerBtn.textContent = state.power ? 'POWER ON' : 'POWER OFF'; setStatus(state.power ? 'Power ON' : 'Power OFF',700); });
+ui.modeSelect && ui.modeSelect.addEventListener('change', (e)=>{ ui.manualArea.style.display = e.target.value === 'manual' ? 'block' : 'none'; setStatus('Mode '+e.target.value,700); });
+ui.manualHeadSelect && ui.manualHeadSelect.addEventListener('change', (e)=>{ state.manualSelected = Number(e.target.value); updateManualControls(state.manualSelected); });
+ui.manualPan && ui.manualPan.addEventListener('input', (e)=>{ const id = Number(ui.manualHeadSelect.value); const h = state.heads.find(x=>x.id===id); if(h) h.targetPan = Number(e.target.value); });
+ui.manualTilt && ui.manualTilt.addEventListener('input', (e)=>{ const id = Number(ui.manualHeadSelect.value); const h = state.heads.find(x=>x.id===id); if(h) h.targetTilt = Number(e.target.value); });
+ui.manualColor && ui.manualColor.addEventListener('input', (e)=>{ const id = Number(ui.manualHeadSelect.value); const h = state.heads.find(x=>x.id===id); if(h){ h.color = e.target.value; setStatus('Color set',700); } });
+document.getElementById('saveHeadA') && document.getElementById('saveHeadA').addEventListener('click', ()=> saveHeadSlot(state.manualSelected, 'A'));
+document.getElementById('loadHeadA') && document.getElementById('loadHeadA').addEventListener('click', ()=> loadHeadSlot(state.manualSelected, 'A'));
+document.getElementById('saveHeadB') && document.getElementById('saveHeadB').addEventListener('click', ()=> saveHeadSlot(state.manualSelected, 'B'));
+document.getElementById('loadHeadB') && document.getElementById('loadHeadB').addEventListener('click', ()=> loadHeadSlot(state.manualSelected, 'B'));
+document.getElementById('saveAll') && document.getElementById('saveAll').addEventListener('click', ()=> saveAllSlot('ALL'));
+document.getElementById('loadAll') && document.getElementById('loadAll').addEventListener('click', ()=> loadAllSlot('ALL'));
+document.getElementById('clearSlots') && document.getElementById('clearSlots').addEventListener('click', ()=> { localStorage.removeItem(STORAGE_KEY); setStatus('Slots cleared',700); });
+ui.miniBruteBtn && ui.miniBruteBtn.addEventListener('click', ()=>{ state.miniBruteOn = !state.miniBruteOn; ui.miniBruteBtn.textContent = state.miniBruteOn ? 'BRUTE ON' : 'BRUTE OFF'; setStatus(state.miniBruteOn ? 'Mini Brute ON — beams paused' : 'Mini Brute OFF — beams resume',900); saveStateUI(); });
+
+function saveHeadSlot(hid, slot){ const st = loadStorage(); st.heads = st.heads || {}; st.heads[slot] = st.heads[slot] || {}; const h = state.heads.find(x=>x.id===hid); if(h) st.heads[slot][hid] = { pan: h.pan, tilt: h.tilt, color: h.color, ts:Date.now() }; saveStorage(st); }
+function loadHeadSlot(hid, slot){ const st = loadStorage(); if(!st.heads || !st.heads[slot] || !st.heads[slot][hid]){ setStatus('Slot empty',800); return; } const s = st.heads[slot][hid]; const h = state.heads.find(x=>x.id===hid); if(h){ h.targetPan = s.pan; h.targetTilt = s.tilt; h.color = s.color || h.color; setStatus('Head loaded',800); } }
+function saveAllSlot(slot){ const data = state.heads.map(h=>({id:h.id, pan:h.pan, tilt:h.tilt, color:h.color})); const st = loadStorage(); st.all = st.all || {}; st.all[slot] = {time:Date.now(), heads:data}; saveStorage(st); }
+function loadAllSlot(slot){ const st = loadStorage(); if(!st.all || !st.all[slot]){ setStatus('Slot empty',800); return; } const data = st.all[slot].heads; for(const d of data){ const h = state.heads.find(x=>x.id===d.id); if(h){ h.targetPan = d.pan; h.targetTilt = d.tilt; h.color = d.color || h.color; } } setStatus('All loaded',800); }
+
+function setStatus(text, ttl=900){ ui.powerBtn.textContent = text; clearTimeout(ui._t); ui._t = setTimeout(()=> ui.powerBtn.textContent = state.power ? 'POWER ON' : 'POWER OFF', ttl); }
+
+ui.bgFile && ui.bgFile.addEventListener('change', (e)=>{
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = function(){
+      const minDim = Math.min(img.naturalWidth, img.naturalHeight);
+      const sx = Math.round((img.naturalWidth - minDim)/2);
+      const sy = Math.round((img.naturalHeight - minDim)/2);
+      const off = document.createElement('canvas'); off.width = minDim; off.height = minDim;
+      const oc = off.getContext('2d');
+      oc.drawImage(img, sx, sy, minDim, minDim, 0, 0, minDim, minDim);
+      state.bgImageCanvas = off;
+      saveStateUI();
+      setStatus('Background loaded',900);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(f);
+});
+
+ui.clearBg && ui.clearBg.addEventListener('click', ()=>{
+  state.bgImageCanvas = null; ui.bgFile.value = ''; saveStateUI(); setStatus('Background cleared',700);
+});
+
+ui.wallCount && ui.wallCount.addEventListener('input', (e)=>{ ui.wallCountLabel.textContent = e.target.value; });
+ui.spawnWall && ui.spawnWall.addEventListener('click', ()=>{ const v = Number(ui.wallCount.value); spawnWallwashers(v); setStatus('Wallwashers spawned: '+v,800); });
+ui.clearWall && ui.clearWall.addEventListener('click', ()=>{ state.wallwashers = []; saveStateUI(); setStatus('Wallwashers cleared',700); });
+
+ui.parCount && ui.parCount.addEventListener('input', (e)=>{ ui.parCountLabel.textContent = e.target.value; });
+ui.spawnPar && ui.spawnPar.addEventListener('click', ()=>{ const v = Number(ui.parCount.value); spawnParleds(v); setStatus('Parleds spawned: '+v,800); });
+ui.clearPar && ui.clearPar.addEventListener('click', ()=>{ state.parleds = []; saveStateUI(); setStatus('Parleds cleared',700); });
+
+if(state.wallwashers.length === 0 && Number(ui.wallCount ? ui.wallCount.value : 0) > 0) spawnWallwashers(Number(ui.wallCount ? ui.wallCount.value : 0));
+if(state.parleds.length === 0 && Number(ui.parCount ? ui.parCount.value : 0) > 0) spawnParleds(Number(ui.parCount ? ui.parCount.value : 0));
+
+(function restoreAll(){
+  const st = loadStorage();
+  if(st.bgImage){}
+  if(st.wallwashers) state.wallwashers = st.wallwashers;
+  if(st.parleds) state.parleds = st.parleds;
+  if(st.miniBrutePos) state.miniBrutePos = st.miniBrutePos;
+})();
+
+window.GEBER = { state, initHeads, playChaseSlot, clearChaseSlot };
+
+if(ui.wallScale){
+  ui.wallScale.addEventListener('input', ()=>{
+    if(state.selectedWall !== null && state.wallwashers){
+      const w = state.wallwashers.find(x => x.id === state.selectedWall);
+      if(w){ w.scale = Number(ui.wallScale.value); saveStateUI(); setStatus('Wall scale '+ui.wallScale.value,700); }
+    }
+  });
+}
+if(ui.wallRotate){
+  ui.wallRotate.addEventListener('input', ()=>{
+    if(state.selectedWall !== null && state.wallwashers){
+      const w = state.wallwashers.find(x => x.id === state.selectedWall);
+      if(w){ w.rotation = Number(ui.wallRotate.value); saveStateUI(); setStatus('Wall rotate '+ui.wallRotate.value+'°',700); }
+    }
+  });
+}
+
+canvas.addEventListener('click', (e)=>{
+  if(state.dragging) return;
+  const r = canvas.getBoundingClientRect(); const px = e.clientX - r.left, py = e.clientY - r.top;
+  state.selectedWall = null;
+  for(const w of state.wallwashers){
+    const barH = Math.round(canvas.height * 0.36) * (w.scale || 1);
+    const barW = Math.max(18, Math.round(canvas.width * 0.02)) * (w.scale || 1);
+    const dx = px - w.x;
+    const dy = py - (w.y - Math.round(canvas.height * 0.36)/2 + (barH/2));
+    const rot = (w.rotation || 0) * Math.PI/180;
+    const localX = dx * Math.cos(-rot) - dy * Math.sin(-rot);
+    const localY = dx * Math.sin(-rot) + dy * Math.cos(-rot);
+    if(localX >= -barW/2 - 8 && localX <= barW/2 + 8 && localY >= -barH/2 - 8 && localY <= barH/2 + 8){
+      state.selectedWall = w.id;
+      ui.wallScale.value = w.scale || 1;
+      ui.wallRotate.value = w.rotation || 0;
+      setStatus('Selected Wallwasher '+(w.id+1),700);
+      break;
+    }
+  }
+});
+</script>
+
+</body>
+</html>
