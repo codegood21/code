@@ -1,0 +1,9 @@
+nama=Test Code
+language=javascript
+lines=5
+date=08/10/2025
+code=const crypto = require('crypto')
+function randomId(length = 16) {
+  return crypto.randomBytes(length).toString('hex')
+}
+console.log(randomId())
