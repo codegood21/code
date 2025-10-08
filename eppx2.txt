@@ -1,0 +1,5 @@
+nama=bsbsn
+language=javascript
+lines=1
+views=0
+code=sbzbbz
