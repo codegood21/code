@@ -1,0 +1,57 @@
+nama=Snack Video
+language=javascript
+lines=53
+date=08/10/2025
+code=/**
+Cr : CodeGood
+Note : Kalo Reupload jangan lupa kasih cr plss, cape nyari web 
+*/
+
+const fetch = require("node-fetch")
+const cheerio = require("cheerio")
+
+const scrapeSnackVideo = async (url) => {
+  try {
+    const response = await fetch("https://dvsnackvideo.com/abc_download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Origin": "https://dvsnackvideo.com",
+        "Referer": "https://dvsnackvideo.com/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+      },
+      body: JSON.stringify({
+        url,
+        locale: "id",
+        type: "video"
+      })
+    })
+    const html = await response.text()
+    const $ = cheerio.load(html)
+    const result = {
+      thumbnail: $("img.thumbnail").attr("src") || null,
+      duration: $(".duration span").text() || null,
+      likes: $(".likes span").text() || null,
+      views: $(".views span").text() || null,
+      comments: $(".comments span").text() || null,
+      downloads: []
+    }
+    $(".download-container a").each((_, el) => {
+      const link = $(el).attr("href")
+      const text = $(el).text().trim()
+      if (link && text) {
+        result.downloads.push({
+          name: text,
+          url: link.startsWith("/dl")
+            ? `https://dvsnackvideo.com${link}`
+            : link
+        })
+      }
+    })
+    console.log(result)
+  } catch (err) {
+    console.error("Error:", err)
+  }
+}
+
+scrapeSnackVideo("https://www.snackvideo.com/@kwai/video/5199274407939319471?pwa_source=web_share")
