@@ -1,0 +1,5 @@
+nama=Test Code
+language=python
+lines=1
+date=08/10/2025
+code=const Test = 'Test';
