@@ -1,0 +1,28 @@
+nama=untuk nonooo
+language=python
+lines=25
+date=09/10/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+ <title>Semangat!</title>
+ <style>
+ body {
+ background-color: #ffff00;
+ font-family: Arial, sans-serif;
+ text-align: center;
+ }
+ .semangat-message {
+ font-size: 24px;
+ color: #008000;
+ margin-top: 20%;
+ }
+ </style>
+</head>
+<body>
+ <div class="semangat-message">
+ <h1>Semangat!</h1>
+ <p>Kamu bisa melakukannya!</p>
+ </div>
+</body>
+</html>
