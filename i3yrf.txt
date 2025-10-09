@@ -1,0 +1,303 @@
+nama=Layananky
+language=html
+lines=299
+date=09/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAY PRESET - Futuristic Grid</title>
+    <style>
+        /* CSS Utama & Tema Gelap */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            position: relative;
+            z-index: 10; /* Konten utama di atas partikel */
+        }
+        
+        /* --- Latar Belakang Partikel (Canvas) --- */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            z-index: 1; 
+        }
+
+        /* --- Header Utama (Hero Section) --- */
+        #hero {
+            height: 80vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        #hero h1 {
+            font-size: 4em;
+            margin-bottom: 0.2em;
+            color: #4CAF50; 
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.5); 
+            animation: text-reveal 2s ease-out;
+        }
+
+        #hero p {
+            font-size: 1.5em;
+            color: #8b949e;
+        }
+        
+        /* --- Animasi Logo (3D Flip & Glow) --- */
+        .logo-3d {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 40px;
+            border-radius: 50%;
+            background: #21262d;
+            box-shadow: 0 0 30px #4CAF50, inset 0 0 15px #4CAF50;
+            transition: transform 0.5s;
+            animation: logo-pulse 3s infinite alternate;
+            transform-style: preserve-3d;
+        }
+
+        .logo-3d:hover {
+            transform: rotateY(180deg);
+        }
+        
+        .logo-3d img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            padding: 15px;
+            box-sizing: border-box;
+            backface-visibility: hidden;
+        }
+
+        @keyframes logo-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 30px #4CAF50, inset 0 0 15px #4CAF50; }
+            100% { transform: scale(1.05); box-shadow: 0 0 50px #4CAF50, inset 0 0 25px #4CAF50; }
+        }
+
+        /* --- Konten Grid Layanan (Unik) --- */
+        #services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .service-card {
+            background: #161b22;
+            padding: 30px;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            transition: all 0.3s;
+            transform: translateY(0);
+        }
+
+        .service-card:hover {
+            background: #1f242c;
+            transform: translateY(-5px); 
+            border-color: #4CAF50;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card h3 {
+            color: #4CAF50;
+            font-size: 1.5em;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 10px;
+        }
+        
+        /* --- Footer & Tombol WA --- */
+        footer {
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid #30363d;
+            text-align: center;
+            font-size: 0.9em;
+            color: #8b949e;
+            position: relative;
+            z-index: 10;
+        }
+
+        .whatsapp-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 12px 30px;
+            background-color: #4CAF50; 
+            color: #0d1117; 
+            text-decoration: none;
+            border-radius: 50px; 
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+            
+            /* SOLUSI Z-INDEX agar dapat diklik */
+            position: relative;
+            z-index: 999; 
+        }
+
+        .whatsapp-button:hover {
+            background-color: #5cb85c;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(76, 175, 80, 1.0);
+        }
+        
+        /* --- Responsiveness Tambahan --- */
+        @media (max-width: 600px) {
+            #hero h1 {
+                font-size: 2.5em;
+            }
+            #hero p {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+    
+    <header id="hero" class="container">
+        
+        <div class="logo-3d">
+            <img src="kay_preset.jpg" alt="KAY PRESET.">
+        </div>
+
+        <h1>KAY PRESET</h1>
+        <p>Selamat Datang Di Bio/Wep Kami, Disini Kami Melayani 3 Hal.. Silahkan Scrol Ke Bawah Untuk Melihat</p>
+    </header>
+
+    <div id="main-content" class="container">
+        
+        <h2>Layanan Utama</h2>
+        <div id="services-grid">
+            
+            <div class="service-card">
+                <h3>Layanan Apk</h3>
+                <p>APK SUNTIK Rp 10.000</p>
+            </div>
+            
+            <div class="service-card">
+                <h3>Layanan Wep</h3>
+                <p>Wep Suntik All Sosmed 20.000</p>
+            </div>
+            
+            <div class="service-card">
+                <h3>Layanan	Suntik Tiktok</h3>
+                <p>100 Followers   	Rp 10.000       –       Rp 100.000,
+                    100 Save	       Rp 10.000       –       Rp 100.000,       
+                    10.000 Views	   Rp 10.000       –       Rp 100.000,
+                    1.000 Likes    Rp 10.000       -       Rp 100.0000</p>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <footer>
+        <a 
+            href="https://wa.me/6283840810784?text=Halo%20KAY%20PRESET,%20saya%20tertarik%20dengan%20layanan%20Anda." 
+            class="whatsapp-button" 
+            target="_blank"
+        >
+            Hubungi Kami Sekarang
+        </a>
+        
+        <p style="margin-top: 10px;">
+            <a 
+                href="https://wa.me/6283840810784?text=mau%20beli"
+                target="_blank" 
+                style="color: #4CAF50; text-decoration: none; font-size: 1em; position: relative; z-index: 999;"
+            >
+                KAY PRESET
+            </a>
+        </p>
+
+        <p>KAY PRESET - RESELLER &copy; 2025</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // INISIALISASI PARTIKEL JS
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80, 
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#4CAF50" 
+                },
+                "shape": {
+                    "type": "circle",
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#4CAF50",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab" 
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+            },
+            "retina_detect": true
+        });
+    </script>
+
+</body>
+</html>
