@@ -1,0 +1,42 @@
+nama=Instagram Downloader
+language=javascript
+lines=38
+date=09/10/2025
+code=const axios = require("axios")
+const cheerio = require("cheerio")
+const qs = require("qs")
+
+async function downloadInstagram(url) {
+  try {
+    const response = await axios.post(
+      "https://api.downloadgram.app/media",
+      qs.stringify({ url }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36",
+          Referer: "https://downloadgram.app/"
+        }
+      }
+    )
+
+    const html = response.data
+    const $ = cheerio.load(html)
+    const thumb = $("img").attr("src")
+    const downloadLink = $("a.abutton.is-success").attr("href")
+
+    if (!downloadLink) return null
+
+    return {
+      thumbnail: thumb,
+      download: downloadLink
+    }
+  } catch (err) {
+    return null
+  }
+}
+
+;(async () => {
+  const result = await downloadInstagram("https://www.instagram.com/reel/DPPzhTaE38y/?igsh=MWJkYzhudTljYzh4OQ==&lang=en")
+  console.log(result)
+})()
