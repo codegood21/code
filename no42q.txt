@@ -1,0 +1,30 @@
+nama=Tiktok Downloader Supp Image
+language=javascript
+lines=26
+date=09/10/2025
+code=/**
+ * Cr : CodeGood
+ * Note : kalo reupload kasih cr plss, susah nyari web
+ */
+
+const axios = require("axios");
+
+async function scrapeTikTok(url) {
+  try {
+    const response = await axios.post(
+      "https://tikgo.me/api/tiktok/",
+      { url },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log(JSON.stringify(response.data, null, 2));
+  } catch (err) {
+    console.error("Gagal scrape:", err.response?.data || err.message);
+  }
+}
+
+scrapeTikTok("https://vt.tiktok.com/ZSUMvWufM/");
