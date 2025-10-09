@@ -1,0 +1,29 @@
+nama=untuk nonooo
+language=html
+lines=26
+date=09/10/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+ <title>Semangat Mbaa!</title>
+ <style>
+ body {
+ background-color: #ffff00;
+ font-family: Arial, sans-serif;
+ text-align: center;
+ }
+ .semangat-message {
+ font-size: 24px;
+ color: #008000;
+ margin-top: 20%;
+ }
+ </style>
+</head>
+<body>
+ <div class="semangat-message">
+ <h1>Semangat Mbaa!</h1>
+ <p>Kamu bisa!</p>
+ <button onclick="alert('Yakin bisa!')">Klik untuk Semangat</button>
+ </div>
+</body>
+</html>
