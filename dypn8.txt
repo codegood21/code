@@ -1,0 +1,109 @@
+nama=Banana Ai Edite
+language=javascript
+lines=105
+date=09/10/2025
+code=/**
+ * Cr : CodeGood
+ * Note : Kalo reupload jangan lupa kasih cr plss, cape nyari web
+ */
+
+const axios = require("axios");
+const fs = require("fs");
+const crypto = require("crypto");
+
+async function uploadAndGenerate(imagePath, prompt) {
+  try {
+    const fileName = `${crypto.randomUUID()}.jpg`;
+    const bucket = "ai-image-editor";
+    const path = `original/${fileName}`;
+
+    const signed = await axios.post(
+      "https://ai-image-editor.com/api/trpc/uploads.signedUploadUrl?batch=1",
+      {
+        0: { json: { bucket, path } },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0",
+        },
+      }
+    );
+
+    const uploadUrl = signed.data[0].result.data.json;
+    console.log("[SIGNED URL]", uploadUrl);
+
+    const imgBuffer = fs.readFileSync(imagePath);
+    await axios.put(uploadUrl, imgBuffer, {
+      headers: { "Content-Type": "image/jpeg" },
+    });
+    console.log("Gambar berhasil diupload!");
+
+    const imageUrl = `https://files.ai-image-editor.com/${path}`;
+
+    const task = await axios.post(
+      "https://ai-image-editor.com/api/trpc/ai.createNanoBananaTask?batch=1",
+      {
+        0: {
+          json: {
+            imageUrls: [imageUrl],
+            prompt: prompt || "change to ghibli studio style",
+            outputFormat: "png",
+            imageSize: "auto",
+            nVariants: 1,
+          },
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0",
+        },
+      }
+    );
+
+    const taskId = task.data[0].result.data.json.data.taskId;
+    console.log("[TASK ID]", taskId);
+
+    let done = false;
+    let resultUrl = null;
+    const visitorId = crypto.randomUUID();
+
+    while (!done) {
+      const check = await axios.get(
+        `https://ai-image-editor.com/api/trpc/ai.queryNanoBananaTask?batch=1&input=${encodeURIComponent(
+          JSON.stringify({
+            0: {
+              json: {
+                taskId,
+                visitorId,
+              },
+            },
+          })
+        )}`,
+        {
+          headers: {
+            "User-Agent": "Mozilla/5.0",
+          },
+        }
+      );
+
+      const data = check.data[0].result.data.json.data;
+      if (data.state === "success" && data.resultUrls?.length) {
+        resultUrl = data.resultUrls[0];
+        done = true;
+        console.log("Berhasil! Hasilnya:");
+        console.log(resultUrl);
+      } else {
+        console.log("Belum selesai... cek ulang dalam 2 detik");
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+    }
+
+    return resultUrl;
+  } catch (e) {
+    console.error("Error:", e.message);
+  }
+}
+
+uploadAndGenerate("file-nya.jpg", "prompt nya");
