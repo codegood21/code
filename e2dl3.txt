@@ -1,0 +1,5 @@
+nama=G
+language=python
+lines=1
+date=09/10/2025
+code=G
