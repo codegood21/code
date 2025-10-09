@@ -1,0 +1,29 @@
+nama=Image Enhance
+language=javascript
+lines=25
+date=09/10/2025
+code=/**
+Cr : CodeGood
+Note : Kalo Reupload jangan lupa kasih cr plss, cape nyari web 
+*/
+
+const axios = require("axios")
+const FormData = require("form-data")
+const fs = require("fs")
+
+async function enhanceImage(filePath) {
+  try {
+    const form = new FormData()
+    form.append("file", fs.createReadStream(filePath))
+
+    const response = await axios.post("https://enhanceit.pro/proxy-1.php", form, {
+      headers: form.getHeaders(),
+    })
+
+    console.log("Output URL:", response.data.output_url)
+  } catch (error) {
+    console.error("Gagal:", error.message)
+  }
+}
+
+enhanceImage("clean.jpg")
