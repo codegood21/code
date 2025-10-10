@@ -1,0 +1,38 @@
+nama=for-u-Nau
+language=python
+lines=34
+date=10/10/2025
+code=!/usr/bin/python3
+
+import time
+
+t = time.localtime(time.time())
+localtime = time.asctime(t)
+str = "Current Time:" + time.asctime(t)
+
+print(str)
+
+import time
+import sys
+
+def print_with_delay(text, delay=0.1):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+lyrics = [
+    ("karna kamu cantik ", 0.09),
+    ("kan kuberi segalanya apa yang kupunya", 0.09),
+    ("dan hatimu baik", 0.10),
+    ("sempurnalah duniaku saat kau disisiku\n", 0.10),
+    ("bukan karna make up diwajahmu", 0.09),
+    ("atau lipstik merah itu", 0.09),
+    ("lembut hati tutur kata", 0.08),
+    ("terciptalah cinta yang kupuja\n", 0.10)
+]
+
+for line, delay in lyrics:
+    print_with_delay(line, delay)
+    time.sleep(1)
