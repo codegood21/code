@@ -15,6 +15,14 @@
         "angela.ns.cloudflare.com",
         "mitch.ns.cloudflare.com"
       ]
+    },
+    {
+      "domain": "0xx0.biz.id",
+      "zone_id": "124d82f791f274101ae97979f31036fa",
+      "name_servers": [
+        "angela.ns.cloudflare.com",
+        "mitch.ns.cloudflare.com"
+      ]
     }
   ]
 }
