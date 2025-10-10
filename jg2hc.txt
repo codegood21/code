@@ -1,0 +1,270 @@
+nama=Yazzmwk
+language=javascript
+lines=267
+date=10/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAZZMWK STORE - Amanah & Ramah</title>
+    <style>
+        /* ========================================= */
+        /* CSS DITINGKATKAN - Menggunakan Variabel & Struktur BEM */
+        /* ========================================= */
+
+        /* 1. Variabel CSS */
+        :root {
+            --color-primary: #333;       /* Header, Card BG */
+            --color-secondary: #25D366;  /* Hijau WhatsApp */
+            --color-text-light: #ffffff;
+            --color-text-dark: #333;
+            --color-price: #28a745;      /* Warna Harga */
+            --color-background: #f4f4f4;
+            --spacing-sm: 16px;
+            --spacing-md: 20px;
+            --spacing-lg: 30px;
+            --border-radius: 8px;
+        }
+
+        /* 2. Base Styles & Reset */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+            color: var(--color-text-dark);
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box; /* Praktik terbaik */
+        }
+
+        /* 3. Header */
+        .header {
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            padding: var(--spacing-md) 0;
+            text-align: center;
+        }
+        .header__slogan {
+            opacity: 0.9; /* Sedikit lebih redup dari judul */
+            font-size: 1.1rem;
+        }
+
+        /* 4. Layout (Container) */
+        .container {
+            max-width: 1200px; /* Batas maksimum lebar */
+            width: 90%;
+            margin: auto;
+            padding: var(--spacing-lg) 0;
+        }
+        
+        /* 5. Product List (Menggunakan Flexbox) */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            justify-content: center;
+        }
+
+        /* 6. Product Card */
+        .product-card {
+            background: var(--color-primary); /* Hitam */
+            color: var(--color-text-light);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            width: 100%; /* Default 100% untuk mobile */
+            max-width: 300px; /* Batas lebar maksimum */
+            text-align: center;
+            /* Transisi untuk efek hover halus */
+            transition: transform 0.3s ease; 
+        }
+        .product-card:hover {
+            transform: translateY(-5px); /* Efek melayang saat disentuh */
+        }
+        .product-card__title {
+            color: var(--color-text-light);
+            margin-top: 0;
+        }
+        .product-card__price {
+            font-weight: bold;
+            color: var(--color-price);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .product-card__code {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-top: 0;
+        }
+
+        /* 7. Form Styles */
+        .order-form {
+            background: var(--color-text-light);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .order-form label {
+            display: block;
+            margin-top: var(--spacing-sm);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .order-form input[type="text"], 
+        .order-form input[type="number"], 
+        .order-form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: var(--spacing-sm);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .order-form input:focus, 
+        .order-form select:focus {
+            border-color: var(--color-secondary);
+            outline: none;
+        }
+        
+        /* 8. Button (Button WhatsApp) */
+        .form__button {
+            background-color: var(--color-secondary); /* Hijau WhatsApp */
+            color: var(--color-text-light);
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .form__button:hover {
+            background-color: #128C7E; /* Hijau yang sedikit lebih gelap */
+        }
+        
+        /* 9. Media Query (Responsif) */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%; /* Lebih lebar di layar kecil */
+            }
+            .order-form {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>YAZZMWK STORE</h1>
+        <p class="header__slogan">STORE YANG AMANAH DAN RAMAH!</p>
+    </header>
+
+    <div class="container">
+        <h2>🛒 Daftar Produk Unggulan</h2>
+        
+        <div class="product-list">
+            
+            <div class="product-card">
+                <h3 class="product-card__title">APLIKASI QRIS</h3>
+                <p class="product-card__price">Rp 5.000</p>
+                <p class="product-card__code">Kode: AQ5</p>
+            </div>
+            
+            <div class="product-card">
+                <h3 class="product-card__title">WINK UNLIMITED</h3>
+                <p class="product-card__price">Rp 5.000</p>
+                <p class="product-card__code">Kode: WU5</p>
+            </div>
+            
+            <div class="product-card">
+                <h3 class="product-card__title">ALIGHT MOTION PREMIUM</h3>
+                <p class="product-card__price">Rp 13.000</p>
+                <p class="product-card__code">Kode: AMP</p>
+            </div>
+
+            <div class="product-card">
+                <h3 class="product-card__title">JASA HD</h3>
+                <p class="product-card__price">Rp 2.000</p>
+                <p class="product-card__code">Kode: JH2</p>
+            </div>
+
+        </div>
+
+        <hr style="margin: 40px auto; border-color: #ddd;">
+
+        <div class="order-form">
+            <h2>📝 Formulir Pemesanan via WhatsApp</h2>
+            
+            <form id="waForm"> 
+                
+                <label for="nama_pelanggan">Nama Lengkap:</label>
+                <input type="text" id="nama_pelanggan" name="nama_pelanggan" placeholder="Cth: Budi Santoso" required>
+
+                <label for="produk">Pilih Produk:</label>
+                <select id="produk" name="produk" required>
+                    <option value="" disabled selected>-- Pilih Produk --</option>
+                    <option value="APLIKASI QRIS (AQ5 - Rp 5.000)">APLIKASI QRIS (Rp 5.000)</option>
+                    <option value="WINK UNLIMITED (WU5 - Rp 5.000)">WINK UNLIMITED (Rp 5.000)</option>
+                    <option value="ALIGHT MOTION PREMIUM (AMP - Rp 13.000)">ALIGHT MOTION PREMIUM (Rp 13.000)</option>
+                    <option value="JASA HD (JH2 - Rp 2.000)">JASA HD (Rp 2.000)</option>
+                </select>
+
+                <label for="jumlah">Jumlah Pesanan:</label>
+                <input type="number" id="jumlah" name="jumlah" min="1" value="1" required>
+
+                <label for="nomor_wa">Nomor WhatsApp Aktif (Cth: 0812xxxxxx):</label>
+                <input type="text" id="nomor_wa" name="nomor_wa" pattern="[0-9]+" title="Hanya masukkan angka" required> 
+
+                <button type="submit" class="form__button">Pesan via WhatsApp</button>
+            </form>
+            
+        </div>
+        
+    </div>
+    
+    <script>
+        // =======================================================
+        // GANTI NOMOR INI DENGAN NOMOR WHATSAPP ANDA (Kode Negara + Nomor)
+        // Contoh: Jika nomor Anda 081234567890, tulis 6281234567890
+        const WHATSAPP_NUMBER = "6282178523556"; 
+        // =======================================================
+
+        const form = document.getElementById('waForm');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Menghentikan pengiriman formulir standar
+
+            // 1. Ambil Nilai dari Input
+            const nama = document.getElementById('nama_pelanggan').value;
+            const produk = document.getElementById('produk').value;
+            const jumlah = document.getElementById('jumlah').value;
+            const nomor_pelanggan = document.getElementById('nomor_wa').value;
+            
+            // 2. Susun Pesan (menggunakan %0A untuk baris baru)
+            const message = 
+                "Halo Admin YAZZMWK STORE!%0A" + 
+                "Saya ingin melakukan pesanan dengan detail berikut:%0A%0A" + 
+                "👤 Nama: " + encodeURIComponent(nama) + "%0A" +
+                "📦 Produk: " + encodeURIComponent(produk) + "%0A" +
+                "🔢 Jumlah: " + encodeURIComponent(jumlah) + " unit%0A" +
+                "📞 Nomor WA Pelanggan: " + encodeURIComponent(nomor_pelanggan) + "%0A%0A" +
+                "Mohon diproses, terima kasih.";
+
+            // 3. Susun URL WhatsApp Lengkap
+            const waURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+
+            // 4. Arahkan pengguna ke URL tersebut
+            window.location.href = waURL;
+        });
+    </script>
+</body>
+</html>
