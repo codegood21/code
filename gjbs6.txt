@@ -1,0 +1,8 @@
+nama=i
+language=html
+lines=4
+date=10/10/2025
+code=<div class="taskbar-item" onclick="window.open('spam-ngl.html', '_blank')">
+    <i class="fas fa-bullhorn"></i>
+    <span>Spam NGL</span>
+</div>
