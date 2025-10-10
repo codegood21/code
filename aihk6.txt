@@ -1,0 +1,5 @@
+nama=P
+language=javascript
+lines=1
+date=10/10/2025
+code=P
