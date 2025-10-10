@@ -1,0 +1,34 @@
+nama=Main.py
+language=python
+lines=30
+date=10/10/2025
+code=import tkinter as tk
+from tkinter import ttk, messagebox
+from ui import CalculatorUI
+from calculations import ScientificCalculator
+from stats import StatisticsCalculator
+from calibration import CalibrationGraph
+
+class CalculatorApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Advanced Scientific Calculator")
+        self.root.geometry("800x600")
+        self.root.minsize(700, 500)
+    
+        self.notebook = ttk.Notebook(root)
+        self.notebook.pack(expand=True, fill='both')
+       
+        self.scientific_calc = ScientificCalculator()
+        self.stats_calc = StatisticsCalculator()
+        self.calibration_graph = CalibrationGraph()
+        
+        self.ui = CalculatorUI(self.notebook, self)
+        
+    def run(self):
+        self.root.mainloop()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CalculatorApp(root)
+    app.run()
