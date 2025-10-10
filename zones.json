@@ -1,0 +1,12 @@
+{
+  "zones": [
+    {
+      "domain": "cx9o.my.id",
+      "zone_id": "9e426833e3b056d2083c3cbc15e32fb2",
+      "name_servers": [
+        "angela.ns.cloudflare.com",
+        "mitch.ns.cloudflare.com"
+      ]
+    }
+  ]
+}
