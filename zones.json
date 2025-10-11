@@ -47,6 +47,14 @@
         "chloe.ns.cloudflare.com",
         "yoxall.ns.cloudflare.com"
       ]
+    },
+    {
+      "domain": "w3ll.biz.id",
+      "zone_id": "8198ae0c0e0d8d90bf25608972dc6982",
+      "name_servers": [
+        "chloe.ns.cloudflare.com",
+        "yoxall.ns.cloudflare.com"
+      ]
     }
   ]
 }
