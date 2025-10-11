@@ -23,6 +23,14 @@
         "angela.ns.cloudflare.com",
         "mitch.ns.cloudflare.com"
       ]
+    },
+    {
+      "domain": "w1nc.my.id",
+      "zone_id": "b8b31cf71d4d36e2614d385a5b40c639",
+      "name_servers": [
+        "angela.ns.cloudflare.com",
+        "mitch.ns.cloudflare.com"
+      ]
     }
   ]
 }
