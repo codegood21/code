@@ -1,0 +1,10 @@
+nama=test
+language=javascript
+lines=6
+date=11/10/2025
+code=const time = moment.tz("Asia/Jakarta").format("HH:mm:ss");
+
+const DaffaDevStickSc = () => {
+        let DaffaDevStikRep = fs.readFileSync('./sticker-reply-sc/sc.webp')
+        Ditt.sendMessage(from, { sticker: DaffaDevStikRep }, { quoted: m })
+        }  
