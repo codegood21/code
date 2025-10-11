@@ -1,0 +1,41 @@
+nama=Hi
+language=html
+lines=37
+date=11/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nina - Feast</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Sedang Memutar: Nina - Feast</h1>
+  <audio id="player" autoplay loop>
+    <source src="nina-feast.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Kadang browser minta interaksi use
+    document.addEventListener('click', function() {
+      document.getElementById('player').play();
+    });
+  </script>
+</body>
+</html>
