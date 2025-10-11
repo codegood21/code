@@ -1,0 +1,5 @@
+nama=TuyyiSTORE.id
+language=html
+lines=1
+date=11/10/2025
+code=hello
