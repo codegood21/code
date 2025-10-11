@@ -39,6 +39,14 @@
         "chloe.ns.cloudflare.com",
         "yoxall.ns.cloudflare.com"
       ]
+    },
+    {
+      "domain": "gn0s.biz.id",
+      "zone_id": "fe2f3f6f65a82491e907e9ac08782b71",
+      "name_servers": [
+        "chloe.ns.cloudflare.com",
+        "yoxall.ns.cloudflare.com"
+      ]
     }
   ]
 }
