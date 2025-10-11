@@ -31,6 +31,14 @@
         "angela.ns.cloudflare.com",
         "mitch.ns.cloudflare.com"
       ]
+    },
+    {
+      "domain": "gopanel.my.id",
+      "zone_id": "917a9fd32091154354d1935f3e68a887",
+      "name_servers": [
+        "chloe.ns.cloudflare.com",
+        "yoxall.ns.cloudflare.com"
+      ]
     }
   ]
 }
