@@ -1,0 +1,68 @@
+nama=Tes
+language=javascript
+lines=64
+date=12/10/2025
+code=<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top-up E‑Wallet — Contoh Aman</title>
+  <style>
+    :root{ --accent:#0b74de; --muted:#666; font-family:Inter, Roboto, Arial, sans-serif; }
+    body{ margin:0; padding:32px; background:#f5f7fb; color:#111; }
+    .card{ max-width:760px; margin:0 auto; background:#fff; border-radius:12px; padding:24px; box-shadow:0 6px 20px rgba(15,20,30,0.08); }
+    h1{ margin:0 0 8px; font-size:20px; }
+    p.lead{ color:var(--muted); margin:0 0 16px; }
+    label{ display:block; margin:12px 0 6px; font-size:14px; }
+    input, select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e2e8f0; font-size:15px; }
+    .row{ display:flex; gap:16px; }
+    .col{ flex:1; }
+    .btn{ display:inline-block; background:var(--accent); color:#fff; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600; margin-top:12px; }
+    .muted{ color:var(--muted); font-size:13px; margin-top:8px; }
+    .qr{ width:220px; height:220px; border-radius:8px; background:linear-gradient(135deg,#f3f7fb,#eef5ff); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted); }
+    .grid{ display:grid; grid-template-columns:1fr 260px; gap:24px; align-items:start; }
+    .note{ background:#fff8e1; border-left:4px solid #ffd54f; padding:10px 12px; border-radius:8px; font-size:13px; }
+    footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:right; }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <h1>Top‑up E‑Wallet</h1>
+    <p class="lead">Formulir top‑up — gunakan integrasi provider resmi untuk menyelesaikan pembayaran.</p>
+
+    <div class="grid">
+      <div>
+        <label for="provider">Pilih Provider E‑Wallet</label>
+        <select id="provider" aria-label="Provider e-wallet">
+          <option value="gopay">GoPay</option>
+          <option value="ovo">OVO</option>
+          <option value="dana">DANA</option>
+          <option value="linkaja">LinkAja</option>
+          <option value="other">Lainnya (mitra resmi)</option>
+        </select>
+
+        <label for="phone">Nomor WA / Nomor Penerima</label>
+        <input id="phone" placeholder="+62xxxxxxxxxx" type="tel" />
+
+        <div class="row">
+          <div class="col">
+            <label for="amount">Jumlah Top‑up (IDR)</label>
+            <input id="amount" placeholder="50000" type="number" min="1000" />
+          </div>
+          <div class="col">
+            <label for="method">Metode Pembayaran</label>
+            <select id="method">
+              <option value="qr">Scan QR (direkomendasikan)</option>
+              <option value="deeplink">Buka Aplikasi (Deep link)</option>
+              <option value="va">Virtual Account (backend)</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="note">Catatan (opsional)</label>
+        <input id="note" placeholder="Contoh: Topup untuk saldo akun bisnis" />
+
+        <button id="start" class="btn">Buat Instruksi Pembayaran</button>
+
+        <div id
