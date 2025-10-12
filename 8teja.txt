@@ -1,0 +1,5 @@
+nama=hyyh
+language=javascript
+lines=1
+date=12/10/2025
+code=yhyhy
