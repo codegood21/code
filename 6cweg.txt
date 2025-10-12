@@ -1,0 +1,5 @@
+nama=orang
+language=html
+lines=1
+date=12/10/2025
+code=word Excel powerpoint 
