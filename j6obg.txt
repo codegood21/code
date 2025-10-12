@@ -1,0 +1,5 @@
+nama=mmk
+language=javascript
+lines=1
+date=12/10/2025
+code=https://files.catbox.moe/cd30rt.jpg"
