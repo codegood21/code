@@ -1,0 +1,101 @@
+nama=Mikaza
+language=html
+lines=98
+date=14/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio [Nama Anda]</title>
+    </head>
+<body>
+
+    <header>
+        <nav>
+            <h1>[Nama Anda]</h1>
+            <ul>
+                <li><a href="#beranda">Beranda</a></li>
+                <li><a href="#tentang">Tentang Saya</a></li>
+                <li><a href="#portofolio">Portofolio</a></li>
+                <li><a href="#kontak">Kontak</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="beranda">
+        <div>
+            <h2>Halo, Saya [Nama Anda]</h2>
+            <p>Seorang Profesional yang bersemangat dalam [Bidang Anda]. Saya membantu [Target Klien] mencapai [Tujuan Mereka].</p>
+            <a href="#portofolio" class="button-utama">Lihat Karya Saya</a>
+            <a href="link-ke-cv-anda.pdf" target="_blank" class="button-sekunder">Unduh CV</a>
+        </div>
+        <img src="foto-profil-anda.jpg" alt="Foto Profil Anda">
+    </section>
+
+    <section id="tentang">
+        <h2>Tentang Saya</h2>
+        <p>Saya memiliki pengalaman selama [X] tahun di bidang [Bidang Anda]. Saya percaya bahwa [Nilai atau Filosofi Kerja Anda].</p>
+        
+        <h3>Keahlian Utama</h3>
+        <ul>
+            <li>Keahlian 1</li>
+            <li>Keahlian 2</li>
+            <li>Keahlian 3</li>
+        </ul>
+
+        <h3>Pengalaman & Edukasi</h3>
+        <p>[Tahun] - [Jabatan/Gelar] di [Nama Perusahaan/Institusi]</p>
+        <p>[Tahun] - [Jabatan/Gelar] di [Nama Perusahaan/Institusi]</p>
+        
+    </section>
+
+    <section id="portofolio">
+        <h2>Karya Pilihan Saya</h2>
+        
+        <div class="proyek">
+            <img src="gambar-proyek-1.jpg" alt="Proyek 1: [Nama Proyek]">
+            <h3>Nama Proyek 1</h3>
+            <p>Deskripsi singkat: [Jelaskan masalah, peran Anda, dan hasilnya].</p>
+            <a href="link-detail-proyek-1.html" class="button-detail">Lihat Detail</a>
+        </div>
+
+        <div class="proyek">
+            <img src="gambar-proyek-2.jpg" alt="Proyek 2: [Nama Proyek]">
+            <h3>Nama Proyek 2</h3>
+            <p>Deskripsi singkat: [Jelaskan masalah, peran Anda, dan hasilnya].</p>
+            <a href="link-detail-proyek-2.html" class="button-detail">Lihat Detail</a>
+        </div>
+        
+        </section>
+
+    <section id="kontak">
+        <h2>Mari Berkolaborasi!</h2>
+        <p>Tertarik dengan layanan atau ingin berdiskusi lebih lanjut? Hubungi saya melalui formulir atau media sosial berikut.</p>
+        
+        <form action="submit_form.php" method="POST">
+            <label for="nama">Nama:</label>
+            <input type="text" id="nama" name="nama" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="pesan">Pesan:</label>
+            <textarea id="pesan" name="pesan" rows="5" required></textarea>
+            
+            <button type="submit" class="button-kirim">Kirim Pesan</button>
+        </form>
+
+        <div class="social-links">
+            <a href="mailto:emailanda@example.com">Email Saya</a>
+            <a href="https://linkedin.com/in/namaanda" target="_blank">LinkedIn</a>
+            <a href="https://github.com/namaanda" target="_blank">GitHub</a>
+            </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 [Nama Anda]. Semua Hak Cipta Dilindungi.</p>
+    </footer>
+
+    </body>
+</html>
