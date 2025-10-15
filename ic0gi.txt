@@ -1,0 +1,5 @@
+nama=Idk
+language=python
+lines=1
+date=15/10/2025
+code=Print("Hello, World!);
