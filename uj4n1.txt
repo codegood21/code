@@ -1,0 +1,204 @@
+nama=INS dev
+language=javascript
+lines=200
+date=16/10/2025
+code=-- fixed
+
+--[[
+===========================================================
+🧲 INS DEV - MAGNET STUD v7.1 (Universal & Respawn-Safe)
+Efek: Objek non-anchored di sekitar karakter ketarik ke kamu.
+Fix:
+✅ Karakter tidak ikut ketarik
+✅ Tarikan dari jauh langsung aktif
+✅ Gerakan part halus dan realistis
+✅ Bekerja di semua map
+✅ Aman saat respawn
+✅ Objek menempel pada karakter (bisa dibawa)
+===========================================================
+]]--
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local Debris = game:GetService("Debris")
+
+local player = Players.LocalPlayer
+local magnetEnabled = false
+local magnetRange = 500 -- jarak maksimum sedot
+local pullStrength = 80 -- ditingkatkan untuk tarikan lebih kuat
+local stickDistance = 5 -- jarak di mana objek akan menempel pada karakter
+
+-- Fungsi untuk mendapatkan referensi karakter yang aman
+local function getCharacter()
+    return player.Character or player.CharacterAdded:Wait()
+end
+
+-- Fungsi untuk setup ulang referensi karakter saat respawn
+local function setupCharacterReferences()
+    local char = getCharacter()
+    local root = char:WaitForChild("HumanoidRootPart")
+    
+    -- Hentikan semua tarikan saat respawn
+    for _, obj in ipairs(Workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and obj:FindFirstChild("MagnetVelocity") then
+            obj:FindFirstChild("MagnetVelocity"):Destroy()
+        end
+        if obj:IsA("BasePart") and obj:FindFirstChild("MagnetWeld") then
+            obj:FindFirstChild("MagnetWeld"):Destroy()
+        end
+    end
+    
+    return char, root
+end
+
+-- Setup awal
+local char, root = setupCharacterReferences()
+
+-- Event handler untuk respawn
+player.CharacterAdded:Connect(function()
+    char, root = setupCharacterReferences()
+end)
+
+-- === Buat UI ===
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "INS_MagnetUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.75, 0, 0.35, 0)
+Frame.Size = UDim2.new(0, 200, 0, 110)
+Frame.BackgroundTransparency = 0.3
+Frame.Active = true
+Frame.Draggable = true
+
+local Title = Instance.new("TextLabel")
+Title.Parent = Frame
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Text = "🧲 INS DEV MAGNET v7.1"
+Title.TextColor3 = Color3.fromRGB(0, 255, 255)
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+
+local Toggle = Instance.new("TextButton")
+Toggle.Parent = Frame
+Toggle.Size = UDim2.new(1, -20, 0, 45)
+Toggle.Position = UDim2.new(0, 10, 0, 50)
+Toggle.Text = "MAGNET: OFF"
+Toggle.TextColor3 = Color3.new(1,1,1)
+Toggle.TextScaled = true
+Toggle.Font = Enum.Font.GothamBold
+Toggle.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
+Toggle.AutoButtonColor = false
+
+-- === Toggle system ===
+Toggle.MouseButton1Click:Connect(function()
+    magnetEnabled = not magnetEnabled
+    if magnetEnabled then
+        Toggle.Text = "MAGNET: ON"
+        Toggle.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
+    else
+        Toggle.Text = "MAGNET: OFF"
+        Toggle.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
+        
+        -- Hapus semua weld saat magnet dimatikan
+        for _, obj in ipairs(Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") and obj:FindFirstChild("MagnetWeld") then
+                obj:FindFirstChild("MagnetWeld"):Destroy()
+            end
+        end
+    end
+end)
+
+-- === Efek magnet ===
+RunService.Heartbeat:Connect(function()
+    if not magnetEnabled then return end
+    if not root or not root.Parent then 
+        -- Coba dapatkan referensi baru jika root tidak valid
+        char, root = setupCharacterReferences()
+        return 
+    end
+
+    -- Iterasi melalui semua objek di workspace
+    for _, obj in ipairs(Workspace:GetDescendants()) do
+        -- Filter objek yang valid
+        if obj:IsA("BasePart")
+            and not obj.Anchored
+            and not obj:IsDescendantOf(char)
+            and obj.CanCollide -- Hanya objek yang bisa bertabrakan
+        then
+            local distance = (root.Position - obj.Position).Magnitude
+            if distance < magnetRange then
+                -- Pastikan bukan bagian dari karakter player
+                if not obj:IsDescendantOf(player.Character) then
+                    local dir = (root.Position - obj.Position).Unit
+                    
+                    -- Jika objek sudah dekat, buat weld untuk menempelkannya
+                    if distance <= stickDistance then
+                        if not obj:FindFirstChild("MagnetWeld") then
+                            -- Hapus velocity yang ada
+                            if obj:FindFirstChild("MagnetVelocity") then
+                                obj:FindFirstChild("MagnetVelocity"):Destroy()
+                            end
+                            
+                            -- Buat weld untuk menempelkan objek ke karakter
+                            local weld = Instance.new("Weld")
+                            weld.Name = "MagnetWeld"
+                            weld.Part0 = root
+                            weld.Part1 = obj
+                            weld.C0 = CFrame.new(0, 0, 0)
+                            weld.C1 = root.CFrame:toObjectSpace(obj.CFrame)
+                            weld.Parent = obj
+                        end
+                    else
+                        -- Jika masih jauh, terus tarik dengan velocity
+                        if not obj:FindFirstChild("MagnetWeld") then
+                            -- Hapus velocity yang lama jika ada
+                            if obj:FindFirstChild("MagnetVelocity") then
+                                obj:FindFirstChild("MagnetVelocity"):Destroy()
+                            end
+                            
+                            -- Buat BodyVelocity dengan nama khusus untuk tracking
+                            local bodyVel = Instance.new("BodyVelocity")
+                            bodyVel.Name = "MagnetVelocity"
+                            bodyVel.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                            -- Semakin dekat, semakin cepat tarikannya
+                            local speedMultiplier = math.min(1.5, 1 + (magnetRange - distance) / magnetRange)
+                            bodyVel.Velocity = dir * pullStrength * speedMultiplier
+                            bodyVel.P = 2000
+                            bodyVel.Parent = obj
+                            
+                            -- Hapus setelah waktu singkat
+                            Debris:AddItem(bodyVel, 0.1)
+
+                            -- Sedikit rotasi buat efek "muter ketarik"
+                            if not obj:FindFirstChild("MagnetRotation") then
+                                local rot = Instance.new("BodyAngularVelocity")
+                                rot.Name = "MagnetRotation"
+                                rot.AngularVelocity = Vector3.new(math.random(-2, 2), math.random(-2, 2), math.random(-2, 2))
+                                rot.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+                                rot.P = 2000
+                                rot.Parent = obj
+                                Debris:AddItem(rot, 0.2)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- === Notifikasi ===
+pcall(function()
+    game.StudioUI:SetCore("SendNotification", {
+        Title = "INS DEV Magnet v7.1",
+        Text = "Objek non-anchored langsung ketarik ke kamu ⚡\nAman saat respawn! Objek akan menempel pada karakter.",
+        Duration = 8,
+    })
+end)
