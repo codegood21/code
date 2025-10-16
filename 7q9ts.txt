@@ -1,0 +1,293 @@
+nama=tes
+language=html
+lines=290
+date=16/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Futuristik</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #1f2833;
+      --accent: #00bfff;
+      --text: #eaeaea;
+      --transition: 0.6s cubic-bezier(.4,.1,.2,1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    header h1 {
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    nav button {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-weight: 500;
+    }
+
+    nav button:hover, nav button.active {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(0,191,255,0.18);
+    }
+
+    /* Slider container (3 pages) */
+    main {
+      flex: 1;
+      display: flex;
+      width: 300%;
+      transition: transform var(--transition);
+      will-change: transform;
+    }
+
+    section {
+      width: 100%;
+      height: calc(100vh - 60px);
+      flex-shrink: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+
+      /* fix flicker when transformed */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      will-change: opacity, transform;
+    }
+
+    /* Home Section */
+    #home h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      animation: fadeIn 0.9s ease forwards;
+    }
+
+    #home p {
+      max-width: 640px;
+      text-align: center;
+      color: #cfcfcf;
+      animation: fadeInUp 1s ease 0.2s forwards;
+      opacity: 0;
+    }
+
+    /* Foto Section */
+    #foto .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      width: 100%;
+      max-width: 920px;
+      padding: 6px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 0;
+      padding-bottom: 66%; /* keep aspect ratio */
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease;
+      filter: brightness(0.78);
+      display: block;
+
+      /* rendering hints to avoid flicker */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform, filter, opacity;
+    }
+
+    .gallery .img-wrap{position:relative;overflow:hidden;border-radius:10px}
+    .gallery img:hover {
+      transform: scale(1.06);
+      filter: brightness(1);
+      box-shadow: 0 0 26px rgba(0,191,255,0.16);
+    }
+
+    /* Video Section */
+    #video .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 920px;
+      width: 100%;
+      padding: 6px;
+    }
+
+    .video-grid video {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 2px solid rgba(0,191,255,0.12);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: block;
+
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+
+    .video-grid video:hover {
+      box-shadow: 0 0 30px rgba(0,191,255,0.18);
+      transform: scale(1.02);
+    }
+
+    /* small helper when using local images: keep visibility stable */
+    img[src^="file:"]{opacity:1}
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-12px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(12px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 768px) {
+      #home h2 {font-size: 1.5rem;}
+      nav button {padding: 6px 12px; font-size: 0.9rem;}
+      .gallery img{padding-bottom:66%}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>GALERI</h1>
+    <nav>
+      <button class="active" data-index="0">Home</button>
+      <button data-index="1">Foto</button>
+      <button data-index="2">Video</button>
+    </nav>
+  </header>
+
+  <main id="slider">
+    <section id="home">
+      <h2>Selamat Datang di Galeri Futuristik</h2>
+      <p>Jelajahi koleksi foto dan video dengan desain bertema dark futuristik dan efek neon biru yang menawan.</p>
+    </section>
+
+    <section id="foto">
+      <h2 style="color:var(--accent)">Galeri Foto</h2>
+      <div class="gallery" id="gallery">
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=1" alt="Foto 1"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=2" alt="Foto 2"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=3" alt="Foto 3"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=4" alt="Foto 4"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=5" alt="Foto 5"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=6" alt="Foto 6"></div>
+      </div>
+    </section>
+
+    <section id="video">
+      <h2 style="color:var(--accent)">Galeri Video</h2>
+      <div class="video-grid">
+        <video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <video controls src="https://www.w3schools.com/html/movie.mp4"></video>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const navButtons = document.querySelectorAll('nav button');
+    const gallery = document.getElementById('gallery');
+
+    function goTo(index){
+      // use translate3d to force GPU compositing (helps with flicker)
+      slider.style.transform = `translate3d(-${index * 100}%,0,0)`;
+      navButtons.forEach(b => b.classList.remove('active'));
+      navButtons[index].classList.add('active');
+
+      // ensure images are visible (force repaint for some browsers)
+      // by toggling a tiny opacity trick if needed
+      if(index === 1){
+        const imgs = gallery.querySelectorAll('img');
+        imgs.forEach((img, i) => {
+          // if image not yet fully loaded, ensure it paints when loaded
+          if(!img.complete){
+            img.addEventListener('load', ()=>{
+              img.style.opacity = '1';
+            });
+          } else {
+            // force layer paint
+            img.style.transform = 'translateZ(0)';
+          }
+        });
+      }
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => goTo(Number(btn.dataset.index)));
+    });
+
+    // Swipe gesture for mobile
+    let startX = 0;
+    slider.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    slider.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      const activeIndex = [...navButtons].findIndex(b => b.classList.contains('active'));
+      if (diff > 50 && activeIndex < 2) goTo(activeIndex + 1);
+      else if (diff < -50 && activeIndex > 0) goTo(activeIndex - 1);
+    });
+
+    // keyboard navigation
+    document.addEventListener('keydown', e => {
+      const activeIndex = [...navButtons].findIndex(b => b.classList.contains('active'));
+      if(e.key === 'ArrowRight' && activeIndex < 2) goTo(activeIndex + 1);
+      if(e.key === 'ArrowLeft' && activeIndex > 0) goTo(activeIndex - 1);
+    });
+
+    // initial small paint fix for some browsers
+    window.addEventListener('load', ()=>{
+      document.querySelectorAll('img').forEach(img=>{ img.style.opacity='1'; });
+    });
+  </script>
+</body>
+</html>
