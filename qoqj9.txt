@@ -1,0 +1,171 @@
+nama=PAMPAM STORE 
+language=javascript
+lines=167
+date=16/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pampam Store - Jual Item Game Murah dan Aman</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        header {
+            background-color: #4CAF50; /* Warna hijau untuk tema "aman dan murah" */
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+        
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        
+        .item-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .item {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        
+        .cart {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pampam Store</h1>
+        <p>Paling Murah, Paling Aman, Cuma di Kita Saja!</p>
+    </header>
+    
+    <main>
+        <section class="section">
+            <h2>Selamat Datang di Pampam Store</h2>
+            <p>Kami menjual berbagai item game dengan harga paling murah dan proses yang aman. Mulai dari ikan secret, hingga joki bebas request. Semua transaksi dijamin aman dan cepat!</p>
+            <p>Hubungi kami via WhatsApp: <a href="https://wa.me/087759944027" style="color: #4CAF50;">087759944027</a></p>
+            <p>Ikuti kami di TikTok: <a href="https://tiktok.com/@niczzz" style="color: #4CAF50;">@niczzz</a> untuk tips dan promo menarik!</p>
+        </section>
+        
+        <section class="section">
+            <h2>Produk Kami</h2>
+            <div class="item-list">
+                <div class="item">
+                    <h3>KRAKEN</h3>
+                    <p>Harga: Rp 30.000</p>
+                    <button onclick="addToCart('KRAKEN')">Add to Cart</button>
+                </div>
+                <div class="item">
+                    <h3>JOKI FISH JT (1 HARI)</h3>
+                    <p>Harga: Rp 7.000</p>
+                    <button onclick="addToCart('Diamonds JOKI FISH IT (1000)')">Add to Cart</button>
+                </div>
+                <div class="item">
+                    <h3>Item MEGALODON</h3>
+                    <p>Harga: Rp 35.000</p>                    <button onclick="addToCart('Item MEGALODON')">Add to Cart</button>
+                </div>
+                <!-- Tambahkan item lebih banyak jika diperlukan -->
+            </div>
+        </section>
+        
+        <section class="section cart" id="cartSection">
+            <h2>Keranjang Belanja</h2>
+            <p id="cartItems">Keranjang kosong. Tambahkan item untuk memulai!</p>
+            <button onclick="checkout()">Checkout via WhatsApp</button>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 Pampam Store. Paling Murah, Paling Aman, Cuma di Kita Saja!</p>
+    </footer>
+    
+    <script>
+        // JavaScript untuk Keranjang Belanja
+        let cart = [];  // Array untuk menyimpan item
+        
+        function addToCart(item) {
+            cart.push(item);  // Tambahkan item ke array
+            updateCartDisplay();  // Perbarui tampilan
+        }
+        
+        function updateCartDisplay() {
+            const cartItemsElement = document.getElementById('cartItems');
+            if (cart.length > 0) {
+                cartItemsElement.innerHTML = 'Item di keranjang: ' + cart.join(', ') + '<br>Total item: ' + cart.length;
+            } else {
+                cartItemsElement.innerHTML = 'Keranjang kosong.';
+            }
+        }
+        
+        function checkout() {
+            if (cart.length > 0) {
+                // Buat pesan WhatsApp dengan item yang dipilih
+                const message = encodeURIComponent('Halo, saya ingin membeli: ' + cart.join(', '));
+                const waLink = `https://wa.me/087759944027?text=${message}`;
+                window.open(waLink, '_blank');  // Buka WhatsApp
+                cart = [];  // Kosongkan keranjang setelah checkout
+                updateCartDisplay();  // Perbarui tampilan
+            } else {
+                alert('Keranjang masih kosong!');
+            }
+        }
+    </script>
+</body>
+</html>
