@@ -1,0 +1,129 @@
+nama=topup-proyek
+language=html
+lines=125
+date=16/10/2025
+code=<!-- Prank HTML: 'HP Terkena Virus - Scarier Version with English scary voices + whispers loop' --><!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>CRITICAL SYSTEM ALERT</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:monospace;background:#000;color:#f00;overflow:hidden}
+    .glitch{font-size:22px;animation:glitch 1s infinite;white-space:pre-wrap;text-align:center}
+    @keyframes glitch{0%{text-shadow:2px 0 red,-2px 0 blue}20%{text-shadow:-2px 0 red,2px 0 blue}40%{text-shadow:2px 0 lime,-2px 0 red}60%{text-shadow:-2px 0 blue,2px 0 lime}80%{text-shadow:2px 0 red,-2px 0 lime}100%{text-shadow:-2px 0 blue,2px 0 red}}
+    .takeover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:shake 1.3s infinite;background:rgba(0,0,0,.95)}
+    @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,4px)}40%{transform:translate(6px,-4px)}60%{transform:translate(-4px,6px)}80%{transform:translate(4px,-6px)}}
+    .count{font-size:38px;font-weight:900;color:#ff2020;margin:18px 0}
+    .files{width:90%;max-width:600px;height:160px;overflow:auto;background:rgba(255,0,0,.08);padding:10px;border-radius:8px;color:#fff;font-size:13px;line-height:1.4}
+    .btn{margin-top:16px;padding:10px 16px;border:0;border-radius:8px;background:#222;color:#fff;font-weight:bold}
+  </style>
+</head>
+<body>
+  <div class="takeover" id="takeover">
+    <div class="glitch">WARNING: YOUR DEVICE IS INFECTED</div>
+    <div class="count" id="count">00:00:30</div>
+    <div class="files" id="files"></div>
+    <button class="btn" id="enable">Enable Sound & Vibration</button>
+    <button class="btn" id="reveal">Reveal Prank</button>
+  </div>  <script>
+    const files=document.getElementById('files');
+    const count=document.getElementById('count');
+    const enable=document.getElementById('enable');
+    const reveal=document.getElementById('reveal');
+    const takeover=document.getElementById('takeover');
+
+    // fake files encryption
+    let i=0;
+    const fakeFiles=[];
+    for(let k=0;k<200;k++) fakeFiles.push(`/storage/data/file_${k}.LOCKED`);
+    const fileInterval=setInterval(()=>{
+      if(i<fakeFiles.length){
+        const p=document.createElement('div');
+        p.textContent=fakeFiles[i];
+        files.appendChild(p);
+        files.scrollTop=files.scrollHeight;
+        i++;
+      } else {clearInterval(fileInterval)}
+    },50);
+
+    // countdown
+    let sec=30;
+    const cInterval=setInterval(()=>{
+      sec--;if(sec<0){sec=0;}
+      count.textContent=`00:00:${sec.toString().padStart(2,'0')}`;
+      if(sec===0){clearInterval(cInterval);}
+    },1000);
+
+    // scary sounds + speech
+    let ctx,osc,whisperInterval;
+    enable.addEventListener('click',()=>{
+      ctx=new (window.AudioContext||window.webkitAudioContext)();
+      function playRumble(){
+        osc=ctx.createOscillator();
+        const gain=ctx.createGain();
+        osc.type='sawtooth';osc.frequency.value=35;
+        gain.gain.value=0.25;
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        setTimeout(()=>osc.stop(),8000);
+      }
+      playRumble();
+      // scream
+      setTimeout(()=>{
+        const o2=ctx.createOscillator();
+        const g2=ctx.createGain();
+        o2.type='square';o2.frequency.value=220;
+        g2.gain.value=0.5;
+        o2.connect(g2).connect(ctx.destination);
+        o2.start();
+        setTimeout(()=>o2.stop(),1200);
+      },3000);
+      // TTS scary lines
+      const lines=[
+        "Warning. Your device is compromised.",
+        "Your personal files are being encrypted.",
+        "System failure imminent.",
+        "Do not attempt to shut down."
+      ];
+      let idx=0;
+      function speak(){
+        if(idx>=lines.length)return;
+        const u=new SpeechSynthesisUtterance(lines[idx]);
+        u.lang='en-US';
+        u.pitch=0.5;u.rate=0.9;
+        speechSynthesis.speak(u);
+        idx++;
+        setTimeout(speak,3000);
+      }
+      speak();
+      // loop whispers
+      whisperInterval=setInterval(()=>{
+        const u2=new SpeechSynthesisUtterance("You can't escape.");
+        u2.lang='en-US';
+        u2.pitch=0.2;u2.rate=0.8;
+        speechSynthesis.speak(u2);
+      },8000);
+      // vibration
+      if(navigator.vibrate){navigator.vibrate([300,200,600,300,1000]);}
+    });
+
+    // stop + reveal
+    reveal.addEventListener('click',()=>{
+      takeover.innerHTML='<div style="color:#0f0;text-align:center"><h2>Relax!</h2><p>This was only a prank demo. No virus, no harm.</p></div>';
+      if(osc) osc.stop();
+      speechSynthesis.cancel();
+      navigator.vibrate(0);
+      clearInterval(whisperInterval);
+    });
+
+    // emergency escape (Esc or 999 key)
+    window.addEventListener('keydown',e=>{
+      if(e.key==='Escape' || e.key==='9'){
+        takeover.innerHTML='<div style="color:#0f0;text-align:center"><h2>Safe</h2><p>Simulation ended.</p></div>';
+        if(osc) osc.stop();speechSynthesis.cancel();navigator.vibrate(0);clearInterval(whisperInterval);
+      }
+    });
+  </script></body>
+</html>
