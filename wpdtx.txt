@@ -1,0 +1,421 @@
+nama=Wheels of names
+language=html
+lines=417
+date=18/10/2025
+code=<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wheel of Names — Karya Syihab</title>
+<style>
+  /* ---------- Reset & base ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(900px 500px at 20% 10%, rgba(124,58,237,0.10), transparent),
+                linear-gradient(180deg,#0b0420 0%, #050114 100%);
+    color:#eaf2ff;
+    display:flex;align-items:center;justify-content:center;
+    padding:28px;overflow:hidden;
+  }
+
+  /* ---------- App wrapper ---------- */
+  .app{width:100%;max-width:1000px;position:relative;z-index:2}
+
+  header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .logo{
+    width:64px;height:64px;border-radius:12px;
+    background:linear-gradient(135deg,#7c3aed,#6ee7b7);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;
+    box-shadow:0 12px 40px rgba(124,58,237,0.12);
+  }
+  .title{font-size:18px;font-weight:800}
+  .subtitle{font-size:13px;color:rgba(230,240,255,0.7)}
+
+  /* ---------- Panel ---------- */
+  .panel{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);
+    border-radius:14px;padding:20px;box-shadow:0 20px 60px rgba(3,6,12,0.6);
+    max-width:720px;margin:0 auto;text-align:center;
+  }
+
+  /* page containers (cover / spin / match) */
+  .page{display:none;opacity:0;transition:opacity 0.2s ease}
+  .page.active{display:block;opacity:1}
+
+  h1{font-size:24px;margin-bottom:8px;color:#e9e3ff;text-shadow:0 0 10px rgba(124,58,237,0.14)}
+  p.lead{color:rgba(230,240,255,0.75);margin-bottom:12px}
+
+  /* inputs & buttons */
+  .inputs{display:flex;flex-direction:column;gap:10px;align-items:center}
+  input[type="text"]{
+    width:88%;max-width:420px;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.02);color:inherit;font-size:14px;outline:none;
+    box-shadow: inset 0 2px 10px rgba(124,58,237,0.03);
+  }
+  input[type="text"]:focus {
+    border-color: rgba(124,58,237,0.4);
+  }
+
+  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  button.action{
+    background:linear-gradient(90deg,#7c3aed,#8b5cf6 60%,#06b6d4);
+    border:0;padding:10px 16px;border-radius:12px;color:white;font-weight:800;cursor:pointer;
+    box-shadow:0 10px 30px rgba(124,58,237,0.12);
+  }
+  button.ghost{
+    background:transparent;border:1px solid rgba(255,255,255,0.06);color:rgba(230,240,255,0.85);
+  }
+  button.small{padding:8px 12px;font-size:13px;border-radius:10px}
+
+  /* neon glow pulse (applied to elements with .neon) */
+  .neon{box-shadow:0 8px 30px rgba(124,58,237,0.16);animation:neonPulse 2.6s ease-in-out infinite}
+  @keyframes neonPulse{
+    0%{box-shadow:0 6px 18px rgba(124,58,237,0.08)}
+    50%{box-shadow:0 18px 50px rgba(124,58,237,0.22)}
+    100%{box-shadow:0 6px 18px rgba(124,58,237,0.08)}
+  }
+
+  /* cover game title style (Wheel of Names) */
+  .game-title{
+    font-weight:900;
+    font-size:34px;
+    letter-spacing:1px;
+    color:#f2ecff;
+    margin-bottom:6px;
+    text-shadow:
+      0 0 6px rgba(167,139,250,0.9),
+      0 0 18px rgba(124,58,237,0.75),
+      0 6px 30px rgba(6,182,212,0.06);
+    animation: titlePulse 2.8s ease-in-out infinite;
+  }
+  @keyframes titlePulse{
+    0%{filter:brightness(1); text-shadow:0 0 6px rgba(167,139,250,0.7)}
+    50%{filter:brightness(1.15); text-shadow:0 0 24px rgba(167,139,250,1)}
+    100%{filter:brightness(1); text-shadow:0 0 6px rgba(167,139,250,0.7)}
+  }
+
+  /* result styles */
+  .result{margin-top:14px;font-weight:800;font-size:16px;color:#e6ecff;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .muted{color:rgba(230,240,255,0.75)}
+  .waiting{font-style:italic;color:rgba(230,240,255,0.85)}
+
+  /* exit button top-right but not overlapping content */
+  .exit-btn{
+    position:fixed;right:18px;top:18px;z-index:99;
+    background:transparent;border:2px solid rgba(124,58,237,0.9);
+    color:#dcd6ff;padding:8px 12px;border-radius:10px;font-weight:800;cursor:pointer;
+    box-shadow:0 8px 30px rgba(124,58,237,0.08);
+    transition: opacity 0.2s ease;
+  }
+  .exit-btn:hover{background:rgba(124,58,237,0.14)}
+
+  /* footer white plain at very bottom */
+  footer.site-foot{
+    position:fixed;left:0;right:0;bottom:8px;text-align:center;color:#ffffff;font-size:13px;
+    z-index:50;
+  }
+
+  /* Animation for spinning text */
+  @keyframes spinText {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .spin-text {
+    animation: spinText 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  /* Animation for number counter */
+  @keyframes countUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .count-up {
+    animation: countUp 0.6s ease-out forwards;
+  }
+
+  /* responsiveness */
+  @media (max-width:720px){
+    input[type="text"]{width:92%}
+    .panel{padding:16px}
+    .game-title{font-size:28px}
+  }
+</style>
+</head>
+<body>
+  <!-- exit button (hidden on cover) -->
+  <button class="exit-btn" id="exitBtn" aria-hidden="true" style="display:none">❌ Exit</button>
+
+  <div class="app">
+    <!-- COVER -->
+    <div class="panel page active" id="coverPage">
+      <header style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:12px">
+        <div class="logo neon">SP</div>
+        <div>
+          <div class="title">Wheel of Names</div>
+          <div class="subtitle">Spin & Kecocokan — Futuristik</div>
+        </div>
+      </header>
+
+      <!-- Game title with pulsing neon -->
+      <div class="game-title neon">Wheel of Names</div>
+      <p class="lead">Pilih mode — Spin pilihan atau cek kecocokan nama.</p>
+
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="action neon" id="openSpinBtn">🎡 Spin Pilihan</button>
+        <button class="action neon" id="openMatchBtn">💞 Cek Kecocokan</button>
+      </div>
+    </div>
+
+    <!-- SPIN PAGE -->
+    <div class="panel page" id="spinPage" aria-hidden="true">
+      <h1 class="neon">🎡 Spin Pilihan</h1>
+      <p class="muted">Ketik maksimal 4 pilihan. Minimal 2 pilihan untuk memutar.</p>
+
+      <div class="inputs" style="margin-top:10px">
+        <input type="text" id="spin1" placeholder="Pilihan 1 (maks 4)">
+        <input type="text" id="spin2" placeholder="Pilihan 2">
+        <input type="text" id="spin3" placeholder="Pilihan 3">
+        <input type="text" id="spin4" placeholder="Pilihan 4">
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <button class="action neon" id="spinNowBtn">🎯 Spin Sekarang</button>
+        <button class="ghost small" id="spinClearBtn">Clear</button>
+      </div>
+
+      <div class="result" id="spinResult" aria-live="polite"></div>
+    </div>
+
+    <!-- MATCH PAGE -->
+    <div class="panel page" id="matchPage" aria-hidden="true">
+      <h1 class="neon">💞 Cek Kecocokan Nama</h1>
+      <p class="muted">Masukkan dua nama lalu tekan cek.</p>
+
+      <div class="inputs" style="margin-top:10px">
+        <input type="text" id="nameA" placeholder="Nama pertama">
+        <input type="text" id="nameB" placeholder="Nama kedua">
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <button class="action neon" id="checkMatchBtn">🔮 Cek Persen</button>
+        <button class="ghost small" id="matchClearBtn">Clear</button>
+      </div>
+
+      <div class="result" id="matchResult" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Footer plain white -->
+  <footer class="site-foot">Karya Syihab © Copyright 2025</footer>
+
+  <!-- click sound (hosted) -->
+  <audio id="clickAudio" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3baf5cfb64.mp3?filename=click-124467.mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+  // ---------- elements ----------
+  const openSpinBtn = document.getElementById('openSpinBtn');
+  const openMatchBtn = document.getElementById('openMatchBtn');
+  const spinPage = document.getElementById('spinPage');
+  const matchPage = document.getElementById('matchPage');
+  const coverPage = document.getElementById('coverPage');
+  const exitBtn = document.getElementById('exitBtn');
+
+  const spinNowBtn = document.getElementById('spinNowBtn');
+  const spinClearBtn = document.getElementById('spinClearBtn');
+  const spinResult = document.getElementById('spinResult');
+
+  const checkMatchBtn = document.getElementById('checkMatchBtn');
+  const matchClearBtn = document.getElementById('matchClearBtn');
+  const matchResult = document.getElementById('matchResult');
+
+  const clickAudio = document.getElementById('clickAudio');
+
+  // ---------- helpers ----------
+  function playClick(){
+    try{
+      clickAudio.currentTime = 0;
+      clickAudio.play();
+    }catch(e){ /* ignore autoplay issues */ }
+    if(navigator.vibrate) try{ navigator.vibrate(25); }catch(e){}
+  }
+
+  function showPage(showEl){
+    // hide all
+    [coverPage, spinPage, matchPage].forEach(el=>{
+      el.classList.remove('active');
+      el.setAttribute('aria-hidden','true');
+    });
+    // show requested
+    showEl.classList.add('active');
+    showEl.setAttribute('aria-hidden','false');
+
+    // show/hide exit button: visible only on subpages (spin/match)
+    if(showEl !== coverPage){
+      exitBtn.style.display = 'inline-block';
+      exitBtn.setAttribute('aria-hidden','false');
+    }else{
+      exitBtn.style.display = 'none';
+      exitBtn.setAttribute('aria-hidden','true');
+    }
+  }
+
+  // ---------- navigation ----------
+  openSpinBtn.addEventListener('click', e=>{
+    playClick(); showPage(spinPage);
+    spinResult.textContent = '';
+  });
+
+  openMatchBtn.addEventListener('click', e=>{
+    playClick(); showPage(matchPage);
+    matchResult.textContent = '';
+  });
+
+  exitBtn.addEventListener('click', e=>{
+    playClick(); showPage(coverPage);
+    // reset fields
+    resetSpinInputs(); resetMatchInputs();
+    spinResult.textContent = ''; matchResult.textContent = '';
+  });
+
+  // ---------- Spin logic dengan efek roulette ----------
+  function getSpinChoices(){
+    const list = [];
+    for(let i=1;i<=4;i++){
+      const v = (document.getElementById('spin'+i).value || '').trim();
+      if(v) list.push(v);
+    }
+    return list;
+  }
+
+  function resetSpinInputs(){
+    for(let i=1;i<=4;i++) document.getElementById('spin'+i).value = '';
+  }
+
+  spinNowBtn.addEventListener('click', ()=>{
+    playClick();
+    spinResult.textContent = '';
+    const choices = getSpinChoices();
+    if(choices.length < 2){
+      spinResult.innerHTML = '<span class="waiting">⚠️ Minimal masukin dua pilihan!</span>';
+      return;
+    }
+
+    // Disable button selama spin
+    spinNowBtn.disabled = true;
+    
+    // Efek roulette - tampilkan pilihan berputar cepat
+    let spinCount = 0;
+    const maxSpins = 20;
+    const spinInterval = 100;
+    
+    const spinEffect = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * choices.length);
+      spinResult.innerHTML = `<span style="color:#8b5cf6;font-weight:900;font-size:18px">🎯 ${escapeHtml(choices[randomIndex])}</span>`;
+      spinCount++;
+      
+      if(spinCount >= maxSpins) {
+        clearInterval(spinEffect);
+        // Tampilkan hasil akhir dengan animasi
+        const finalPick = choices[Math.floor(Math.random() * choices.length)];
+        setTimeout(() => {
+          spinResult.innerHTML = `<span class="neon spin-text">🎯 Hasil: <strong>${escapeHtml(finalPick)}</strong></span>`;
+          spinNowBtn.disabled = false;
+        }, 200);
+      }
+    }, spinInterval);
+  });
+
+  spinClearBtn.addEventListener('click', ()=>{
+    playClick();
+    resetSpinInputs();
+    spinResult.textContent = '';
+  });
+
+  // ---------- Match logic dengan efek spedometer ----------
+  function resetMatchInputs(){
+    document.getElementById('nameA').value = '';
+    document.getElementById('nameB').value = '';
+  }
+
+  checkMatchBtn.addEventListener('click', ()=>{
+    playClick();
+    matchResult.textContent = '';
+    const a = (document.getElementById('nameA').value || '').trim();
+    const b = (document.getElementById('nameB').value || '').trim();
+    if(!a || !b){
+      matchResult.innerHTML = '<span class="waiting">⚠️ Masukkan kedua nama terlebih dahulu!</span>';
+      return;
+    }
+
+    // Disable button selama proses
+    checkMatchBtn.disabled = true;
+
+    // Efek spedometer - angka berjalan cepat
+    let currentPercent = 0;
+    const finalPercent = Math.floor(Math.random()*100)+1;
+    const increment = Math.ceil(finalPercent / 30);
+    const speed = 50;
+    
+    matchResult.innerHTML = `<span class="waiting">💫 Menghitung: <span id="percentCounter">0</span>%</span>`;
+    
+    const counterInterval = setInterval(() => {
+      currentPercent += increment;
+      if(currentPercent >= finalPercent) {
+        currentPercent = finalPercent;
+        clearInterval(counterInterval);
+        
+        // Tampilkan hasil final dengan animasi
+        setTimeout(() => {
+          let message = '';
+          if(finalPercent <= 30) message = '💔 Kurang cocok, tapi masih bisa jadi teman!';
+          else if(finalPercent <= 60) message = '😊 Ada sedikit kecocokan, bisa dicoba kenalan lebih dalam!';
+          else if(finalPercent <= 85) message = '💖 Wah, kalian cocok banget!';
+          else message = '🔥 Jodoh sejati nih! Jangan dilepas!';
+
+          matchResult.innerHTML = `
+            <span class="neon count-up"><strong>${escapeHtml(a)}</strong> ❤️ <strong>${escapeHtml(b)}</strong> = ${finalPercent}%</span>
+            <br>
+            <span class="count-up">${message}</span>
+          `;
+          checkMatchBtn.disabled = false;
+        }, 200);
+      }
+      
+      document.getElementById('percentCounter').textContent = currentPercent;
+    }, speed);
+  });
+
+  matchClearBtn.addEventListener('click', ()=>{
+    playClick();
+    resetMatchInputs();
+    matchResult.textContent = '';
+  });
+
+  // ---------- small utility ----------
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, (m)=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    })[m]);
+  }
+
+  // ---------- Optimasi performa untuk typing ----------
+  window.addEventListener('load', () => {
+    try {
+      clickAudio.load();
+    } catch(e) {}
+  });
+
+  // ensure cover is shown on load
+  showPage(coverPage);
+</script>
+</body>
+</html>
