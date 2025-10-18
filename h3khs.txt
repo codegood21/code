@@ -1,0 +1,106 @@
+nama=buat cintaku
+language=javascript
+lines=102
+date=18/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animasi Ucapan Ulang Tahun</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef, #ffecd2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        #message {
+            font-size: 24px;
+            color: #333;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 2px solid #333;
+            animation: blink-caret 1s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #333; }
+        }
+        .balloons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #4ecdc4);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 6s ease-in-out infinite;
+        }
+        .balloon:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .balloon:nth-child(2) { left: 20%; animation-delay: 1s; background: radial-gradient(circle at 30% 30%, #ffeaa7, #fd79a8); }
+        .balloon:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .balloon:nth-child(4) { left: 40%; animation-delay: 3s; background: radial-gradient(circle at 30% 30%, #a29bfe, #fdcb6e); }
+        .balloon:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .balloon:nth-child(6) { left: 60%; animation-delay: 5s; background: radial-gradient(circle at 30% 30%, #6c5ce7, #a8e6cf); }
+        .balloon:nth-child(7) { left: 70%; animation-delay: 6s; }
+        .balloon:nth-child(8) { left: 80%; animation-delay: 7s; background: radial-gradient(circle at 30% 30%, #fd79a8, #ffeaa7); }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="balloons">
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+    </div>
+    <div class="container">
+        <div id="message"></div>
+    </div>
+    <script>
+        const message = "haloo cantikk,selamat ulang tahun yaa,tepat pada hari inii umur kamuu bertambah satu tahunn semoga rezeki kamu dilancarkan dan segala urusan kamuu dimudahkann yaa,aku berharap semoga kamu bisa menjadi pribadi yang lebih baik kedepannyaa,tambah dewasaa,trimakasihh sudah menjadi perempuan yang kuat sampai saat inii,dan trimakasihh udah menjadi prempuan yang hebatt,bahagia selalu yaa";
+        const messageElement = document.getElementById('message');
+        let index = 0;
+
+        function typeWriter() {
+            if (index < message.length) {
+                messageElement.textContent += message.charAt(index);
+                index++;
+                setTimeout(typeWriter, 100); // Kecepatan typing (ms per karakter)
+            }
+        }
+
+        // Mulai animasi setelah halaman dimuat
+        window.onload = function() {
+            typeWriter();
+        };
+    </script>
+</body>
+</html>
