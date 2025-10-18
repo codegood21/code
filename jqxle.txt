@@ -1,0 +1,128 @@
+nama=Iqc iPhone by zoarolex
+language=html
+lines=124
+date=18/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IQC iPhone - Nebula - by zoarolex</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',sans-serif;background:#000;color:#fff;overflow:hidden}
+    /* ====== BACKGROUND NEBULA + CAHAYA ====== */
+    .nebula-bg{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(128,0,255,.4),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(0,255,255,.3),transparent 60%),radial-gradient(ellipse at center,#0f0c29,#302b63,#24243e);background-size:200% 200%;animation:nebula 20s infinite alternate;z-index:-2}
+    @keyframes nebula{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+    .light{position:fixed;width:300px;height:300px;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);border-radius:50%;filter:blur(80px);animation:float 12s infinite ease-in-out;z-index:-1}
+    .light1{top:10%;left:10%;animation-delay:0s}.light2{top:60%;right:10%;animation-delay:4s}.light3{bottom:10%;left:50%;animation-delay:8s}
+    @keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-30px) scale(1.2)}}
+
+    /* ====== HALAMAN ====== */
+    .page{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease}
+    .hidden{opacity:0;pointer-events:none}
+
+    /* ====== FORM ====== */
+    .form-card{background:rgba(255,255,255,.05);backdrop-filter:blur(12px);padding:30px 40px;border-radius:20px;border:1px solid rgba(255,255,255,.1);width:90%;max-width:420px;box-shadow:0 0 40px rgba(128,0,255,.4)}
+    h2{margin-bottom:20px;text-align:center;color:#e0c3ff;font-size:26px}
+    label{margin-top:15px;display:block;font-weight:bold}
+    input{width:100%;padding:12px;margin-top:5px;border:none;border-radius:10px;background:rgba(255,255,255,.1);color:#fff;font-size:16px}
+    input::placeholder{color:#ccc}
+    button{width:100%;padding:14px;margin-top:25px;border:none;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;font-size:16px;font-weight:bold;cursor:pointer;transition:transform .2s}
+    button:hover{transform:scale(1.03)}
+
+    /* ====== LOADING ====== */
+    .loading{display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .loader{width:80px;height:80px;border:8px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading p{margin-top:20px;font-size:18px;color:#e0c3ff}
+
+    /* ====== HASIL ====== */
+    .result-card{text-align:center;background:rgba(255,255,255,.05);backdrop-filter:blur(12px);padding:30px;border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:0 0 40px rgba(128,0,255,.4)}
+    img{max-width:90%;border-radius:15px;box-shadow:0 0 30px rgba(128,0,255,.6)}
+    .back{margin-top:20px;background:transparent;border:2px solid #fff;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="nebula-bg"></div>
+  <div class="light light1"></div>
+  <div class="light light2"></div>
+  <div class="light light3"></div>
+
+  <!-- ========== HALAMAN UTAMA ========== -->
+  <div id="homePage" class="page">
+    <div class="form-card">
+      <h2>📱 IQC iPhone</h2>
+      <label>🕒 Jam (contoh: 18:00)</label>
+      <input type="text" id="time" placeholder="18:00"/>
+      <label>🔋 Baterai (%)</label>
+      <input type="number" id="battery" placeholder="40" min="0" max="100"/>
+      <label>📶 Merek Kartu</label>
+      <input type="text" id="carrier" placeholder="Indosat"/>
+      <label>💬 Teks Pesan</label>
+      <input type="text" id="message" placeholder="Hai hai"/>
+      <button onclick="buatGambar()">Buat Gambar</button>
+    </div>
+  </div>
+
+  <!-- ========== LOADING ========== -->
+  <div id="loadingPage" class="page hidden">
+    <div class="loading">
+      <div class="loader"></div>
+      <p>Mohon tunggu...</p>
+    </div>
+  </div>
+
+  <!-- ========== HASIL ========== -->
+  <div id="resultPage" class="page hidden">
+    <div class="result-card">
+      <h2>✅ Berhasil!</h2>
+      <img id="hasilImg" src="" alt="hasil"/>
+      <br/>
+      <a id="downloadBtn" download="iqc-iphone.jpg">
+        <button>Download</button>
+      </a>
+      <button class="back" onclick="kembali()">Kembali</button>
+    </div>
+  </div>
+
+  <script>
+    const home = document.getElementById('homePage');
+    const load = document.getElementById('loadingPage');
+    const result = document.getElementById('resultPage');
+    const hasilImg = document.getElementById('hasilImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    function tampilkan(el){
+      [home,load,result].forEach(p=>p.classList.add('hidden'));
+      el.classList.remove('hidden');
+    }
+
+    function buatGambar(){
+      const time = document.getElementById('time').value.trim();
+      const battery = document.getElementById('battery').value.trim();
+      const carrier = document.getElementById('carrier').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if(!time||!battery||!carrier||!message)return alert('Lengkapi semua field!');
+
+      tampilkan(load);
+      const msg = encodeURIComponent(message);
+      const url = `https://brat.siputzx.my.id/iphone-quoted?time=${encodeURIComponent(time)}&batteryPercentage=${battery}&carrierName=${encodeURIComponent(carrier)}&messageText=${msg}&emojiStyle=apple`;
+      
+      hasilImg.src = url;
+      hasilImg.onload = () => {
+        downloadBtn.href = url;
+        tampilkan(result);
+      };
+      hasilImg.onerror = () => {
+        alert('Gagal memuat gambar, coba lagi.');
+        tampilkan(home);
+      };
+    }
+
+    function kembali(){
+      tampilkan(home);
+    }
+  </script>
+</body>
+</html>
