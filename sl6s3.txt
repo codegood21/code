@@ -1,0 +1,277 @@
+nama=Kolop
+language=html
+lines=273
+date=18/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materi Jaringan Interaktif v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+
+  body {
+    background: linear-gradient(135deg, rgba(255,182,193,0.4), rgba(255,255,255,0.5));
+    backdrop-filter: blur(10px);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #333;
+    transition: background 0.5s ease;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(12px);
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    scrollbar-width: none;
+    z-index: 10;
+  }
+  header::-webkit-scrollbar { display: none; }
+
+  header button {
+    flex: none;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #555;
+    transition: 0.3s;
+  }
+
+  header button.active, header button:hover {
+    color: #fff;
+    background: rgba(255,182,193,0.6);
+    border-radius: 15px;
+  }
+
+  .section {
+    display: none;
+    padding: 40px 20px;
+    text-align: center;
+    animation: fadeIn 0.7s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .example {
+    margin-top: 30px;
+    width: 100%;
+    height: 200px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .topologi .node {
+    width: 15px; height: 15px;
+    background: pink;
+    border-radius: 50%;
+    position: absolute;
+    animation: moveNode 5s infinite alternate ease-in-out;
+  }
+
+  @keyframes moveNode {
+    0% { transform: translate(-50px, -30px); }
+    100% { transform: translate(50px, 30px); }
+  }
+
+  .sound-btn {
+    position: sticky;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    text-align: right;
+    padding: 10px 20px;
+    z-index: 5;
+  }
+
+  .sound-btn button {
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 15px;
+    padding: 8px 16px;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .sound-btn button:hover {
+    background: rgba(255,182,193,0.6);
+    color: #fff;
+  }
+
+  /* kata² style */
+  .quote {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #444;
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 50px;
+    box-shadow: 0 0 15px rgba(255,182,193,0.2);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button class="active" onclick="showSection('topologi')">Topologi</button>
+  <button onclick="showSection('arsitektur')">Arsitektur</button>
+  <button onclick="showSection('pengalamatan')">Pengalamatan</button>
+  <button onclick="showSection('subnetting')">Subnetting</button>
+  <button onclick="showSection('cidr')">CIDR</button>
+  <button onclick="showSection('vlsm')">VLSM</button>
+  <button onclick="showSection('kata')">Kata²</button>
+</header>
+
+<div class="sound-btn">
+  <button id="soundToggle">🔊 Sound: OFF</button>
+</div>
+
+<section id="topologi" class="section active topologi">
+  <h2>Topologi Jaringan</h2>
+  <p>Topologi jaringan adalah cara menghubungkan perangkat dalam suatu jaringan.</p>
+  <div class="example">
+    <div class="node" style="top:50%; left:30%;"></div>
+    <div class="node" style="top:50%; left:70%; animation-delay:1s;"></div>
+    <div class="node" style="top:30%; left:50%; animation-delay:2s;"></div>
+    <span>Simulasi koneksi antar node</span>
+  </div>
+</section>
+
+<section id="arsitektur" class="section">
+  <h2>Arsitektur Jaringan</h2>
+  <p>Arsitektur jaringan menggambarkan hubungan antara client dan server dalam jaringan.</p>
+  <div class="example">💻 Client ⇄ 🖥️ Server</div>
+</section>
+
+<section id="pengalamatan" class="section">
+  <h2>Pengalamatan</h2>
+  <p>Pengalamatan adalah cara memberi alamat unik ke setiap perangkat dalam jaringan.</p>
+  <div class="example">IP: 192.168.1.1 💡</div>
+</section>
+
+<section id="subnetting" class="section">
+  <h2>Subnetting</h2>
+  <p>Subnetting adalah membagi jaringan besar menjadi beberapa jaringan kecil.</p>
+  <div class="example">📦 → 📦📦📦 (Pembagian jaringan)</div>
+</section>
+
+<section id="cidr" class="section">
+  <h2>CIDR</h2>
+  <p>CIDR memungkinkan pengelompokan alamat IP dengan efisien.</p>
+  <div class="example">192.168.0.0/24 ➜ 192.168.0.0/26</div>
+</section>
+
+<section id="vlsm" class="section">
+  <h2>VLSM</h2>
+  <p>VLSM adalah teknik subnetting dengan ukuran subnet yang bervariasi.</p>
+  <div class="example">🧩 Subnet dinamis menyesuaikan kebutuhan</div>
+</section>
+
+<section id="kata" class="section">
+  <h2>Kata²</h2>
+  <div class="quote">
+    “Hidup bukan tentang siapa yang paling cepat tiba, tapi siapa yang paling kuat bertahan di perjalanan.”
+  </div>
+</section>
+
+<audio id="music1" loop>
+  <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+<audio id="music2" loop>
+  <source src="sad.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const buttons = document.querySelectorAll('header button');
+const music1 = document.getElementById('music1');
+const music2 = document.getElementById('music2');
+const soundToggle = document.getElementById('soundToggle');
+let soundOn = false;
+let currentMusic = music1;
+
+function fadeAudio(audio, type) {
+  let vol = type === "out" ? 1 : 0;
+  const interval = setInterval(() => {
+    if (type === "out") {
+      if (vol > 0) {
+        vol -= 0.1;
+        audio.volume = vol;
+      } else {
+        audio.pause();
+        clearInterval(interval);
+      }
+    } else {
+      if (vol < 1) {
+        vol += 0.1;
+        audio.volume = vol;
+      } else clearInterval(interval);
+    }
+  }, 100);
+}
+
+function showSection(id) {
+  sections.forEach(s => s.classList.remove('active'));
+  buttons.forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+
+  if (soundOn) {
+    if (id === "kata" && currentMusic !== music2) {
+      fadeAudio(currentMusic, "out");
+      currentMusic = music2;
+      currentMusic.currentTime = 0;
+      currentMusic.play();
+      fadeAudio(currentMusic, "in");
+    } else if (id !== "kata" && currentMusic !== music1) {
+      fadeAudio(currentMusic, "out");
+      currentMusic = music1;
+      currentMusic.currentTime = 0;
+      currentMusic.play();
+      fadeAudio(currentMusic, "in");
+    }
+  }
+}
+
+soundToggle.addEventListener('click', () => {
+  soundOn = !soundOn;
+  if (soundOn) {
+    currentMusic.volume = 0;
+    currentMusic.play();
+    fadeAudio(currentMusic, "in");
+    soundToggle.textContent = "🔊 Sound: ON";
+  } else {
+    fadeAudio(currentMusic, "out");
+    soundToggle.textContent = "🔇 Sound: OFF";
+  }
+});
+</script>
+
+</body>
+</html>
