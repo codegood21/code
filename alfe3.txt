@@ -1,0 +1,252 @@
+nama=Iqc-by-deku
+language=html
+lines=248
+date=20/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iPhone Quoted Generator By Deku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0c0c1e;
+      --card-bg: #1a1a3a;
+      --primary-accent: #6a05ad;
+      --secondary-accent: #2e86de;
+      --text-color: #e0e0f0;
+      --border-color: #3f3f6e;
+      --glow-color: #6a05ad;
+    }
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      margin: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle linear infinite;
+    }
+    @keyframes twinkle {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 18px var(--glow-color);
+      font-weight: 700;
+      animation: pulse 2s infinite alternate;
+      text-align: center;
+    }
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color) transparent; }
+      100% { text-shadow: 0 0 20px var(--glow-color), 0 0 35px var(--glow-color) transparent; }
+    }
+    .container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 28px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      position: relative;
+      z-index: 1;
+    }
+    .container:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7);
+    }
+    input {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 25px;
+      border-radius: 14px;
+      border: 2px solid var(--primary-accent);
+      outline: none;
+      font-size: 1.05rem;
+      background: #2a2a4d;
+      color: var(--text-color);
+      transition: 0.3s;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #9a9abf;
+    }
+    input:focus {
+      border-color: var(--secondary-accent);
+      box-shadow: 0 0 18px rgba(46, 134, 222, 0.6);
+    }
+    button {
+      background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+      border: none;
+      padding: 16px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1.15rem;
+      color: #ffffff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto;
+      transition: transform 0.2s, box-shadow 0.3s;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    button:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 22px rgba(106, 5, 173, 0.5);
+    }
+    .result {
+      margin-top: 35px;
+      min-height: 160px;
+    }
+    .result p {
+      margin-bottom: 18px;
+      font-size: 1.15rem;
+      color: #c0c0e0;
+    }
+    .result img {
+      max-width: 100%;
+      border-radius: 22px;
+      border: 3px solid var(--primary-accent);
+      box-shadow: 0 0 28px rgba(106, 5, 173, 0.4);
+      margin-top: 18px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out, transform 0.3s ease-out;
+    }
+    .result img.loaded {
+        display: block;
+        opacity: 1;
+        transform: scale(1);
+    }
+    .loader {
+      border: 6px solid #333;
+      border-top: 6px solid var(--primary-accent);
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      animation: spin 1s linear infinite;
+      margin: 25px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .download-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 14px 28px;
+      border-radius: 35px;
+      background: linear-gradient(90deg, var(--secondary-accent), var(--primary-accent));
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s ease-in-out;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+    .download-btn:hover {
+      box-shadow: 0 0 22px rgba(46, 134, 222, 0.6);
+      transform: scale(1.07);
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <h1>iPhone Quoted Generator</h1>
+  <div class="container">
+    <input type="text" id="message" placeholder="Tulis kata-kata kamu...">
+    <button onclick="generateImage()">Generate</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function generateImage() {
+      const message = document.getElementById("message").value.trim();
+      const resultDiv = document.getElementById("result");
+      const sanitizedMessage = encodeURIComponent(message);
+
+      if (!message) {
+        alert("Harap masukkan teks terlebih dahulu!");
+        return;
+      }
+
+      resultDiv.innerHTML = '<div class="loader"></div><p>Sedang membuat quote...</p>';
+
+    
+      const apiUrl = `/api/generate?text=${sanitizedMessage}`;
+
+      setTimeout(() => {
+        const img = new Image();
+        img.src = apiUrl;
+        img.alt = "Generated Image";
+        img.onload = () => {
+            resultDiv.innerHTML = `
+                <p>Generate Selesai!</p>
+                <img src="${apiUrl}" alt="Generated Image" class="loaded">
+                <br>
+                <a class="download-btn" href="${apiUrl}" download="iPhone_Quoted.png">Unduh Gambar</a>
+            `;
+        };
+        img.onerror = () => {
+            resultDiv.innerHTML = '<p style="color: red;">Gagal memuat gambar. Coba lagi.</p>';
+        };
+      }, 1200);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const starsContainer = document.querySelector('.stars');
+        const numStars = 100;
+
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = star.style.height = `${Math.random() * 3 + 1}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            starsContainer.appendChild(star);
+        }
+    });
+  </script>
+</body>
+</html>
