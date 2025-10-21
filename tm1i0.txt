@@ -1,0 +1,35 @@
+nama=hack ff 
+language=javascript
+lines=32
+date=21/10/2025
+code=// FITUR INI HANYA SIMULASI SUPPORT UNTUK TIDAK MENGHAPUS SUMBER - ZIFERR
+bot.onText(/\/hackff(?:\s+(.+))?/, function(msg, match) {
+  var chatId = msg.chat.id;
+  var id = match && match[1] ? match[1].trim() : null;
+
+  if (!id) {
+    bot.sendMessage(chatId, 'Gunakan: /hackff <id_freefire>\nContoh: /hackff 123456789');
+    return;
+  }
+
+  bot.sendChatAction(chatId, 'typing');
+  bot.sendMessage(chatId, 'Memulai simulasi hack untuk ID: ' + id + '...').then(function() {
+    // delay acak (1.5 - 3.5 detik)
+    var delay = 1500 + Math.floor(Math.random() * 2000);
+
+    setTimeout(function() {
+      // probabilitas: 70% sukses, 30% eror
+      var chance = Math.random();
+      if (chance < 0.7) {
+        bot.sendMessage(chatId, 'Successful Hack FF By Ziferoffc 😈\nTarget ID: ' + id);
+      } else {
+        bot.sendMessage(chatId, 'eror');
+      }
+    }, delay);
+
+  }).catch(function(err) {
+    // kalau gagal kirim pesan awal
+    bot.sendMessage(chatId, 'eror');
+    console.error(err);
+  });
+});
