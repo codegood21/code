@@ -1,0 +1,319 @@
+nama=Hbd.html
+language=html
+lines=316
+date=22/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun SUPER MERIAH 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Jost:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* PERUBAHAN UTAMA DI SINI */
+        :root {
+            --primary-color: #ff3864; /* Merah Muda Cerah (Tetap untuk Kontras) */
+            --secondary-color: #ffd700; /* Emas */
+            --bg-color-start: #6dd5ed; /* Biru Langit Modern */
+            --bg-color-end: #2193b0; /* Biru Laut Modern */
+            --shadow-color: rgba(0, 0, 0, 0.15);
+        }
+        body {
+            font-family: 'Jost', sans-serif;
+            /* Latar belakang gradien biru modern */
+            background: linear-gradient(135deg, var(--bg-color-start) 0%, var(--bg-color-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            color: #333;
+        }
+        /* -- CSS lainnya tidak berubah (kontainer putih, teks pink/emas) -- */
+        .screen {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px var(--shadow-color);
+            max-width: 500px;
+            width: 90%;
+            transition: all 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            opacity: 0;
+            transform: scale(0.8) translateY(-20px);
+            position: absolute;
+            border: 5px solid var(--secondary-color);
+        }
+        .screen.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+        h2 {
+            font-family: 'Fredoka', cursive;
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0 #fff; /* Shadow diubah ke putih agar kontras dengan biru */
+        }
+        input, select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            background-color: #fff;
+        }
+        .date-inputs { display: flex; gap: 10px; }
+        .date-inputs select { flex: 1; }
+        button.primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(255, 56, 100, 0.4);
+            transition: all 0.2s ease;
+        }
+        button.primary:hover {
+            background-color: #e6305a;
+            transform: translateY(-3px) scale(1.02);
+        }
+        #final-message h1 {
+            font-family: 'Fredoka', cursive;
+            font-size: 4em;
+            color: var(--secondary-color);
+            text-shadow: 4px 4px 0 var(--primary-color), 6px 6px 0 #333;
+            margin-bottom: 15px;
+            animation: bounceIn 1.5s ease-out;
+        }
+        .age-message {
+            color: #00bcd4; /* Warna disesuaikan agar kontras dengan latar biru */
+            font-style: italic;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+        #gift-page p {
+            font-size: 1.6em;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .choice-buttons button {
+            width: 45%;
+            padding: 15px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        #btn-mau { background-color: var(--secondary-color); color: #333; }
+        #btn-tidak { background-color: #ddd; }
+        .joke { color: #38a89d; font-size: 1.8em; } /* Warna Hijau/Biru Laut */
+        .canda { color: #9c27b0; font-style: italic; display: block; margin-top: 10px; }
+        .closure-message { margin-top: 25px; font-weight: 700; font-size: 1.2em; }
+        .amin { display: block; margin-top: 15px; font-size: 2em; color: var(--primary-color); }
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: fall 12s infinite;
+            z-index: 1;
+        }
+        .confetti:nth-child(3n+1) { background-color: #ff3864; }
+        .confetti:nth-child(3n+2) { background-color: #00bcd4; }
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; left: calc(var(--x-pos) * 100vw); }
+            5% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(1080deg); opacity: 0; left: calc(var(--x-pos) * 100vw + var(--drift) * 200px); }
+        }
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.1); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    
+    <audio id="birthday-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3"> 
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <div id="name-screen" class="screen active">
+        <h2>Siapa Bintang Hari Ini? ⭐</h2>
+        <input type="text" id="input-name" placeholder="Tuliskan nama lengkap..." required>
+        <button class="primary" onclick="goToDateScreen()">LANJUTKAN 🎉</button>
+    </div>
+
+    <div id="date-screen" class="screen">
+        <h2>Rahasiakan Tahun Berapa Lahirnya... 😉</h2>
+        <div class="date-inputs">
+            <select id="input-day"> <option value="">Tanggal</option> </select>
+            <select id="input-month"> <option value="">Bulan</option> </select>
+            <select id="input-year"> <option value="">Tahun</option> </select>
+        </div>
+        <button class="primary" onclick="calculateBirthday()">LIHAT PESAN SPESIAL 💌</button>
+    </div>
+
+    <div id="final-message" class="screen">
+        <h1 id="output-greeting"></h1>
+        <p id="output-age"></p>
+        <p class="age-message">makin tua aja nih hehehe</p>
+        <button class="primary" onclick="goToGiftPage()">KLIK LANJUT UNTUK KADO RAHASIA 🎁</button>
+    </div>
+
+    <div id="gift-page" class="screen">
+        <p id="gift-question">Mau kado gak, [Nama]?🎁</p>
+        <div class="choice-buttons">
+            <button id="btn-tidak" onclick="showGiftResult(false)">TIDAK (GAK SUKA KADO)</button>
+            <button id="btn-mau" onclick="showGiftResult(true)">MAU (WAJIB KADO!)</button>
+        </div>
+        <div id="gift-result"></div>
+    </div>
+
+
+    <script>
+        let userName = "";
+        let musicPlayed = false;
+
+        function populateDateSelectors() {
+            const daySelect = document.getElementById('input-day');
+            const monthSelect = document.getElementById('input-month');
+            const yearSelect = document.getElementById('input-year');
+
+            for (let i = 1; i <= 31; i++) { daySelect.innerHTML += `<option value="${i}">${i}</option>`; }
+            
+            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            months.forEach((month, index) => { monthSelect.innerHTML += `<option value="${index + 1}">${month}</option>`; });
+            
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1950; i--) { yearSelect.innerHTML += `<option value="${i}">${i}</option>`; }
+        }
+
+        function startConfetti() {
+            const body = document.body;
+            if (body.querySelectorAll('.confetti').length > 0) return;
+
+            for (let i = 0; i < 70; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.animationDelay = `${Math.random() * 12}s`;
+                confetti.style.animationDuration = `${7 + Math.random() * 5}s`;
+                confetti.style.setProperty('--x-pos', Math.random());
+                confetti.style.setProperty('--drift', (Math.random() - 0.5) * 4);
+                body.appendChild(confetti);
+            }
+        }
+
+        function playMusic() {
+            if (!musicPlayed) {
+                const audio = document.getElementById('birthday-music');
+                audio.play().catch(error => {
+                    console.log("Autoplay diblokir. Musik akan diputar saat interaksi berikutnya.");
+                });
+                musicPlayed = true;
+            }
+        }
+
+        function switchScreen(fromId, toId) {
+            const fromScreen = document.getElementById(fromId);
+            const toScreen = document.getElementById(toId);
+
+            fromScreen.classList.remove('active');
+            setTimeout(() => {
+                fromScreen.style.zIndex = 1;
+                toScreen.style.zIndex = 10;
+                toScreen.classList.add('active');
+            }, 700);
+        }
+
+        function goToDateScreen() {
+            userName = document.getElementById('input-name').value.trim();
+            if (userName === "") {
+                alert("Siapa nih yang mau ulang tahun? Tolong isi namanya dulu ya!");
+                return;
+            }
+            userName = userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase();
+            
+            playMusic();
+            startConfetti(); 
+
+            populateDateSelectors();
+            switchScreen('name-screen', 'date-screen');
+        }
+
+        function calculateBirthday() {
+            const day = document.getElementById('input-day').value;
+            const month = document.getElementById('input-month').value;
+            const year = document.getElementById('input-year').value;
+
+            if (!day || !month || !year) {
+                alert("Jangan ada yang kosong ya, nanti umurnya gak kehitung!");
+                return;
+            }
+
+            const birthDate = new Date(year, month - 1, day);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            document.getElementById('output-greeting').innerHTML = `Happy Birthday, ${userName}! 🥳`;
+            document.getElementById('output-age').innerText = `Sekarang kamu berusia ${age} tahun!`;
+            
+            switchScreen('date-screen', 'final-message');
+        }
+
+        function goToGiftPage() {
+            document.getElementById('gift-question').innerText = `Mau kado gak, ${userName}?🎁`;
+            switchScreen('final-message', 'gift-page');
+        }
+
+        function showGiftResult(wantsGift) {
+            const resultDiv = document.getElementById('gift-result');
+            let content = "";
+
+            if (wantsGift) {
+                content = `
+                    <div class="joke">"Gak jadi ah soalnya kamu bau🤣"</div>
+                    <span class="canda">Canda-canda! Hahaha 😂</span>
+                    <div class="closure-message">semoga panjang umur ya, ${userName}!</div>
+                    <span class="amin">Amin 🙏</span>
+                `;
+            } else {
+                content = `
+                    <div class="joke">Bagus deh, soalnya aku cuma bawa ucapan! 🤫</div>
+                    <div class="closure-message">semoga panjang umur ya, ${userName}!</div>
+                    <span class="amin">Amin 🙏</span>
+                `;
+            }
+            
+            document.getElementById('btn-mau').disabled = true;
+            document.getElementById('btn-tidak').disabled = true;
+
+            resultDiv.innerHTML = content;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('name-screen').classList.add('active');
+            }, 100);
+        });
+    </script>
+
+</body>
+</html>
