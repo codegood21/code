@@ -1,0 +1,50 @@
+nama=Cctv test
+language=html
+lines=47
+date=23/10/2025
+code=# CCTV Live Link Playlist
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Live Link Playlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .playlist {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .cctv-link {
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+        }
+        .cctv-link:hover {
+            background-color: #eaeaea;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CCTV Live Link Playlist</h1>
+    <div class="playlist">
+        <a class="cctv-link" href="http://example.com/cctv1" target="_blank">CCTV Camera 1</a>
+        <a class="cctv-link" href="http://example.com/cctv2" target="_blank">CCTV Camera 2</a>
+        <a class="cctv-link" href="http://example.com/cctv3" target="_blank">CCTV Camera 3</a>
+        <a class="cctv-link" href="http://example.com/cctv4" target="_blank">CCTV Camera 4</a>
+    </div>
+
+</body>
+</html>
