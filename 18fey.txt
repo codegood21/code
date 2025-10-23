@@ -1,0 +1,210 @@
+nama=My.id
+language=html
+lines=206
+date=23/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LasoXc OFFICIAL - List Produk Mewah</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #8B0000, #000000);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px black;
+        }
+
+        .marquee {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+            background: #ff0000;
+            padding: 10px 0;
+            margin-bottom: 30px;
+        }
+
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .product-card {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: scale(1.08) rotate(-2deg);
+            box-shadow: 0 0 20px #ff0000;
+        }
+
+        .product-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2em;
+            color: #ff6666;
+            margin-bottom: 15px;
+        }
+
+        .order-button {
+            background: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .order-button:hover {
+            background: #cc0000;
+            transform: scale(1.05);
+        }
+
+        .contact {
+            margin-top: 40px;
+            background: #ff0000;
+            padding: 15px 25px;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .contact:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Musik Latar -->
+    <audio id="bg-music" autoplay loop>
+        <source src="https://files.catbox.moe/9beoh6.m4a" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Teks Berjalan -->
+    <div class="marquee">
+        <span>ZYYPRANZ STORE • ZYYPRANZ STORE • ZYYPRANZ STORE • ZYYPRANZ STORE • ZYYPRANZ STORE • ZYYPRANZ STORE • </span>
+    </div>
+
+    <h1>List Produk Premium</h1>
+
+    <div class="product-list">
+        <!-- Produk 1 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 1</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%201" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 2 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 2</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%202" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 3 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 3</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%203" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 4 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 4</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%204" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 5 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 5</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%205" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 6 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 6</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%206" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 7 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 7</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%207" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 8 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 8</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%208" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 9 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 9</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%209" target="_blank">Order Via WhatsApp</a>
+        </div>
+        <!-- Produk 10 -->
+        <div class="product-card">
+            <div class="product-name">🛒 PRODUK 10</div>
+            <div class="product-price">Rp 10.000</div>
+            <a class="order-button" href="https://wa.me/6283152238707?text=Halo%20saya%20berminat%20dengan%20PRODUK%2010" target="_blank">Order Via WhatsApp</a>
+        </div>
+    </div>
+
+    <a class="contact" href="https://wa.me/6283152238707" target="_blank">Berminat? Hubungi Saya: 083152238707</a>
+
+    <script>
+        // Atur volume musik ke 90%
+        document.addEventListener('DOMContentLoaded', function() {
+            var audio = document.getElementById('bg-music');
+            audio.volume = 0.9;
+        });
+    </script>
+
+</body>
+</html>
