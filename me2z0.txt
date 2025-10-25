@@ -1,0 +1,215 @@
+nama=ChisaStore
+language=html
+lines=211
+date=25/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChisaStore - Toko Digital</title>
+  <style>
+    /* ====== GLOBAL STYLE ====== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #0b0b0e;
+      color: #fff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background: #121218;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(255,255,255,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: #8f6fff;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: #ddd;
+      margin-left: 25px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #8f6fff;
+    }
+
+    /* ====== HERO ====== */
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+      background: radial-gradient(circle at top, #1a1a24, #0b0b0e);
+      animation: fadeIn 1.2s ease;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #8f6fff, #6bd6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: #aaa;
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ====== PRODUK ====== */
+    .produk-section {
+      padding: 60px 8%;
+    }
+
+    .produk-section h3 {
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #8f6fff;
+    }
+
+    .produk-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 25px;
+    }
+
+    .produk-card {
+      background: #161620;
+      border-radius: 15px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .produk-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(143,111,255,0.3);
+    }
+
+    .produk-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .produk-card h4 {
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .produk-card p {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .produk-card a {
+      display: block;
+      text-align: center;
+      background: linear-gradient(90deg, #8f6fff, #6bd6ff);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .produk-card a:hover {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      text-align: center;
+      padding: 30px 10px;
+      background: #121218;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 50px;
+    }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ChisaStore</h1>
+    <nav>
+      <a href="#produk">Produk</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Temukan Aplikasi Premium Terbaik</h2>
+    <p>Toko digital terpercaya untuk aplikasi musik, film, produktivitas, dan game. Harga terjangkau, layanan cepat!</p>
+  </section>
+
+  <section id="produk" class="produk-section">
+    <h3>Daftar Produk</h3>
+    <div class="produk-container">
+      <div class="produk-card">
+        <img src="https://via.placeholder.com/300x200" alt="Netflix Premium">
+        <h4>Netflix Premium 1 Bulan</h4>
+        <p>Akses penuh tanpa batas. Kualitas HD dan Ultra HD.</p>
+        <a href="https://wa.me/6289528914474?text=Halo%20ChisaStore!%20Saya%20ingin%20membeli%20Netflix%20Premium%201%20Bulan." target="_blank">Beli Sekarang</a>
+      </div>
+
+      <div class="produk-card">
+        <img src="https://via.placeholder.com/300x200" alt="Spotify Family">
+        <h4>Spotify Family Plan</h4>
+        <p>Dengarkan musik bebas iklan bersama keluarga.</p>
+        <a href="https://wa.me/6289528914474?text=Halo%20ChisaStore!%20Saya%20ingin%20membeli%20Spotify%20Family%20Plan." target="_blank">Beli Sekarang</a>
+      </div>
+
+      <div class="produk-card">
+        <img src="https://via.placeholder.com/300x200" alt="CapCut Pro">
+        <h4>CapCut Pro</h4>
+        <p>Edit video tanpa watermark dan fitur premium.</p>
+        <a href="https://wa.me/6289528914474?text=Halo%20ChisaStore!%20Saya%20ingin%20membeli%20CapCut%20Pro." target="_blank">Beli Sekarang</a>
+      </div>
+
+      <div class="produk-card">
+        <img src="https://via.placeholder.com/300x200" alt="Apple Music">
+        <h4>Apple Music</h4>
+        <p>Nikmati jutaan lagu tanpa batas di semua perangkat Apple.</p>
+        <a href="https://wa.me/6289528914474?text=Halo%20ChisaStore!%20Saya%20ingin%20membeli%20Apple%20Music." target="_blank">Beli Sekarang</a>
+      </div>
+    </div>
+  </section>
+
+  <footer id="kontak">
+    © 2025 ChisaStore | Toko Digital Modern dan Elegan
+  </footer>
+
+</body>
+</html>
