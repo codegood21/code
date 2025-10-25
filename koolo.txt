@@ -1,0 +1,110 @@
+nama=Bug wa
+language=html
+lines=107
+date=25/10/2025
+code=<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Demo UI (Aman) — Mockup</title>
+<style>
+  body { font-family: Inter, system-ui, Arial; background: linear-gradient(180deg,#e8f0ff,#f7fbff); display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+  .card { width:360px; background:#fff; border-radius:12px; box-shadow:0 8px 30px rgba(20,30,60,0.12); padding:20px; }
+  h1 { font-size:20px; margin:0 0 12px; }
+  label { display:block; font-size:13px; margin-top:10px; color:#333; }
+  .row { display:flex; gap:8px; margin-top:8px; }
+  input[type="text"], input[type="password"], input[type="tel"] {
+    width:100%; padding:10px 12px; border-radius:8px; border:1px solid #d6e1ff; box-sizing:border-box;
+  }
+  .btn { padding:10px 12px; border-radius:8px; border:0; cursor:pointer; background:#2b6ef6; color:#fff; font-weight:600; }
+  .btn.secondary { background:#eef3ff; color:#1b3aa6; border:1px solid #d6e1ff; }
+  .choice { display:flex; gap:8px; margin-top:12px; }
+  .chip { padding:8px 10px; border-radius:999px; border:1px solid #e6eefc; cursor:pointer; user-select:none; }
+  .chip.active { background:#2b6ef6; color:#fff; border-color:transparent; }
+  .small { font-size:12px; color:#666; margin-top:10px; }
+  .danger { color:#9b1c1c; font-weight:700; }
+</style>
+</head>
+<body>
+  <div class="card" role="region" aria-label="Demo UI Aman">
+    <h1>Login (Demo Aman)</h1>
+
+    <label for="username">Username</label>
+    <div class="row">
+      <input id="username" type="text" placeholder="Klik 'isi cepat' untuk mengisi" aria-describedby="hint-user" />
+      <button id="fillBtn" class="btn secondary" type="button">Isi cepat</button>
+    </div>
+    <div id="hint-user" class="small">Username contoh: <span style="font-weight:700">alkha</span></div>
+
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Password" />
+
+    <label for="wa">Nomor WhatsApp</label>
+    <input id="wa" type="tel" placeholder="+62xxxxxxxxxxx" />
+
+    <div class="small">Pilih jenis (demo UI saja):</div>
+    <div class="choice" role="radiogroup" aria-label="pilihan demo">
+      <div id="opt1" class="chip" role="radio" aria-checked="false" tabindex="0">Bug crash handphone</div>
+      <div id="opt2" class="chip" role="radio" aria-checked="false" tabindex="0">Wifi attack</div>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button id="send" class="btn">Send Bug</button>
+      <button id="clear" class="btn secondary" type="button">Clear</button>
+    </div>
+
+    <p class="small" style="margin-top:12px;">
+      <span class="danger">Peringatan:</span> Ini hanya <strong>demo antarmuka</strong>. Tombol/tindakan tidak akan menyakiti, menyerang, atau mengirim data ke layanan manapun.
+    </p>
+  </div>
+
+<script>
+// Aman: semua aksi hanya di client, tidak ada network call.
+const username = document.getElementById('username');
+const password = document.getElementById('password');
+const fillBtn = document.getElementById('fillBtn');
+const opt1 = document.getElementById('opt1');
+const opt2 = document.getElementById('opt2');
+const send = document.getElementById('send');
+const clearBtn = document.getElementById('clear');
+
+fillBtn.addEventListener('click', () => {
+  username.value = 'alkha';
+  password.value = '123';
+});
+
+// simple toggle radio-like behavior
+function setActive(selected, other) {
+  selected.classList.add('active'); selected.setAttribute('aria-checked','true');
+  other.classList.remove('active'); other.setAttribute('aria-checked','false');
+}
+opt1.addEventListener('click', () => setActive(opt1,opt2));
+opt2.addEventListener('click', () => setActive(opt2,opt1));
+opt1.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') setActive(opt1,opt2); });
+opt2.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') setActive(opt2,opt1); });
+
+send.addEventListener('click', () => {
+  // Demo-only message
+  const u = username.value || '(kosong)';
+  const p = password.value ? '•••••' : '(kosong)';
+  const wa = document.getElementById('wa').value || '(kosong)';
+  const chosen = opt1.classList.contains('active') ? opt1.textContent : opt2.classList.contains('active') ? opt2.textContent : '(tidak dipilih)';
+  alert(
+    'Demo aman:\\n' +
+    'Username: ' + u + '\\n' +
+    'Password: ' + p + '\\n' +
+    'WA: ' + wa + '\\n' +
+    'Pilihan: ' + chosen + '\\n\\n' +
+    'Ini hanya mockup UI. Tidak melakukan serangan atau mengirim data.'
+  );
+});
+
+clearBtn.addEventListener('click', () => {
+  username.value=''; password.value=''; document.getElementById('wa').value='';
+  opt1.classList.remove('active'); opt2.classList.remove('active');
+  opt1.setAttribute('aria-checked','false'); opt2.setAttribute('aria-checked','false');
+});
+</script>
+</body>
+</html>
