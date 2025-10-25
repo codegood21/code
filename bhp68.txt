@@ -1,0 +1,293 @@
+nama=test
+language=html
+lines=289
+date=25/10/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IQC iPhone - Nebula - deku</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      position: relative;
+    }
+
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -3;
+    }
+
+    .nebula-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(128, 0, 255, 0.25), transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.2), transparent 60%),
+                  radial-gradient(ellipse at center, #0f0c29, #24243e);
+      background-size: 200% 200%;
+      animation: nebulaPulse 25s infinite alternate;
+      z-index: -2;
+    }
+    @keyframes nebulaPulse {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.5s ease, transform 0.4s ease;
+    }
+    .hidden { opacity: 0; pointer-events: none; }
+
+    .form-card {
+      background: rgba(15, 10, 30, 0.6);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 32px;
+      width: 92%;
+      max-width: 440px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 0 0 1px rgba(128, 0, 255, 0.2),
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(128, 0, 255, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, #8a2be2, #00cfff, #ff00cc, #8a2be2);
+      background-size: 400% 400%;
+      border-radius: 26px;
+      z-index: -1;
+      animation: gradientBorder 8s ease infinite;
+      opacity: 0.6;
+    }
+    @keyframes gradientBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-weight: 700;
+      font-size: 28px;
+      background: linear-gradient(90deg, #e0c3ff, #a0f0ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(224, 195, 255, 0.3);
+    }
+
+    .input-group { margin-top: 18px; position: relative; }
+    .input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0a0ff;
+      font-size: 16px;
+    }
+    input {
+      width: 100%;
+      padding: 14px 14px 14px 40px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 14px;
+      background: rgba(30, 20, 50, 0.5);
+      color: #fff;
+      font-size: 16px;
+      border: 1px solid rgba(128, 0, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: #8a2be2;
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 28px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8a2be2, #00cfff);
+      color: white;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(138, 43, 226, 0.6);
+    }
+
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .social-buttons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2);
+    }
+    .social-buttons a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.35);
+    }
+    .whatsapp {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
+    }
+    .tiktok {
+      background: linear-gradient(135deg, #ff0050, #00f2ea);
+      box-shadow: 0 4px 18px rgba(255, 0, 80, 0.4);
+    }
+
+    /* ===== NOTE / CATATAN ===== */
+    .note {
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #d6d6ff;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      box-shadow: 0 0 15px rgba(128, 0, 255, 0.15);
+    }
+    .note i {
+      color: #a9a9ff;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 500px) {
+      .form-card { padding: 24px; width: 95%; }
+      h2 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="nebula-overlay"></div>
+
+  <div id="homePage" class="page">
+    <div class="form-card">
+      <h2><i class="fas fa-mobile-alt"></i> IQC iPhone DekuV2</h2>
+
+      <div class="input-group">
+        <i class="far fa-clock"></i>
+        <input type="text" id="time" placeholder="18:00" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-battery-full"></i>
+        <input type="number" id="battery" placeholder="40" min="0" max="100" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-sim-card"></i>
+        <input type="text" id="carrier" placeholder="Indosat" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-comment"></i>
+        <input type="text" id="message" placeholder="Hai hai" />
+      </div>
+
+      <button onclick="buatGambar()">
+        <i class="fas fa-magic"></i> Buat Gambar
+      </button>
+
+      <div class="social-buttons">
+        <a href="https://whatsapp.com/channel/EXAMPLE" target="_blank" class="whatsapp">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://www.tiktok.com/@yourusername" target="_blank" class="tiktok">
+          <i class="fab fa-tiktok"></i> TikTok
+        </a>
+      </div>
+
+      <!-- 📝 NOTE / CATATAN -->
+      <div class="note">
+        <i class="fas fa-sticky-note"></i>
+        <p><strong>Catatan:</strong> Gunakan koneksi internet stabil agar proses pembuatan gambar lebih cepat dan hasil tampil dengan sempurna.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    const particleCount = Math.min(80, Math.floor(window.innerWidth / 10));
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        this.color = `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 100)}, 255, ${Math.random() * 0.4 + 0.1})`;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+        if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of particles) { p.update(); p.draw(); }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>
