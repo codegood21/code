@@ -1,0 +1,246 @@
+nama=Test
+language=python
+lines=242
+date=25/10/2025
+code=#!/usr/bin/env python3
+"""
+hallo_site.py
+Simple single-file Python web server that serves a single page:
+- Content: "hallo"
+- All HTML/CSS/JS embedded in this file (no external assets)
+Run:
+    python3 hallo_site.py
+Open in browser:
+    http://localhost:8000
+"""
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import socketserver
+import sys
+
+HOST = "0.0.0.0"
+PORT = 8000
+
+# The single-page HTML with embedded CSS and JS
+PAGE_HTML = """<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hallo</title>
+  <style>
+    /* --- CSS (disatukan di sini) --- */
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#7c3aed;
+      --muted:#9aa4b2;
+      --white: #f8fafc;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(124,58,237,0.12), transparent 5%),
+                  radial-gradient(1000px 500px at 90% 80%, rgba(59,130,246,0.06), transparent 5%),
+                  var(--bg);
+      color:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .card{
+      width:clamp(260px, 40vw, 540px);
+      padding:28px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      text-align:center;
+      transform-origin:center;
+      transition: transform 260ms ease;
+    }
+
+    .card:hover{ transform: translateY(-6px) scale(1.01); }
+
+    h1{
+      margin:0 0 6px 0;
+      font-size: clamp(28px, 5vw, 48px);
+      letter-spacing: -0.02em;
+    }
+    p.lead{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    /* a tiny decorative accent (flex-like row) */
+    .accent{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+      margin:12px auto 0;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(180deg,var(--accent), #5b21b6);
+      box-shadow:0 4px 14px rgba(124,58,237,0.28);
+    }
+
+    /* small responsive footer */
+    footer{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* Example of using Flex (requested) */
+    .row {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      margin-top:12px;
+    }
+
+    button{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--white);
+      padding:8px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      backdrop-filter: blur(4px);
+    }
+    button:active{ transform: translateY(1px); }
+
+    /* small mobile tweak */
+    @media (max-width:420px){
+      body{ padding:20px; }
+      .card{ padding:18px; border-radius:12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="judul">
+    <h1 id="judul">hallo</h1>
+    <p class="lead">Ini halaman sederhana — semua di satu file Python.</p>
+
+    <div class="row">
+      <button id="btnGreet" type="button">Klik untuk salam</button>
+      <button id="btnColor" type="button">Ganti warna</button>
+    </div>
+
+    <div class="accent" aria-hidden="true">
+      <span class="dot" id="dotA"></span>
+      <span style="opacity:0.75">BirdWebsiteOP • Single-file</span>
+    </div>
+
+    <footer>Server: single-file Python HTTPServer</footer>
+  </main>
+
+  <script>
+    /* --- JavaScript (disatukan di sini) --- */
+    (function(){
+      // simple interactivity: click to show alert and change accent color
+      const btnGreet = document.getElementById('btnGreet');
+      const btnColor = document.getElementById('btnColor');
+      const dot = document.getElementById('dotA');
+      const h1 = document.getElementById('judul');
+
+      btnGreet.addEventListener('click', () => {
+        // small dynamic greeting
+        const t = new Date();
+        const hrs = t.getHours();
+        let greet = 'Hallo';
+        if (hrs < 6) greet = 'Selamat dini hari';
+        else if (hrs < 12) greet = 'Selamat pagi';
+        else if (hrs < 15) greet = 'Selamat siang';
+        else if (hrs < 18) greet = 'Selamat sore';
+        else greet = 'Selamat malam';
+        alert(greet + ' — kamu membuka halaman "hallo"!');
+      });
+
+      btnColor.addEventListener('click', () => {
+        // rotate accent color
+        const colors = [
+          ['#7c3aed','#5b21b6'],
+          ['#06b6d4','#0891b2'],
+          ['#f97316','#ea580c'],
+          ['#10b981','#059669']
+        ];
+        const idx = Math.floor(Math.random()*colors.length);
+        dot.style.background = `linear-gradient(180deg, ${colors[idx][0]}, ${colors[idx][1]})`;
+        // small pulse
+        dot.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)'}], {
+          duration: 420,
+          easing: 'ease-out'
+        });
+      });
+
+      // optional keyboard shortcut: press "h" to toggle text
+      window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'h') {
+          h1.textContent = h1.textContent === 'hallo' ? 'halo 👋' : 'hallo';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+"""
+
+class SinglePageHandler(BaseHTTPRequestHandler):
+    def _send(self, content: bytes, content_type="text/html; charset=utf-8"):
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(content)))
+        # Prevent caching so edits reflect immediately when refreshing
+        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
+        self.end_headers()
+        self.wfile.write(content)
+
+    def do_HEAD(self):
+        content = PAGE_HTML.encode("utf-8")
+        self._send(content)
+
+    def do_GET(self):
+        # Serve the single page at root and any path -> same page
+        if True:
+            content = PAGE_HTML.encode("utf-8")
+            self._send(content)
+        else:
+            self.send_error(404, "Not found")
+
+    def log_message(self, format, *args):
+        # Keep logs compact: print to stdout
+        sys.stdout.write("%s - - [%s] %s\n" %
+                         (self.client_address[0],
+                          self.log_date_time_string(),
+                          format%args))
+
+def run_server(host=HOST, port=PORT):
+    with HTTPServer((host, port), SinglePageHandler) as httpd:
+        print(f"Serving single-page app on http://{host}:{port}")
+        print("Press Ctrl+C to stop")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nServer stopped.")
+
+if __name__ == "__main__":
+    # allow custom port by argument: python3 hallo_site.py 8080
+    port = PORT
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+        except:
+            pass
+    run_server(HOST, port)
