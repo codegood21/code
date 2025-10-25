@@ -1,0 +1,10 @@
+nama=fadzzz-uploader
+language=javascript
+lines=6
+date=25/10/2025
+code=import uploadFile from 'fadzzz-uploader';
+
+(async() => {
+  const result = await uploadFile('/path/your/file.jpg');
+  console.log(result)
+})()
