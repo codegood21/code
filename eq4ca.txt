@@ -1,0 +1,5 @@
+nama=https://github.com/ilmanhdyt/ShiraoriBOT
+language=css
+lines=1
+date=25/10/2025
+code=git clone https://github.com/ilmanhdyt/ShiraoriBOT
