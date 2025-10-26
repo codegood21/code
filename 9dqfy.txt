@@ -1,0 +1,108 @@
+nama=TEST
+language=css
+lines=105
+date=26/10/2025
+code=body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Penting untuk positioning menu dropdown */
+}
+
+header h1 {
+    margin: 0;
+}
+
+.menu-container {
+    position: relative;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    outline: none;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin: 2px 0;
+}
+
+.dropdown-menu {
+    display: none; /* Sembunyikan secara default */
+    position: absolute;
+    top: 100%; /* Posisikan di bawah tombol toggle */
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    min-width: 160px;
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden; /* Untuk memastikan border-radius bekerja pada item list */
+}
+
+.dropdown-menu.active {
+    display: block; /* Tampilkan ketika aktif */
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu ul li a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap; /* Mencegah teks menu pecah baris */
+}
+
+.dropdown-menu ul li a:hover {
+    background-color: #f1f1f1;
+}
+
+main {
+    padding: 2rem;
+}
+
+.content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
