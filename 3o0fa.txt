@@ -1,0 +1,5 @@
+nama=danpannnscript 
+language=javascript
+lines=1
+date=27/10/2025
+code=pandi
