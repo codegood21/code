@@ -1,0 +1,11 @@
+nama=Test code
+language=javascript
+lines=7
+date=27/10/2025
+code=cons crypto =
+requer('crypto')
+funstion randomId(length =
+16) {
+  return
+crypto.randomBytes(length).toString('hex')}
+console.log(randomId())
