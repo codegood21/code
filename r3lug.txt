@@ -1,0 +1,45 @@
+nama=Spam NGL Tools
+language=python
+lines=41
+date=28/10/2025
+code=✦ NEW TOOLS SPAM NGL BY ZIFER JANGAN HAPUS INI BRE BEBAS RENAME BREE SHARE KE CH MU BAHAN RUN ADA DI CHANNEL @berbagitools 
+
+import requests
+import time
+import os
+
+def banner():
+    os.system("clear")  # Bersihkan layar terminal
+    print("\033[91m")  # Warna merah
+    print("SUCCESS SPAM NGL BY ZIFERR OFFC ✅")
+    print("\033[0m")  # Reset warna
+
+def spam_ngl(url_ngl, message, count):
+    api_url = "https://api.fikmydomainsz.xyz/tools/spamngl"
+    banner()
+    print(f"Link    : {url_ngl}")
+    print(f"Pesan   : {message}")
+    print(f"Jumlah  : {count}")
+    print("-" * 40)
+
+    for i in range(count):
+        params = {
+            "url": url_ngl,
+            "message": message,
+            "count": 1
+        }
+        try:
+            response = requests.get(api_url, params=params)
+            if response.status_code == 200:
+                print(f"[{i+1}] ✅ Terkirim")
+            else:
+                print(f"[{i+1}] ❌ Gagal: Status {response.status_code}")
+        except Exception as e:
+            print(f"[{i+1}] ⚠️ Error: {e}")
+        time.sleep(1)
+
+if __name__ == "__main__":
+    url_ngl = input("Masukkan link NGL: ")
+    message = input("Masukkan pesan: ")
+    jumlah = int(input("Masukkan jumlah spam: "))
+    spam_ngl(url_ngl, message, jumlah)
