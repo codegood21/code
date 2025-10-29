@@ -1,0 +1,42 @@
+nama=Test code
+language=python
+lines=38
+date=29/10/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+  <title>Belajar html sama CSS</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>BELAJAR html sama css</h1>
+  <p>😅😅😅</p>
+  <div class="header">
+    <h2>gacor lek</h2>
+    <h3>folow tiktok w</h3>
+  <title>Tombol</title>
+  <style>
+    .tombol {
+      background-color: #FFFFFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .tombol:hover {
+      background-color: #7a288a;
+    }
+  </style>
+</head>
+<body>
+  <strong>yok masuk</strong>
+  <a href="tiktok.com/@yan_1714" target="_blank" class="tombol">masuk</a>
+<select id="tipe">
+      <option> 1</option>
+      <option> 2</option>
+      <option> 3</option>
+    </select>
+   </body>
+    </html>
