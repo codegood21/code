@@ -1,0 +1,45 @@
+nama=Threads Download
+language=javascript
+lines=41
+date=30/10/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+async function downloadThreads(url) {
+  try {
+    const form = new URLSearchParams();
+    form.append("id", url);
+    form.append("locale", "en");
+
+    const { data } = await axios.post("https://savethr.com/process", form, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "HX-Request": "true",
+        "HX-Trigger": "search-form",
+        "HX-Target": "result-container",
+        "HX-Current-URL": "https://savethr.com/",
+      },
+    });
+
+    const $ = cheerio.load(data);
+    const username = $(".font-semibold.text-gray-900.text-sm").text().trim();
+    const profilePic = $(".w-12.h-12.rounded-full").attr("src");
+    const previewImg = $(".w-full.h-40.object-cover").attr("src");
+    const downloadLink = $("a.download_link").attr("href");
+    const directLink = $("a[target='_blank']").last().attr("href");
+
+    return {
+      success: true,
+      user: username,
+      profilePic,
+      previewImg,
+      downloadLink,
+      directLink,
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+const test = "https://www.threads.com/@dagelanviral/post/DQae85Ckgkq?xmt=AQF0mfBDbBDH6Juu8pJcsFi8Ee9xONLXGp6gITTYwNg4LA";
+downloadThreads(test).then(console.log);
