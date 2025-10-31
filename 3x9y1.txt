@@ -1,0 +1,243 @@
+nama=Rasyid
+language=html
+lines=239
+date=31/10/2025
+code=<!doctype html>
+
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Belajar Perkalian & Latihan Pelajaran (1-100)</title>
+  <style>
+    :root{--accent:#2b9cff}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#f7fbff;color:#123;line-height:1.4;margin:0;padding:20px}
+    header{display:flex;gap:12px;align-items:center}
+    h1{margin:0;font-size:1.4rem}
+    .card{background:white;border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(10,20,40,.06);margin-top:14px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    select,input,button{padding:8px;border-radius:8px;border:1px solid #d7e7ff}
+    button{background:var(--accent);color:white;border:none;cursor:pointer}
+    .table-wrap{overflow:auto;max-height:380px}
+    table{border-collapse:collapse;width:100%}
+    td,th{padding:6px 8px;border:1px dashed #eee;text-align:center}
+    .quiz-choices{display:flex;gap:8px;flex-wrap:wrap}
+    .subject-row{display:flex;gap:8px;align-items:center}
+    canvas{border:1px solid #ddd;background:linear-gradient(#eaf7ff, #fff);border-radius:8px}
+    footer{margin-top:18px;text-align:center;color:#666}
+    small.note{color:#666}
+    .right{margin-left:auto}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%232b9cff'/%3E%3Ctext x='12' y='16' font-size='10' text-anchor='middle' fill='white' font-family='Arial'>1-100</text%3E%3C/svg%3E" alt="logo" style="width:48px;height:48px;border-radius:10px;"/>
+    <div>
+      <h1>Daftar Perkalian Interaktif (1–100) + Latihan Pelajaran</h1>
+      <small class="note">Pilih angka, latihan kuis, dan di bagian bawah kamu bisa memutar video YouTube untuk anak-anak.</small>
+    </div>
+  </header>  <!-- Perkalian Interaktif -->  <section class="card" id="perkalian">
+    <h2>Generator Perkalian (1–100)</h2>
+    <div class="controls">
+      <label>Angka A: <select id="a"> </select></label>
+      <label>Angka B: <select id="b"> </select></label>
+      <button id="calc">Hitung</button>
+      <button id="showTable">Tampilkan Baris Perkalian A × 1..100</button>
+      <button id="randomPair">Soal Acak (1–100)</button>
+      <div class="right"><strong>Hasil:</strong> <span id="result">—</span></div>
+    </div><div id="tableArea" class="card" style="display:none;margin-top:12px">
+  <h3>Baris Perkalian untuk <span id="tableFor">0</span></h3>
+  <div class="table-wrap"><table id="multTable"><thead><tr><th>n</th><th>n × a</th></tr></thead><tbody></tbody></table></div>
+</div>
+
+  </section>  <!-- Kuiz Perkalian -->  <section class="card" id="kuiz">
+    <h2>Kuiz Perkalian (latihan cepat)</h2>
+    <div>
+      <button id="startQuiz">Mulai 10 Soal</button>
+      <button id="nextQ" disabled>Soal Berikutnya</button>
+      <div style="margin-top:10px">
+        <strong>Soal:</strong> <span id="qText">-</span>
+      </div>
+      <div class="quiz-choices" id="choices"></div>
+      <div style="margin-top:8px"><strong>Skor:</strong> <span id="score">0 / 0</span></div>
+    </div>
+  </section>  <!-- Soal Matematika & Pelajaran Lain -->  <section class="card" id="soal">
+    <h2>Soal Matematika & Pelajaran Lain (Kelas 1–6 SD)</h2>
+    <div class="subject-row">
+      <label>Pelajaran:
+        <select id="subject">
+          <option value="math">Matematika</option>
+          <option value="ipa">IPA</option>
+          <option value="bindo">Bahasa Indonesia</option>
+        </select>
+      </label>
+      <label>Kelas:
+        <select id="grade">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </label>
+      <button id="genQuestion">Buat Soal</button>
+      <button id="showAnswer" disabled>Jawaban</button>
+    </div>
+    <div style="margin-top:10px">
+      <div><strong>Soal:</strong></div>
+      <div id="questionText" style="margin-top:6px;font-weight:600">—</div>
+      <div id="answerText" style="margin-top:6px;color:green;font-weight:700"></div>
+    </div>
+  </section>  <!-- Area Menggambar sederhana (SVG + canvas) -->  <section class="card" id="gambar">
+    <h2>Gambar & Mewarnai — Lumba-lumba dan Hewan</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div>
+        <canvas id="draw" width="420" height="240"></canvas>
+        <div style="margin-top:8px">
+          <button id="clear">Hapus</button>
+          <label>Ukuran: <input id="size" type="range" min="1" max="12" value="4"></label>
+        </div>
+      </div>
+      <div style="flex:1;min-width:180px">
+        <div style="margin-bottom:8px">Pilih gambar dasar:</div>
+        <button class="preset" data-shape="dolphin">Lumba-lumba</button>
+        <button class="preset" data-shape="fish">Ikan</button>
+        <button class="preset" data-shape="cat">Kucing</button>
+        <div style="margin-top:10px;color:#555">Tekan preset untuk memuat gambar yang dapat diwarnai.</div>
+      </div>
+    </div>
+  </section>  <!-- YouTube Embed (anak-anak) -->  <section class="card" id="video">
+    <h2>Video Anak (YouTube)</h2>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input id="ytUrl" placeholder="Tempel URL YouTube atau ID di sini (contoh: https://www.youtube.com/watch?v=...)" style="flex:1">
+      <button id="loadVideo">Muat Video</button>
+    </div>
+    <div style="margin-top:10px">
+      <div id="playerWrap" style="max-width:560px">
+        <!-- iframe akan dimasukkan lewat JS -->
+      </div>
+      <small class="note">Tip: tempel link video Cocomelon atau lagu anak yang kamu suka, lalu klik Muat Video.</small>
+    </div>
+  </section>  <footer>
+    <small>Dicoding sederhana — simpan file ini sebagai <code>index.html</code> dan buka di browser. Untuk offline audio/video pastikan koneksi internet.</small>
+  </footer>  <script>
+    // --- helper: isi select 1..100
+    const aEl = document.getElementById('a'), bEl = document.getElementById('b');
+    for(let i=1;i<=100;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; aEl.appendChild(o); }
+    for(let i=1;i<=100;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; bEl.appendChild(o); }
+    aEl.value=7; bEl.value=8;
+
+    // --- kalkulasi
+    document.getElementById('calc').addEventListener('click',()=>{
+      const a=+aEl.value, b=+bEl.value; document.getElementById('result').textContent = a + ' × ' + b + ' = ' + (a*b);
+    });
+
+    // show table for A
+    document.getElementById('showTable').addEventListener('click',()=>{
+      const a=+aEl.value; const tb=document.getElementById('multTable').querySelector('tbody'); tb.innerHTML='';
+      document.getElementById('tableFor').textContent = a;
+      for(let n=1;n<=100;n++){
+        const tr=document.createElement('tr'); const td1=document.createElement('td'); const td2=document.createElement('td'); td1.textContent=n; td2.textContent = n + ' × ' + a + ' = ' + (n*a); tr.appendChild(td1); tr.appendChild(td2); tb.appendChild(tr);
+      }
+      document.getElementById('tableArea').style.display='block';
+    });
+
+    // random pair quick
+    document.getElementById('randomPair').addEventListener('click',()=>{
+      const a=Math.floor(Math.random()*100)+1, b=Math.floor(Math.random()*100)+1; document.getElementById('result').textContent = a + ' × ' + b + ' = ' + (a*b);
+    });
+
+    // --- kuiz sederhana
+    const startBtn = document.getElementById('startQuiz'), nextBtn = document.getElementById('nextQ'), qText = document.getElementById('qText'), choicesWrap = document.getElementById('choices');
+    let quizQuestions = [], current=0, correct=0, total=0;
+    function makeQuizSet(n){ quizQuestions = []; for(let i=0;i<n;i++){ const a=Math.floor(Math.random()*100)+1, b=Math.floor(Math.random()*100)+1; quizQuestions.push({a,b,ans:a*b}); } current=0; correct=0; total=0; document.getElementById('score').textContent = '0 / 0'; }
+    function showQ(){ const q = quizQuestions[current]; qText.textContent = `Berapakah ${q.a} × ${q.b} ?`; choicesWrap.innerHTML=''; const correctAns = q.ans;
+      // buat 3 pilihan salah
+      const opts = new Set([correctAns]); while(opts.size<4){ const delta = Math.floor((Math.random()*200)-100); opts.add(Math.max(0, correctAns + delta)); }
+      const arr = Array.from(opts).sort(()=>Math.random()-0.5);
+      arr.forEach(v=>{ const btn=document.createElement('button'); btn.textContent=v; btn.addEventListener('click',()=>{ total++; if(v===correctAns) correct++; document.getElementById('score').textContent = `${correct} / ${total}`; nextBtn.disabled=false; startBtn.disabled=false; }); choicesWrap.appendChild(btn); });
+    }
+    startBtn.addEventListener('click',()=>{ makeQuizSet(10); startBtn.disabled=true; nextBtn.disabled=true; showQ(); });
+    nextBtn.addEventListener('click',()=>{ current++; if(current>=quizQuestions.length){ alert('Selesai! Skor: '+correct+' / '+total); startBtn.disabled=false; nextBtn.disabled=true; qText.textContent='-'; choicesWrap.innerHTML=''; } else { showQ(); nextBtn.disabled=true; } });
+
+    // --- soal untuk mapel lain (sampel sederhana)
+    const bank = {
+      math: {
+        1: [{q:'2 + 3 = ?', a:'5'},{q:'5 − 2 = ?', a:'3'}],
+        2: [{q:'7 + 6 = ?', a:'13'},{q:'12 − 4 = ?', a:'8'}],
+        3: [{q:'15 ÷ 3 = ?', a:'5'},{q:'8 × 7 = ?', a:'56'}],
+        4: [{q:'50 ÷ 5 = ?', a:'10'},{q:'25 + 36 = ?', a:'61'}],
+        5: [{q:'125 ÷ 5 = ?', a:'25'},{q:'72 − 19 = ?', a:'53'}],
+        6: [{q:'12 × 12 = ?', a:'144'},{q:'(48 ÷ 6) + 7 = ?', a:'15'}]
+      },
+      ipa: {
+        1: [{q:'Benda yang bisa bergerak sendiri disebut?', a:'Hewan atau manusia'},{q:'Apakah matahari panas atau dingin?', a:'Panas'}],
+        2: [{q:'Air berubah jadi es bila didinginkan. Benar atau salah?', a:'Benar'},{q:'Contoh hewan mamalia?', a:'Sapi / Kucing'}],
+        3: [{q:'Apa sumber energi tumbuhan?', a:'Cahaya matahari'},{q:'Bagian tumbuhan yang menyerap air?', a:'Akar'}],
+        4: [{q:'Apa fungsi paru-paru?', a:'Bernapas'},{q:'Contoh alat pernapasan pada ikan?', a:'Insang'}],
+        5: [{q:'Proses mengubah makanan menjadi energi disebut?', a:'Metabolisme (pencernaan)'},{q:'Sebutkan 2 sumber energi fosil', a:'Minyak bumi, batu bara'}],
+        6: [{q:'Apa itu ekosistem?', a:'Hubungan makhluk hidup dan lingkungannya'},{q:'Sebutkan 3 bentuk energi', a:'Kinetik, potensial, listrik'}]
+      },
+      bindo: {
+        1: [{q:'Sebutkan salam yang sopan untuk pagi hari.', a:'Selamat pagi'},{q:'Apa lawan kata dari besar?', a:'Kecil'}],
+        2: [{q:'Buatlah kalimat pendek dengan kata "apel"', a:'Contoh: Saya makan apel.'},{q:'Huruf vokal antara: a,i,u,e,o? Jawab: semua'}],
+        3: [{q:'Nama jenis kata yang menunjuk benda?', a:'Kata benda (nomina)'},{q:'Buat kalimat tanya sederhana', a:'Contoh: Di mana kamu tinggal?'}],
+        4: [{q:'Apa yang dimaksud paragraf?', a:'Kumpulan kalimat yang membahas satu ide'},{q:'Sebutkan 3 tanda baca', a:'Titik, koma, tanda tanya'}],
+        5: [{q:'Buat kalimat kompleks singkat', a:'Contoh: Karena hujan, kami tetap di rumah.'},{q:'Apa sinonim dari cepat?', a:'Cepat = kilat / lekas'}],
+        6: [{q:'Jelaskan pengertian teks deskripsi', a:'Teks yang menggambarkan sesuatu secara rinci'},{q:'Contoh penggunaan kata sambung', a:'dan, tetapi, karena'}]
+      }
+    };
+
+    document.getElementById('genQuestion').addEventListener('click',()=>{
+      const subj = document.getElementById('subject').value; const grade = document.getElementById('grade').value;
+      const arr = bank[subj][grade]; const pick = arr[Math.floor(Math.random()*arr.length)]; document.getElementById('questionText').textContent = pick.q; document.getElementById('answerText').textContent = ''; document.getElementById('showAnswer').disabled=false; document.getElementById('showAnswer').dataset.ans = pick.a;
+    });
+    document.getElementById('showAnswer').addEventListener('click',()=>{ document.getElementById('answerText').textContent = document.getElementById('showAnswer').dataset.ans || ''; document.getElementById('showAnswer').disabled=true; });
+
+    // --- canvas drawing + presets (simple SVG render to canvas)
+    const canvas = document.getElementById('draw'); const ctx = canvas.getContext('2d'); let drawing=false; ctx.lineWidth=4; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle='#0b63b6';
+    document.getElementById('size').addEventListener('input',e=>ctx.lineWidth = e.target.value);
+    canvas.addEventListener('pointerdown',(e)=>{ drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+    canvas.addEventListener('pointermove',(e)=>{ if(!drawing) return; ctx.lineTo(e.offsetX,e.offsetY); ctx.stroke(); });
+    canvas.addEventListener('pointerup',()=>drawing=false); document.getElementById('clear').addEventListener('click',()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); });
+
+    // simple presets: draw basic shapes that look like animals
+    document.querySelectorAll('.preset').forEach(btn=>btn.addEventListener('click',()=>{
+      ctx.clearRect(0,0,canvas.width,canvas.height); ctx.lineWidth=3; ctx.strokeStyle='#114b8a'; const s=btn.dataset.shape;
+      if(s==='dolphin'){
+        // draw a stylized dolphin
+        ctx.beginPath(); ctx.moveTo(40,140); ctx.quadraticCurveTo(140,30,340,100); ctx.quadraticCurveTo(300,140,260,120); ctx.quadraticCurveTo(220,160,180,150); ctx.quadraticCurveTo(120,160,80,140); ctx.stroke();
+        ctx.beginPath(); ctx.arc(320,110,8,0,Math.PI*2); ctx.fillStyle='#114b8a'; ctx.fill();
+      } else if(s==='fish'){
+        ctx.beginPath(); ctx.ellipse(200,120,90,40,0,0,Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(100,120); ctx.lineTo(40,90); ctx.lineTo(40,150); ctx.closePath(); ctx.stroke();
+      } else if(s==='cat'){
+        ctx.beginPath(); ctx.arc(200,120,50,0,Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(160,80); ctx.lineTo(150,50); ctx.lineTo(170,70); ctx.stroke(); ctx.beginPath(); ctx.moveTo(240,80); ctx.lineTo(250,50); ctx.lineTo(230,70); ctx.stroke();
+      }
+    }));
+
+    // --- YouTube loader (ambil ID dari URL atau ID mentah)
+    document.getElementById('loadVideo').addEventListener('click',()=>{
+      const v = document.getElementById('ytUrl').value.trim(); if(!v){ alert('Tempelkan URL YouTube atau ID video.'); return; }
+      const id = extractYouTubeID(v); if(!id){ alert('Tidak bisa menemukan ID video. Pastikan URL benar.'); return; }
+      const wrap = document.getElementById('playerWrap'); wrap.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    });
+    function extractYouTubeID(url){
+      // terima URL biasa atau ID
+      if(!url) return null;
+      // jika cuma ID (11+ chars) -> kembalikan
+      if(/^[a-zA-Z0-9_-]{6,}$/.test(url) && url.indexOf('http')!==0) return url;
+      try{
+        const u = new URL(url);
+        if(u.hostname.includes('youtube.com')){
+          return u.searchParams.get('v') || (u.pathname.split('/').pop());
+        } else if(u.hostname.includes('youtu.be')){
+          return u.pathname.slice(1);
+        }
+      } catch(e){ return null; }
+      return null;
+    }
+
+    // selesai
+  </script></body>
+</html>
