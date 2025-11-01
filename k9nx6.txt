@@ -1,0 +1,130 @@
+nama=Fitur Daftar bot
+language=javascript
+lines=126
+date=01/11/2025
+code=const { createHash } = require('crypto');
+const moment = require('moment-timezone');
+
+let handler = async function (m, { conn, text, usedPrefix }) {
+    let user = global.db.data.users[m.sender];
+
+    if (user.registered === true) {
+        throw `❌ Anda sudah terdaftar!\nGunakan *${usedPrefix}unreg <SN>* untuk daftar ulang.`;
+    }
+
+    if (!text) {
+        throw `❌ Maaf Format salah!\nGunakan: *${usedPrefix}daftar nama.tahunLahir.gender.bio*`;
+    }
+
+    let input = text.split('.');
+    if (input.length < 4) {
+        throw `⚠️ Format tidak lengkap Bro!\nGunakan: *${usedPrefix}daftar nama.tahunLahir.gender.bio*`;
+    }
+
+    let [name, tahunLahir, gender, ...bioArray] = input;
+    let bio = bioArray.join('.').trim();
+
+    // 🧹 Daftar kata kasar / terlarang
+    const forbiddenWords = [
+        'anjing', 'bangsat', 'kontol', 'memek', 'ngentot', 'babi', 'goblok', 'idiot',
+        'tolol', 'jancok', 'pantek', 'asw', 'tai', 'kntl', 'mmk', 'anjg',
+        'botak', 'brengsek', 'kimak', 'pepek', 'ppk', 'tetek', 'ttk', 'ngewe', 'tete', 'jembut',
+        'https', 'http', 't.me', 'wa.me', 'telegram', 'discord.gg', '@', '.com', '.id', 'peli', 'kntl', 'anj', 'beban', 'mmk', 'memek', 'memew', 'mmek', 'memk', 'titit', 'bngst'
+    ];
+
+    function containsForbidden(text) {
+        return forbiddenWords.some(word => text.toLowerCase().includes(word));
+    }
+
+    // ⚙️ Validasi dasar
+    if (!name) throw '⚠️ Nama tidak boleh kosong!';
+    if (!tahunLahir || isNaN(tahunLahir)) throw '⚠️ Tahun lahir harus berupa angka!';
+    if (!gender) throw '⚠️ Gender tidak boleh kosong! Pilih: Pria/Wanita.';
+    if (!bio) throw '⚠️ Bio tidak boleh kosong!';
+    if (bio.length > 100) throw '⚠️ Bio terlalu panjang! Maksimal 100 karakter.';
+
+    // 🚫 Cek kata kasar di nama dan bio
+    if (containsForbidden(name)) throw '🚫 Nama mengandung kata tidak pantas atau link!';
+    if (containsForbidden(bio)) throw '🚫 Bio mengandung kata tidak pantas atau link!';
+
+    // 🔎 Validasi nama unik
+    let allUsers = global.db.data.users;
+    let nameExists = Object.values(allUsers).some(u => u.registered && u.name?.toLowerCase() === name.toLowerCase());
+    if (nameExists) throw `❌ Nama *${name}* sudah digunakan. Silakan gunakan nama lain!`;
+
+    // 🧠 Validasi tahun lahir logis
+    tahunLahir = parseInt(tahunLahir);
+    let currentYear = new Date().getFullYear();
+    let umur = currentYear - tahunLahir;
+
+    if (tahunLahir > currentYear) throw `🚫 Tahun lahir tidak valid! Belum lahir ya?`;
+    if (tahunLahir < 1900) throw `🚫 Tahun lahir terlalu tua! Harus di atas tahun 1900.`;
+    if (umur > 120) throw `🚫 Umur tidak realistis (lebih dari 120 tahun)!`;
+    if (umur < 5) throw `🚫 Umur terlalu muda! Minimal 5 tahun untuk mendaftar.`;
+
+    // 🚻 Validasi gender harus sesuai
+    gender = gender.trim().toLowerCase();
+    if (!['pria', 'wanita', 'laki-laki', 'perempuan'].includes(gender)) {
+        throw `🚫 Gender tidak valid! Hanya boleh *Pria* atau *Wanita*.`;
+    }
+
+    // 🧩 Normalisasi gender
+    if (gender === 'laki-laki') gender = 'Pria';
+    else if (gender === 'perempuan') gender = 'Wanita';
+    else gender = gender.charAt(0).toUpperCase() + gender.slice(1);
+
+    // ✅ Simpan data user
+    user.name = name.trim();
+    user.age = umur;
+    user.gender = gender;
+    user.bio = bio;
+    user.tahunLahir = tahunLahir;
+    user.regTime = +new Date();
+    user.registered = true;
+
+    // 🎁 Reward awal
+    user.money = 100000;
+    user.exp = 5999;
+    user.limit = 10;
+
+    let sn = createHash('md5').update(m.sender).digest('hex');
+    let caption = `
+┏─• *ᴜꜱᴇʀꜱ* 
+│▸ *ɴᴀᴍᴀ:* ${name}
+│▸ *ᴜᴍᴜʀ:* ${umur} ᴛᴀʜᴜɴ
+│▸ *ɢᴇɴᴅᴇʀ:* ${gender}
+│▸ *ʙɪᴏ:* ${bio}
+│▸ *ꜱᴇʀɪᴀʟ ɴᴜᴍʙᴇʀ:* ${sn}
+│▸ *ʀᴇᴡᴀʀᴅ ᴍᴏɴᴇʏ:* ${user.money}
+│▸ *ʀᴇᴡᴀʀᴅ ᴇxᴘ:* ${user.exp}
+│▸ *ʀᴇᴡᴀʀᴅ ʟɪᴍɪᴛ:* ${user.limit}
+┗────···
+
+✅ ᴘᴇɴᴅᴀꜰᴛᴀʀᴀɴ ꜱᴇʟᴇꜱᴀɪ!
+> Ketik *.allmenu* untuk melihat seluruh menu bot.
+`.trim();
+
+    // 🔔 Notifikasi admin
+    const adminGroupId = '120363347063028657@g.us';
+    const regTime = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
+    const adminMessage = `
+📢 *𝙽𝚘𝚝𝚒𝚏𝚒𝚔𝚊𝚜𝚒 𝚞𝚜𝚎𝚛 𝚋𝚊𝚛𝚞* 📢
+
+📛 *Nama:* ${name}
+🚻 *Gender:* ${gender}
+📜 *Bio:* ${bio}
+⏰ *Waktu Daftar:* ${regTime}
+> Mohon bantu user baru, ya admin.
+`;
+
+    await conn.sendMessage(adminGroupId, { text: adminMessage });
+
+    let imageUrl = 'https://api.betabotz.eu.org/api/tools/get-upload?id=f/j8qz0zz6.mp4';
+    await conn.sendFile(m.chat, imageUrl, null, caption, m);
+};
+
+handler.help = ['daftar', 'reg', 'register'].map(v => v + ' <nama>.<tahunLahir>.<gender>.<bio>');
+handler.tags = ['xp'];
+handler.command = /^(daftar|reg(ister)?)$/i;
+
+module.exports = handler;
