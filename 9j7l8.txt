@@ -1,0 +1,46 @@
+nama=SoundCloud Downloader
+language=javascript
+lines=42
+date=01/11/2025
+code=const axios = require("axios");
+
+async function downloadSoundcloud(url) {
+  try {
+    const { data: info } = await axios.post(
+      "https://sc.snapfirecdn.com/soundcloud",
+      { target: url, gsc: "x" },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { data: dl } = await axios.get(
+      `https://sc.snapfirecdn.com/soundcloud-get-dl?target=${encodeURIComponent(
+        info.sound.progressive_url
+      )}`
+    );
+
+    return {
+      success: true,
+      title: info.sound.title,
+      username: info.metadata.username,
+      userid: info.metadata.userid,
+      profilePicture: info.metadata.profile_picture_url,
+      artwork: info.metadata.artwork_url,
+      hlsUrl: info.sound.hls_url,
+      progressiveUrl: info.sound.progressive_url,
+      directMp3: dl.url,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err.response ? err.response.data : err.message,
+    };
+  }
+}
+
+const test = "https://on.soundcloud.com/7XnHklPldjsqXc6oK3";
+downloadSoundcloud(test).then(console.log);
