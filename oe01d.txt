@@ -1,0 +1,5 @@
+nama=Rirhrk
+language=javascript
+lines=1
+date=01/11/2025
+code=Jsvsdj
