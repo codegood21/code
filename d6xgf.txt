@@ -1,0 +1,6 @@
+nama=Ttt
+language=javascript
+lines=2
+date=02/11/2025
+code=@CodeGood ⚡: Website Pasteclip :
+https://pasteclip.zone.id
