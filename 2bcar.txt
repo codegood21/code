@@ -1,0 +1,463 @@
+nama=my-freepalestine
+language=python
+lines=459
+date=03/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET Code Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Galaxy Background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000011 50%, #000000 100%);
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .planet {
+            position: fixed;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .planet1 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #4a0e0e);
+            top: 10%;
+            right: 10%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .planet2 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #6b9fff, #0e2a4a);
+            bottom: 20%;
+            left: 5%;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(0, 255, 255, 0.1) 25%, 
+                rgba(255, 0, 255, 0.1) 50%, 
+                rgba(0, 255, 255, 0.1) 75%, 
+                transparent 100%);
+            animation: aurora-flow 15s infinite linear;
+        }
+
+        @keyframes aurora-flow {
+            0% { transform: translateX(-100%) rotate(0deg); }
+            100% { transform: translateX(100%) rotate(360deg); }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.5)); }
+        }
+
+        /* Input Section */
+        .input-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="url"] {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Result Section */
+        .result-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glowing Border Animation */
+        .glowing-border {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff, #ff00ff);
+            border-radius: 20px;
+            opacity: 0.5;
+            animation: glowing 3s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes glowing {
+            0% { filter: blur(5px) opacity(0.5); }
+            50% { filter: blur(10px) opacity(0.8); }
+            100% { filter: blur(5px) opacity(0.5); }
+        }
+
+        .result-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .result-meta span {
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .result-content {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .code-output {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #00ffff;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            color: #00ffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .copy-button.copied {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        /* Scrollbar Styling */
+        .result-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .result-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .result-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .input-group { flex-direction: column; }
+            .result-meta { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="galaxy-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="planet planet1"></div>
+    <div class="planet planet2"></div>
+    <div class="aurora"></div>
+
+    <div class="container">
+        <h1>GET Code Generator</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="Masukkan URL (wajib https://)" required>
+                <button onclick="generateCode()">Generate Code</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="loader"></div>
+                <p style="margin-top: 10px; color: rgba(255, 255, 255, 0.7);">Mengambil kode dari galaksi...</p>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="glowing-border"></div>
+            <div class="result-header">
+                <div class="result-meta">
+                    <span id="creator">Creator: -</span>
+                    <span id="status">Status: -</span>
+                </div>
+            </div>
+            <div class="result-content">
+                <button class="copy-button" onclick="copyCode()">Salin Kode</button>
+                <pre class="code-output" id="codeOutput"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Generate code function
+        async function generateCode() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Masukkan URL terlebih dahulu!');
+                return;
+            }
+            
+            if (!url.startsWith('https://')) {
+                alert('URL wajib menggunakan https://');
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+            
+            loading.classList.add('active');
+            resultSection.classList.remove('active');
+            
+            try {
+                const response = await fetch( https://api.resellergaming.my.id/tools/getcode?url=${encodeURIComponent(url)} );
+                const data = await response.json();
+                
+                if (data.status) {
+                    document.getElementById('creator').textContent =  Creator: ${data.creator} ;
+                    document.getElementById('status').textContent =  Status: ${data.status ? 'Success' : 'Failed'} ;
+                    document.getElementById('codeOutput').textContent = data.result.html;
+                    
+                    loading.classList.remove('active');
+                    resultSection.classList.add('active');
+                } else {
+                    throw new Error('Failed to fetch code');
+                }
+            } catch (error) {
+                loading.classList.remove('active');
+                alert('Terjadi kesalahan saat mengambil kode. Silakan coba lagi.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Copy code function
+        function copyCode() {
+            const codeOutput = document.getElementById('codeOutput');
+            const copyButton = document.querySelector('.copy-button');
+            
+            navigator.clipboard.writeText(codeOutput.textContent).then(() => {
+                copyButton.textContent = 'Tersalin!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyButton.textContent = 'Salin Kode';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Gagal menyalin kode');
+            });
+        }
+
+        // Initialize
+        createStars();
+    </script>
+</body>
+  </html>
