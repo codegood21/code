@@ -1,0 +1,5 @@
+nama=indosia
+language=python
+lines=2
+date=03/11/2025
+code=https://pasteclip.zone.id
