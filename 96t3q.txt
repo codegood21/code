@@ -1,0 +1,5 @@
+nama=Sish.
+language=javascript
+lines=1
+date=04/11/2025
+code=Ueeg
