@@ -1,0 +1,403 @@
+nama=Azzstore 
+language=html
+lines=399
+date=04/11/2025
+code=
+
+<!DOCTYPE HTML>
+<html lang="en" data-bs-theme="light">
+<head>
+
+
+  <meta charset="utf-8">
+  <!-- <meta http-equiv="pragma" content="no-cache" /> -->
+  <meta http-equiv="cache-control" content="max-age=259200" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>PREFLIX</title>
+  <meta name="theme-color" content="#5D0501"/>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js" type="text/javascript"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
+  <link rel="icon" href="https://images.bukaolshop.com/2025-07/156602/344531fbc786563839.png" type="image/png" >
+
+
+
+</head>
+<header class="bg-success bg-gradient">
+
+  <section>
+    <div class="container ">
+      <div style="padding-top:30px;padding-bottom:20px">
+        <div class="row d-flex align-items-center">
+
+          <div class="col-12 col-md-2 col-sm-12 py-3">
+            <a href="/"  class="text-decoration-none" style="color:white">
+              <h3 class="navbar-brand m-0" style="font-size: 1.57rem;">PREFLIX</h3>
+            </a>
+          </div>
+          <div class="col-12 col-md-7 py-3">
+            <form action="/search" class="search" method="GET">
+              <div class="input-group w-100">
+                <input type="search" class="form-control" id="form-cari" maxlength="150" name="q" placeholder="Cari produk disini">
+
+                <button class="btn rounded-end" type="submit" style="background-color:#ffffffcf;border:1px solid #ced4da;">
+                  <i class="fa fa-search primarycolor"></i>
+                </button>
+
+              </div>
+            </form>
+          </div>
+
+          <div class="col-7 col-md-3 order-1 order-md-0 py-3">
+
+            <div class="d-flex flex-row justify-content-evenly mb-3" id="user-data">
+              <div class="d-flex flex-column ">
+                <small class="text-white">Selamat Datang!</small>
+                <div class="d-none" id="belum_login">
+                  <a class="btn btn-sm btn-outline-primary border border-white text-white font-8" href="/akun/login">&nbsp; Login &nbsp;</a>  <span class="text-white pe-2 ps-2">|</span>
+                  <a class="btn btn-sm btn-outline-primary border border-white text-white font-8" href="/akun/daftar">&nbsp; Daftar &nbsp;</a>
+                </div>
+                <b class="text-white" id="nama_user"></b>
+              </div>
+              <div class="d-flex flex-row flex-fill justify-content-evenly align-items-center d-none" id="logo_member">
+                <a href="/akun/?page=profil" ><i class="fa fa-user text-white fs-3"></i></a>
+                <a href="/akun/?page=cart" class="position-relative">
+                  <i class="fa fa-shopping-cart text-white fs-3"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="total_cart">0</span>
+                </a>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="col">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+              <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav mt-4 mt-md-0">
+                    <li class="nav-item">
+                      <a class="nav-link" href="/" id="nav_home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/kategori" id="nav_kategori">Kategori</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/pages?voucher" id="nav_voucher">Promo &amp; Voucher</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/pages?informasi" id="nav_informasi">Informasi</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/pages?kontak" id="nav_kontak">Kontak</a>
+                    </li>
+                  </ul>
+
+                </div>
+              </div>
+            </nav>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+    <div class="container" id="pesan_status">
+
+
+    </div>
+  </section>
+
+</header>
+<script>
+
+$(document).ready(function() {
+   const data_akun={"status":"no_data"};
+   if(data_akun.status=="ok"){
+       console.log(data_akun);
+       $("#nama_user").text(data_akun.data.nama_user);
+       $("#logo_member").removeClass("d-none");
+       $("#user-data").removeClass("mb-3");
+       $("#user-data").addClass("mb-1");
+       $("#total_cart").text(data_akun.data.total_cart);
+    }else{
+      $("#belum_login").removeClass("d-none");
+    }
+    const data_status={"status":"no_data"};
+    if(data_status.status!="no_data"){
+      let alert_status;
+      let url_svg;
+      if(data_status.status=="sukses"){
+        alert_status="alert-success";
+        url_svg="https://storage3.bukaolshop.com/other_image/check-circle-svgrepo-com.svg";
+      }else if(data_status.status=="info"){
+        alert_status="alert-info";
+        url_svg="https://storage3.bukaolshop.com/other_image/warning-circle-svgrepo-com.svg";
+      }else{
+        alert_status="alert-warning";
+        url_svg="https://storage3.bukaolshop.com/other_image/warning-circle-svgrepo-com.svg";
+      }
+      $("#pesan_status").addClass("pb-4");
+      $("#pesan_status").html(`<div class="alert `+alert_status+` d-flex  alert-dismissible fade show" role="alert">
+      <svg width="50" height="50">
+       <image xlink:href="`+url_svg+`" width="50" height="50"/></svg>
+      <div class="d-flex flex-column ms-2">
+        <strong>`+data_status.judul+`</strong>`+data_status.pesan+`
+      </div>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>`);
+    }
+
+
+ });
+</script>
+
+<body><style media="screen">:root{
+  --bo-warna-utama:#5D0501;
+  --bo-warna-gelap:#200200;
+  --bo-warna-terang:#5D0501;
+  --bs-success-rgb:93,5,1;
+  --bs-primary-rgb:93,5,1;
+  --bs-secondary-rgb:32,2,0;
+  --bs-link-color-rgb:93,5,1;
+}
+.list-group{
+    --bs-list-group-active-bg: var(--bo-warna-utama);
+    --bs-list-group-active-border-color:var(--bo-warna-utama);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--bo-warna-utama);
+    --bs-btn-border-color: var(--bo-warna-utama);
+    --bs-btn-hover-bg: var(--bo-warna-gelap);
+    --bs-btn-hover-border-color: var(--bo-warna-gelap);
+    --bs-btn-active-bg:var(--bo-warna-terang);
+    --bs-btn-active-border-color:var(--bo-warna-terang);
+}
+
+.btn-outline-primary{
+  --bs-btn-color:var(--bo-warna-utama);
+  --bs-btn-border-color:var(--bo-warna-utama);
+  --bs-btn-hover-bg:var(--bo-warna-utama);
+  --bs-btn-hover-border-color:var(--bo-warna-utama);
+  --bs-btn-active-bg:var(--bo-warna-utama);
+  --bs-btn-active-border-color:var(--bo-warna-utama);
+}
+
+.card-banner {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 0.37rem;
+}
+.card-banner .card-body {
+    background-size: cover;
+    position: relative;
+    z-index: 10;
+}
+
+@media only screen and (max-width: 480px)
+.card-responsive {
+    height: 86px;
+    background-color: #301B6F;
+}
+.card-responsive {
+    height: 150px;
+    background-color: #301B6F;
+}
+
+@media only screen and (max-width: 480px){
+  .card-responsive {
+      height: 86px;
+      background-color: #301B6F;
+  }
+  .card-banner .text-bottom {
+      padding: 6px 10px !important;
+      padding-top: 30px;
+      background: linear-gradient(to bottom, rgb(0 0 0 / 17%) 0%, rgba(0, 0, 0, 0.8) 100%);
+      bottom: -7px;
+  } .font-8{font-size: 8pt;}
+}
+
+
+
+.card-banner .text-bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    padding: 7px 20px;
+    padding-top: 30px;
+    border-radius: 0 0 0.37rem 0.37rem;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+    color: #fff;
+}
+
+.judul-produk{
+  color: var(--bs-dark-text);
+font-size: 0.82rem;
+line-height: 1.2;
+max-width: 100%;
+max-height: 100%;
+white-space: pre-wrap;
+word-break: keep-all;
+text-overflow: ellipsis;
+overflow: hidden;
+margin-bottom: 4px;
+min-height: 16px;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+}
+
+.discount {
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding: 4px;
+    font-size: 0.714286rem;
+    font-weight: bold;
+    border-radius: 3px;
+    margin: 0px 4px 0px 0px;
+    -webkit-box-align: center;
+    align-items: center;
+    flex: 0 0 30px;
+    height: 20px;
+    color: #df5151;
+    background-color: #ffd2db;
+}
+.list_produk:hover{
+  background: #d6d6d630;
+}
+
+.lebar-150{
+  width: 150px;
+}</style><div class="container mb-4">
+  <div class="row">
+
+    <div class=" col-12 mt-4 mb-4">
+      <center>
+        <h2 class="text-center ">Download Aplikasi<br>putri preflix </h2>
+        <img src="https://images.bukaolshop.com/2025-07/156602/344531fbc786563839.png" alt="" style="width:120px;margin-top:20px">
+        <br>
+        <a href="https://download.bukaolshop.com/files/apk/preflix1.apk" class="btn btn-primary btn-lg mt-4 mb-2">Download Aplikasi APK</a>      </center>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4 mb-4">
+      <center>
+        <div class="card card-body shadow">
+          <table>
+            <tbody>
+              <tr>
+                <td>Nama Aplikasi</td>
+                <td>:</td>
+                <td>putri preflix </td>
+              </tr>
+              <tr>
+                <td>Versi</td>
+                <td>:</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td>Format</td>
+                <td>:</td>
+                <td>APK</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </center>
+    </div>
+  </div>
+</div><script type="text/javascript">
+$('#button-plus').click(function(){
+  let jumlah=$('#jumlah_produk').val();
+  jumlah++;
+  $('#jumlah_produk').val(jumlah);
+});
+$('#button-minus').click(function(){
+  let jumlah=$('#jumlah_produk').val();
+  if(jumlah>1){
+    jumlah--;
+  }
+  $('#jumlah_produk').val(jumlah);
+});
+
+function activeClass(){
+  return "active p-2 bg-secondary rounded ";
+};
+
+function htmlListProduk(object) {
+  let list_produk= `<div class="col-md-2 col-6 mb-4">
+  <a href="`+object.url_produk+`" class="text-decoration-none">
+  <div class="card shadow-sm h-100 list_produk">
+  <img src="`+object.url_gambar_barang+`" class="card-img-top" >
+  <div class="card-body p-2"><p class="judul-produk">`+object.nama_barang+`</p>
+  <p class="fw-bolder mb-1">`+formatRupiah(object.harga_barang)+`</p>`;
+  if(object.harga_barang_asli>0){
+    list_produk+=`<div class="mb-2"><span class="discount ">belum diset%</span>
+    <del class="small">`+formatRupiah(object.harga_barang_asli)+`</del></div>`;
+  }
+  list_produk+=`</div></div></a></div>`;
+  return list_produk;
+}
+
+/* Fungsi formatRupiah */
+function formatRupiah(angka){
+
+  var number_string = angka.toString().replace(/[^,\d]/g, '').toString(),
+  split   		= number_string.split(','),
+  sisa     		= split[0].length % 3,
+  rupiah     		= split[0].substr(0, sisa),
+  ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+
+  // tambahkan titik jika yang di input sudah menjadi angka ribuan
+  if(ribuan){
+    separator = sisa ? '.' : '';
+    rupiah += separator + ribuan.join('.');
+  }
+
+  rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+  return 'Rp' + rupiah;
+}</script><footer class="section-footer border-top mt-4 pt-4 pb-4">
+ 	<div class="container">
+ 		<section class="footer-top padding-y">
+ 			<div class="row">
+
+ 				<aside class="col-12 col-md-8 offset-md-2">
+ 					<h6 class="title">About</h6>
+           <div class="btn-group" role="group">
+       	  	<a href="/pages?privacy-policy" class="btn btn-outline-primary btn-footer">Privacy Policy</a>
+       	  	<a href="/pages?kebijakan-layanan" class="btn btn-outline-primary btn-footer">Kebijakan Layanan</a>
+       	  	<a href="/pages?informasi" class="btn btn-outline-primary btn-footer">Informasi</a>
+           		<a href="/pages?kontak" class="btn btn-outline-primary btn-footer">Kontak</a>
+       	</div>
+ 					<p class=" text-muted mt-3 "> ©2022 PREFLIX. All rights reserved.</p>
+ 				</aside>
+
+
+ 			</div> <!-- row.// -->
+ 		</section>	<!-- footer-top.// -->
+
+
+ 	</div><!-- //container -->
+ </footer>
