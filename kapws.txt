@@ -1,0 +1,34 @@
+nama=web-kopros
+language=python
+lines=31
+date=06/11/2025
+code=import time
+import sys
+
+# Lirik lagu
+lirik = [
+    "DIA TANYA AKU PUNYA PLAN HEI",
+    "DIA TAHU KALAU I'M THE MAN HEI, HEI",
+    "KAMU TINKER BELL, AKU PETER PAN",
+    "TAPI INI NYATA, NO, BUKAN CERPEN",
+    "INI BUKAN CERPEN, SHE'S TEN OUT OF TEN",
+    "PILIH MAU MANA, DOLLAR ATAU YEN?",
+    "ANGKAT KOPER, KITA PERGI JAPAN",
+    "I'LL GIVE YOU THE BEST THAT I CAN"
+]
+
+# Delay antar baris (detik)
+delay = [0.04, 0.06, 0.06, 0.06, 0.05, 0.06, 0.04, 2.5]
+
+print("================================")
+print("     Naykilla, Tenxi & Jemsii - Kasih Aba-Aba")
+print("================================\n")
+time.sleep(2)
+
+# Loop untuk menampilkan lirik
+for baris, tunda in zip(lirik, delay):
+    for huruf in baris:
+        print(huruf, end='', flush=True)
+        time.sleep(0.06)  # jeda antar huruf
+    print()  # pindah baris
+    time.sleep(tunda)  # jeda antar lirik
