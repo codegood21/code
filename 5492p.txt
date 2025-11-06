@@ -1,0 +1,25 @@
+nama=Counter
+language=html
+lines=22
+date=06/11/2025
+code=<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador de 10 en 10</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      font-size: 48px;
+      color: #333;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      b
