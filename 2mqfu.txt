@@ -1,0 +1,124 @@
+nama=FF & ML NAME CHECKER
+language=javascript
+lines=120
+date=06/11/2025
+code=const axios = require('axios');
+
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function prepareOrder({ userId = '2134554847', zoneId = '200', baseUrl = 'https://gopay.co.id/games/v1/order/prepare/FREEFIRE', maxRetries = 5 } = {}) {
+  const url = `${baseUrl}?userId=${encodeURIComponent(userId)}&zoneId=${encodeURIComponent(zoneId)}`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-captcha-token': '',
+    'X-Client': 'web-mobile',
+    'X-Timestamp': String(Date.now()),
+    'User-Agent': 'Mozilla/5.0 (Node.js) Scraper/1.0'
+  };
+
+  let attempt = 0;
+  let backoff = 1000;
+
+  while (attempt < maxRetries) {
+    attempt++;
+    try {
+      const resp = await axios.get(url, { headers, validateStatus: null, timeout: 10000 });
+      const status = resp.status;
+      const ra = resp.headers && resp.headers['retry-after'];
+
+      if (status >= 200 && status < 300) {
+        return resp.data;
+      }
+
+      if (status === 429 || ra) {
+        const retryAfterSec = ra ? parseInt(String(ra), 10) : Math.ceil(backoff / 1000);
+        await sleep((retryAfterSec + 1) * 1000);
+        backoff = Math.min(backoff * 2, 60000);
+        continue;
+      }
+
+      if (status >= 500 && status < 600) {
+        await sleep(backoff);
+        backoff = Math.min(backoff * 2, 60000);
+        continue;
+      }
+
+      throw new Error(`HTTP ${status} - ${typeof resp.data === 'string' ? resp.data : JSON.stringify(resp.data)}`);
+    } catch (err) {
+      if (attempt >= maxRetries) throw err;
+      await sleep(backoff);
+      backoff = Math.min(backoff * 2, 60000);
+    }
+  }
+
+  throw new Error('Max retries reached');
+}
+
+async function prepareOrderML({ userId = '1786470914', zoneId = '18612', baseUrl = 'https://gopay.co.id/games/v1/order/prepare/MOBILE_LEGENDS', maxRetries = 5 } = {}) {
+  const url = `${baseUrl}?userId=${encodeURIComponent(userId)}&zoneId=${encodeURIComponent(zoneId)}`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-captcha-token': '',
+    'X-Client': 'web-mobile',
+    'X-Timestamp': String(Date.now()),
+    'User-Agent': 'Mozilla/5.0 (Node.js) Scraper/1.0'
+  };
+
+  let attempt = 0;
+  let backoff = 1000;
+
+  while (attempt < maxRetries) {
+    attempt++;
+    try {
+      const resp = await axios.get(url, { headers, validateStatus: null, timeout: 10000 });
+      const status = resp.status;
+      const ra = resp.headers && resp.headers['retry-after'];
+
+      if (status >= 200 && status < 300) {
+        return resp.data;
+      }
+
+      if (status === 429 || ra) {
+        const retryAfterSec = ra ? parseInt(String(ra), 10) : Math.ceil(backoff / 1000);
+        await sleep((retryAfterSec + 1) * 1000);
+        backoff = Math.min(backoff * 2, 60000);
+        continue;
+      }
+
+      if (status >= 500 && status < 600) {
+        await sleep(backoff);
+        backoff = Math.min(backoff * 2, 60000);
+        continue;
+      }
+
+      throw new Error(`HTTP ${status} - ${typeof resp.data === 'string' ? resp.data : JSON.stringify(resp.data)}`);
+    } catch (err) {
+      if (attempt >= maxRetries) throw err;
+      await sleep(backoff);
+      backoff = Math.min(backoff * 2, 60000);
+    }
+  }
+
+  throw new Error('Max retries reached');
+}
+
+if (require.main === module) {
+  (async () => {
+    try {
+      console.log('=== Free Fire ===');
+      const resFF = await prepareOrder({ userId: '2134554847', zoneId: '200' });
+      console.log(JSON.stringify(resFF, null, 2));
+
+      console.log('\n=== Mobile Legends ===');
+      const resML = await prepareOrderML({ userId: '1786470914', zoneId: '18612' });
+      console.log(JSON.stringify(resML, null, 2));
+    } catch (err) {
+      console.error(err && err.message ? err.message : err);
+      process.exit(1);
+    }
+  })();
+}
+
+module.exports = { prepareOrder, prepareOrderML };
