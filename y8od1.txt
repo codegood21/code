@@ -1,0 +1,68 @@
+nama=Snack Video Search
+language=javascript
+lines=64
+date=07/11/2025
+code=const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function SnackVideo(query) {
+  const encodedQuery = encodeURIComponent(query);
+  const url = `https://www.snackvideo.com/discover/${encodedQuery}`;
+
+  try {
+    const { data: html } = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9,id;q=0.8',
+      },
+    });
+
+    const $ = cheerio.load(html);
+
+    // Cari semua script JSON-LD (SnackVideo biasanya taruh data di sini)
+    const scripts = $('script[type="application/ld+json"]')
+      .map((_, el) => $(el).html())
+      .get();
+
+    let videos = [];
+    for (const script of scripts) {
+      try {
+        const data = JSON.parse(script);
+        if (Array.isArray(data.itemListElement)) {
+          const filtered = data.itemListElement
+            .filter(v => v['@type'] === 'VideoObject')
+            .map(v => ({
+              judul_video: v.name,
+              deskripsi: v.description,
+              url_halaman: v.url,
+              url_file_video: v.contentUrl,
+              durasi: v.duration,
+              diupload: v.uploadDate,
+              commentCount: v.commentCount || 0
+            }));
+          videos.push(...filtered);
+        } else if (data['@type'] === 'VideoObject') {
+          videos.push({
+            judul_video: data.name,
+            deskripsi: data.description,
+            url_halaman: data.url,
+            url_file_video: data.contentUrl,
+            durasi: data.duration,
+            diupload: data.uploadDate,
+            commentCount: data.commentCount || 0
+          });
+        }
+      } catch {}
+    }
+
+    return videos;
+  } catch {
+    return [];
+  }
+}
+
+(async () => {
+  const searchQuery = 'andragz';
+  const videoList = await SnackVideo(searchQuery);
+  console.log(JSON.stringify(videoList, null, 2));
+})();
