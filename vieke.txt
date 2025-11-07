@@ -1,0 +1,363 @@
+nama=rupiah cepat
+language=html
+lines=359
+date=07/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RupiahCepat Mockup</title>
+<style>
+  :root{
+    --blue:#007bff;
+    --accent-2:#0a61d6;
+    --yellow:#ffcc00;
+    --bg:#f6f9ff;
+    --card:#ffffff;
+    --muted:#6f7b8a;
+    --danger:#ff6b3d;
+    --success:#16a34a;
+  }
+  body{
+    margin:0;
+    font-family:"Segoe UI", Roboto, system-ui;
+    background:var(--bg);
+    color:#0f1724;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+
+  /* Header */
+  .header{
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,0.05);
+  }
+  .header h1{margin:0;font-size:18px;color:#06345a;}
+  .header .icons{font-size:20px;}
+
+  /* Content */
+  .content{flex:1;overflow:auto;padding:18px;}
+
+  /* Card */
+  .card{
+    background:#fff;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.05);
+    max-width:920px;
+    margin:10px auto;
+  }
+
+  /* PINJAMAN PAGE */
+  #page-pinjaman{background:linear-gradient(180deg,#eaf3ff,#ffffff);}
+  .pinjaman-limit{
+    text-align:center;
+    padding:28px 18px;
+  }
+  .pinjaman-limit img{margin-bottom:8px;}
+  .pinjaman-limit .label-small{color:var(--muted);margin:6px 0;font-size:14px;}
+  .pinjaman-limit h2{margin:8px 0;font-size:34px;color:#05214a;}
+  .loan-min{color:#ff6600;font-weight:800;margin-top:6px;}
+  .loan-desc{color:#7a8696;margin-top:10px;line-height:1.4;}
+
+  .pay-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px;align-items:center;}
+  .pay-btn{
+    background:linear-gradient(90deg,var(--blue),var(--accent-2));
+    color:#fff;border:none;padding:14px 20px;border-radius:10px;font-size:16px;cursor:pointer;width:100%;max-width:420px;
+    box-shadow:0 8px 24px rgba(11,123,255,0.18);
+  }
+
+  /* Nomor pembayaran box */
+  .pay-box{
+    margin-top:16px;background:#fff;border-radius:12px;padding:12px 14px;width:100%;max-width:520px;border:1px solid #eef4ff;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .pay-box .pay-number{font-weight:900;font-size:18px;color:#05214a;}
+  .pay-box .pay-note{color:var(--danger);font-weight:800;}
+  .pay-controls{display:flex;gap:10px;margin-top:6px;}
+  .btn-ghost{background:#fff;border:1px solid #d7e7ff;padding:8px 12px;border-radius:8px;cursor:pointer;}
+  .btn-copy{background:#eef6ff;border:1px solid #bfe0ff;padding:8px 12px;border-radius:8px;cursor:pointer;}
+
+  /* RC POIN PAGE */
+  #page-rcpoin{background:linear-gradient(180deg,#fff5d9,#ffffff);}
+  .poin-top{text-align:center;padding:24px 12px;}
+  .poin-top h2{color:#d67f00;font-size:38px;margin:6px 0;}
+  .poin-level{
+    background:#fff0cc;
+    display:inline-block;
+    color:#d67f00;
+    font-weight:700;
+    border-radius:10px;
+    padding:6px 12px;
+    font-size:13px;
+  }
+  .checkin{
+    background:#fff;border-radius:14px;padding:20px;margin:12px auto;text-align:center;max-width:600px;
+  }
+  .check-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+  .day-box{background:#f6f8fb;border-radius:12px;padding:12px;text-align:center;font-weight:700}
+  .day-box.active{background:linear-gradient(180deg,#fff3b8,#fff0d9);box-shadow:inset 0 -4px 0 rgba(0,0,0,0.02)}
+  .big-checkin{margin-top:18px;background:linear-gradient(90deg,#ff6b6b,#ff416c);color:white;border:0;padding:14px;border-radius:28px;font-weight:900;font-size:18px;width:100%}
+
+  /* SAYA PAGE (Identitas) */
+  .profile-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 4px 10px rgba(0,0,0,0.05);max-width:700px;margin:10px auto;}
+  .profile-top{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+  .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,#8fd3ff,#5aa8ff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;}
+  .profile-info h3{margin:0;}
+  .small{color:var(--muted);font-size:13px;}
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0}
+  .label{color:var(--muted);font-weight:600;}
+  .value{font-weight:700;color:#122033;}
+  .info-row:last-child{border-bottom:none;}
+
+  /* footer nav */
+  .footer{
+    display:flex;justify-content:space-around;align-items:center;padding:10px 6px;background:var(--card);box-shadow:0 -1px 0 rgba(0,0,0,0.03);
+    position:fixed;left:0;right:0;bottom:0;
+  }
+  .nav-btn{background:none;border:0;padding:8px 12px;font-size:14px;color:var(--muted);cursor:pointer;}
+  .nav-btn.active{color:var(--blue);font-weight:700;}
+
+  @media(max-width:420px){
+    .check-grid{grid-template-columns:repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>RupiahCepat</h1>
+  <div class="icons">🎧 🔔</div>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+  <!-- PINJAMAN -->
+  <div id="page-pinjaman" class="page">
+    <div class="card pinjaman-limit">
+      <img src="https://cdn-icons-png.flaticon.com/512/1048/1048940.png" width="64" alt="lock">
+      <div class="label-small">Limit tersisa (Rp)</div>
+      <h2 id="loanAmount">133.320</h2>
+
+      <div class="label-small">Nominal pinjaman terkecil sekarang adalah</div>
+      <div class="loan-min">Rp 200.000</div>
+
+      <div class="loan-desc">Pinjaman terkecil telah melebihi limit yang tersedia saat ini. Anda dapat melakukan pinjaman kembali setelah pembayaran sebagian.</div>
+
+      <!-- Nomor Pembayaran -->
+      <div class="pay-box" id="payBox">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="font-size:13px;color:var(--muted)">Nomor Pembayaran</div>
+          <div class="pay-number" id="payNumber">--</div>
+          <div class="pay-note" id="payNote">Segera bayar</div>
+        </div>
+
+        <div class="pay-controls">
+          <button class="btn-copy" onclick="copyPaymentNumber()">Salin Nomor</button>
+          <button class="btn-ghost" onclick="regeneratePayment()">Ganti Nomor</button>
+        </div>
+      </div>
+
+      <div class="pay-actions">
+        <button class="pay-btn" onclick="actionPay()">Lakukan pembayaran</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RC POIN -->
+  <div id="page-rcpoin" class="page" style="display:none;">
+    <div class="card">
+      <div class="poin-top">
+        <div class="poin-level">Level 1</div>
+        <h2 id="pointsNum">88</h2>
+        <p>Check in berturut-turut <span id="streak">1</span> Hari</p>
+      </div>
+
+      <div class="checkin">
+        <div style="font-weight:800">Check in tiap hari dapat poin lebih banyak</div>
+        <div id="checkGrid" class="check-grid" style="margin-top:12px"></div>
+        <button id="btnCheckIn" class="big-checkin" onclick="doCheckIn()">Check in sekarang</button>
+      </div>
+
+      <div style="margin-top:12px;font-weight:800">Pilihan Hadiah</div>
+      <div style="display:flex;gap:12px;overflow:auto;margin-top:10px">
+        <div style="flex:0 0 220px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(0,0,0,0.04)">Hadiah 1</div>
+        <div style="flex:0 0 220px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(0,0,0,0.04)">Hadiah 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAYA / IDENTITAS -->
+  <div id="page-saya" class="page" style="display:none;">
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="avatar" id="avatar">W</div>
+        <div class="profile-info">
+          <h3 id="profileName">WULIYO</h3>
+          <div class="small" id="profileID">ID: 3525 **** **** 0003</div>
+        </div>
+      </div>
+
+      <div class="info-row"><div class="label">Nama</div><div class="value" id="infoNama">WULIYO</div></div>
+      <div class="info-row"><div class="label">Nomor HP</div><div class="value" id="infoHP">085*****4502</div></div>
+      <div class="info-row"><div class="label">No. KTP</div><div class="value" id="infoKTP">3525 **** **** 0003</div></div>
+      <div class="info-row"><div class="label">No. Rekening</div><div class="value" id="infoRek">7012 3456 890 (BRI)</div></div>
+
+      <div style="margin-top:12px;color:var(--muted);font-size:13px">
+        <strong>Perhatian:</strong> Identitas diri tidak dapat diubah melalui aplikasi (hanya untuk tampilan mockup).
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer nav -->
+<div class="footer">
+  <button id="navPinjaman" class="nav-btn active" onclick="showPage('pinjaman')">Pinjaman</button>
+  <button id="navRCPoin" class="nav-btn" onclick="showPage('rcpoin')">RC Poin</button>
+  <button id="navSaya" class="nav-btn" onclick="showPage('saya')">Saya</button>
+</div>
+
+<script>
+/* ---------- Profile (read-only) ---------- */
+const defaultUser = {
+  name: "WULIYO",
+  phone: "085*****4502",
+  ktp: "3525 **** **** 0003",
+  rek: "70123456890"
+};
+let user = JSON.parse(localStorage.getItem('rc_user')) || defaultUser;
+localStorage.setItem('rc_user', JSON.stringify(user));
+document.getElementById('infoNama').textContent = user.name;
+document.getElementById('infoHP').textContent = user.phone;
+document.getElementById('infoKTP').textContent = user.ktp;
+document.getElementById('infoRek').textContent = user.rek + " (BRI)";
+document.getElementById('avatar').textContent = user.name.charAt(0).toUpperCase();
+document.getElementById('profileName').textContent = user.name;
+
+/* ---------- Page switching ---------- */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(name==='pinjaman'){
+    document.getElementById('page-pinjaman').style.display='block';
+    document.getElementById('navPinjaman').classList.add('active');
+  } else if(name==='rcpoin'){
+    document.getElementById('page-rcpoin').style.display='block';
+    document.getElementById('navRCPoin').classList.add('active');
+  } else if(name==='saya'){
+    document.getElementById('page-saya').style.display='block';
+    document.getElementById('navSaya').classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+showPage('pinjaman');
+
+/* ---------- Loan: payment number generation & UI ---------- */
+// create or read payment number from localStorage
+function makeRandomPaymentNumber(){
+  // generate like PAY-<timestamp>-<4digits>
+  const ts = Date.now().toString().slice(-6);
+  const rnd = Math.floor(Math.random()*9000)+1000;
+  return `PAY-${ts}-${rnd}`;
+}
+let paymentNumber = localStorage.getItem('rc_payment_no');
+if(!paymentNumber){
+  paymentNumber = makeRandomPaymentNumber();
+  localStorage.setItem('rc_payment_no', paymentNumber);
+}
+document.getElementById('payNumber').textContent = paymentNumber;
+document.getElementById('payNote').textContent = 'Segera bayar';
+
+/* copy to clipboard */
+function copyPaymentNumber(){
+  const txt = document.getElementById('payNumber').textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert('Nomor pembayaran disalin: ' + txt);
+    }).catch(()=>{ fallbackCopy(txt); });
+  } else {
+    fallbackCopy(txt);
+  }
+}
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try{
+    document.execCommand('copy');
+    alert('Nomor pembayaran disalin: ' + text);
+  }catch(e){ prompt('Salin manual nomor pembayaran:', text); }
+  ta.remove();
+}
+
+/* regenerate payment number (user requested "nomer terserah") */
+function regeneratePayment(){
+  if(confirm('Ganti nomor pembayaran dengan nomor baru?')){
+    paymentNumber = makeRandomPaymentNumber();
+    localStorage.setItem('rc_payment_no', paymentNumber);
+    document.getElementById('payNumber').textContent = paymentNumber;
+    alert('Nomor pembayaran baru: ' + paymentNumber);
+  }
+}
+
+/* simulate payment action */
+function actionPay(){
+  alert('Menu pembayaran (placeholder). Nomor pembayaran: ' + document.getElementById('payNumber').textContent + '\nSelanjutnya lakukan pembayaran sesuai instruksi.');
+}
+
+/* ---------- RC Poin logic (simple) ---------- */
+let points = Number(localStorage.getItem('rc_points') || 88);
+let streak = Number(localStorage.getItem('rc_streak') || 1);
+let lastCheck = localStorage.getItem('rc_lastcheck') || null;
+const pointSchedule = [10,10,10,20,10,10,30];
+
+function renderPoints(){
+  document.getElementById('pointsNum').textContent = points;
+  document.getElementById('streak').textContent = (streak>7?7:streak);
+  const grid = document.getElementById('checkGrid');
+  grid.innerHTML = '';
+  for(let i=0;i<7;i++){
+    const day = i+1;
+    const box = document.createElement('div');
+    box.className = 'day-box' + (day <= streak ? ' active' : '');
+    box.innerHTML = `<div style="font-size:12px;color:var(--muted)">Hari ke ${day}</div><div style="margin-top:6px;font-size:16px">+${pointSchedule[i]}</div>`;
+    grid.appendChild(box);
+  }
+}
+renderPoints();
+
+function doCheckIn(){
+  const today = new Date().toDateString();
+  if(lastCheck === today){
+    alert("Anda sudah Check-in hari ini.");
+    return;
+  }
+  const dayIndex = Math.min(Math.max(streak-1,0),6);
+  const reward = pointSchedule[dayIndex];
+  points += reward;
+  // determine streak continuity
+  const yesterday = new Date();
+  yesterday.setDate(new Date().getDate()-1);
+  if(lastCheck === yesterday.toDateString()){
+    streak = Math.min(streak + 1, 7);
+  } else {
+    streak = 2; // after first check-in, prepare next day; we use this to simulate progression
+  }
+  lastCheck = today;
+  localStorage.setItem('rc_lastcheck', lastCheck);
+  localStorage.setItem('rc_points', points);
+  localStorage.setItem('rc_streak', streak);
+  renderPoints();
+  alert(`Check-in berhasil! Anda mendapatkan +${reward} poin.`);
+}
+</script>
+</body>
+</html>
