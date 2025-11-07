@@ -1,0 +1,51 @@
+nama=Brainly Search
+language=javascript
+lines=47
+date=07/11/2025
+code=const axios = require("axios");
+
+async function brainlySearch(query) {
+  try {
+    const url = `https://brainly.com/bff/social-qa/answer-experience-web/api/v1/search?query=${encodeURIComponent(query)}&limit=5&market=id`;
+    const res = await axios.get(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+      },
+    });
+
+    if (!res.data?.data?.results) throw new Error("No results found");
+
+    const results = res.data.data.results.map((item) => {
+      const q = item.question;
+      const ans = q.answer;
+
+      return {
+        id: q.id,
+        question: q.content?.replace(/<[^>]+>/g, "").trim(),
+        answer: ans?.content?.replace(/<[^>]+>/g, "").trim(),
+        subject: q.subject?.name || "Unknown",
+        grade: q.grade?.name || "Unknown",
+        author: ans?.author?.nick || "Anonim",
+        avatar: ans?.author?.avatarUrl || null,
+        attachments: q.attachments?.map((a) => a.url) || [],
+      };
+    });
+
+    return {
+      success: true,
+      status: 200,
+      total: results.length,
+      query: query,
+      results,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      status: 500,
+      message: err.message,
+    };
+  }
+}
+
+brainlySearch("luas segitiga").then(console.log);
