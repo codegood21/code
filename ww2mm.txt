@@ -1,0 +1,71 @@
+nama=Snack Video Stalk
+language=javascript
+lines=67
+date=08/11/2025
+code=const axios = require('axios');
+const cheerio = require('cheerio');
+
+const TARGET_URL = 'https://www.snackvideo.com/@AndraGZ?page_source=new_discover';
+
+function getStatCount(statArray, actionType) {
+  if (!Array.isArray(statArray)) return 0;
+  const stat = statArray.find(s => s.interactionType['@type'].includes(actionType));
+  return stat ? stat.userInteractionCount : 0;
+}
+
+function scrapeProfileData($) {
+  const profileScriptTag = $('#Person').html();
+  if (!profileScriptTag) return {};
+  const jsonData = JSON.parse(profileScriptTag);
+  const profile = jsonData.mainEntity;
+  return {
+    nama: profile.name,
+    id: profile.alternateName,
+    deskripsi: profile.description,
+    foto_profil: profile.image,
+    followers: getStatCount(profile.interactionStatistic, 'FollowAction'),
+    total_like: getStatCount(profile.interactionStatistic, 'LikeAction'),
+    total_video: profile.agentInteractionStatistic.userInteractionCount
+  };
+}
+
+function scrapeVideoData($) {
+  const videoScriptTag = $('#ItemList').html();
+  if (!videoScriptTag) return [];
+  const jsonData = JSON.parse(videoScriptTag);
+  const videos = jsonData.itemListElement.slice(0, 3);
+  return videos.map(v => ({
+    judul_video: v.name,
+    deskripsi: v.description,
+    url_halaman: v.url,
+    url_file_video: v.contentUrl,
+    thumbnail: v.thumbnailUrl?.[0] || null,
+    tanggal_upload: v.uploadDate,
+    views: getStatCount(v.interactionStatistic, 'WatchAction'),
+    likes: getStatCount(v.interactionStatistic, 'LikeAction'),
+    shares: getStatCount(v.interactionStatistic, 'ShareAction')
+  }));
+}
+
+async function SnackVideoUser(username) {
+  const url = `https://www.snackvideo.com/@${username}?page_source=new_discover`;
+  try {
+    const { data: html } = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      },
+    });
+    const $ = cheerio.load(html);
+    return {
+      profile: scrapeProfileData($),
+      videos: scrapeVideoData($)
+    };
+  } catch {
+    return { profile: {}, videos: [] };
+  }
+}
+
+(async () => {
+  const result = await SnackVideoUser('AndraGZ');
+  console.log(JSON.stringify(result, null, 2));
+})();
