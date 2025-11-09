@@ -1,0 +1,315 @@
+nama=Dedra
+language=html
+lines=312
+date=09/11/2025
+code=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share - PasteClip</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        :root {
+            /* Nord Theme Palette */
+            --nord0: #2E3440; /* Gutter, Background */
+            --nord1: #3B4252; /* UI Elements, Status Bar */
+            --nord3: #4C566A; /* Borders, Highlights */
+            --nord4: #D8DEE9; /* Text */
+            --nord6: #ECEFF4; /* Bright Text */
+            --nord8: #88C0D0; /* Cyan */
+            --nord10: #5E81AC;/* Blue */
+            --nord14: #A3BE8C;/* Green */
+            --nord11: #BF616D;/* Red */
+            --font-code: 'JetBrains Mono', monospace;
+            --font-primary: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-code);
+            background-color: #242933;
+            color: var(--nord4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .main-container { width: 100%; max-width: 800px; }
+
+        .editor-window {
+            background-color: var(--nord0);
+            border-radius: 10px;
+            border: 1px solid var(--nord3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Style */
+        .window-header {
+            background-color: var(--nord0);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--nord3);
+            flex-shrink: 0;
+        }
+        .window-dots { display: flex; gap: 8px; }
+        .window-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background-color: #BF616D; }
+        .dot.yellow { background-color: #EBCB8B; }
+        .dot.green { background-color: #A3BE8C; }
+        .header-title { font-family: var(--font-primary); font-size: 1.5rem; font-weight: 700; color: var(--nord6); }
+
+        .editor-body { padding: 25px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--nord4); opacity: 0.8; }
+        input[type="text"], textarea, select {
+            width: 100%; padding: 10px; border: 1px solid var(--nord3); border-radius: 6px;
+            background-color: var(--nord1); color: var(--nord6); font-size: 0.9rem; font-family: var(--font-code);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--nord8); box-shadow: 0 0 0 2px rgba(136, 192, 208, 0.3);
+        }
+        textarea { resize: vertical; min-height: 150px; }
+        button#createLinkBtn {
+            width: 100%; padding: 12px; background-color: var(--nord10); color: var(--nord6);
+            border: none; border-radius: 6px; font-size: 1rem; font-weight: 500;
+            font-family: var(--font-code); cursor: pointer; transition: background-color 0.2s;
+        }
+        button#createLinkBtn:hover { background-color: #6a8ab9; }
+
+        /* Benefits Section */
+        .benefits-section-container { margin-top: 25px; }
+        .benefits-header { text-align: center; margin-bottom: 30px; }
+        .benefits-header h2 { font-size: 1.8rem; color: var(--nord6); font-family: var(--font-primary); margin-bottom: 10px; }
+        .benefits-header p { font-family: var(--font-primary); font-size: 1rem; color: var(--nord4); max-width: 600px; margin: 0 auto; line-height: 1.5; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; justify-content: center; }
+        .benefit-card { background-color: var(--nord0); border: 1px solid var(--nord3); border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease-in-out; }
+        .benefit-card:hover { transform: translateY(-5px); }
+        .benefit-icon-wrapper { width: 60px; height: 60px; background-color: var(--nord10); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
+        .benefit-icon-wrapper i { font-size: 2.2rem; color: var(--nord6); }
+        .benefit-card h3 { font-family: var(--font-primary); font-size: 1.2rem; color: var(--nord6); margin-bottom: 10px; }
+        .benefit-card p { font-family: var(--font-primary); font-size: 0.9rem; color: var(--nord4); opacity: 0.8; line-height: 1.4; }
+        
+        /* Modern Popup (Modal) Styling */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(13, 17, 23, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; z-index: 1000;
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--nord0);
+            border: 1px solid var(--nord3);
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%; max-width: 400px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            transform: scale(0.95); transition: transform 0.3s ease-out;
+            position: relative;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .close-button {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--nord1); border: 1px solid var(--nord3);
+            width: 30px; height: 30px; border-radius: 50%;
+            color: var(--nord4); font-size: 1rem; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: background-color 0.2s;
+        }
+        .close-button:hover { background-color: var(--nord3); }
+        
+        .modal-body { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .success-title { font-family: var(--font-primary); font-size: 2rem; font-weight: 700; color: var(--nord14); margin-bottom: 20px; }
+        .qris-image {
+            width: 180px; height: 180px; border-radius: 12px;
+            background-color: var(--nord1);
+            object-fit: contain;
+            margin-bottom: 25px;
+        }
+        .result-url-container {
+            display: flex; align-items: center; gap: 10px;
+            background-color: var(--nord1);
+            padding: 8px 12px;
+            border-radius: 8px; border: 1px solid var(--nord3);
+            width: 100%;
+        }
+        .result-url {
+            color: var(--nord6); font-family: var(--font-code); font-size: 0.9rem;
+            white-space: normal; overflow-wrap: break-word; word-wrap: break-word;
+            text-align: left; flex-grow: 1;
+            min-width: 0;
+        }
+        #copyBtn { background: none; border: none; color: var(--nord4); cursor: pointer; font-size: 1.1rem; flex-shrink: 0; }
+        .error-title { font-family: var(--font-primary); font-size: 2rem; font-weight: 700; color: var(--nord11); margin-bottom: 15px; }
+        .error-message { font-size: 1rem; color: var(--nord4); }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="editor-window">
+            <div class="window-header">
+                <div class="window-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <h1 class="header-title">PasteClip</h1>
+            </div>
+            
+            <div class="editor-body">
+                <form id="codeForm">
+                    <div class="input-group">
+                        <label for="featureName">Title Name</label>
+                        <input type="text" id="featureName" name="featureName" placeholder="my-awesome-function" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="language">Select Language</label>
+                        <select id="language" name="language">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="codeSnippet">Enter Code</label>
+                        <textarea id="codeSnippet" name="codeSnippet" rows="10" placeholder="const greet = () => 'Hello, World!';"></textarea>
+                    </div>
+                    <button type="submit" id="createLinkBtn">
+                        <i class="fas fa-link"></i> Create
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section-container">  
+        <div class="benefits-header">  
+            <h2>Why Choose PasteClip?</h2>  
+            <p>Built by developers, for developers. We understand what you need for a fast, secure, and reliable code sharing platform.</p>  
+        </div>  
+        <div class="benefits-grid">  
+            <div class="benefit-card">  
+                <div class="benefit-icon-wrapper"><i class="fas fa-bolt"></i></div>  
+                <h3>Lightning Fast</h3><p>Optimized for minimal latency, sharing code in real-time.</p>  
+            </div>  
+            <div class="benefit-card">  
+                <div class="benefit-icon-wrapper"><i class="fas fa-shield-alt"></i></div>  
+                <h3>Enterprise Security</h3><p>Bank-level security and 99.9% uptime guarantee.</p>  
+            </div>  
+            <div class="benefit-card">  
+                <div class="benefit-icon-wrapper"><i class="fas fa-code"></i></div>  
+                <h3>Developer First</h3><p>A clean and intuitive interface designed for maximum productivity.</p>  
+            </div>  
+        </div>  
+    </section>  
+</div>  
+
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeForm = document.getElementById('codeForm');
+            const resultModal = document.getElementById('resultModal');
+
+            codeForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const createLinkBtn = document.getElementById('createLinkBtn');
+                createLinkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+                createLinkBtn.disabled = true;
+
+                fetch('/api/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: document.getElementById('featureName').value,
+                        language: document.getElementById('language').value,
+                        code: document.getElementById('codeSnippet').value
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccessPopup(data.url);
+                    } else {
+                        showErrorPopup(data.error || 'Failed to create snippet.');
+                    }
+                })
+                .catch(err => showErrorPopup(err.message))
+                .finally(() => {
+                    createLinkBtn.innerHTML = '<i class="fas fa-link"></i> Create';
+                    createLinkBtn.disabled = false;
+                });
+            });
+
+            function showSuccessPopup(link) {
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = `
+                    <button class="close-button">&times;</button>
+                    <div class="modal-body">
+                        <h2 class="success-title">Success</h2>
+                        <img src="https://quickchart.io/qr?text=${link}" alt="QRIS Payment" class="qris-image">
+                        <div class="result-url-container">
+                            <span class="result-url" id="generatedLinkSpan">${link}</span>
+                            <button id="copyBtn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
+                        </div>
+                    </div>
+                `;
+                resultModal.classList.add('visible');
+                addModalListeners();
+
+                document.getElementById('copyBtn').addEventListener('click', () => {
+                    const linkSpan = document.getElementById('generatedLinkSpan');
+                    navigator.clipboard.writeText(linkSpan.textContent).then(() => {
+                        const copyBtn = document.getElementById('copyBtn');
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => copyBtn.innerHTML = '<i class="far fa-copy"></i>', 2000);
+                    });
+                });
+            }
+
+            function showErrorPopup(message) {
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = `
+                    <button class="close-button">&times;</button>
+                    <div class="modal-body">
+                        <h2 class="error-title">Error</h2>
+                        <p class="error-message">${message}</p>
+                    </div>
+                `;
+                resultModal.classList.add('visible');
+                addModalListeners();
+            }
+
+            function addModalListeners() {
+                const closeBtn = document.querySelector('.close-button');
+                closeBtn.addEventListener('click', closeModal);
+                resultModal.addEventListener('click', (e) => {
+                    if (e.target === resultModal) { closeModal(); }
+                });
+            }
+
+            function closeModal() {
+                resultModal.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+    </html>
