@@ -1,0 +1,98 @@
+nama=Zabugz
+language=javascript
+lines=94
+date=11/11/2025
+code=import React, { useState } from 'react';
+    import {
+      SafeAreaView,
+      StyleSheet,
+      View,
+      Text,
+      TextInput,
+      TouchableOpacity,
+      Alert
+    } from 'react-native';
+    import styled from 'styled-components/native';
+    import Icon from 'react-native-vector-icons/FontAwesome';
+
+    const Container = styled.SafeAreaView`
+      flex: 1;
+      background-color: #121212; /* Latar belakang gelap mewah */
+      padding: 20px;
+    `;
+
+    const Title = styled.Text`
+      font-size: 28px;
+      font-weight: bold;
+      color: #ffffff; /* Warna teks putih */
+      margin-bottom: 20px;
+      text-align: center;
+    `;
+
+    const Input = styled.TextInput`
+      background-color: #2c2c2c; /* Latar belakang input gelap */
+      color: #ffffff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      font-size: 16px;
+    `;
+
+    const Button = styled.TouchableOpacity`
+      background-color: #007bff; /* Warna tombol biru */
+      padding: 15px;
+      border-radius: 10px;
+      align-items: center;
+    `;
+
+    const ButtonText = styled.Text`
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+    `;
+
+    const App = () => {
+      const [phoneNumber, setPhoneNumber] = useState('');
+      const [bugMessage, setBugMessage] = useState('');
+
+      const handleBug = () => {
+        // Logika pengiriman pesan bug (gantilah dengan implementasi yang sesuai)
+        if (phoneNumber && bugMessage) {
+          Alert.alert(
+            'Pesan Bug Terkirim',
+            `Pesan bug: ${bugMessage} dikirim ke ${phoneNumber}.`
+          );
+          //Implementasi Pengiriman (Fake SMS atau Crash)
+          // Contoh Crash:
+          throw new Error(bugMessage);
+
+        } else {
+          Alert.alert('Error', 'Harap isi semua kolom.');
+        }
+      };
+
+      return (
+        <Container>
+          <Title>WhatsApp Bug Zaax</Title>
+          <Input
+            placeholder="Nomor Telepon Target"
+            placeholderTextColor="#777777"
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="phone-pad"
+          />
+          <Input
+            placeholder="Pesan Bug (Contoh: crash!)"
+            placeholderTextColor="#777777"
+            value={bugMessage}
+            onChangeText={setBugMessage}
+            multiline
+          />
+          <Button onPress={handleBug}>
+            <ButtonText>Kirim Bug!</ButtonText>
+          </Button>
+        </Container>
+      );
+    };
+
+    export default App;
