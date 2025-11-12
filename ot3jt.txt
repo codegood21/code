@@ -1,0 +1,29 @@
+nama=Calculator by Aqil/Andra
+language=python
+lines=25
+date=12/11/2025
+code=angka1 = int(input("masukan angka pertama :"))
+angka2 = int(input("masukan angka kedua :"))
+operasi = input("pilih operasi,tambah kurang kali bagi :")
+def tambah(angka1, angka2):
+    hasil = angka1 + angka2
+    print(hasil)
+def kurang(angka1, angka2):
+    hasil = angka1 - angka2
+    print(hasil)
+def kali(angka1, angka2):
+    hasil = angka1 * angka2
+    print(hasil)
+def bagi(angka1, angka2):
+    hasil = angka1 / angka2
+    print(hasil)
+if operasi == "tambah":
+    tambah(angka1, angka2)
+elif operasi == "kurang":
+    kurang(angka1, angka2)  
+elif operasi == "kali":
+    kali(angka1, angka2)
+elif operasi == "bagi":
+    bagi(angka1, angka2)
+else:
+    print("error")                  
