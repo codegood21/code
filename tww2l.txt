@@ -1,0 +1,49 @@
+nama=Playstore Search
+language=javascript
+lines=45
+date=15/11/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+async function PlayStore(query) {
+    try {
+        const url = `https://play.google.com/store/search?q=${encodeURIComponent(query)}&c=apps`;
+        const { data } = await axios.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0"
+            }
+        });
+
+        const $ = cheerio.load(data);
+        const result = [];
+
+        $('.ULeU3b .VfPpkd-WsjYwc-OWXEXe-INsAgc').each((i, el) => {
+
+            const anchor = $(el).find("a").first();
+            const href = anchor.attr("href");
+
+            const name = $(el).find('.DdYX5').text()?.trim();
+            const dev = $(el).find('.wMUdtb').text()?.trim();
+            const rateLabel = $(el).find('div[aria-label]').attr("aria-label");
+            const rateValue = $(el).find('span.w2kbF').text()?.trim();
+
+            result.push({
+                link: "https://play.google.com" + href,
+                nama: name || "No name",
+                developer: dev || "No developer",
+                rate: rateLabel || "No rate",
+                rate2: rateValue || "No rate",
+                link_dev: dev
+                    ? `https://play.google.com/store/apps/developer?id=${dev.split(" ").join("+")}`
+                    : "No developer profile"
+            });
+        });
+
+        return result.slice(0, 5);
+
+    } catch (err) {
+        throw new Error("Gagal scrape PlayStore: " + err.message);
+    }
+}
+
+module.exports = PlayStore;
