@@ -1,0 +1,72 @@
+nama=Website INHIL HEBAT
+language=html
+lines=68
+date=16/11/2025
+code=<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+<title>INHIL HEBAT</title>
+<style type="text/css">
+.style2 {color:#FFFFFF}
+</style>
+</head>
+
+<body class="<style2">
+<table bgcolor=green width="900" border="1">
+  <tr>
+    <th colspan="2" scope="col"><img src="ATAS.jpg" width="900" height="150" /></th>
+    </tr>
+    <tr>
+      <td colspan="2"><marquee>Selamat Datang di Website Resmi Pemerintah Kabupaten Indragiri Hilir </marquee></td>
+      </tr>
+      <tr>
+        <td colspan="2"><img src="BAWAH.jpg" width="900" height="30" /></td>
+      </tr>
+      <tr>
+        <td width="697"><table width="200" border="1">
+      <tr>
+        <td valign="top" scope="col">
+          <p align="center"><b>Menu</b></p>
+          <ul>
+            <li>Pemerintah Daerah</li>
+            <li>Kekayaan Alam</li>
+            <li>Potensi Wisata </li>
+          </ul>
+        </td>
+      </tr>
+      </tr>
+      <tr>
+        <td valign="top">
+          <p align="center"><b>Login</b></p>
+          <table width="200" border="1">
+            <tr>
+              <td width="81" scope="col">Username</td>
+              <td><input type="email" name="email"></td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+              <td colspan="2" align=center>
+                <input type=button value=Daftar onclick="alert('Menu Daftar Belum Tersedia');">
+                <input type=submit value=Login onclick="alert('Menu login Belum Tersedia');">
+              </td>
+            </tr>
+          </table>
+      </tr>
+      <tr>
+        <td valign="top" scope="col" style="text-align: justify;">
+          <p align="center"><b>Berita Trending</b></p>
+          <p style="text-indent: 40px;">Inhil adalah singkatan dari Kabupaten Indragiri Hilir, sebuah wilayah kabupaten di Provinsi Riau. Kabupaten ini terkenal sebagai penghasil kelapa terbesar di Indonesia dan memiliki ibu kota di Tembilahan.</p>
+        </td>
+      </tr>
+    </table>
+    </td>
+      <tr>
+    <td colspan="2"><div align="center">&copy AlifMaulana</div></td>
+  </tr>
+</table>
+</body>
+</html>
