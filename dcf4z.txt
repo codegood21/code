@@ -1,0 +1,210 @@
+nama=Personal website
+language=python
+lines=206
+date=16/11/2025
+code=from flask import Flask, render_template_string, request, redirect, url_for, flash
+from datetime import datetime
+import os
+
+app = Flask(__name__)
+app.secret_key = "vi.zzhr_" 
+
+SITE = {
+    "name": "Vika Barokah Azzahra",
+    "tagline": "Suka Mencoba Hal Hal Baru • Developer • Designer",
+    "bio": "Halo! Saya Vika Barokah Azzahra — seorang developer dan pembuat konten. Saya suka membangun proyek web dan belajar hal baru setiap hari.",
+    "avatar": "https://via.placeholder.com/200",  # ganti URL avatar
+    "socials": {
+        "Tiktok": "https://github.com/vi.zzhr_",
+        "Instagram": "https://instagram.com/vi.zzhr_"
+    }
+}
+
+PROJECTS = [
+    {"Designer": "Proyek A", "Membuat Design Yang Sederhana Namun Bermakna": "Bermakna dan Sederhana", "link": "#Design"},
+    {"Guitarist": "Proyek B", "Calm & Rock": "Lead And Rhythms", "link": "#Guitarist"},
+    {"Listening": "Proyek C", "Suka mendengarkan cerita dan curhatan oranglain": "Good Listener", "link": "#Listener"},
+]
+
+CONTACT_STORAGE = "contacts.txt" 
+os.makedirs(os.path.dirname(CONTACT_STORAGE) or ".", exist_ok=True)
+
+# --- Template HTML sederhana (Bootstrap CDN) ---
+BASE_HTML = """
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} — {{ site.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body { padding-top: 72px; }
+      .hero { background: linear-gradient(120deg,#f8fafc,#eef2ff); padding: 60px 0; }
+      .avatar { width:150px; height:150px; object-fit:cover; border-radius:50%; border:6px solid white; box-shadow:0 4px 14px rgba(0,0,0,0.08);}
+      footer { padding: 24px 0; color:#6b7280; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white border-bottom">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}"><strong>{{ site.name }}</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('portfolio') }}">Portfolio</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="mt-3">
+            {% for m in messages %}
+              <div class="alert alert-success small">{{ m }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {{ body | safe }}
+    </main>
+
+    <footer class="mt-5 border-top">
+      <div class="container d-flex justify-content-between align-items-center">
+        <div>© {{ now.year }} {{ site.name }}. All rights reserved.</div>
+        <div>
+          {% for k,v in site.socials.items() %}
+            <a class="small me-2" href="{{ v }}" target="_blank">{{ k }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
+"""
+
+# --- Halaman ---
+@app.route("/")
+def home():
+    body = f"""
+    <section class="hero">
+      <div class="container text-center">
+        <img src="{SITE['avatar']}" alt="avatar" class="avatar mb-3">
+        <h1 class="display-6">{SITE['name']}</h1>
+        <p class="lead">{SITE['tagline']}</p>
+        <p class="mb-3">{SITE['bio']}</p>
+        <a href="{url_for('portfolio')}" class="btn btn-primary me-2">Lihat Portfolio</a>
+        <a href="{url_for('contact')}" class="btn btn-outline-primary">Kontak Saya</a>
+      </div>
+    </section>
+
+    <section class="mt-5">
+      <h3>Proyek terbaru</h3>
+      <div class="row">
+        {''.join([f'''
+          <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{p["title"]}</h5>
+                <p class="card-text">{p["desc"]}</p>
+                <a href="{p["link"]}" class="stretched-link">Lihat</a>
+              </div>
+            </div>
+          </div>
+        ''' for p in PROJECTS])}
+      </div>
+    </section>
+    """
+    return render_template_string(BASE_HTML, title="Home", site=SITE, body=body, now=datetime.utcnow())
+
+@app.route("/about")
+def about():
+    body = f"""
+    <div class="row gy-4">
+      <div class="col-md-4 text-center">
+        <img src="{SITE['avatar']}" alt="avatar" class="avatar mb-3">
+      </div>
+      <div class="col-md-8">
+        <h2>About</h2>
+        <p>{SITE['bio']}</p>
+        <h5>Keahlian</h5>
+        <ul>
+          <li>Web Development (Python, Flask)</li>
+          <li>UI/UX dasar</li>
+          <li>Desain dan konten</li>
+        </ul>
+      </div>
+    </div>
+    """
+    return render_template_string(BASE_HTML, title="About", site=SITE, body=body, now=datetime.utcnow())
+
+@app.route("/portfolio")
+def portfolio():
+    body = """
+    <h2>Portfolio</h2>
+    <div class="row">
+    """
+    for p in PROJECTS:
+        body += f"""
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{p['title']}</h5>
+              <p class="card-text">{p['desc']}</p>
+              <a href="{p['link']}" target="_blank">Demo / Detail</a>
+            </div>
+          </div>
+        </div>
+        """
+    body += "</div>"
+    return render_template_string(BASE_HTML, title="Portfolio", site=SITE, body=body, now=datetime.utcnow())
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        name = request.form.get("name","").strip()
+        email = request.form.get("email","").strip()
+        message = request.form.get("message","").strip()
+        if not name or not message:
+            flash("Isi nama dan pesan dulu ya.")
+            return redirect(url_for("contact"))
+        # Simpan sederhana ke file lokal (untuk demo). Ganti dengan DB atau email di produksi.
+        entry = f"{datetime.utcnow().isoformat()} | {name} | {email} | {message}\\n"
+        with open(CONTACT_STORAGE, "a", encoding="utf-8") as f:
+            f.write(entry)
+        flash("Pesan terkirim. Terima kasih!")
+        return redirect(url_for("contact"))
+
+    body = """
+    <h2>Contact</h2>
+    <form method="post" class="mt-3" style="max-width:720px">
+      <div class="mb-3">
+        <label class="form-label">Nama</label>
+        <input name="name" class="form-control" placeholder="Nama kamu">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email (opsional)</label>
+        <input name="email" class="form-control" placeholder="email@contoh.com">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pesan</label>
+        <textarea name="message" rows="5" class="form-control" placeholder="Tinggalkan pesan..."></textarea>
+      </div>
+      <button class="btn btn-primary">Kirim</button>
+    </form>
+    <hr>
+    <p class="small text-muted">Catatan: pesan tersimpan secara lokal di file <code>contacts.txt</code>. Untuk produksi, sambungkan SMTP atau database.</p>
+    """
+    return render_template_string(BASE_HTML, title="Contact", site=SITE, body=body, now=datetime.utcnow())
+
+if __name__ == "__main__":
+    app.run(debug=True)
