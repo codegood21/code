@@ -1,0 +1,49 @@
+nama=Happymod Search
+language=javascript
+lines=45
+date=16/11/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+async function happyMod(query = "kinemaster") {
+  try {
+    const url = `https://id.happymod.cloud/search.html?q=${encodeURIComponent(query)}`;
+    const res = await axios.get(url, {
+      headers: { "User-Agent": "Mozilla/5.0" }
+    });
+
+    const $ = cheerio.load(res.data);
+    const results = [];
+
+    $("li.list-item").each((i, el) => {
+      const box = $(el).find("a.list-box");
+      const title = box.find(".list-info-title").text().trim();
+      const link = box.attr("href");
+      if (!link) return;
+
+      const page_dl = `https://id.happymod.cloud${link}original-downloading.html`;
+      const packageName = link.split("/")[2] || null;
+      const version = box.find(".list-info-text").first().find("span").eq(0).text().trim();
+      const size = box.find(".list-info-text").first().find("span").eq(2).text().trim();
+      const modInfo = box.find(".list-info-text").eq(1).text().trim();
+
+      results.push({
+        title,
+        package: packageName,
+        version,
+        size,
+        modInfo,
+        page_dl
+      });
+    });
+
+    return results;
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+(async () => {
+  const hasil = await happyMod("kinemaster");
+  console.log(JSON.stringify(hasil, null, 2));
+})();
