@@ -1,0 +1,316 @@
+nama=Buat muu sayang
+language=html
+lines=313
+date=17/11/2025
+code=<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sayangku — Buat Biar Deka Gak Ngambek</title>
+<style>
+  :root{
+    --bg:#fff7fb; --card:#ffffff; --accent:#ff5c8a; --muted:#6b6b6b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:linear-gradient(180deg,#fff7fb 0%, #fff 60%);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{padding:28px 20px; text-align:center;}
+  h1{margin:0; font-size:28px; color:var(--accent)}
+  p.lead{margin:6px 0 0; color:var(--muted)}
+  .container{max-width:920px;margin:20px auto;padding:16px;}
+  .card{background:var(--card); border-radius:14px; box-shadow:0 6px 20px rgba(40,20,40,0.06); padding:16px; margin-bottom:16px;}
+  .grid{display:grid; grid-template-columns:1fr 320px; gap:16px;}
+  @media(max-width:880px){ .grid{grid-template-columns:1fr;}}
+  /* gallery */
+  .gallery{display:flex; gap:8px; flex-wrap:wrap}
+  .gallery input[type=file]{display:none}
+  .thumb{width:calc(33.333% - 8px); aspect-ratio:3/4; border-radius:10px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center}
+  .thumb img{width:100%; height:100%; object-fit:cover}
+  @media(max-width:520px){ .thumb{width:calc(50% - 8px)}}
+  /* controls */
+  button{background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+  button.secondary{background:#eee;color:#222}
+  .small{padding:8px 10px; border-radius:8px; font-size:14px}
+  /* message box */
+  textarea{width:100%; min-height:110px; padding:10px; font-size:15px; border-radius:10px; border:1px solid #eee}
+  label{font-weight:600; color:#444; display:block; margin-bottom:6px}
+  .preset-list{display:flex; gap:8px; flex-wrap:wrap}
+  .preset{background:#fff; border:1px dashed #eee; padding:8px 10px; border-radius:8px; cursor:pointer}
+  /* hearts */
+  .floating{position:fixed; right:18px; bottom:18px; pointer-events:none; z-index:9999}
+  /* confetti (simple) */
+  .confetti{position:fixed; left:0; top:0; width:100%; height:0; pointer-events:none; z-index:9998}
+  /* footer */
+  footer{font-size:13px; color:var(--muted); text-align:center; padding:18px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Sayangku</h1>
+  <p class="lead">Website kecil ini khusus buat minta maaf & bikin Deka senyum lagi 💖</p>
+</header>
+
+<div class="container">
+  <div class="card grid">
+    <div>
+      <label>Upload foto kenangan (bisa banyak)</label>
+      <div class="card" style="padding:12px;">
+        <div class="gallery" id="gallery">
+          <div class="thumb" id="thumb-add">
+            <label style="cursor:pointer">
+              <input id="file-input" type="file" accept="image/*" multiple />
+              <div style="text-align:center;color:#999">Tambah foto</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <label>Generator pesan minta maaf (klik untuk pakai)</label>
+        <div class="preset-list" id="presets">
+          <div class="preset" data-template="Deka, maaf ya kalau aku bikin kamu sedih. Aku sayang kamu banget dan janji akan lebih perhatian.">Simple & Tulus</div>
+          <div class="preset" data-template="Maaf ya Deka. Aku sadar salah dan pengen memperbaiki semuanya. Kamu berarti buat aku.">Pendek Romantis</div>
+          <div class="preset" data-template="Deka sayang, aku salah. Mohon maaf dari hati. Kalau kamu mau, aku siap dengarkan dan berubah.">Minta Maaf & Berubah</div>
+          <div class="preset" data-template="Sayangku Deka, maafkan aku yang kadang egois. Semua kenangan kita berharga, izinkan aku menjaga kamu lebih baik.">Kenangan & Janji</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label>Personalisasi (nama panggilan pasangan)</label>
+          <input id="name" type="text" placeholder="Contoh: Deka" style="width:100%; padding:8px; border-radius:8px; border:1px solid #eee" />
+        </div>
+
+        <div style="margin-top:10px;">
+          <label>Pesan (bisa edit sebelum kirim)</label>
+          <textarea id="message"></textarea>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="makeup">MAKE UP 💞</button>
+            <button class="secondary small" id="copyBtn">Salin</button>
+            <button class="secondary small" id="downloadBtn">Unduh PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <label>Pilih lagu (opsional)</label>
+        <input type="file" id="audioInput" accept="audio/*" />
+        <div style="margin-top:10px;">
+          <audio id="player" controls style="width:100%; display:none"></audio>
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card" style="text-align:center;">
+        <h3 style="margin:6px 0">Preview</h3>
+        <div id="preview" style="padding:10px; border-radius:10px; background:linear-gradient(180deg,#fff,#fff0f5); min-height:220px;">
+          <h2 id="preview-title" style="margin:6px 0; color:var(--accent)">Untuk Deka</h2>
+          <p id="preview-text" style="white-space:pre-wrap; color:#333">Pilih template di kiri atau ketik pesanmu—lalu tekan MAKE UP 💞</p>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
+          <button id="surpriseBtn">Kirim Kejutan</button>
+          <button class="secondary" id="resetBtn">Reset</button>
+        </div>
+        <div style="margin-top:10px; color:var(--muted); font-size:13px">Kejutan = konfeti + musik + pesan muncul fullscreen</div>
+      </div>
+
+      <div class="card" style="margin-top:12px; text-align:center;">
+        <label>Petunjuk cepat</label>
+        <ol style="text-align:left; padding-left:18px; margin:8px 0 0; color:var(--muted)">
+          <li>Upload foto kenangan</li>
+          <li>Pilih template / edit pesan</li>
+          <li>Tambahkan lagu bila mau</li>
+          <li>Tekan MAKE UP atau Kirim Kejutan</li>
+        </ol>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="card">
+    <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap">
+      <div>Buatan manis untukmu — Asmi ❤️</div>
+      <div><small style="color:#888">Simpan file ini sebagai <code>index.html</code> lalu buka di browser.</small></div>
+    </div>
+  </footer>
+</div>
+
+<!-- confetti area -->
+<div class="confetti" id="confetti"></div>
+<div class="floating" id="hearts"></div>
+
+<script>
+  // helpers
+  function el(q){return document.querySelector(q)}
+  const gallery = el('#gallery')
+  const inputFile = el('#file-input')
+  const presets = document.querySelectorAll('.preset')
+  const msg = el('#message')
+  const nameInput = el('#name')
+  const previewText = el('#preview-text')
+  const previewTitle = el('#preview-title')
+  const player = el('#player')
+  const audioInput = el('#audioInput')
+
+  // preset click
+  presets.forEach(p=>{
+    p.addEventListener('click', ()=>{
+      const t = p.dataset.template || ''
+      const nama = nameInput.value || 'Deka'
+      msg.value = t.replace(/Deka/g, nama)
+      updatePreview()
+    })
+  })
+
+  nameInput.addEventListener('input', ()=> {
+    updatePreview()
+  })
+
+  msg.addEventListener('input', updatePreview)
+  function updatePreview(){
+    const nama = nameInput.value || 'Deka'
+    previewTitle.textContent = 'Untuk ' + nama
+    previewText.textContent = msg.value || 'Pilih template di kiri atau ketik pesanmu—lalu tekan MAKE UP 💞'
+  }
+
+  // image upload preview
+  inputFile.addEventListener('change', (ev)=>{
+    const files = Array.from(ev.target.files).slice(0,12)
+    files.forEach(file=>{
+      const reader = new FileReader()
+      reader.onload = (e)=>{
+        const div = document.createElement('div')
+        div.className='thumb'
+        div.innerHTML = '<img src="'+e.target.result+'" alt="memori" />'
+        gallery.insertBefore(div, document.getElementById('thumb-add'))
+      }
+      reader.readAsDataURL(file)
+    })
+  })
+
+  // audio load
+  audioInput.addEventListener('change', (ev)=>{
+    const f = ev.target.files[0]
+    if(!f) return
+    const url = URL.createObjectURL(f)
+    player.src = url; player.style.display='block'; player.load()
+  })
+
+  // copy & download PDF (basic)
+  el('#copyBtn').addEventListener('click', ()=>{
+    navigator.clipboard.writeText(msg.value || previewText.textContent).then(()=>{
+      alert('Pesan disalin ke clipboard ✅')
+    })
+  })
+
+  el('#downloadBtn').addEventListener('click', ()=>{
+    const text = msg.value || previewText.textContent
+    const blob = new Blob([text], {type:'text/plain'})
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'pesan-maaf.txt'
+    a.click()
+  })
+
+  // MAKE UP button: show modal-like full screen message, confetti, play music
+  function spawnConfetti(){
+    const area = el('#confetti')
+    area.innerHTML = ''
+    for(let i=0;i<50;i++){
+      const c = document.createElement('div')
+      c.style.position='absolute'
+      c.style.left = Math.random()*100 + '%'
+      c.style.top = (Math.random()*20) + '%'
+      c.style.width = (6+Math.random()*8)+'px'
+      c.style.height = (10+Math.random()*10)+'px'
+      c.style.background = ['#ff5c8a','#ffd166','#6ee7b7','#9ad0f5','pink'][Math.floor(Math.random()*5)]
+      c.style.transform = 'rotate('+Math.random()*360+'deg)'
+      c.style.opacity = 0.95
+      c.style.borderRadius = '2px'
+      c.style.animation = 'fall 2.5s linear forwards'
+      area.appendChild(c)
+    }
+  }
+
+  // simple keyframes via JS
+  const style = document.createElement('style')
+  style.innerHTML = `
+  @keyframes fall {
+    to { transform: translateY(90vh) rotate(120deg); opacity:1 }
+  }`
+  document.head.appendChild(style)
+
+  function showFullMessage(){
+    const overlay = document.createElement('div')
+    overlay.style.position='fixed'
+    overlay.style.left=0; overlay.style.top=0; overlay.style.width='100%'; overlay.style.height='100%'
+    overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'
+    overlay.style.zIndex=9999; overlay.style.background='rgba(0,0,0,0.45)'
+    overlay.innerHTML = `
+      <div style="background:linear-gradient(180deg,#fff0f6,#fff);padding:22px;border-radius:16px;max-width:700px;width:92%;text-align:center;">
+        <h1 style="margin:0 0 6px; color:var(--accent)">Maaf ya, sayang ❤️</h1>
+        <p style="white-space:pre-wrap; color:#333; font-size:18px">${(msg.value||previewText.textContent).replaceAll('\n','<br/>')}</p>
+        <div style="margin-top:12px;">
+          <button id="closeOverlay">Peluk & Maafkan</button>
+        </div>
+      </div>
+    `
+    document.body.appendChild(overlay)
+    el('#closeOverlay').addEventListener('click', ()=> {
+      overlay.remove()
+    })
+  }
+
+  // surprise button
+  el('#surpriseBtn').addEventListener('click', ()=> {
+    spawnConfetti()
+    if(player.src) player.play().catch(()=>{})
+    showFullMessage()
+    createFloatingHearts()
+  })
+
+  el('#makeup').addEventListener('click', ()=>{
+    // fill default if empty
+    if(!msg.value.trim()){
+      const nama = nameInput.value || 'Deka'
+      msg.value = `Maaf ya ${nama}, aku sadar aku salah dan nggak mau kamu sedih. Aku sayang kamu dan pengen perbaiki semuanya.`
+    }
+    updatePreview()
+    spawnConfetti()
+    if(player.src) player.play().catch(()=>{})
+    createFloatingHearts()
+  })
+
+  el('#resetBtn').addEventListener('click', ()=>{
+    if(confirm('Reset semua foto & pesan?')) location.reload()
+  })
+
+  // floating hearts (small effect)
+  function createFloatingHearts(){
+    const container = el('#hearts')
+    container.innerHTML = ''
+    for(let i=0;i<10;i++){
+      const h = document.createElement('div')
+      h.style.width='36px'; h.style.height='36px'
+      h.style.position='absolute'; h.style.right = (Math.random()*60)+'px'
+      h.style.bottom = (Math.random()*40)+'px'
+      h.style.background = 'radial-gradient(circle at 30% 35%, #fff 0 8%, transparent 8%), linear-gradient(45deg,#ff5c8a,#ff8fb1)'
+      h.style.clipPath = 'path("M10 30 C 10 19 19 12 25 16 C 31 12 40 19 40 30 C 40 44 25 52 25 52 C 25 52 10 44 10 30 Z")'
+      h.style.opacity=0; h.style.transform='translateY(0) scale(0.8)'
+      container.appendChild(h)
+      // animate
+      setTimeout(()=>{ h.style.transition='all 1.4s ease-out'; h.style.opacity=1; h.style.transform='translateY(-140px) scale(1)'; h.style.right = (Math.random()*80)+'px' }, 50 + i*80)
+      setTimeout(()=>{ h.remove() }, 2200 + i*120)
+    }
+  }
+
+  // init default
+  msg.value = ''
+  updatePreview()
+</script>
+</body>
+</html>
