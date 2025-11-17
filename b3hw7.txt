@@ -1,0 +1,5 @@
+nama=Website INHIL HEBAT
+language=html
+lines=1
+date=17/11/2025
+code=Hello World
