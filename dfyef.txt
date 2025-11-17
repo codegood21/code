@@ -1,0 +1,9 @@
+nama=untuk deka
+language=javascript
+lines=6
+date=17/11/2025
+code=Kepada Yth. Deka,
+
+Saya berharap surat ini menemukan Anda dalam keadaan baik. Saya ingin berbagi sebuah video singkat yang saya buat khusus untuk Anda, dengan harapan dapat menambah keceriaan hari Anda. Dalam video tersebut, saya berusaha menampilkan momen‑momen ringan yang saya rasa dapat menggambarkan kebahagiaan saat berada di samping Anda.
+
+Saya sangat menghargai kehadiran dan dukungan Anda, serta merasa beruntung memiliki seseorang sepertinya dalam hidup saya. Semoga video ini dapat memberikan senyum dan menginspirasi hari Anda. Saya menantikan kesempatan untuk mendengar tanggapan Anda.
