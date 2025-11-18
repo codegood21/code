@@ -1,0 +1,20 @@
+nama=Kiky
+language=html
+lines=16
+date=18/11/2025
+code=Peringatan — AKUN TERKUNCI
+html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}
+.bg{height:100%;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;flex-direction:column;gap:1rem}
+.box{max-width:90%;padding:2rem;border-radius:12px;background:rgba(255,255,255,0.03);text-align:center}
+h1{margin:0 0 .5rem;font-size:1.4rem}
+p{margin:0;color:#ddd}
+.restore{margin-top:1rem;padding:.6rem 1rem;border-radius:8px;border:none;cursor:pointer}
+Kesalahan Sistem
+Status: Akses Ditolak
+Tutup
+// tampilkan alert saat halaman siap (singkat delay supaya dramatis)
+window.addEventListener('DOMContentLoaded', function () {
+setTimeout(function () {
+alert('AKUN ANDA TELAH TERKUNCI!');
+}, 200);
+}, false);
