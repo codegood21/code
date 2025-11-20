@@ -1,0 +1,577 @@
+nama=Bot
+language=html
+lines=573
+date=20/11/2025
+code=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIZZ | Portfolio with Iridescence Effect</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Iridescence Effect - Simplified CSS Version */
+        .iridescence-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(
+                45deg,
+                #ff0000, #ff0066, #ff00cc, #cc00ff,
+                #6600ff, #0000ff, #0066ff, #00ccff,
+                #00ffcc, #00ff66, #00ff00, #66ff00,
+                #ccff00, #ffff00, #ffcc00, #ff6600
+            );
+            background-size: 1600% 1600%;
+            animation: iridescenceAnimation 20s ease infinite;
+            opacity: 0.7;
+            mix-blend-mode: overlay;
+        }
+        
+        @keyframes iridescenceAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Dark overlay untuk kontras */
+        .dark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: -1;
+        }
+        
+        /* Existing styles dari website Anda */
+        .glow {
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .glow-red {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .avatar-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+        }
+        
+        .avatar-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.7); }
+            50% { box-shadow: 0 0 70px rgba(255, 0, 0, 0.9); }
+            100% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.7); }
+        }
+        
+        .floating-icon {
+            position: absolute;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .code-editor {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .editor-header {
+            background-color: #2d2d2d;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .editor-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .editor-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .close { background-color: #ff5f56; }
+        .minimize { background-color: #ffbd2e; }
+        .maximize { background-color: #27ca3f; }
+        
+        .editor-content {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .keyword { color: #569cd6; }
+        .variable { color: #9cdcfe; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.2);
+        }
+        
+        .skill-badge {
+            display: inline-block;
+            background-color: rgba(128, 0, 0, 0.3);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-badge:hover {
+            background-color: rgba(128, 0, 0, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .form-input {
+            background-color: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 5px;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: rgba(255, 0, 0, 0.5);
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+        
+        /* Enhanced Animation Effects */
+        .pulse-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            animation: pulse-ring 3s infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.7);
+            animation: particle-float 8s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+        
+        .avatar-hover-effect {
+            transition: all 0.5s ease;
+        }
+        
+        .avatar-hover-effect:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+        
+        .floating-shape {
+            position: absolute;
+            opacity: 0.7;
+            animation: shape-float 15s infinite ease-in-out;
+        }
+        
+        @keyframes shape-float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-30px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(15px) rotate(240deg);
+            }
+        }
+        
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.3);
+            transform: scale(0);
+            animation: ripple 3s infinite;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .cursor-trail {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+        
+        /* New Code Logo Orbit Animation */
+        .orbit-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 350px;
+        }
+        
+        .orbit {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: orbit 20s linear infinite;
+        }
+        
+        .orbit-logo {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 30, 30, 0.8);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .audio-control:hover {
+            background: rgba(128, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+        
+        /* Social Media Button Styles */
+        .social-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+            border: 2px solid;
+        }
+        
+        .social-button:hover {
+            transform: translateY(-5px);
+        }
+        
+        .github-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #6e5494;
+            color: #6e5494;
+        }
+        
+        .github-btn:hover {
+            background-color: #6e5494;
+            color: white;
+            box-shadow: 0 0 15px rgba(110, 84, 148, 0.7);
+        }
+        
+        .whatsapp-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #25D366;
+            color: #25D366;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #25D366;
+            color: white;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.7);
+        }
+        
+        .tiktok-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #69C9D0;
+            color: #69C9D0;
+        }
+        
+        .tiktok-btn:hover {
+            background-color: #69C9D0;
+            color: white;
+            box-shadow: 0 0 15px rgba(105, 201, 208, 0.7);
+        }
+        
+        .telegram-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-color: #0088cc;
+            color: #0088cc;
+        }
+        
+        .telegram-btn:hover {
+            background-color: #0088cc;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 136, 204, 0.7);
+        }
+        
+        /* Iridescence Mouse Reaction */
+        .iridescence-mouse-reactive {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 0, 0, 0.3),
+                rgba(255, 0, 255, 0.2),
+                rgba(0, 0, 255, 0.2),
+                rgba(0, 255, 255, 0.2),
+                rgba(0, 255, 0, 0.2),
+                rgba(255, 255, 0, 0.2),
+                rgba(255, 0, 0, 0.3)
+            );
+            opacity: 0.6;
+            transition: background 0.3s ease;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Iridescence Background Effects -->
+    <div class="iridescence-bg"></div>
+    <div class="dark-overlay"></div>
+    <div class="iridescence-mouse-reactive" id="mouseReactive"></div>
+
+    <!-- Audio Element -->
+    <audio id="bgAudio" loop>
+        <source src="https://files.catbox.moe/n828dj.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Audio Control -->
+    <div class="audio-control" id="audioControl">
+        <i class="fas fa-volume-up text-white text-xl"></i>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-black bg-opacity-70 backdrop-blur-md z-50 py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="text-xl font-bold">ALIZZ</div>
+            
+            <!-- Navigation Links -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-red-400 transition-colors">Home</a>
+                <a href="#about" class="hover:text-red-400 transition-colors">About</a>
+                <a href="#projects" class="hover:text-red-400 transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-red-400 transition-colors">Contact</a>
+            </div>
+            
+            <!-- Social Icons -->
+            <div class="flex space-x-4">
+                <a href="https://tiktok.com/@pendukung.onic" target="_blank" class="hover:text-red-400 transition-colors"><i class="fab fa-tiktok"></i></a>
+                <a href="https://wa.me/6285943502869" target="_blank" class="hover:text-red-400 transition-colors"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://github.com/ALIZZ151" target="_blank" class="hover:text-red-400 transition-colors"><i class="fab fa-github"></i></a>
+                <a href="https://t.me/Lizz12087" target="_blank" class="hover:text-red-400 transition-colors"><i class="fab fa-telegram"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <!-- Text Content -->
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <p class="text-xl mb-2">Hello, I'm</p>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">ALIZZ</h1>
+                <div class="text-3xl md:text-4xl font-bold mb-4 h-12">
+                    <span id="typing-text" class="text-red-400"></span>
+                    <span class="cursor">|</span>
+                </div>
+                <p class="text-lg text-gray-300 mb-8">Creating stunning and functional web experiences</p>
+                
+                <!-- Social Media Buttons -->
+                <div class="flex justify-center md:justify-start mt-8">
+                    <a href="https://github.com/ALIZZ151" target="_blank" class="social-button github-btn">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://wa.me/6285943502869" target="_blank" class="social-button whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://tiktok.com/@pendukung.onic" target="_blank" class="social-button tiktok-btn">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://t.me/Lizz12087" target="_blank" class="social-button telegram-btn">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Avatar with Enhanced Animations -->
+            <div class="md:w-1/2 flex justify-center relative">
+                <div class="avatar-container">
+                    <div class="avatar-glow"></div>
+                    <div class="pulse-ring"></div>
+                    <img src="https://files.catbox.moe/e07dh8.jpg" 
+                         alt="ALIZZ" class="rounded-full w-full h-full object-cover relative z-10 avatar-hover-effect">
+                    
+                    <!-- Code Logo Orbit -->
+                    <div class="orbit-container">
+                        <div class="orbit">
+                            <div class="orbit-logo" style="top: -20px; left: 50%; transform: translateX(-50%);">
+                                <i class="fab fa-html5 text-orange-500 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="top: 50%; right: -20px; transform: translateY(-50%);">
+                                <i class="fab fa-css3-alt text-blue-500 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="bottom: -20px; left: 50%; transform: translateX(-50%);">
+                                <i class="fab fa-js text-yellow-400 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="top: 50%; left: -20px; transform: translateY(-50%);">
+                                <i class="fab fa-react text-cyan-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="orbit" style="animation-duration: 25s; animation-direction: reverse;">
+                            <div class="orbit-logo" style="top: 30px; left: 30px;">
+                                <i class="fab fa-node-js text-green-500 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="top: 30px; right: 30px;">
+                                <i class="fab fa-python text-blue-400 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="bottom: 30px; right: 30px;">
+                                <i class="fab fa-git-alt text-red-500 text-xl"></i>
+                            </div>
+                            <div class="orbit-logo" style="bottom: 30px; left: 30px;">
+                                <i class="fab fa-npm text-red-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Floating Shapes -->
+                    <div class="floating-shape" style="top: 5%; left: 15%;">
+                        <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                    </div>
+                    <div class="floating-shape" style="top: 80%; right: 10%; animation-delay: 2s;">
+                        <div class="w-6 h-3 bg-red-400 rounded-full"></div>
+                    </div>
+                    <div class="floating-shape" style="bottom: 20%; left: 20%; animation-delay: 4s;">
+                        <div class="w-3 h-6 bg-red-300 rounded-full"></div>
+                    </div>
+                    
+                    <!-- Ripple Effects -->
+                    <div class="ripple" style="top: 50%; left: 50%; animation-delay: 0s;"></div>
+                    <div class="ripple" style="top: 50%; left: 50%; animation-delay: 1s;"></div>
+                    <div class="ripple" style="top: 50%; left: 50%; animation-delay: 2s;"></div>
+                </div>
+                
+                <!-- Background Particles -->
+                <div id="particles-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6">
+        <div class="container mx-auto">
+ 
