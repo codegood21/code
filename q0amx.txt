@@ -1,0 +1,66 @@
+nama=Profil desa Kotayasa 
+language=html
+lines=62
+date=21/11/2025
+code=<!DOCTYPE html><html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Resmi Desa Kotayasa - Kecamatan Sumbang, Kabupaten Banyumas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #2a7ae2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background: #1f5cb8;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        section {
+            padding: 20px;
+        }
+        h2 {
+            color: #1f5cb8;
+        }
+        .card {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        footer {
+            background: #2a7ae2;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body><header>
+    <h1>Website Resmi Desa Kotayasa</h1>
+    <p>Kecamatan Sumbang, Kabupaten Banyumas</p>
+</header><nav>
+    <a href="#profil">Profil Desa</a>
+    <a href="#pemerintahan">Pemerintahan Desa</a>
+    <a href="#potensi">Potensi Desa</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#kontak">Kontak</a>
+</nav><section id="profil">
+    <h2>Profil Desa Kotayasa</h2>
+    <div class="card
