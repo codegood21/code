@@ -1,0 +1,274 @@
+nama=adito-chatai
+language=css
+lines=271
+date=21/11/2025
+code=/* --- Gaya Dasar dan Wallpaper --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    /* Wallpaper yang diminta */
+    background-image: url('https://files.catbox.moe/eykrq5.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* --- Dashboard Container --- */
+.dashboard-container {
+    display: flex;
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.95); /* Sedikit transparan untuk melihat wallpaper */
+}
+
+/* --- Sidebar (Menu) --- */
+.sidebar {
+    width: 280px;
+    background: #2c3e50; /* Warna biru gelap */
+    color: #ecf0f1;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #3498db; 
+    border-bottom: 2px solid #34495e;
+    padding-bottom: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px;
+    margin-bottom: 8px;
+    color: #ecf0f1;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.menu-item i {
+    margin-right: 15px;
+    font-size: 1.1em;
+}
+
+.menu-item:hover {
+    background-color: #34495e;
+    transform: translateX(5px);
+}
+
+.menu-item.active {
+    background-color: #3498db;
+    font-weight: bold;
+}
+
+.menu-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- Chat Area Utama --- */
+.chat-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.chat-header {
+    padding: 18px 25px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.chat-header h2 {
+    font-size: 1.3em;
+    color: #2c3e50;
+}
+
+/* --- Kotak Pesan --- */
+.chat-box {
+    flex-grow: 1;
+    padding: 20px 25px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.initial-message {
+    text-align: center;
+    margin-top: 100px;
+    padding: 25px;
+    background: #e9f5ff;
+    border-radius: 15px;
+    color: #555;
+    border: 1px solid #cce5ff;
+}
+
+.initial-message h3 {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+/* Gaya Pesan */
+.message {
+    display: flex;
+    margin-bottom: 20px;
+    max-width: 85%;
+}
+
+.user-message {
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.ai-message {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 15px 20px;
+    border-radius: 25px;
+    line-height: 1.6;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    white-space: pre-wrap; /* Mempertahankan format baris baru dari AI */
+}
+
+.user-message .message-content {
+    background-color: #3498db;
+    color: white;
+    border-bottom-right-radius: 8px;
+}
+
+.ai-message .message-content {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-bottom-left-radius: 8px;
+}
+
+/* Loading/Typing Indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.typing-indicator .message-content {
+    background-color: #f1f1f1;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+    background-color: #95a5a6;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.32s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+
+/* --- Input Area --- */
+.chat-input-area {
+    display: flex;
+    align-items: flex-end; /* Agar tombol sejajar dengan input */
+    padding: 15px 25px;
+    border-top: 1px solid #e9ecef;
+    background-color: #ffffff;
+}
+
+#chat-input {
+    flex-grow: 1;
+    height: auto;
+    max-height: 100px; /* Batasi tinggi input */
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: none;
+    font-size: 1em;
+    margin-right: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#chat-input:focus {
+    border-color: #3498db;
+}
+
+#send-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s, transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#send-btn:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+#send-btn:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* --- Media Queries untuk Responsif --- */
+@media (max-width: 768px) {
+    .dashboard-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .sidebar {
+        display: none; /* Sembunyikan sidebar di perangkat kecil */
+    }
+
+    .chat-main {
+        width: 100%;
+    }
+}
