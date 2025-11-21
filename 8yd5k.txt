@@ -1,0 +1,57 @@
+nama=adito-chatai
+language=html
+lines=54
+date=21/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Dashboard (Gemini)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-brain"></i> **AditoDesu CHAT**
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active">
+                    <i class="fas fa-comment-dots"></i> Chat Baru
+                </a>
+                <a href="#" class="menu-item disabled">
+                    <i class="fas fa-history"></i> Riwayat
+                </a>
+                <a href="#" class="menu-item disabled">
+                    <i class="fas fa-cog"></i> Pengaturan
+                </a>
+            </nav>
+        </aside>
+
+        <main class="chat-main">
+            <header class="chat-header">
+                <h2>🤖 AditoDesu Ai Pengobrolan Ekstra</h2>
+            </header>
+            
+            <div class="chat-box" id="chat-box">
+                <div class="initial-message">
+                    <h3>Halo! Saya AditoDesu Ai</h3>
+                    <p>Tanyakan apa pun, mulai dari ide kreatif, rangkuman, hingga jawaban pertanyaan. Mulailah mengetik!</p>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <textarea id="chat-input" placeholder="Ketik pesan Anda dan tekan Enter..." rows="1"></textarea>
+                <button id="send-btn" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
