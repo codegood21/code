@@ -1,0 +1,77 @@
+nama=Gabut aelah
+language=html
+lines=73
+date=24/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edukasi Keamanan WhatsApp</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: #ffffff;
+    }
+    header {
+      padding: 20px;
+      background: #1a1a1a;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #151515;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    h2 {
+      border-left: 5px solid #06d6a0;
+      padding-left: 10px;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      border: 1px solid #2b2b2b;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      opacity: .6;
+    }
+  </style>
+</head>
+<body>
+  <header>Edukasi Keamanan WhatsApp</header>
+
+  <div class="container">
+    <h2>Apa Itu Bug?</h2>
+    <div class="card">
+      Bug adalah kesalahan pada sistem atau aplikasi yang menyebabkan aplikasi tidak bekerja sebagaimana mestinya. Website ini hanya bertujuan memberikan edukasi tentang keamanan, bukan eksploitasi.
+    </div>
+
+    <h2>Jenis Kerentanan Umum (Non-Bahaya)</h2>
+    <div class="card">
+      <ul>
+        <li><b>Spam Link:</b> Teknik penipu menyebar link palsu untuk mencuri data pengguna.</li>
+        <li><b>Social Engineering:</b> Penjahat siber memanipulasi pengguna agar memberikan informasi pribadi.</li>
+        <li><b>Phishing:</b> Pengguna diarahkan ke halaman login palsu.</li>
+        <li><b>Penyalahgunaan API:</b> Aplikasi pihak ketiga ilegal yang dapat membahayakan akun.</li>
+      </ul>
+    </div>
+
+    <h2>Cara Tetap Aman</h2>
+    <div class="card">
+      <ul>
+        <li>Aktifkan verifikasi dua langkah.</li>
+        <li>Jangan klik link mencurigakan.</li>
+        <li>Gunakan WhatsApp resmi dari Play Store/App Store.</li>
+        <li>Jangan berikan kode
