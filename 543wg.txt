@@ -1,0 +1,5 @@
+nama=AIMLOCK
+language=javascript
+lines=1
+date=25/11/2025
+code=HALO
