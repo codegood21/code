@@ -1,0 +1,41 @@
+nama=Telegram Chanel Stalk
+language=javascript
+lines=37
+date=25/11/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+async function TelegramChannel(url) {
+    try {
+        const { data } = await axios.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0"
+            }
+        });
+
+        const $ = cheerio.load(data);
+
+        const result = {
+            name: $(".tgme_page_title span").text().trim() || null,
+            subscribers: $(".tgme_page_extra").text().trim() || null,
+            description: $(".tgme_page_description").text().trim() || null,
+            image: $(".tgme_page_photo_image").attr("src") || null,
+            username: url.replace("https://t.me/", "").trim()
+        };
+
+        return {
+            success: true,
+            ...result
+        };
+
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+TelegramChannel("https://t.me/yupracloud").then(console.log);
+
+module.exports = TelegramChannel;
