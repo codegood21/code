@@ -1,0 +1,5 @@
+nama=t
+language=python
+lines=1
+date=25/11/2025
+code=tt
