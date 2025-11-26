@@ -1,0 +1,62 @@
+nama=aplikasi premium
+language=html
+lines=59
+date=26/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peringatan Virus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .warning {
+            background-color: #ffdddd;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .warning h1 {
+            color: #ff0000;
+        }
+        .warning p {
+            color: #333;
+        }
+        button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="warning">
+        <h1>PERINGATAN VIRUS!</h1>
+        <p>Sistem Anda telah terdeteksi terinfeksi virus. Segera lakukan pembayaran 50k atau 50rb wa 083197901701.</p>
+        <button onclick="alert('HP KAMU KENA VIRUS HAHAHHAHAHAHAHAHAHAH MAMPUS)">BAYAR SEKARANG</button>
+    </div>
+
+    <script>
+        // Simulasi popup peringatan saat halaman dimuat
+        window.onload = function() {
+            alert("HP KAMU KENA VIRUS HAHAHHAHAHAHAHAHAHAH MAMPUS");
+        };
+    </script>
+</body>
+</html>
