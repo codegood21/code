@@ -1,0 +1,6 @@
+nama=Nexus
+language=html
+lines=2
+date=26/11/2025
+code=
+https://voidex-bypasser.vercel.app/
