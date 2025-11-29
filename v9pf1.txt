@@ -1,0 +1,25 @@
+nama=Survival 
+language=javascript
+lines=21
+date=29/11/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Mini Survival Game</title>
+<style>
+    body { margin: 0; overflow: hidden; background: #333; }
+    #ui { position: fixed; top: 10px; left: 10px; color: #fff; font-family: sans-serif; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="ui">
+    <p>Kayu: <span id="wood">0</span></p>
+    <button id="craft">Craft Pickaxe (Butuh: 5 Kayu)</button>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
