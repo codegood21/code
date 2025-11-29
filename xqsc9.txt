@@ -1,0 +1,6 @@
+nama=nayraherwitaputri
+language=javascript
+lines=2
+date=29/11/2025
+code=@CodeGood ⚡:Website Pasteclip :
+https://pasteclip.zone.id
