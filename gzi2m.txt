@@ -1,0 +1,5 @@
+nama=pas
+language=html
+lines=1
+date=30/11/2025
+code=https://id.wikipedia.org/wiki/Upaya_kudeta_Turki_2016
