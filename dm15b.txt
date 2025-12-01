@@ -1,0 +1,46 @@
+nama=MY-AKBAR-NB
+language=html
+lines=43
+date=01/12/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Top Up Game</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>Top Up Game</h1>
+    </header>
+
+    <section class="topup-section">
+        <h2>Pilih Game dan Nominal</h2>
+        <form id="topup-form">
+            <label for="game">Pilih Game:</label>
+            <select id="game" required>
+                <option value="">--Pilih Game--</option>
+                <option value="Free Fire">Free Fire</option>
+                <option value="Mobile Legends">Mobile Legends</option>
+                <option value="PUBG Mobile">PUBG Mobile</option>
+            </select>
+
+            <label for="nominal">Nominal Top Up:</label>
+            <select id="nominal" required>
+                <option value="">--Pilih Nominal--</option>
+                <option value="10000">Rp 10.000</option>
+                <option value="20000">Rp 20.000</option>
+                <option value="50000">Rp 50.000</option>
+                <option value="100000">Rp 100.000</option>
+            </select>
+
+            <button type="submit">Top Up Sekarang</button>
+        </form>
+    </section>
+
+    <section class="confirmation" id="confirmation"></section>
+
+    <script src="script.js"></script>
+</body>
+</html>
