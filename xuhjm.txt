@@ -1,0 +1,57 @@
+nama=Code Akmal
+language=javascript
+lines=53
+date=01/12/2025
+code=async function makeOTPAPIRequestV2(endpoint, params = {}, method = 'GET') {
+  try {
+    let url = `${domain}/api/v2${endpoint}`;
+    
+    const configAxios = {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
+      timeout: 30000
+    };
+
+    const requestParams = {
+      api_key: apikey,
+      ...params
+    };
+
+    let response;
+    
+    if (method === 'POST') {
+      response = await axios.post(url, requestParams, {
+        ...configAxios,
+        headers: {
+          ...configAxios.headers,
+          'Content-Type': 'application/json'
+        }
+      });
+    } else {
+      response = await axios.get(url, { 
+        ...configAxios,
+        params: requestParams 
+      });
+    }
+
+    // === FIX BAGIAN INI ===
+    const success = response.data?.success ?? response.data?.status;
+    if (success === true) {
+      return response.data;
+    }
+
+    return { 
+      success: false, 
+      message: response.data?.message || 'API v2 request failed',
+      data: response.data
+    };
+    
+  } catch (error) {
+    return { 
+      success: false, 
+      message: error.response?.data?.message || error.message || 'Network error'
+    };
+  }
+}
