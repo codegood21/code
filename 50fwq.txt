@@ -1,0 +1,5 @@
+nama=wa
+language=javascript
+lines=1
+date=03/12/2025
+code=https
