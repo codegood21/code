@@ -1,0 +1,177 @@
+nama=truecaller API Source
+language=javascript
+lines=173
+date=07/12/2025
+code=import axios from "axios";
+import crypto from "crypto";
+
+// Proxy for NumberBox
+const proxy = {
+  protocol: "http",
+  host: "p.webshare.io",
+  port: 80,
+  auth: {
+    username: "xojksxpy-rotate",
+    password: "zyiuro40f0v1",
+  },
+};
+
+// Apilayer API Key
+const APILAYER_KEY = "KEP38MTRSMfmSJJiRuVgGJQ2xpzo95lsSm";
+
+// AES encryption config
+const key = Buffer.from("mKEP38MTRSMfmSJJiRuVgGJQ2xpzo9o5lsSm/DbkzwY=", "base64");
+const iv = Buffer.from("AAECAwQFBgcICQoLDA0ODw==", "base64");
+
+function formatNumber(number) {
+  const num = number.replace(/[^+\d]/g, "");
+  return num.startsWith("+") ? num.slice(1) : num;
+}
+
+function getEncode(data) {
+  const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+  const padLength = 16 - (data.length % 16);
+  const padded = Buffer.concat([Buffer.from(data), Buffer.alloc(padLength, padLength)]);
+  const encrypted = cipher.update(padded);
+  return Buffer.concat([encrypted, cipher.final()]).toString("base64");
+}
+
+async function httpCall(url, headers, useProxy = false) {
+  const config = { headers, timeout: 10000 };
+  if (useProxy) config.proxy = proxy;
+  const { data } = await axios.get(url, config);
+  return data;
+}
+
+async function numBox(number) {
+  const ccode = number.slice(0, 2);
+  const phoneNumber = number.slice(2);
+  const payload = {
+    ccode: getEncode(`%2B${ccode}`),
+    number: getEncode(phoneNumber),
+  };
+  const headers = {
+    host: "api.numberbox.app",
+    device: "android",
+    "content-type": "application/json; charset=UTF-8",
+    "accept-encoding": "gzip",
+    "user-agent": "okhttp/4.11.0",
+  };
+  try {
+    const { data } = await axios.post("https://api.numberbox.app/search", payload, {
+      headers,
+      proxy,
+      timeout: 10000,
+    });
+    return data.result
+      .map((entry) => entry.name)
+      .filter((name) => name !== "قم بتحديث التطبيق من متجر جوجل بلاي");
+  } catch {
+    return [];
+  }
+}
+
+async function getCallappName(formatted) {
+  try {
+    const data = await httpCall(
+      `https://callapp.com/callapp-server/csrch?cpn=%2B${formatted}&myp=gp.104059830954081456032&ibs=0&cid=0&tk=0007847886&cvc=2140`,
+      { host: "s.callapp.com" }
+    );
+    return data?.name || "";
+  } catch {
+    return "";
+  }
+}
+
+// ✅ Updated Apilayer with new endpoint & header
+async function getApilayerInfo(number) {
+  const url = `https://api.apilayer.com/number_verification/validate?number=%2B${number}`;
+  const headers = {
+    apikey: APILAYER_KEY,
+  };
+
+  for (let i = 0; i < 2; i++) {
+    try {
+      const { data } = await axios.get(url, { headers, timeout: 10000 });
+      return {
+        international_format: data.international_format || `+${number}`,
+        country: data.country_name || "Unknown",
+        country_code: data.country_code || "",
+        carrier: data.carrier || "",
+        line_type: data.line_type || "",
+        location: data.location || "N/A",
+      };
+    } catch {
+      if (i === 1) {
+        return {
+          international_format: `+${number}`,
+          country: "Unknown",
+          country_code: "",
+          carrier: "",
+          line_type: "",
+          location: "N/A",
+        };
+      }
+    }
+  }
+}
+
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+
+  const hasNumberParam = req.query?.number !== undefined || req.body?.number !== undefined;
+  const number = req.query?.number || req.body?.number;
+
+  if (!hasNumberParam) {
+    return res.status(400).json({
+      status: "error",
+      message: "⚒️ number parameter give bro...! (?number=)",
+      copyright: "©️ @oggy_workshop",
+    });
+  }
+
+  if (!number || number.trim() === "") {
+    return res.status(400).json({
+      status: "error",
+      message: "☎️ number give bro...!",
+      copyright: "©️ @oggy_workshop",
+    });
+  }
+
+  try {
+    const formatted = formatNumber(number);
+
+    const [name, namesList, info] = await Promise.all([
+      getCallappName(formatted),
+      numBox(formatted),
+      getApilayerInfo(formatted),
+    ]);
+
+    const response = {
+      status: "success",
+      number: formatted,
+      international_format: info.international_format,
+      name: name || "Not found",
+      country: `${info.country} (${info.country_code})`,
+      carrier: info.carrier,
+      line_type: info.line_type,
+      location: info.location,
+      creator: "JerryCoder",
+    };
+
+    return res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .end(JSON.stringify(response, null, 2));
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "👨🏼‍🏭 Jerry Fixing...!",
+      copyright: "©️ @oggy_workshop",
+    });
+  }
+}
