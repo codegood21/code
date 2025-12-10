@@ -1,0 +1,50 @@
+nama=Rijalganzzxx Gemini-Ai
+language=javascript
+lines=46
+date=10/12/2025
+code=/** Ai-Gemini
+Join My Group: https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+Follow Yaa: https://whatsapp.com/channel/0029Vb6ru1s2Jl87BaI4RJ1H
+Note: Sesuaikan Type Sc Kalian Jika Cjs
+**/
+import axios from 'axios'
+
+let handler = async (m, { conn, text }) => {
+  if (!text) return m.reply('Masukkan teks. Contoh: .gemini Halo')
+
+  try {
+    const endpoint = `https://zelapioffciall.koyeb.app/ai/gemini?text=${encodeURIComponent(text)}`
+    const res = await axios.get(endpoint, { timeout: 20000 })
+    const data = res.data
+
+    if (!data?.status) return m.reply('Gagal mengambil respons.')
+
+    const hasil = data.result?.response || 'Tidak ada respons.'
+
+    await conn.sendMessage(
+      m.chat,
+      {
+        text: hasil,
+        contextInfo: {
+          externalAdReply: {
+            title: 'Gemini-Ai',
+            thumbnailUrl: 'https://raw.githubusercontent.com/RIJALGANZZZ/dat1/main/uploads/823c46-1765387111120.jpg',
+            sourceUrl: 'https://zelapioffciall.koyeb.app',
+            showAdAttribution: false,
+            mediaType: 1,
+            renderLargerThumbnail: true
+          }
+        }
+      },
+      { quoted: m }
+    )
+  } catch (e) {
+    return m.reply('Terjadi kesalahan: ' + e.message)
+  }
+}
+
+handler.help = ['gemini <teks>']
+handler.tags = ['ai']
+handler.command = /^gemini$/i
+
+export default handler
