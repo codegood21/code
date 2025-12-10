@@ -1,0 +1,57 @@
+nama=Screp facebook downloader
+language=javascript
+lines=53
+date=10/12/2025
+code=const axios = require('axios')
+
+async function fesnuk(u){
+    try{
+        if(!/facebook\.com/.test(u)) throw new Error('Invalid url')
+
+        return await axios.post(
+            'https://likeedownloader.com/process',
+            new URLSearchParams({ id:u, locale:'en' }),
+            {
+                headers:{
+                    'User-Agent':'Mozilla/5.0 (Linux; Android 10)',
+                    'Accept':'application/json,text/javascript,*/*',
+                    'x-requested-with':'XMLHttpRequest',
+                    'Content-Type':'application/x-www-form-urlencoded',
+                    origin:'https://likeedownloader.com',
+                    referer:'https://likeedownloader.com/facebook-video-downloader'
+                }
+            }
+        ).then(function(r){
+
+            if(!r?.data?.template) throw new Error('Fetch failed')
+
+            function pick(re){
+                const m = r.data.template.match(re)
+                return m ? m[1] : null
+            }
+
+            const link = []
+            for(const m of r.data.template.matchAll(/href="([^"]+)"[^>]*download/g)) link.push(m[1])
+
+            return{
+                thumb:pick(/<img[^>]+src="([^"]+)"/),
+                sd:link[0]||null,
+                hd:link[1]||null
+            }
+        })
+
+    }catch(e){
+        return{status:'error',msg:e.message}
+    }
+}
+
+return await fesnuk('https://www.facebook.com/reel/1173026878305572/')
+
+/*
+{
+  thumb: 'https://ssscdn.io/getmyfb/p/aHR0cHM6Ly9zY29udGVuNQ2M......',
+  sd: 'https://ssscdn.io/getmyfb/NDIzMjExMjM0NTYzMjEzM0lGMWtYR001bFg0ZG14ZFArbmdQQkRGVW01bnlKR05RL0kvL1ZiRVZsUUlqSDFpRzg3WTViSG8yYXhZK0YySTZUQ3R6ZE1IaXoyWjhFMGpNUVdzbG1OMXJRUUFlZDRpdXpqRDYvMXgzWmVpbWRZNEsvZmhqMXhPdmh2bGthdndETzUzUllVbVEwZ21YenJ3bHJsTjBIeWovUHRrOXcvZ2FmV0NCTkNWck1PK3JKSXZDY3ZDeWxOaDUxdE5helF4SlRRUmFPb3JqN3RrVmJkL2hqcUo3OUk1SEFrTWQ0TkFpOHBWVlBQeHVDRElVWGhFNldlbG1lK0dHMHJaUXNjNkkzcXhOL1BwaTJqaXVQNS96Snl5RFhPdWxZZXVseFdzb2VHZURDYmVzb0puVW9NL2hITFZOMk5Rc0FKeG1hN3NTSnVCbnQxQ0dhaGFJdGdnd2VwaVVVeWVXSUpIRzRQZ3p1QWtwbUtWcXVMUHFYMjVmRmY5RlJaV0NaNkdIRmpLWnkzWEVhSTlpcnI1MEgzQ25yMkQwY1Z3amw1eXA2ZkNnZTdYZ2ZxeE55c2NZUTRlK203N3lNOFdOUGw3R095eWFsNkc0aGtZOHlIUjRCb055emtaTStqNUFsQ1Vjd1d1RENjZkVzcG5vSmdzNjRhQUdpb20zbzg0VVZaWFV2M1ovY0lIOUJ6Q3FLWUpteDN0ZVYwekhneEIwK3JCTDQweG1QQWVNQjNSWXpSbmRLUWltTVZmUFFiS2lLTWxTdXpINTRiTWVWTTV0bElMTjEvNVRIN2NicXd5dDFoek9YUDV1eFVRMEQzUkRsKy84NzZ5TjJBcTZJaUk4R3RpbW1meUdSZkY5RlAxWUJ5c2hTVlRFaHhRdGRwQVVMWXZGV2F0dHlHZm1wQ210WFd6UXZEbml4T2dvN3lHd1BMTEJsVzlyYVhJZklYSzdTbFhJRUV1KzI0aHZreVhMRUN6WmEvdzRHWUtlQUcyczNTUlpvS3pwQ3ZTVlFvcDJpN05XU1ZMQkh2cFFxYjc0VTcxODBHcFZmckI0R1Jidy9FbWtTdjcxR05uT3hOSXVpdmZXVXYvcE53N0gvb3BPRkorMmpNUVBNL2NON0svUjYwT2xPRTFzbjh5UHBIQWJWT2pLNjJxNzhubTBlaXZkMndnZG5OSVJmWExEZUwwR21GbGZuOXVqL2RSN1cycGMvaXc5bCthMVJjWDJNVUNneHh6aktPNytSTTVFRUV4QWtFblUxWTh4SjN1SXZXTWNKK2Z3V1M4Ullva3NTMFB4NzJyTkZtMDJTR25GekNZN2hldTlHc3hUV0c3SFNpV1RBUHVITlNadVpoY29QUWJZV2h1eit6TnpuaSsxcVRDajUxTXY3YU5zcUpaa1VVbkkwaVBkWmxvUVhzUitEZnhoTXF2NEluMUw2Rmt3YjM0dXp5ZGZPZXlFa2pXY3c1cXZQNHFObUVPQWRyQ0c5V2xrWEFUTndraGJSN2JGblhmYStwZWtHT05NMWdHOXVIU1RSYVNzeUt4aExGdzlmT2ttbnRDdFJNUFkxUDhqWGJlR2Zmb3g1dDRORnZMYkNGM01sQ01hUFpKbXJwWlpLUVVpN2dYaytOQ1B4N3NkQUQveGlPc3E1d2tZMFY2QXN2dzhrbXhmRGplNXRta2N0YlhFaFhWUndjWjJXbHZyMTBjMG9RU2t6d1FZdkErMS9mdVd1OGxPSWpOakI2NUFGNmdCbnRYTTF5aXpnWFE1L2xiaE1PR1JEY2xPS2pMUFJ3WksrREJxNWFOQQ==',
+  hd: 'https://ssscdn.io/getmyfb/NDIzMjExMjM0NTYzMjEzM0lGMWtYR001bFg0ZG14ZFArbmdQQkRGVW01bnlKR05RL0kvL1ZiRVZsUUpXcWd2bzY1UklDak91R01hSVd3QUVIQk00RFlDRUg0OHZ2TFNRL2U2WUVrZnFLaDJCYjgySU5UWVB6UWV1N2wzMjBvMTdrWHdLbDBHQ0kyOFcvaUtGTno5Z1Rnbzc5TXdSWFBKc0NvL1pYa01RMldCRG9zTzl1cFNHME1iY29scmEyNlJKb2liZE8wdkUreTRHd1c5QURoVXdjTGJiQjUxTG03SnhRM2RTbC9UelZlTVBzdmQzWjhLR0Iwd215QmtlVEZwTXEzc05qMDJTZUxhU1FRcU54dklCYWZkVnAvdFh6Wk52UXN2Q01YM3lYbVBqdTZCVGVZM1p2dDNVMlFWdTg1VURjd1gvTTdXYW9yN3RDNER1TmpsTWdJemFKQm9MYjl1QjlkcUFqS2hkUDlYNzJrc3NuK3ZrR05YRTF6UDk2ZE1PbldXTW04YVZWcHVaSUJlMU9CUjkyRG81bnVndGRkYUY0S3ZrbXN6VStmY01KVDBiRGNBemI5V24rQXF2L0lsSVJKcEYra1V0Y3AwK1FmWWtJUXMxZGZDMWM4MFBxclRmbmdkalZOU2xlbXJRcTlxdy85U2k4b2RDczF1cFNYWUNwSjVHK2l5L2NMYlRhM2dMUVlPOW1YdmlmMU5zUVpjWE5tUmZuS1hIMTZENXJEbXVYRTVMVGFtTVpZa29QTGxYMm5QZHF6dUJEcGJpRFpla3Z6dTNhZVpXREU3aTdSQjkwbWZjb0pta0Z5YlZZRmFPL0gzOU96NXQyZ294OUQ5dlI5ZHN6VDl0cDA1ZHhzN2RqR1J6b1hnaXdOQ3FLTTl1Ym5malgrT2p6VkQ2V1Y4YUQzZ3FKQ29RNFoydTJSWklTT1BMOVFjTEZjWC9wVEp4WnBSNGpIakZZbkFFcmdaank5YWk4R3A0UlRKWFZ3SWdxVW1uYzBOQjNrM1cxL3p5aWE5ZTRnR0FKZ05NdCs4WWpuQUFKKyt4UFpNTGtBaDhjRGxyVFFOU3hTUDhkVDhPVklXejdLVmRmTzF6dEJNSTIyTGE2TFRsaTNiZVlCMVFUQlJ4VkI0TXU4b0FEQTZ2a0cydHl6OFNUQy84cE40RjE4dzlHSk13U2RGZndmZC96Y21UVTJ0UHJCYVE5ZGhpL0R4UklZTTFta09Kb0huTThRT3B1akhsSXNVckQ3N1Zrc3ZYOTgwS2pvTU1OT0lEclgzaEJNK09LOVFsM2x5VjBTUVYyUjVSK25ueVZLOHlINnRwWW1nTU9QVmpxRnRFNDRZZnJYNlhaemxDL09Hakx5RkZjbGJEQkdxbE5CNnlGZ3hVVXozbXgrTFBjd3ExRzJ3WVZnYTZnaCtTNVZIck5hSkU3NzFTUE1FTUZTNTVVUjJGblM3M3VGWDI0RS82MlFaQlJqWVl6NXYrWkZ6M2hxbkhBblhURVlMRjBNN0ZNNDVLdGRLd04wQUpnVkllUWpQVXRjT0FONE1HcXF6aHljOUtIbWdrUDR0L1czY25uS2tCRnhVVTdVTDVQcit1UjkxOXg1dDA2MytqdDhpbjJyN0dkREhneUZUVmZMRTVGUUZWL3BVYUxJcUZmQ2VLdWtLTDNzOFpHeHZhZ0pYRVFmSTI4cVIzNnJSTFlrYzh3di9mQnpYT3VhOC8xZ1ExTHRyanZCaWY2L05uYnlHcGt5YXBRMk1Fc1hyVDE5SWF3NklsWTg0b3Z6MHdKZkxJMmJpUFZwMXk4R0M2UVBuMHhrMm1sQ0tsd2FQZ1dlc0I2ZjFwNkQyUTRQWHEra0Z2T3ZkRUhtRVpzVEE9',
+}
+*/
+apz
