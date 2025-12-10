@@ -1,0 +1,5 @@
+nama=Uy
+language=javascript
+lines=1
+date=10/12/2025
+code=Kentod 
