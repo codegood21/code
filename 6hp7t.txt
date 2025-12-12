@@ -1,0 +1,5 @@
+nama=tt
+language=javascript
+lines=1
+date=12/12/2025
+code=yyyyy
