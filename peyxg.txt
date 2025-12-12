@@ -1,0 +1,5 @@
+nama=Justin 
+language=python
+lines=1
+date=12/12/2025
+code=Fxjkj
