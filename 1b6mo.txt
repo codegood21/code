@@ -1,0 +1,12 @@
+nama=Justin 
+language=javascript
+lines=8
+date=12/12/2025
+code=*Lits sewa wa*
+6 jam =50k
+12 jam = 100k
+18 jam = 150k
+24 jam = 200k 
+
+selama wa di sewa perangkat tertaut dilarang keras di log out (di kluar kan) jika di keluarkan maka tidak akan mendapatkan bayaran.
+dan jika pesan yg muncul di hapus maka jangan salahkan admin jika wa terkena band.
