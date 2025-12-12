@@ -1,0 +1,68 @@
+nama=Tiktok Downloader Rijalganzz
+language=javascript
+lines=64
+date=12/12/2025
+code=/** Tiktok-Dowloader
+Type Esm Plugin 
+Join Saluran Ku Bang https://whatsapp.com/channel/0029Vb7AmhT7DAWv0CeSYl1b
+Join Group Ku Juga Bang
+https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+Sumber Scraper: Gatau Ilang
+**/
+import axios from "axios"
+
+let furina = async (m, { text, usedPrefix, command, conn }) => {
+  try {
+    const url = text
+    if (!url) return m.reply(`Kirim link TikTok.\n\nContoh:\n${usedPrefix + command} https://vm.tiktok.com/xxxx`)
+
+    const data = await ttdl(url)
+
+    const video = data.play
+    const title = data.title || "TikTok Video"
+
+    await conn.sendMessage(m.chat, {
+      video: { url: video },
+      mimetype: "video/mp4",
+      caption: title
+    })
+
+  } catch (e) {
+    m.reply("Gagal mengambil video.")
+  }
+}
+
+furina.help = ["tiktok", "tt"].map(v => v + " <url>")
+furina.tags = ["downloader"]
+furina.premium = false
+furina.register = true
+furina.limit = 1
+furina.command = ["tiktok", "tt"]
+
+export default furina
+
+async function ttdl(url) {
+  if (!/^https?:\/\/(www\.)?(tiktok\.com|vt\.tiktok\.com|vm\.tiktok\.com|m\.tiktok\.com)\/.+/i.test(url))
+    throw new Error("Invalid url")
+
+  try {
+    const { data } = await axios.get("https://tiktok-scraper7.p.rapidapi.com", {
+      headers: {
+        "Accept-Encoding": "gzip",
+        "Connection": "Keep-Alive",
+        "Host": "tiktok-scraper7.p.rapidapi.com",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "X-RapidAPI-Host": "tiktok-scraper7.p.rapidapi.com",
+        "X-RapidAPI-Key": "ca5c6d6fa3mshfcd2b0a0feac6b7p140e57jsn72684628152a"
+      },
+      params: {
+        url,
+        hd: "1"
+      }
+    })
+
+    return data.data
+  } catch (e) {
+    throw new Error(e.message)
+  }
+}
