@@ -1,0 +1,5 @@
+nama=Title
+language=python
+lines=1
+date=12/12/2025
+code=https://whatsapp.com/channel/0029VbBlOCWJ3jv52gqeDF38/695
