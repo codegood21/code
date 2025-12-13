@@ -1,0 +1,5 @@
+nama=Gg.txt
+language=javascript
+lines=1
+date=13/12/2025
+code==> global.owner = ["6281245101404"]
