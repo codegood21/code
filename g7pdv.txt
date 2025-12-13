@@ -1,0 +1,5 @@
+nama=my father
+language=python
+lines=1
+date=13/12/2025
+code=hello
