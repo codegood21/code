@@ -1,0 +1,48 @@
+nama=Rijalganzzxx Cek Femboy
+language=javascript
+lines=44
+date=13/12/2025
+code=/**
+Fitur Cek Seberapa Femboy
+Follow Channel Me:
+https://whatsapp.com/channel/0029Vb6ru1s2Jl87BaI4RJ1H
+Join Group Me:
+https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+Sumber Scraper:
+https://whatsapp.com/channel/0029VbANq6v0VycMue9vPs3u
+**/
+let handler = async (m, { conn, command, text }) => {
+    if (!text) return m.reply('Masukkan nama dulu dong! Contoh: cekfemboy Rijalganzz');
+
+    const nama = text;
+    const percent = Math.floor(Math.random() * 101);
+    let desc = '';
+    let imgUrl = '';
+
+    if (percent < 20) {
+        desc = 'Cowok banget! 😎';
+        imgUrl = 'https://cek-seberapa-femboy.vercel.app/img/normal.gif';
+    } else if (percent < 40) {
+        desc = 'Ada aura lembutnya dikit~ 🌸';
+        imgUrl = 'https://cek-seberapa-femboy.vercel.app/img/dibwh40.gif';
+    } else if (percent < 60) {
+        desc = 'Lumayan femboy 😘';
+        imgUrl = 'https://cek-seberapa-femboy.vercel.app/img/dibwh60.gif';
+    } else if (percent < 80) {
+        desc = 'Femboy sejati 💅✨';
+        imgUrl = 'https://cek-seberapa-femboy.vercel.app/img/dibwh80.gif';
+    } else {
+        desc = 'FEMBOY DEWA 🔥💖';
+        imgUrl = 'https://cek-seberapa-femboy.vercel.app/img/femboyyyy.gif';
+    }
+
+    const hasil = `${nama}, kamu ${percent}% femboy!, ${desc}`;
+
+    await conn.sendMessage(m.chat, { image: { url: imgUrl }, caption: hasil }, { quoted: m });
+}
+
+handler.help = ['cekfemboy <nama>']
+handler.tags = ['fun']
+handler.command = /^cekfemboy/i
+
+export default handler
