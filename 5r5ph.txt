@@ -1,0 +1,93 @@
+nama=Rijalganzzxx Upvidey
+language=javascript
+lines=89
+date=16/12/2025
+code=/** Upvidey 
+Follow Channel https://whatsapp.com/channel/0029Vb6ru1s2Jl87BaI4RJ1H
+Yang Punya Anu https://whatsapp.com/channel/0029Vap84RE8KMqfYnd0V41A/3415
+Join My Grup https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+**/
+import axios from 'axios'
+import FormData from 'form-data'
+import fs from 'fs'
+import path from 'path'
+import crypto from 'crypto'
+
+const handler = async (m, { conn }) => {
+    try {
+        await conn.sendMessage(m.chat, { react: { text: '⌛', key: m.key } })
+
+        let q = m.quoted ? m.quoted : m
+        let mime = (q.msg || q).mimetype || ''
+
+        if (!mime.startsWith('video/')) {
+            throw 'Silahkan kirim video dengan caption *upvidey* atau reply video!'
+        }
+
+        let media = await q.download()
+        if (!media) throw 'Gagal mengunduh video.'
+
+        const tmpDir = './tmp'
+        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir)
+
+        const filePath = path.join(tmpDir, `${crypto.randomUUID()}.mp4`)
+        await fs.promises.writeFile(filePath, media)
+
+        const res = await videy(filePath)
+        await fs.promises.unlink(filePath)
+
+        if (res.status === 'error') throw res.msg
+
+        await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+        await conn.reply(
+            m.chat,
+            `*Video Berhasil Diupload*\n\n*ID :* ${res.output.id}\n*Link :* ${res.output.link}`,
+            m
+        )
+
+    } catch (e) {
+        await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+        await conn.reply(m.chat, `*Error:* ${e.message || e}`, m)
+    }
+}
+
+handler.help = ['upvidey']
+handler.tags = ['tools']
+handler.command = /^upvidey$/i
+handler.register = true
+handler.limit = 5
+
+export default handler
+
+async function videy(file) {
+    try {
+        if (!file) throw new Error('input required')
+        if (!fs.existsSync(file)) throw new Error('file not found')
+
+        const form = new FormData()
+        form.append('file', fs.createReadStream(file), {
+            filename: path.basename(file),
+            contentType: 'video/mp4'
+        })
+
+        const r = await axios.post(
+            'https://videy.co/api/upload?visitorId=' + crypto.randomUUID(),
+            form,
+            {
+                headers: {
+                    ...form.getHeaders(),
+                    'User-Agent': 'Mozilla/5.0 (Linux; Android 10)',
+                    origin: 'https://videy.co',
+                    referer: 'https://videy.co/',
+                    accept: 'application/json'
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity
+            }
+        )
+
+        return { output: r.data }
+    } catch (e) {
+        return { status: 'error', msg: e.message }
+    }
+}
