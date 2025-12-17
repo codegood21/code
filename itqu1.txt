@@ -1,0 +1,46 @@
+nama=Threads Downloader
+language=javascript
+lines=42
+date=17/12/2025
+code=const axios = require("axios")
+
+async function ambatukam(url) {
+  try {
+    const apiUrl = "https://snapthreads.net/api/download"
+
+    const res = await axios.get(apiUrl, {
+      params: { url },
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0"
+      },
+      timeout: 15000
+    })
+
+    const data = res.data
+
+    if (!data || !data.directLink) {
+      throw new Error("Video nya gada tol")
+    }
+
+    return {
+      status: true,
+      thumbnail: data.thumbnail,
+      video: data.directLink
+    }
+
+  } catch (err) {
+    return {
+      status: false,
+      message: err.response && err.response.data
+        ? err.response.data
+        : err.message
+    }
+  }
+}
+
+;(async () => {
+  const url = "https://www.threads.com/@info_cilegon/post/DSUvfpHieV8"
+  const result = await ambatukam(url)
+  console.log(result)
+})()
