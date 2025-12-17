@@ -1,0 +1,126 @@
+nama=Fesnuk Downloader
+language=javascript
+lines=122
+date=17/12/2025
+code=const axios = require("axios")
+const cheerio = require("cheerio")
+const qs = require("qs")
+
+async function getTokens() {
+  const res = await axios.get("https://fbdown.to/", {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "Accept": "text/html",
+      "Accept-Language": "en-US,en;q=0.9"
+    }
+  })
+
+  const html = res.data
+
+  const kTokenMatch = html.match(/k_token\s*=\s*"([^"]+)"/)
+  const kExpMatch = html.match(/k_exp\s*=\s*"([^"]+)"/)
+  const cTokenMatch = html.match(/c_token\s*=\s*"([^"]+)"/)
+
+  if (!kTokenMatch || !kExpMatch) {
+    throw new Error("token tidak ditemukan")
+  }
+
+  return {
+    k_token: kTokenMatch[1],
+    k_exp: kExpMatch[1],
+    c_token: cTokenMatch ? cTokenMatch[1] : null
+  }
+}
+
+async function ajaxSearch(fbUrl) {
+  const { k_token, k_exp } = await getTokens()
+
+  const payload = qs.stringify({
+    q: fbUrl,
+    k_token,
+    k_exp,
+    lang: "en",
+    p: "home",
+    v: "v2",
+    w: ""
+  })
+
+  const res = await axios.post(
+    "https://fbdown.to/api/ajaxSearch",
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest",
+        "User-Agent": "Mozilla/5.0",
+        "Origin": "https://fbdown.to",
+        "Referer": "https://fbdown.to/"
+      }
+    }
+  )
+
+  if (!res.data || res.data.status !== "ok") {
+    throw new Error("ajaxSearch gagal")
+  }
+
+  return res.data.data
+}
+
+function parseDownloads(htmlFragment) {
+  const $ = cheerio.load(htmlFragment)
+  const results = []
+
+  $("a.download-link-fb").each((_, el) => {
+    const url = $(el).attr("href")
+    if (url) {
+      results.push({
+        quality: $(el).attr("title") || "unknown",
+        url,
+        render: false
+      })
+    }
+  })
+
+  $("button[data-videourl]").each((_, el) => {
+    const url = $(el).attr("data-videourl")
+    if (url) {
+      results.push({
+        quality: $(el).attr("data-fquality") || "unknown",
+        url,
+        codec: $(el).attr("data-videocodec") || null,
+        render: true
+      })
+    }
+  })
+
+  return results
+}
+
+async function fbdown(fbUrl) {
+  if (!fbUrl) {
+    throw new Error("url nya di isi ya hitam")
+  }
+
+  const html = await ajaxSearch(fbUrl)
+  const downloads = parseDownloads(html)
+
+  return {
+    source: "fbdown.to",
+    total: downloads.length,
+    results: downloads
+  }
+}
+
+module.exports = fbdown
+
+if (require.main === module) {
+  ;(async () => {
+    try {
+      const url = "https://www.facebook.com/share/r/14K4RQn2mRA/"
+      const res = await fbdown(url)
+      console.log(JSON.stringify(res, null, 2))
+    } catch (e) {
+      console.error(e.message)
+    }
+  })()
+}
