@@ -1,0 +1,10 @@
+nama=Justin 
+language=javascript
+lines=6
+date=18/12/2025
+code=✅Mengerti! Pesanan anda berhasil di buat
+Id Pesanan : 2905641
+Layanan : Whatsapp Channel Member FP 2 [ Max 50K ] Global | 1rb/hari | Tanpa
+Target Isi Ulang : https://whatsapp.com/channel/0029VbAdGkH6xCSLO3xPST2V
+Jumlah : 80
+Tanggal pesanan : 18 Desember 2025 12:15:57
