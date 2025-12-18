@@ -1,0 +1,481 @@
+nama=Tik tok downloader
+language=javascript
+lines=477
+date=18/12/2025
+code=require "import"
+import "android.widget.*"
+import "android.view.View"
+import "android.content.Context"
+import "android.text.InputType"
+import "cjson"
+import "android.content.Intent"
+import "android.net.Uri"
+import "android.media.MediaPlayer"
+import "android.media.AudioManager"
+import "android.widget.VideoView"
+import "android.widget.MediaController"
+import "java.util.HashMap"
+import "java.net.URLEncoder"
+import "android.app.DownloadManager"
+import "android.os.Environment"
+import "android.graphics.Typeface"
+
+activity = this
+
+local BASE_API_URL = 'https://shere-apis.vercel.app/tiktok'
+
+local mediaOptions = {}
+local selectedData = nil
+local trackTitle = "TikTok_Media"
+
+function vibrate()
+	local vibrator = activity.getSystemService(Context.VIBRATOR_SERVICE)
+	if vibrator then vibrator.vibrate(35) end
+	end
+
+	function urlEncode(str)
+		if str then return URLEncoder.encode(str, "UTF-8") end
+			return ""
+		end
+
+		function cleanName(str)
+			if not str then return "Media_" .. os.time() end
+
+				local s = str:gsub("[^a-zA-Z0-9%s%-_]", "")
+				return s:sub(1, 50)
+			end
+
+			function startDownload(url, title, subname, fileExt)
+				pcall(function()
+					local dm = activity.getSystemService(Context.DOWNLOAD_SERVICE)
+					local request = DownloadManager.Request(Uri.parse(url))
+					request.addRequestHeader("User-Agent", "Mozilla/5.0")
+					request.setNotificationVisibility(1)
+
+					if not fileExt then fileExt = "mp4" end
+
+						local fileName = cleanName(title) .. "_" .. subname .. "." .. fileExt
+						request.setTitle(title .. " (" .. subname .. ")")
+						request.setDescription("Downloading TikTok Content...")
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "MyPluginDownloads/" .. fileName)
+
+						dm.enqueue(request)
+						service.speak("Download started")
+					end)
+			end
+
+			local item_layout = {
+				LinearLayout,
+				orientation="vertical",
+				layout_width="fill",
+				layout_height="wrap_content",
+				padding="8dp",
+				{
+					LinearLayout,
+					orientation="vertical",
+					layout_width="fill",
+					layout_height="wrap_content",
+					backgroundColor=0xFF333333,
+					padding="15dp",
+					{
+						TextView,
+						id="opt_res",
+						textSize="18sp",
+						typeface=Typeface.DEFAULT_BOLD,
+						textColor=0xFFFFFFFF,
+						},
+					{
+						LinearLayout,
+						orientation="horizontal",
+						layout_width="fill",
+						layout_height="wrap_content",
+						layout_marginTop="5dp",
+						{
+							TextView,
+							id="opt_type",
+							textSize="12sp",
+							textColor=0xFF000000,
+							backgroundColor=0xFF00FFFF,
+							paddingLeft="5dp", paddingRight="5dp", paddingTop="2dp", paddingBottom="2dp"
+							},
+						{
+							TextView,
+							id="opt_size",
+							textSize="14sp",
+							textColor=0xFFCCCCCC,
+							layout_marginLeft="10dp"
+							}
+						}
+					}
+				}
+
+			layout = {
+				LinearLayout,
+				orientation = "vertical",
+				layout_width = "fill",
+				layout_height = "fill",
+				padding = "10dp",
+				{
+					EditText,
+					id = "textInput",
+					hint = "Paste TikTok Link Here...",
+					layout_width = "fill",
+					layout_height = "wrap_content",
+					padding = "10dp",
+					lines = 1,
+					inputType = InputType.TYPE_CLASS_TEXT,
+					},
+				{
+					Button,
+					id = "scanButton",
+					text = "Process TikTok",
+					layout_width = "fill",
+					layout_height = "wrap_content",
+					layout_marginTop = "5dp"
+					},
+
+				{
+					FrameLayout,
+					layout_width = "fill",
+					layout_height = "250dp",
+					layout_marginTop = "10dp",
+					backgroundColor = "0xFF000000",
+					{
+						VideoView,
+						id = "videoDisplay",
+						layout_width = "match",
+						layout_height = "match",
+						layout_gravity = "center",
+						visibility = View.GONE
+						},
+					{
+						TextView,
+						id = "statusText",
+						text = "Ready.",
+						textColor = "0xFF888888",
+						layout_gravity = "center",
+						visibility = View.VISIBLE,
+						gravity = "center",
+						padding="10dp"
+						}
+					},
+
+				{
+					TextView,
+					id="listLabel",
+					text = "Select Content:",
+					textColor = 0xFFCCCCCC,
+					layout_marginTop = "10dp",
+					paddingLeft = "5dp",
+					visibility = "gone"
+					},
+				{
+					ListView,
+					id = "optionsList",
+					layout_width = "fill",
+					layout_height = "0dp",
+					layout_weight = 1,
+					dividerHeight = "0",
+					visibility = "gone"
+					},
+				{
+					LinearLayout,
+					id="finalInfoLayout",
+					orientation="vertical",
+					layout_width="fill",
+					layout_height="0dp",
+					layout_weight=1,
+					padding="10dp",
+					visibility="gone",
+					gravity="center",
+					{
+						TextView,
+						text="✅ Selected",
+						textSize="20sp",
+						textColor=0xFF00FF00,
+						typeface=Typeface.DEFAULT_BOLD,
+						gravity="center"
+						},
+					{
+						TextView,
+						id="finalTitleText",
+						text="Title",
+						textSize="16sp",
+						textColor=0xFFFFFFFF,
+						gravity="center",
+						layout_marginTop="10dp"
+						},
+					{
+						TextView,
+						id="finalDetailText",
+						text="Detail",
+						textSize="14sp",
+						textColor=0xFFAAAAAA,
+						gravity="center",
+						layout_marginTop="5dp"
+						},
+					{
+						Button,
+						id="backToListBtn",
+						text = "Choose Another",
+						layout_marginTop="10dp",
+						visibility="gone",
+						onClick=function()
+						finalInfoLayout.setVisibility(View.GONE)
+						optionsList.setVisibility(View.VISIBLE)
+						listLabel.setVisibility(View.VISIBLE)
+					end
+					},
+
+				{
+					Button,
+					id="externalPlayBtn",
+					text = "Open in System Player",
+					layout_marginTop="10dp",
+					backgroundColor=0xFF555555,
+					onClick=function()
+					if selectedData and selectedData.url then
+						service.speak("Opening external player...")
+						local intent = Intent(Intent.ACTION_VIEW)
+						local mime = "video/*"
+						if selectedData.type == "audio" then mime = "audio/*" end
+							if selectedData.type == "image" then mime = "image/*" end
+								intent.setDataAndType(Uri.parse(selectedData.url), mime)
+								activity.startActivity(intent)
+							end
+						end
+						}
+					},
+
+				{
+					LinearLayout,
+					orientation = "horizontal",
+					layout_width = "fill",
+					layout_height = "wrap_content",
+					layout_marginTop = "5dp",
+					{
+						Button,
+						id = "playButton",
+						text = "Play Here",
+						layout_width = "0dp",
+						layout_weight = 1,
+						enabled = false
+						},
+					{
+						Button,
+						id = "downloadButton",
+						text = "Download",
+						layout_width = "0dp",
+						layout_weight = 1,
+						enabled = false
+						},
+					},
+				{
+					Button,
+					text = "Close",
+					layout_width = "match",
+					layout_height = "wrap_content",
+					onClick = function()
+					videoDisplay.stopPlayback()
+					dlg.dismiss()
+				end
+				}
+			}
+
+		dlg = LuaDialog(this)
+		dlg.setTitle("TikTok Downloader (Shere API)")
+		dlg.setView(loadlayout(layout))
+		dlg.setCancelable(false)
+
+		function updateStatus(txt)
+			statusText.text = txt
+			statusText.setVisibility(View.VISIBLE)
+			videoDisplay.setVisibility(View.GONE)
+			service.speak(txt)
+		end
+
+		function resetUI()
+			mediaOptions = {}
+			playButton.setEnabled(false)
+			downloadButton.setEnabled(false)
+			videoDisplay.stopPlayback()
+			optionsList.setAdapter(nil)
+
+			optionsList.setVisibility(View.GONE)
+			listLabel.setVisibility(View.GONE)
+			finalInfoLayout.setVisibility(View.GONE)
+			backToListBtn.setVisibility(View.GONE)
+		end
+
+		function showFinalPanel(data, fromList)
+			selectedData = data
+			finalTitleText.text = trackTitle
+			finalDetailText.text = data.label
+
+			optionsList.setVisibility(View.GONE)
+			listLabel.setVisibility(View.GONE)
+			finalInfoLayout.setVisibility(View.VISIBLE)
+
+			if fromList then backToListBtn.setVisibility(View.VISIBLE) else backToListBtn.setVisibility(View.GONE) end
+
+				playButton.setEnabled(true)
+				downloadButton.setEnabled(true)
+
+				if data.type == "image" then
+					playButton.text = "View Image"
+					externalPlayBtn.setVisibility(View.GONE)
+				else
+					playButton.text = "Play Here"
+					externalPlayBtn.setVisibility(View.VISIBLE)
+				end
+
+				updateStatus("Selected: " .. data.label)
+			end
+
+			scanButton.onClick = function()
+			vibrate()
+			local input_url = textInput.text
+			if #input_url == 0 then updateStatus("Paste URL first.") return end
+
+				resetUI()
+				updateStatus("Processing TikTok...")
+
+				local target_url = string.format("%s?url=%s", BASE_API_URL, urlEncode(input_url))
+
+				Thread(Runnable {
+						run = function()
+						Http.get(target_url, function(code, content)
+							if code ~= 200 then updateStatus("Error: " .. code) return end
+
+								local status, json = pcall(cjson.decode, content)
+								if not status then updateStatus("JSON Error") return end
+
+									if json.status == true and json.result then
+										local res = json.result
+										trackTitle = res.title or "TikTok_Video"
+
+										local downloads = res.downloads or {}
+
+										if #downloads > 0 then
+											mediaOptions = {}
+
+											for i, v in ipairs(downloads) do
+												local rawType = v.type or "Unknown"
+												local fileType = "video"
+												local ext = "mp4"
+
+												if string.find(rawType, "Audio") then
+													fileType = "audio"
+													ext = "mp3"
+												elseif string.find(rawType, "Image") then
+													fileType = "image"
+													ext = "jpg"
+												else
+
+													fileType = "video"
+													ext = "mp4"
+												end
+
+												table.insert(mediaOptions, {
+														label = rawType,
+														url = v.url,
+														type = fileType,
+														ext = ext
+														})
+											end
+
+											if #mediaOptions == 1 then
+												showFinalPanel(mediaOptions[1], false)
+												service.speak("One option found.")
+											else
+												updateStatus("Found " .. #mediaOptions .. " options.")
+												local adapterData = {}
+												for k, v in ipairs(mediaOptions) do
+													table.insert(adapterData, {
+															opt_res = v.label,
+															opt_size = "Ready",
+															opt_type = string.upper(v.type)
+															})
+												end
+
+												local adapter = LuaAdapter(activity, adapterData, item_layout)
+												optionsList.setAdapter(adapter)
+
+												optionsList.setVisibility(View.VISIBLE)
+												listLabel.setVisibility(View.VISIBLE)
+											end
+										else
+											updateStatus("No download links found.")
+										end
+									else
+										updateStatus("API Failed or No Result.")
+									end
+								end)
+						end
+						}).start()
+			end
+
+			optionsList.onItemClick = function(parent, view, position, id)
+			vibrate()
+			local selected = mediaOptions[position + 1]
+			if selected then showFinalPanel(selected, true) end
+			end
+
+			playButton.onClick = function()
+			vibrate()
+			if not selectedData then return end
+
+				if selectedData.type == "image" then
+					local intent = Intent(Intent.ACTION_VIEW)
+					intent.setDataAndType(Uri.parse(selectedData.url), "image/*")
+					activity.startActivity(intent)
+
+				else
+
+					if videoDisplay.isPlaying() then
+						videoDisplay.pause()
+						playButton.text = "Resume"
+					else
+						statusText.setVisibility(View.GONE)
+						videoDisplay.setVisibility(View.VISIBLE)
+
+						local mc = MediaController(activity)
+						videoDisplay.setMediaController(mc)
+
+						updateStatus("Buffering...")
+						videoDisplay.setVideoURI(Uri.parse(selectedData.url))
+
+						videoDisplay.setOnPreparedListener(MediaPlayer.OnPreparedListener{
+								onPrepared = function(mp)
+								mp.setAudioStreamType(AudioManager.STREAM_MUSIC)
+								mp.setScreenOnWhilePlaying(true)
+								mp.start()
+
+								videoDisplay.start()
+
+								playButton.text = "Pause"
+								service.speak("Playing.")
+							end
+							})
+
+					videoDisplay.setOnErrorListener(MediaPlayer.OnErrorListener{
+							onError = function(mp, what, extra)
+							updateStatus("Player Error. Try External Player.")
+							service.speak("Playback failed.")
+							return true
+						end
+						})
+			end
+		end
+	end
+
+	downloadButton.onClick = function()
+	vibrate()
+	if selectedData then
+
+		startDownload(selectedData.url, trackTitle, selectedData.label, selectedData.ext)
+	end
+end
+
+service.playSoundTick()
+dlg.show()
