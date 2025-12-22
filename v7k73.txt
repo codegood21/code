@@ -1,0 +1,52 @@
+nama=Gif Search
+language=javascript
+lines=48
+date=22/12/2025
+code=const axios = require("axios")
+const cheerio = require("cheerio")
+
+async function scrapeGiphy(query) {
+  const url = `https://giphy.com/search/${encodeURIComponent(query)}`
+
+  const { data: html } = await axios.get(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+    }
+  })
+
+  const $ = cheerio.load(html)
+
+  let results = []
+
+  $('script[type="application/ld+json"]').each((_, el) => {
+    try {
+      const json = JSON.parse($(el).html())
+      if (json.image && Array.isArray(json.image)) {
+        json.image.forEach(img => {
+          if (img.contentUrl) {
+            results.push({
+              title: img.name || null,
+              gif: img.contentUrl,
+              preview: img.thumbnailUrl || null,
+              width: img.width?.value || null,
+              height: img.height?.value || null
+            })
+          }
+        })
+      }
+    } catch (_) {}
+  })
+
+  results = results.filter(
+    (v, i, a) => a.findIndex(t => t.gif === v.gif) === i
+  )
+
+  return results
+}
+
+;(async () => {
+  const query = "happy birthday"
+  const data = await scrapeGiphy(query)
+  console.log(data)
+})()
