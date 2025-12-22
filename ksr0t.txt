@@ -1,0 +1,48 @@
+nama=Apps Search
+language=javascript
+lines=44
+date=22/12/2025
+code=const axios = require("axios")
+const cheerio = require("cheerio")
+
+async function apelkroak(query) {
+  const url = `https://apps.apple.com/us/iphone/search?term=${encodeURIComponent(query)}`
+
+  const { data } = await axios.get(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/119 Safari/537.36"
+    }
+  })
+
+  const $ = cheerio.load(data)
+  let results = []
+
+  $('li a[aria-label^="View"]').each((_, el) => {
+    const container = $(el)
+
+    const title = container.find("h3").text().trim()
+    const subtitle = container.find("p").text().trim()
+    const appUrl = container.attr("href")
+    const ratingCount = container.find(".rating-container").text().trim()
+    const ratingStars = container.find("ol.stars").attr("aria-label") || null
+
+    if (title) {
+      results.push({
+        title,
+        subtitle: subtitle || null,
+        ratingStars,
+        ratingCount,
+        url: appUrl
+      })
+    }
+  })
+
+  return results
+}
+
+;(async () => {
+  const query = "Free fire"
+  const data = await apelkroak(query)
+  console.log(data)
+})()
