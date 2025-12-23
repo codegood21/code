@@ -1,0 +1,69 @@
+nama=Happymod Search
+language=javascript
+lines=65
+date=23/12/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+async function JembMod(query) {
+    const url = `https://www.happymod.cloud/search.html?q=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await axios.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                "Accept": "text/html",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            timeout: 15000
+        });
+
+        const $ = cheerio.load(response.data);
+        const data = [];
+
+        $("ul.list > li.list-item").each((_, el) => {
+            const box = $(el).find("a.list-box");
+
+            const title = box.find(".list-info-title").text().trim();
+            const link = box.attr("href")
+                ? `https://www.happymod.cloud${box.attr("href")}`
+                : null;
+
+            const icon =
+                box.find(".list-icon img").attr("data-src") ||
+                box.find(".list-icon img").attr("src") ||
+                null;
+
+            const info = box.find(".list-info-text");
+
+            const version = $(info[0]).find("span").eq(0).text().trim();
+            const size = $(info[0]).find("span").eq(2).text().trim();
+            const mod = $(info[1]).find("span").text().trim();
+
+            data.push({
+                title,
+                version,
+                size,
+                mod_status: mod || null,
+                icon,
+                url: link
+            });
+        });
+
+        return {
+            success: true,
+            data
+        };
+
+    } catch (err) {
+        return {
+            success: false,
+            message: err.message
+        };
+    }
+}
+
+(async () => {
+    const result = await JembMod("kinemaster");
+    console.log(JSON.stringify(result, null, 2));
+})();
