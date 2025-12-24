@@ -1,0 +1,101 @@
+nama=Rijalganzzxx Sfile Search
+language=javascript
+lines=97
+date=24/12/2025
+code=/** Code Search Sfile
+Follow Ch Ku Bang https://whatsapp.com/channel/0029Vb6ru1s2Jl87BaI4RJ1H
+Join Group Aku Bang https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+Follow Yang Punya Scraper Nya Juga https://whatsapp.com/channel/0029VbAeMWdHFxP73goAZ23x/332
+**/
+import axios from "axios";
+import cheerio from "cheerio";
+
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) {
+    return conn.reply(
+      m.chat,
+      `❗ Gunakan format: ${usedPrefix + command} <keyword>\nContoh: ${usedPrefix + command} Photo Search V2.1.37 ✨`,
+      m
+    );
+  }
+
+  const results = await sfileSearch(text);
+  if (!results.length)
+    return conn.reply(m.chat, "❌ Tidak ditemukan hasil untuk keyword itu 😿", m);
+
+  let msg = results
+    .map(
+      (item) =>
+        `🔹 *${item.title}*\n🗂️ Info: ${item.info}\n👤 Uploader: ${item.uploader || "-"}\n📅 Upload: ${item.uploadDate || "-"}\n💾 Size: ${item.size || "-"}\n🔗 Link: ${item.link}`
+    )
+    .join("\n\n");
+
+  conn.reply(m.chat, msg, m);
+};
+
+handler.help = handler.command = ["sfilesearch", "sfs"];
+handler.tags = ["tools"];
+handler.limit = true;
+
+export default handler;
+
+async function sfileSearch(query) {
+  try {
+    const { data: html } = await axios.get(
+      `https://sfile.mobi/search.php?q=${encodeURIComponent(query)}`,
+      { headers: { "User-Agent": "Mozilla/5.0" } }
+    );
+
+    const $ = cheerio.load(html);
+    let results = [];
+
+    $(".list").each((_, el) => {
+      const a = $(el).find("a").first();
+      const link = a.attr("href");
+      if (!link) return;
+
+      results.push({
+        title: a.text().trim(),
+        info: $(el).find(".file-info").text().trim(),
+        link,
+      });
+    });
+
+    results = results.sort(() => Math.random() - 0.5).slice(0, 15);
+
+    const output = [];
+    for (const item of results) {
+      const detail = await getFileDetail(item.link);
+      output.push({
+        title: item.title,
+        info: item.info,
+        uploader: detail.uploader,
+        uploadDate: detail.uploadDate,
+        size: detail.size,
+        link: item.link,
+      });
+    }
+
+    return output;
+  } catch {
+    return [];
+  }
+}
+
+async function getFileDetail(url) {
+  try {
+    const { data: html } = await axios.get(url, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+
+    const $ = cheerio.load(html);
+
+    const uploader = $('a[href*="/user/"]').first().text().trim() || null;
+    const uploadDate = $('span:contains("Uploaded:") span').text().trim() || null;
+    const size = html.match(/with size\s([^.]*)\./i)?.[1] || null;
+
+    return { uploader, uploadDate, size };
+  } catch {
+    return { uploader: null, uploadDate: null, size: null };
+  }
+}
