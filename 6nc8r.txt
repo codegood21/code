@@ -1,0 +1,75 @@
+nama=Sfile Search
+language=javascript
+lines=71
+date=24/12/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+
+const BASE_URL = "https://sfile.mobi";
+
+async function sfileSearch(query) {
+    try {
+        const { data: html } = await axios.get(
+            `${BASE_URL}/search.php?q=${encodeURIComponent(query)}`,
+            { headers: { "User-Agent": "Mozilla/5.0" } }
+        );
+
+        const $ = cheerio.load(html);
+        let results = [];
+
+        $(".list").each((_, el) => {
+            const a = $(el).find("a").first();
+            const link = a.attr("href");
+            if (!link) return;
+
+            results.push({
+                title: a.text().trim(),
+                info: $(el).find(".file-info").text().trim(),
+                link
+            });
+        });
+
+        results = results.sort(() => Math.random() - 0.5).slice(0, 15);
+
+        const output = [];
+        for (const item of results) {
+            const detail = await getFileDetail(item.link);
+            output.push({
+                title: item.title,
+                info: item.info,
+                uploader: detail.uploader,
+                uploadDate: detail.uploadDate,
+                size: detail.size,
+                link: item.link
+            });
+        }
+
+        return output;
+    } catch {
+        return [];
+    }
+}
+
+async function getFileDetail(url) {
+    try {
+        const { data: html } = await axios.get(url, {
+            headers: { "User-Agent": "Mozilla/5.0" }
+        });
+
+        const $ = cheerio.load(html);
+
+        const uploader = $('a[href*="/user/"]').first().text().trim() || null;
+        const uploadDate = $('span:contains("Uploaded:") span').text().trim() || null;
+        const size = html.match(/with size\s([^.]*)\./i)?.[1] || null;
+
+        return { uploader, uploadDate, size };
+    } catch {
+        return { uploader: null, uploadDate: null, size: null };
+    }
+}
+
+(async () => {
+    const keyword = "Photo Search V2.1.37";
+    const data = await sfileSearch(keyword);
+    console.log(JSON.stringify(data, null, 2));
+})();
