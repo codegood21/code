@@ -1,0 +1,5 @@
+nama=Hey 
+language=python
+lines=1
+date=24/12/2025
+code=Hjkmh
