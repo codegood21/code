@@ -1,0 +1,76 @@
+nama=Yete Deel
+language=javascript
+lines=72
+date=24/12/2025
+code=const axios = require("axios");
+const cheerio = require("cheerio");
+const qs = require("qs");
+
+async function YeteeDeel(youtubeUrl) {
+    const postData = qs.stringify({
+        url: youtubeUrl
+    });
+
+    const { data: html } = await axios.post(
+        "https://www.mediamister.com/get_youtube_video",
+        postData,
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Accept": "*/*",
+                "X-Requested-With": "XMLHttpRequest",
+                "User-Agent": "Mozilla/5.0"
+            },
+            timeout: 20000
+        }
+    );
+
+    const $ = cheerio.load(html);
+
+    const thumbnail = $(".yt_thumb img").attr("src") || null;
+    const title = $("h2").first().text().trim();
+
+    const videos = [];
+    $(".yt_format")
+        .first()
+        .find("a.download-button")
+        .each((_, el) => {
+            const a = $(el);
+            videos.push({
+                quality: a.text().replace(/\s+/g, " ").trim(),
+                url: a.attr("href"),
+                format: a.attr("href")?.includes("mime=video/webm")
+                    ? "webm"
+                    : "mp4"
+            });
+        });
+
+    const audios = [];
+    $(".yt_format")
+        .last()
+        .find("a.download-button.audio")
+        .each((_, el) => {
+            const a = $(el);
+            audios.push({
+                quality: a.text().replace(/\s+/g, " ").trim(),
+                url: a.attr("href"),
+                format: a.attr("href")?.includes("mime=audio/webm")
+                    ? "webm"
+                    : "m4a"
+            });
+        });
+
+    return {
+        title,
+        thumbnail,
+        videos,
+        audios
+    };
+}
+
+(async () => {
+    const result = await YeteeDeel(
+        "https://youtube.com/shorts/LLw_xGVcL0o"
+    );
+    console.dir(result, { depth: null });
+})();
