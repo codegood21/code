@@ -1,0 +1,62 @@
+nama=Tiktok Stalk
+language=javascript
+lines=58
+date=26/12/2025
+code=const axios = require("axios").default
+const cheerio = require("cheerio")
+const qs = require("qs")
+const { CookieJar } = require("tough-cookie")
+const { wrapper } = require("axios-cookiejar-support")
+
+const jar = new CookieJar()
+
+const client = wrapper(
+    axios.create({
+        jar,
+        withCredentials: true,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Accept": "*/*"
+        }
+    })
+)
+
+async function getUserProfile(username) {
+    const page = await client.get("https://on4t.com/tiktok-viewer")
+
+    const $ = cheerio.load(page.data)
+    const csrf = $('meta[name="csrf-token"]').attr("content")
+
+    if (!csrf) {
+        throw new Error("CSRF token tidak ditemukan")
+    }
+
+    const payload = qs.stringify({
+        userName: username
+    })
+
+    const res = await client.post(
+        "https://on4t.com/GetUserProfile",
+        payload,
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "X-CSRF-TOKEN": csrf,
+                "X-Requested-With": "XMLHttpRequest",
+                "Origin": "https://on4t.com",
+                "Referer": "https://on4t.com/tiktok-viewer"
+            }
+        }
+    )
+
+    return res.data
+}
+
+;(async () => {
+    try {
+        const data = await getUserProfile("baguselek21")
+        console.log(JSON.stringify(data, null, 2))
+    } catch (e) {
+        console.error("ERROR:", e.response?.data || e.message)
+    }
+})()
