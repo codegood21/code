@@ -1,0 +1,9 @@
+nama=bokel
+language=javascript
+lines=6
+date=27/12/2025
+code=switch case(command) {
+case "hi":
+await m.reply("hi")
+break
+}
