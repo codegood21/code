@@ -1,0 +1,5 @@
+nama=little
+language=javascript
+lines=1
+date=27/12/2025
+code=const ww = hapus wok;
