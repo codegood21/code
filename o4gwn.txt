@@ -1,0 +1,5 @@
+nama=Rijalganzzxx Sfile Search
+language=javascript
+lines=1
+date=28/12/2025
+code=d
