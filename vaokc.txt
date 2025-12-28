@@ -1,0 +1,65 @@
+nama=Rijalganzz Img2prompt ( Cjs )
+language=javascript
+lines=61
+date=28/12/2025
+code=/**
+Code Img2Prompt
+Follow Ch Ku Bang https://whatsapp.com/channel/0029Vb6ru1s2Jl87BaI4RJ1H
+Join Group Aku Bang https://chat.whatsapp.com/Bhwenfkc5Vi3V2kbTKw7WJ
+Follow Yang Punya Anunya https://whatsapp.com/channel/0029Vap84RE8KMqfYnd0V41A/3580
+**/
+
+const fs = require('fs')
+const axios = require('axios')
+
+let handler = async (m, { conn }) => {
+  try {
+    let q = m.quoted ? m.quoted : m
+    let mime = (q.msg || q).mimetype || ''
+    if (!mime) throw 'Reply/send image with caption *.img2prompt*'
+    if (!/image\/(jpe?g|png|webp)/.test(mime)) throw 'Only JPEG/PNG/WEBP images are supported'
+
+    let imgBuffer = await q.download()
+    let filePath = `./tmp/${Date.now()}.webp`
+    fs.writeFileSync(filePath, imgBuffer)
+
+    let { prompt } = await imgtoprompt(filePath)
+    fs.unlinkSync(filePath)
+
+    if (!prompt) throw 'No prompt generated'
+    await m.reply(prompt)
+  } catch (e) {
+    m.reply(e.message)
+  }
+}
+
+handler.help = ['img2prompt']
+handler.command = ['img2prompt']
+handler.tags = ['tools']
+
+module.exports = handler
+
+async function imgtoprompt(media){
+  try{
+    const base64 = fs.readFileSync(media).toString('base64')
+    const r = await axios.post(
+      'https://imageprompt.org/api/ai/prompts/image',
+      {
+        base64Url: `data:image/webp;base64,${base64}`,
+        imageModelId: 0,
+        language: 'en'
+      },
+      {
+        headers:{
+          'User-Agent':'Mozilla/5.0 (Linux; Android 10)',
+          'Content-Type':'application/json',
+          origin:'https://imageprompt.org',
+          referer:'https://imageprompt.org/image-to-prompt'
+        }
+      }
+    )
+    return { prompt: r.data.prompt, generatedAt: r.data.generatedAt }
+  }catch(e){
+    return { status:'error', msg: e.message }
+  }
+}
