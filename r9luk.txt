@@ -1,0 +1,11 @@
+nama=Saber scurity.
+language=javascript
+lines=7
+date=29/12/2025
+code=web resmi dari youareanidiot [web pelacak lokasi hanya mengunakan ip andres] 
+
+//< https://youareanidiot.cc/ >
+
+web ini biasa nya digunakan oleh para polisi untuk mencari keberadaan atau lokasi seseorang.
+
+//Index-kantor-pusat-ID
