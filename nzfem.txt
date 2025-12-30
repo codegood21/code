@@ -1,0 +1,703 @@
+nama=Tiktok.id.html
+language=html
+lines=699
+date=30/12/2025
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Home – KENZ • Coding</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --blue: #0099ff;
+      --blue-dark: #0077cc;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .blue-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100vh;
+      background: var(--blue);
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid var(--blue);
+        object-fit: cover;
+        margin-bottom: 20px;
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+    h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+        opacity: 0;
+        animation: fadeIn 1s .3s forwards;
+    }
+    .typing {
+        font-size: 16px;
+        margin-bottom: 30px;
+        min-height: 24px;
+        color: #ccc;
+        opacity: 0;
+        animation: fadeIn 1s .6s forwards;
+    }
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    .btn {
+        background: var(--blue);
+        color: #fff;
+        padding: 14px 0;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp .8s forwards;
+    }
+    .btn:nth-child(1) { animation-delay: .9s; }
+    .btn:nth-child(2) { animation-delay: 1.2s; }
+    .btn:nth-child(3) { animation-delay: 1.5s; }
+    .tiktok-btn {
+        margin-top: 30px;
+        background: #ff0050;
+        font-size: 18px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp .8s 1.8s forwards;
+    }
+    @keyframes fadeIn {
+        to { opacity: 1; }
+    }
+    @keyframes fadeUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .loader-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    .loader-overlay.active { display: flex; }
+    .progress-bar {
+        width: 250px;
+        height: 8px;
+        background: #333;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--blue);
+        transition: width .2s;
+    }
+    .progress-text { font-size: 14px; color: #ccc; }
+
+    .tiktok-section {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 1000;
+    }
+    .tiktok-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #111;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        z-index: 10;
+    }
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .video-scroller {
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        padding-top: 60px;
+    }
+    .video-item {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+    }
+    .video-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .video-info {
+        position: absolute;
+        bottom: 60px;
+        left: 15px;
+        max-width: 70%;
+    }
+    .video-info .author {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .video-info .title { display: none; }
+    .video-actions {
+        position: absolute;
+        right: 15px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+    .video-actions .action {
+        font-size: 28px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .video-actions .like-count {
+        font-size: 12px;
+        margin-top: -10px;
+    }
+
+    .downloader-box {
+      margin-top: 40px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 90%;
+    }
+    .downloader-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+    .dl-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .dl-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 25px;
+      width: 90%;
+      max-width: 400px;
+      text-align: left;
+    }
+    .modal-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #0f0f0f;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .example {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 15px;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .modal-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal-btn.primary {
+      background: var(--blue);
+      color: #fff;
+    }
+    .modal-btn.secondary {
+      background: #444;
+      color: #fff;
+    }
+
+    .result-box {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .result-box .item {
+      margin-bottom: 6px;
+    }
+    .download-confirm {
+      margin-top: 15px;
+      background: #0099ff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .circle-loader {
+      border: 4px solid #333;
+      border-top: 4px solid #0099ff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+<div class="blue-bar"></div>
+
+<section class="home-section" id="homeSection" style="background: url('https://i.pinimg.com/originals/25/e8/8b/25e88b4e0993437d90cbbf47f268f906.jpg') center/cover no-repeat;">
+  <div class="home-content" style="background: rgba(0,0,0,0.6); border-radius: 20px; padding: 30px; max-width: 90%;">
+    <img src="https://i.pinimg.com/originals/c0/c4/bc/c0c4bc57c88b037477e604e074c3ad99.jpg" alt="Profile" class="profile-pic">
+    <h1>KENZ • Coding</h1>
+    <div class="typing" id="typing"></div>
+    <div class="buttons">
+      <a class="btn" href="https://chat.whatsapp.com/HlyYOczlYcn9JipRVchJxE" target="_blank">Join Group</a>
+      <a class="btn" href="https://wa.me/6285758459672" target="_blank">Development</a>
+      <a class="btn" href="https://wa.me/+6283843622870" target="_blank">Bot WhatsApp</a>
+    </div>
+    <button class="tiktok-btn" onclick="openTiktok()">WEB TIKTOK ✨</button>
+
+    <div class="downloader-box">
+      <div class="downloader-title">✨ DOWNLOADER SIMPLE ✨</div>
+      <div class="dl-buttons">
+        <button class="dl-btn" onclick="openDL('tiktok','https://theresapis.vercel.app/download/tiktok?url=','https://vm.tiktok.com/ ...')">TikTok</button>
+        <button class="dl-btn" onclick="openDL('spotify','https://theresapis.vercel.app/download/spotify?url=','https://open.spotify.com/track/ ...')">Spotify</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="loader-overlay" id="loader">
+  <div class="circle-loader"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0%</div>
+</div>
+
+<section class="tiktok-section" id="tiktokSection">
+  <div class="tiktok-header">
+    <span class="search-icon" onclick="openSearch()">🔍</span>
+    T I K • T O K
+  </div>
+  <div class="video-scroller" id="videoScroller"></div>
+</section>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-title" id="modalTitle">Masukan Link</div>
+    <input type="text" class="modal-input" id="modalInput" placeholder="https://...">
+    <div class="example" id="modalExample"></div>
+    <div class="result-box" id="resultBox" style="display:none;"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn secondary" onclick="closeModal()">Batal</button>
+      <button class="modal-btn primary" onclick="fetchInfo()">Cek</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const teks = "selamat datang di web resmi kami jangan lupa ikuti kami terus yah";
+  const typingEl = document.getElementById('typing');
+  let idx = 0;
+  function typeWriter() {
+    if (idx < teks.length) {
+      typingEl.textContent += teks.charAt(idx);
+      idx++;
+      setTimeout(typeWriter, 60);
+    }
+  }
+  typeWriter();
+
+  function openTiktok() {
+    const loader = document.getElementById('loader');
+    const fill = document.getElementById('progressFill');
+    const text = document.getElementById('progressText');
+    loader.classList.add('active');
+    let prog = 0;
+    const interval = setInterval(() => {
+      prog++;
+      fill.style.width = prog + '%';
+      text.textContent = prog + '%';
+      if (prog >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          loader.classList.remove('active');
+          document.getElementById('homeSection').style.display = 'none';
+          document.getElementById('tiktokSection').style.display = 'block';
+          loadVideos();
+        }, 300);
+      }
+    }, 20);
+  }
+
+  const keywords = [
+    "jj asupan","asupan hot","jj tobrout","jj tobrout hijab","tobrout hot",
+    "jj alya","jj waguri","jj mahiru","jj kaguya","jj yuki","jj makima",
+    "jj asupan hot","jj asupan tobrout","asupan daster"
+  ];
+  let isLoading = false;
+  let videoBuffer = [];
+
+  function getRandomKeyword() {
+    return keywords[Math.floor(Math.random() * keywords.length)];
+  }
+
+  async function fetchVideo() {
+    const kw = getRandomKeyword();
+    try {
+      const res = await fetch("https://tikwm.com/api/feed/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Cookie": "current_language=en",
+          "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36"
+        },
+        body: new URLSearchParams({ keywords: kw, count: 50, cursor: 0, HD: 1 })
+      });
+      const data = await res.json();
+      const videos = data.data.videos;
+      if (!videos.length) return null;
+      const v = videos[Math.floor(Math.random() * videos.length)];
+      return {
+        Judul: v.title,
+        negara: v.region,
+        likes: v.digg_count,
+        Videos: v.play
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function observeVideos() {
+    const items = document.querySelectorAll('.video-item video');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const v = entry.target;
+        if (entry.isIntersecting) {
+          items.forEach(vid => {
+            vid.pause();
+            vid.currentTime = 0;
+          });
+          v.muted = false;
+          v.play();
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.7 });
+    items.forEach(video => observer.observe(video));
+  }
+
+  async function addVideo() {
+    if (isLoading) return;
+    isLoading = true;
+    const video = await fetchVideo();
+    isLoading = false;
+    if (!video) return;
+
+    videoBuffer.push(video);
+    const scroller = document.getElementById('videoScroller');
+    const idx = videoBuffer.length - 1;
+
+    const item = document.createElement('div');
+    item.className = 'video-item';
+    item.innerHTML = `
+      <video src="${video.Videos}" muted></video>
+      <div class="video-info">
+        <div class="author">@${video.negara || 'unknown'}</div>
+        <div class="title">${video.Judul}</div>
+      </div>
+      <div class="video-actions">
+        <div class="action" onclick="like(${idx})">❤️</div>
+        <div class="like-count" id="like-${idx}">${video.likes}</div>
+        <div class="action" onclick="comment()">💬</div>
+        <div class="action" onclick="down(${idx})">Down</div>
+      </div>
+    `;
+    scroller.appendChild(item);
+    observeVideos();
+  }
+
+  function like(i) {
+    videoBuffer[i].likes++;
+    document.getElementById(`like-${i}`).textContent = videoBuffer[i].likes;
+  }
+  function comment() { alert('Comment!'); }
+  function down(i) {
+    const url = videoBuffer[i].Videos;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'video_' + Date.now() + '.mp4';
+    a.click();
+  }
+  function openSearch() {
+    const q = prompt('Cari video:');
+    if (q) {
+      document.getElementById('videoScroller').innerHTML = '';
+      videoBuffer = [];
+      keywords.unshift(q);
+      loadVideos();
+    }
+  }
+
+  async function loadVideos() {
+    for (let i = 0; i < 3; i++) await addVideo();
+  }
+
+  document.getElementById('videoScroller').addEventListener('scroll', () => {
+    const scroller = document.getElementById('videoScroller');
+    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 50) {
+      addVideo();
+    }
+  });
+
+  let currentDL = {};
+  let currentInfo = {};
+
+  function openDL(platform, base, example) {
+    currentDL = { platform, base };
+    document.getElementById('modalTitle').textContent = `Masukan Link ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
+    document.getElementById('modalInput').placeholder = example;
+    document.getElementById('modalExample').textContent = `Contoh: ${example}`;
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('modalInput').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    document.getElementById('modalInput').value = '';
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('resultBox').innerHTML = '';
+  }
+
+  async function isUrl(url) {
+    let urlRegex = /(https?:\/\/[^\s]+)/g;
+    let result = url.match(urlRegex);
+    return result ? result[0] : null;
+  }
+
+  async function TtDown(text) {
+    try {
+      const res = await fetch(`https://theresapis.vercel.app/download/tiktok?url=${encodeURIComponent(text)}`);
+      const data = await res.json();
+      const json = data.result.data;
+      const units = ['byte', 'KB', 'MB', 'GB', 'TB'];
+      let i = 0;
+      while (json.size >= 1024 && i < units.length - 1) {
+        json.size /= 1024;
+        i++;
+      }
+      let usize = `${json.size.toFixed(2)} ${units[i]}`;
+      return {
+        title: json.title,
+        durasi: json.duration,
+        size: usize,
+        UrlMusic: json.music,
+        UrlDl: json.play
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function SpotifyDown(text) {
+    try {
+      const res = await fetch(`https://theresapis.vercel.app/download/spotify?url=${encodeURIComponent(text)}`);
+      const data = await res.json();
+      const json = data.result;
+      return {
+        title: json.title,
+        artists: json.artists,
+        duration: json.duration,
+        UrlMusic: json.download_url
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function fetchInfo() {
+    const raw = document.getElementById('modalInput').value.trim();
+    if (!raw) return alert('Link tidak boleh kosong!');
+
+    const cleanUrl = await isUrl(raw);
+    if (!cleanUrl) return alert('Link tidak valid!');
+
+    const { platform } = currentDL;
+    let valid = false;
+
+    if (/tiktok/.test(cleanUrl)) valid = platform === 'tiktok';
+    if (/spotify/.test(cleanUrl)) valid = platform === 'spotify';
+
+    if (!valid) return alert('Link tidak sesuai platform!');
+
+    const loader = document.getElementById('loader');
+    const fill = document.getElementById('progressFill');
+    const text = document.getElementById('progressText');
+    loader.classList.add('active');
+    let prog = 0;
+    const interval = setInterval(() => {
+      prog++;
+      fill.style.width = prog + '%';
+      text.textContent = prog + '%';
+      if (prog >= 100) {
+        clearInterval(interval);
+        loader.classList.remove('active');
+      }
+    }, 20);
+
+    let info = null;
+    if (platform === 'tiktok') info = await TtDown(cleanUrl);
+    if (platform === 'spotify') info = await SpotifyDown(cleanUrl);
+
+    if (!info) {
+      alert('Gagal mengambil data.');
+      return;
+    }
+
+    if (platform === 'spotify') {
+      currentInfo = {
+        title: info.title,
+        artist: info.artists,
+        duration: info.duration,
+        url: info.UrlMusic
+      };
+      document.getElementById('resultBox').innerHTML = `
+        <div class="item"><strong>Judul:</strong> ${currentInfo.title}</div>
+        <div class="item"><strong>Artis:</strong> ${currentInfo.artist}</div>
+        <div class="item"><strong>Durasi:</strong> ${currentInfo.duration}</div>
+        <button class="download-confirm" onclick="downloadCurrent()">Download Lagu</button>
+      `;
+    } else {
+      currentInfo = {
+        title: info.title,
+        durasi: info.durasi,
+        size: info.size,
+        urlVideo: info.UrlDl,
+        urlAudio: info.UrlMusic
+      };
+      document.getElementById('resultBox').innerHTML = `
+        <div class="item"><strong>Judul:</strong> ${currentInfo.title}</div>
+        <div class="item"><strong>Durasi:</strong> ${currentInfo.durasi}</div>
+        <div class="item"><strong>Size:</strong> ${currentInfo.size}</div>
+        <button class="download-confirm" onclick="downloadVideo()">Download Video</button>
+        <button class="download-confirm" onclick="downloadAudio()">Download Audio</button>
+      `;
+    }
+
+    document.getElementById('resultBox').style.display = 'block';
+  }
+
+  function downloadVideo() {
+    if (!currentInfo.urlVideo) return alert('URL Video tidak tersedia.');
+    const a = document.createElement('a');
+    a.href = currentInfo.urlVideo;
+    a.download = 'tiktok_video_' + Date.now() + '.mp4';
+    a.click();
+  }
+
+  function downloadAudio() {
+    if (!currentInfo.urlAudio) return alert('URL Audio tidak tersedia.');
+    const a = document.createElement('a');
+    a.href = currentInfo.urlAudio;
+    a.download = 'tiktok_audio_' + Date.now() + '.mp3';
+    a.click();
+  }
+
+  function downloadCurrent() {
+    if (!currentInfo.url) return alert('URL tidak tersedia.');
+    const ext = currentDL.platform === 'spotify' ? '.mp3' : '.mp4';
+    const filename = currentDL.platform + '_' + Date.now() + ext;
+    const a = document.createElement('a');
+    a.href = currentInfo.url;
+    a.download = filename;
+    a.click();
+    closeModal();
+  }
+</script>
+</body>
+</html>
