@@ -1,0 +1,92 @@
+nama=SCRAPER BYPASS.CITY
+language=python
+lines=88
+date=30/12/2025
+code=import requests
+import json
+
+def get_turnstile_token():
+    """Mendapatkan token dari anabot.my.id API"""
+    try:
+        response = requests.get(
+            "https://anabot.my.id/api/tools/bypass",
+            params={
+                "url": "https://bypass.city",
+                "siteKey": "0x4AAAAAAAGzw6rXeQWJ_y2P",
+                "type": "turnstile-min",
+                "apikey": "freeApikey"
+            },
+            headers={"accept": "*/*"},
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("success"):
+                return data["data"]["result"]["token"]
+    except:
+        pass
+    return None
+
+def bypass_url(url_to_bypass, token):
+    """Menggunakan bypass.city API untuk bypass URL"""
+    try:
+        response = requests.post(
+            "https://api2.bypass.city/bypass",
+            headers={
+                "Content-Type": "application/json",
+                "x-captcha-provider": "TURNSTILE",
+                "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36",
+                "token": token,
+                "Origin": "https://bypass.city",
+                "Referer": "https://bypass.city/"
+            },
+            json={"url": url_to_bypass},
+            timeout=10
+        )
+        
+        if response.status_code == 201:
+            result = response.json()
+            return result.get("data")
+    except:
+        pass
+    return None
+
+def main():
+    print("=== Bypass URL Tool ===")
+    print("Menggunakan API dari anabot.my.id")
+    print("-" * 30)
+    
+    # Input URL
+    url = input("Enter your link to bypass: ").strip()
+    
+    if not url:
+        print("URL tidak boleh kosong!")
+        return
+    
+    # Tambahkan https:// jika tidak ada
+    if not url.startswith(('http://', 'https://')):
+        url = 'https://' + url
+    
+    print(f"\nMemproses: {url}")
+    
+    # Get token
+    print("Mengambil token...")
+    token = get_turnstile_token()
+    
+    if not token:
+        print("Gagal mendapatkan token!")
+        return
+    
+    # Bypass
+    print("Melakukan bypass...")
+    result = bypass_url(url, token)
+    
+    if result:
+        print("\n✓ BERHASIL!")
+        print(f"Hasil: {result}")
+    else:
+        print("\n✗ GAGAL!")
+
+if __name__ == "__main__":
+    main()
