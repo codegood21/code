@@ -1,0 +1,198 @@
+nama=GPTO ~ SUPP BACA IMAGE
+language=javascript
+lines=194
+date=31/12/2025
+code=const fs = require("fs");
+const path = require("path");
+
+function getBaseHeaders(extra = {}) {
+  return {
+    "User-Agent":
+      "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
+    "Origin": "https://chatgpt4online.org",
+    "Referer": "https://chatgpt4online.org/",
+    "Accept": "*/*",
+    ...extra
+  };
+}
+
+async function post(url, body, extraHeaders = {}) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: getBaseHeaders({
+      "Content-Type": "application/json",
+      ...extraHeaders
+    }),
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`HTTP ${res.status}\n${t}`);
+  }
+
+  return res;
+}
+
+async function startSession() {
+  const res = await post(
+    "https://chatgpt4online.org/wp-json/mwai/v1/start_session",
+    {}
+  );
+
+  const json = await res.json();
+  if (!json.success) throw new Error("start_session failed");
+
+  return {
+    sessionId: json.sessionId,
+    nonce: json.restNonce
+  };
+}
+
+async function uploadImage(nonce, filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return null;
+
+  const buffer = fs.readFileSync(filePath);
+
+  const form = new FormData();
+  form.append("purpose", "vision");
+  form.append(
+    "file",
+    new Blob([buffer], { type: "image/png" }),
+    path.basename(filePath)
+  );
+
+  const res = await fetch(
+    "https://chatgpt4online.org/wp-json/mwai-ui/v1/files/upload",
+    {
+      method: "POST",
+      headers: getBaseHeaders({
+        "X-WP-Nonce": nonce
+      }),
+      body: form
+    }
+  );
+
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`UPLOAD FAIL ${res.status}\n${t}`);
+  }
+
+  const json = await res.json();
+  return json?.data?.id || null;
+}
+
+async function chat(session, prompt, imagePath = null) {
+  const fileIds = [];
+
+  if (imagePath) {
+    const fileId = await uploadImage(session.nonce, imagePath);
+    if (fileId) fileIds.push(fileId);
+  }
+
+  const payload = {
+    botId: "chatbot-qm966k",
+    customId: null,
+    session: session.sessionId,
+    chatId: Math.random().toString(36).slice(2),
+    contextId: 5410,
+    messages: [
+      {
+        id: "start",
+        role: "assistant",
+        content: "Hi! How can I help you?",
+        who: "AI: ",
+        timestamp: Date.now(),
+        key: "start"
+      }
+    ],
+    newMessage: prompt,
+    newFileId: null,
+    newFileIds: fileIds,
+    stream: true
+  };
+
+  const res = await post(
+    "https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit",
+    payload,
+    {
+      "X-WP-Nonce": session.nonce,
+      "Accept": "text/event-stream"
+    }
+  );
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+
+  let buffer = "";
+  let final = null;
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith("data:")) continue;
+
+      const raw = line.slice(5).trim();
+      if (!raw) continue;
+
+      let evt;
+      try {
+        evt = JSON.parse(raw);
+      } catch {
+        continue;
+      }
+
+      if (evt.type === "end") {
+        final = JSON.parse(evt.data);
+      }
+    }
+  }
+
+  if (!final) throw new Error("No final response");
+  return final;
+}
+
+(async () => {
+  try {
+    const session = await startSession();
+
+    const imagePath = "./soal.png"; // ubah jadi : null jika mau tanpa gambar
+
+    const result = await chat(
+      session,
+      "Bantu Jawab Soal Tersebut Dengan Singkat Dan Jelas !",
+      imagePath
+    );
+
+    console.log(
+      JSON.stringify(
+        {
+          success: true,
+          sessionId: session.sessionId,
+          model: "chatgpt4online",
+          answer: result.reply,
+          usage: result.usage
+        },
+        null,
+        2
+      )
+    );
+  } catch (err) {
+    console.log(
+      JSON.stringify(
+        {
+          success: false,
+          error: err.message
+        },
+        null,
+        2
+      )
+    );
+  }
+})();
