@@ -1,0 +1,67 @@
+nama=scarper cnbc
+language=javascript
+lines=63
+date=01/01/2026
+code=/**
+name scraper: CNBC
+author: L7
+linkch : https://whatsapp.com/channel/0029Vb73BoS7oQhg8EKF0O2Z
+*/
+import axios from "axios";
+import * as cheerio from "cheerio";
+
+const BASE = "https://www.cnbcindonesia.com";
+
+const headers = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+  "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
+};
+
+function parseTimeFromUrl(url) {
+  // contoh: 20251229123045
+  const match = url.match(/\/(\d{14})-/);
+  if (!match) return null;
+
+  const t = match[1];
+  return `${t.slice(0, 4)}-${t.slice(4, 6)}-${t.slice(6, 8)} ` +
+         `${t.slice(8, 10)}:${t.slice(10, 12)}:${t.slice(12, 14)}`;
+}
+
+export async function scrapeCNBCNews() {
+  try {
+    const { data } = await axios.get(`${BASE}/news`, { headers });
+    const $ = cheerio.load(data);
+
+    const results = [];
+
+    $("article").each((_, el) => {
+      const title = $(el).find("h2, h3").first().text().trim();
+      let link = $(el).find("a").attr("href");
+
+      if (!title || !link) return;
+      if (link.startsWith("/")) link = BASE + link;
+
+      let time =
+        $(el).find("time").attr("datetime") ||
+        $(el).find(".date, .time, .date_time").text().trim() ||
+        parseTimeFromUrl(link);
+
+      results.push({
+        title,
+        link,
+        time,
+      });
+    });
+
+    return results;
+  } catch (err) {
+    console.error("Scrape error:", err.message);
+    return [];
+  }
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const data = await scrapeCNBCNews();
+  console.log(data);
+}
