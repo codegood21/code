@@ -1,0 +1,44 @@
+nama=bllabla
+language=javascript
+lines=40
+date=01/01/2026
+code=true })
+ 
+const MIME_MAP = {
+ js: "application/javascript",
+ mjs: "application/javascript",
+ cjs: "application/javascript",
+ ts: "application/typescript",
+
+ json: "application/json",
+ yml: "text/yaml",
+ yaml: "text/yaml",
+ env: "text/plain",
+
+ txt: "text/plain",
+ md: "text/markdown",
+ log: "text/plain",
+ csv: "text/csv",
+
+ html: "text/html",
+ css: "text/css",
+ xml: "application/xml",
+ sql: "application/sql",
+
+ db: "application/octet-stream",
+ ... Baca selengkapnya 
+}
+
+Anda 
+/**
+** Convert text to file **
+..tofile tofile.js
+
+Jarr 
+Anda 
+.tofile tofile.js
+
+tofile.js 
+JS 2,3 KB - JS
+
+Succes convert tofile!
