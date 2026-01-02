@@ -1,0 +1,122 @@
+nama=Image To Ghibli
+language=javascript
+lines=118
+date=02/01/2026
+code=const puppeteer = require("puppeteer");
+const axios = require("axios");
+
+const IMAGE_PATH = "./image.jpg";
+const PAGE_URL = "https://colorifyai.art/ai-studio-ghibli-filter/";
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+(async () => {
+  let capturedHeaders = null;
+  let capturedPayload = null;
+
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-blink-features=AutomationControlled"
+    ]
+  });
+
+  const page = await browser.newPage();
+
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+  );
+
+  await page.setRequestInterception(true);
+  page.on("request", req => {
+    if (req.url().includes("/aitools/of/create")) {
+      capturedHeaders = req.headers();
+      capturedPayload = req.postData();
+    }
+    req.continue();
+  });
+
+  await page.goto(PAGE_URL, { waitUntil: "networkidle2" });
+  await page.waitForSelector("#app", { timeout: 30000 });
+  await delay(3000);
+
+  const input = await page.$('input[type="file"]');
+  await input.uploadFile(IMAGE_PATH);
+  await delay(2000);
+
+  await page.evaluate(() => {
+    const btn = [...document.querySelectorAll("button")].find(b =>
+      b.innerText.toLowerCase().includes("generate") ||
+      b.innerText.toLowerCase().includes("start")
+    );
+    if (btn) btn.click();
+  });
+
+  await delay(6000);
+
+  if (!capturedHeaders || !capturedPayload) {
+    console.log(JSON.stringify({
+      success: false,
+      error: "CAPTURE_FAILED"
+    }));
+    await browser.close();
+    return;
+  }
+
+  const parsedPayload = JSON.parse(capturedPayload);
+  const { origin_from, request_from, fn_name, call_type } = parsedPayload;
+
+  const createRes = await axios.post(
+    "https://api.colorifyai.art/aitools/of/create",
+    parsedPayload,
+    {
+      headers: {
+        ...capturedHeaders,
+        "content-type": "application/json"
+      }
+    }
+  );
+
+  const taskId = createRes.data.data.task_id;
+  let resultImage = null;
+
+  while (true) {
+    await delay(3000);
+
+    const statusRes = await axios.post(
+      "https://api.colorifyai.art/aitools/of/check-status",
+      {
+        task_id: taskId,
+        fn_name,
+        call_type,
+        consume_type: 0,
+        request_from,
+        origin_from
+      },
+      {
+        headers: {
+          ...capturedHeaders,
+          "content-type": "application/json"
+        }
+      }
+    );
+
+    const data = statusRes.data.data;
+
+    if (data.status === 2) {
+      resultImage = data.result_image;
+      break;
+    }
+  }
+
+  console.log(JSON.stringify({
+    success: true,
+    task_id: taskId,
+    result_url: "https://temp.colorifyai.art/" + resultImage
+  }));
+
+  await browser.close();
+})();
