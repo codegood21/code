@@ -1,0 +1,55 @@
+nama=tiktokDL
+language=javascript
+lines=51
+date=02/01/2026
+code=import fs from "fs"
+import fetch from "node-fetch"
+import * as cheerio from "cheerio"
+
+let handler = async (m, { sock, reply, text, args, isOwner, isGroup, quoted, getName, command }) => {
+ if (!text) return reply("Kirim link TikTok yang ingin diunduh, contoh: .tiktok https://www.tiktok.com/...")
+ const url = text.trim()
+
+ const form = new URLSearchParams()
+ form.append("id", url)
+ form.append("locale", "id")
+ form.append("tt", "someToken")
+
+ const res = await fetch("https://ssstik.io/abc", {
+ method: "POST",
+ headers: {
+ "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+ "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+ "x-requested-with": "XMLHttpRequest"
+ },
+ body: form
+ })
+
+ const html = await res.text()
+ const $ = cheerio.load(html)
+ let downloadUrl = $('a[href$=".mp4"]').attr("href") || $("a.download_link").attr("href") || $("a").first().attr("href")
+
+ if (!downloadUrl) return reply("Gagal mengambil link video. Coba lagi beberapa saat.")
+
+ const videoRes = await fetch(downloadUrl, {
+ headers: {
+ "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+ }
+ })
+ const arrayBuffer = await videoRes.arrayBuffer()
+ const buffer = Buffer.from(arrayBuffer)
+
+ if (!buffer || !buffer.length) return reply("Gagal mengunduh video.")
+
+ await sock.sendMessage(
+ m.chat,
+ {
+ video: buffer,
+ mimetype: "video/mp4",
+ },
+ { quoted: m }
+ )
+}
+
+handler.command = ["tiktok"]
+export default handler
