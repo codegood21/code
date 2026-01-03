@@ -1,0 +1,50 @@
+nama=Douyin Downloader | SnapDouyin.app
+language=javascript
+lines=46
+date=03/01/2026
+code=const axios = require("axios");
+
+async function fetchSnapDouyin(douyinUrl) {
+  try {
+    const url = "https://snapdouyin.app/wp-json/mx-downloader/video-data/";
+
+    const { data } = await axios.post(
+      url,
+      { url: douyinUrl },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Origin": "https://snapdouyin.app",
+          "Referer": "https://snapdouyin.app/",
+          "User-Agent": "Mozilla/5.0"
+        },
+        timeout: 20000
+      }
+    );
+
+    return {
+      source: data.source,
+      title: data.title,
+      duration: data.duration,
+      thumbnail: data.thumbnail,
+      original_url: data.url,
+      medias: data.medias.map(m => ({
+        quality: m.quality,
+        extension: m.extension,
+        size: m.size,
+        formattedSize: m.formattedSize,
+        url: m.url,
+        video: m.videoAvailable,
+        audio: m.audioAvailable
+      }))
+    };
+  } catch {
+    return null;
+  }
+}
+
+(async () => {
+  const result = await fetchSnapDouyin("https://www.douyin.com/video/7590713124841051018");
+  console.log(JSON.stringify(result, null, 2));
+})();
