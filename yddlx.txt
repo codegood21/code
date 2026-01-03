@@ -1,0 +1,49 @@
+nama=Komik Search | AinzScans
+language=javascript
+lines=45
+date=03/01/2026
+code=const axios = require("axios");
+const qs = require("qs");
+
+async function searchAinzScans(query) {
+  try {
+    const url = "https://ainzscans01.com/wp-admin/admin-ajax.php";
+
+    const payload = qs.stringify({
+      action: "ts_ac_do_search",
+      ts_ac_query: query
+    });
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "*/*",
+        "User-Agent": "Mozilla/5.0"
+      },
+      timeout: 15000
+    });
+
+    if (!data || !data.series || !data.series[0] || !Array.isArray(data.series[0].all)) {
+      return [];
+    }
+
+    return data.series[0].all.map(item => ({
+      id: item.ID,
+      title: item.post_title,
+      type: item.post_type,
+      status: item.post_status,
+      genres: item.post_genres.split(",").map(g => g.trim()),
+      latest_chapter: `${item.chapter_label}${item.post_latest}`,
+      link: item.post_link,
+      thumbnail: item.post_image
+    }));
+  } catch {
+    return [];
+  }
+}
+
+(async () => {
+  const result = await searchAinzScans("Leveling");
+  console.log(JSON.stringify(result, null, 2));
+})();
