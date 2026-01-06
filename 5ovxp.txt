@@ -1,0 +1,66 @@
+nama=ikkn
+language=javascript
+lines=63
+date=06/01/2026
+code=const axios = require('axios');
+
+module.exports = {
+    exec: async (sock, m, body) => {
+        const args = body.split(" ").slice(1).join(" ");
+        if (!args) return sock.sendMessage(m.key.remoteJid, { text: 'Masukkan judul lagu!\nContoh: *!play Jakarta Hari Ini*' });
+
+        const sender = m.key.remoteJid;
+
+        try {
+            // Mengirim pesan loading agar kamu tahu bot sedang bekerja
+            await sock.sendMessage(sender, { text: `Wait... Sedang mencari lagu: *${args}*` });
+
+            const api = `https://api.elrayyxml.web.id/api/downloader/ytplay?q=${encodeURIComponent(args)}`;
+            const res = await axios.get(api);
+
+            if (!res.data?.result) return sock.sendMessage(sender, { text: "Gagal: Lagu tidak ditemukan." });
+
+            const info = res.data.result;
+            const title = info.title;
+            const thumbnail = info.thumbnail;
+            const downloadUrl = info.download_url;
+
+            // Download Audio ke Buffer
+            const audioReq = await axios.get(downloadUrl, {
+                responseType: "arraybuffer",
+                headers: { "User-Agent": "Mozilla/5.0" }
+            });
+
+            const audioBuffer = Buffer.from(audioReq.data);
+
+            // Download Thumbnail ke Buffer
+            let thumbBuffer = null;
+            if (thumbnail) {
+                try {
+                    const tReq = await axios.get(thumbnail, { responseType: "arraybuffer" });
+                    thumbBuffer = Buffer.from(tReq.data);
+                } catch {}
+            }
+
+            // Kirim Audio langsung ke chat ini
+            await sock.sendMessage(sender, {
+                audio: audioBuffer,
+                mimetype: "audio/mpeg",
+                fileName: `${title}.mp3`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: title,
+                        body: info.channel || "YouTube Downloader",
+                        thumbnail: thumbBuffer,
+                        mediaType: 2,
+                        sourceUrl: info.url
+                    }
+                }
+            }, { quoted: m });
+
+        } catch (e) {
+            console.error("PLAY ERROR:", e.message);
+            await sock.sendMessage(sender, { text: `❌ Error: ${e.message}` });
+        }
+    }
+};
