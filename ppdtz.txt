@@ -1,0 +1,55 @@
+nama=ikkn
+language=javascript
+lines=52
+date=06/01/2026
+code=const fs = require('fs');
+const path = require('path');
+
+module.exports = {
+    exec: async (sock, m, body) => {
+        // MENGAMBIL PESAN YANG DI-REPLY
+        const quoted = m.message.extendedTextMessage?.contextInfo?.quotedMessage;
+        const code = quoted?.conversation || quoted?.extendedTextMessage?.text;
+
+        if (!code) {
+            return await sock.sendMessage(m.key.remoteJid, { text: "❌ Kamu harus me-REPLY pesan berisi kode!" });
+        }
+
+        // --- LOGIKA OTOMATIS MENCARI NAMA ---
+        let fileName = "";
+
+        // 1. Coba cari pattern: command = /^(nama|fitur)/i
+        const regexCommand = /command\s*=\s*\/\^?\s*\(?([a-zA-Z0-9|]+)\)?/i;
+        const matchCommand = code.match(regexCommand);
+
+        if (matchCommand) {
+            // Ambil kata pertama jika ada pilihan (misal: upswgc|swgc jadi upswgc)
+            fileName = matchCommand[1].split('|')[0].replace('^', '');
+        } 
+        
+        // 2. Jika tidak ada, coba cari pattern: case 'nama':
+        if (!fileName) {
+            const regexCase = /case\s*['"]([^'"]+)['"]\s*:/i;
+            const matchCase = code.match(regexCase);
+            if (matchCase) fileName = matchCase[1];
+        }
+
+        // 3. Jika masih tidak ketemu, gunakan nama acak sebagai pengaman
+        if (!fileName) {
+            return await sock.sendMessage(m.key.remoteJid, { 
+                text: "❌ Bot tidak menemukan nama fitur otomatis di dalam kode.\nSilakan gunakan manual: *!addplugins nama*" 
+            });
+        }
+
+        const filePath = path.join(__dirname, `${fileName.toLowerCase()}.js`);
+
+        try {
+            fs.writeFileSync(filePath, code);
+            await sock.sendMessage(m.key.remoteJid, { 
+                text: `✅ *BERHASIL OTOMATIS!*\n\nNama Fitur: *!${fileName}*\nFile: *${fileName}.js*\nStatus: Aktif & Masuk Menu` 
+            });
+        } catch (e) {
+            await sock.sendMessage(m.key.remoteJid, { text: "❌ Gagal: " + e.message });
+        }
+    }
+};
