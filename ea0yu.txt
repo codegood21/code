@@ -1,0 +1,5 @@
+nama=P
+language=html
+lines=1
+date=06/01/2026
+code=<kontol>kontol</kontol>
