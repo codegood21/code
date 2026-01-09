@@ -1,0 +1,194 @@
+nama=Nano Banana || nanabanana.ai
+language=javascript
+lines=190
+date=09/01/2026
+code=const axios = require("axios");
+const { CookieJar } = require("tough-cookie");
+const { wrapper } = require("axios-cookiejar-support");
+const FormData = require("form-data");
+const fs = require("fs");
+const path = require("path");
+
+const IMAGE_PATH = path.resolve("./img.jpg");
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const jar = new CookieJar();
+
+const client = wrapper(
+  axios.create({
+    jar,
+    withCredentials: true,
+    timeout: 30000,
+    validateStatus: () => true,
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+      Accept: "*/*",
+    },
+  })
+);
+
+const TEMP_HEADERS = {
+  "Content-Type": "application/json",
+  "Application-Name": "web",
+  "Application-Version": "4.0.0",
+  "X-CORS-Header": "iaWg3pchvFx48fY",
+};
+
+async function createTempMail() {
+  const name = `bagusapi_${Math.random().toString(36).slice(2, 8)}`;
+  const res = await client.post(
+    "https://api.internal.temp-mail.io/api/v3/email/new",
+    { name, domain: "illubd.com" },
+    { headers: TEMP_HEADERS }
+  );
+  if (!res.data?.email) throw new Error("TEMP_MAIL_FAILED");
+  return res.data.email;
+}
+
+async function getCSRF() {
+  const res = await client.get("https://nanabanana.ai/api/auth/csrf");
+  if (!res.data?.csrfToken) throw new Error("CSRF_NOT_FOUND");
+  return res.data.csrfToken;
+}
+
+async function sendOTP(email) {
+  const res = await client.post(
+    "https://nanabanana.ai/api/auth/email-verification",
+    { email },
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (res.data?.code !== 0) throw new Error("SEND_OTP_FAILED");
+}
+
+async function waitOTP(email) {
+  for (let i = 0; i < 30; i++) {
+    const inbox = await client.get(
+      `https://api.internal.temp-mail.io/api/v3/email/${email}/messages`,
+      { headers: TEMP_HEADERS }
+    );
+
+    const mail = Array.isArray(inbox.data)
+      ? inbox.data.find(m => m.subject?.includes("Verification Code"))
+      : null;
+
+    if (mail?.body_text) {
+      const code = mail.body_text.match(/\b\d{6}\b/);
+      if (code) return code[0];
+    }
+
+    await sleep(5000);
+  }
+  throw new Error("OTP_TIMEOUT");
+}
+
+async function submitOTP(email, code, csrfToken) {
+  await client.post(
+    "https://nanabanana.ai/api/auth/callback/email-verification",
+    new URLSearchParams({
+      csrfToken,
+      email,
+      code,
+      json: "true",
+    }).toString(),
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      maxRedirects: 0,
+    }
+  );
+
+  const res = await client.get("https://nanabanana.ai/api/auth/session");
+  if (!res.data?.user) throw new Error("LOGIN_FAILED");
+
+  const cookies = await jar.getCookies("https://nanabanana.ai");
+  const session = cookies.find(
+    c => c.key === "__Secure-authjs.session-token"
+  );
+  if (!session) throw new Error("SESSION_COOKIE_MISSING");
+
+  return res.data;
+}
+
+async function uploadImage() {
+  const form = new FormData();
+  form.append("file", fs.createReadStream(IMAGE_PATH));
+
+  const res = await client.post(
+    "https://nanabanana.ai/api/upload",
+    form,
+    { headers: form.getHeaders() }
+  );
+
+  if (!res.data?.url) throw new Error("UPLOAD_FAILED");
+  return res.data;
+}
+
+async function createTask(imageUrl) {
+  const payload = {
+    prompt: "Change to ghibli Studio style",
+    image_urls: [imageUrl],
+    output_format: "png",
+    image_size: "auto",
+    enable_pro: true,
+    resolution: "4K",
+    width: 1024,
+    height: 1024,
+    steps: 20,
+    guidance_scale: 7.5,
+    is_public: false,
+  };
+
+  const res = await client.post(
+    "https://nanabanana.ai/api/image-generation-nano-banana/create",
+    payload,
+    { headers: { "Content-Type": "application/json" } }
+  );
+
+  if (!res.data?.task_id) throw new Error("CREATE_TASK_FAILED");
+  return res.data.task_id;
+}
+
+async function waitResult(taskId) {
+  while (true) {
+    const res = await client.post(
+      "https://nanabanana.ai/api/image-generation-nano-banana/status",
+      { taskId },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    const gen = res.data?.generations?.[0];
+    if (!gen) throw new Error("STATUS_INVALID");
+
+    if (gen.status !== "waiting") {
+      return res.data;
+    }
+
+    await sleep(4000);
+  }
+}
+
+(async () => {
+  try {
+    const email = await createTempMail();
+    const csrf = await getCSRF();
+    await sendOTP(email);
+    const otp = await waitOTP(email);
+    await submitOTP(email, otp, csrf);
+    const upload = await uploadImage();
+    const taskId = await createTask(upload.url);
+    const result = await waitResult(taskId);
+
+    console.log(JSON.stringify(result, null, 2));
+  } catch (e) {
+    console.log(
+      JSON.stringify(
+        {
+          success: false,
+          error: e.message,
+        },
+        null,
+        2
+      )
+    );
+  }
+})();
