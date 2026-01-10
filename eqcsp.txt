@@ -1,0 +1,5 @@
+nama=kkks
+language=javascript
+lines=1
+date=10/01/2026
+code=tsats
