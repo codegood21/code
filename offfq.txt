@@ -1,0 +1,69 @@
+nama=Instagram Downloader || fastdl.app
+language=javascript
+lines=65
+date=11/01/2026
+code=const puppeteer = require("puppeteer");
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function scrapeFastDL() {
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-blink-features=AutomationControlled"
+    ]
+  });
+
+  const page = await browser.newPage();
+
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+  );
+
+  let apiResult = null;
+
+  page.on("response", async res => {
+    if (res.url().includes("/api/convert")) {
+      try {
+        apiResult = await res.json();
+      } catch {}
+    }
+  });
+
+  await page.goto("https://fastdl.app/en2", {
+    waitUntil: "networkidle2",
+    timeout: 60000
+  });
+
+  await page.waitForSelector("#search-form-input", { timeout: 30000 });
+  await page.type(
+    "#search-form-input",
+    "https://www.instagram.com/reel/DTNO-7sk3EJ/?igsh=amh5bmQwZnJwdmRl",
+    { delay: 25 }
+  );
+
+  await page.click("#searchFormButton");
+
+  const start = Date.now();
+  while (!apiResult) {
+    if (Date.now() - start > 30000) {
+      throw new Error("API timeout");
+    }
+    await sleep(300);
+  }
+
+  await browser.close();
+  return apiResult;
+}
+
+scrapeFastDL()
+  .then(res => {
+    process.stdout.write(JSON.stringify(res, null, 2));
+  })
+  .catch(err => {
+    process.stderr.write(
+      JSON.stringify({ error: err.message })
+    );
+  });
