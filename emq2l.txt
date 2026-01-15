@@ -1,0 +1,5 @@
+nama=hi
+language=javascript
+lines=1
+date=15/01/2026
+code=tss
