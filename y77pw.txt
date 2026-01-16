@@ -1,0 +1,5 @@
+nama=Hey bro 
+language=javascript
+lines=1
+date=16/01/2026
+code=Hey bro 
