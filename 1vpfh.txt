@@ -1,0 +1,5 @@
+nama=kojtol
+language=javascript
+lines=1
+date=18/01/2026
+code=kontol ay
