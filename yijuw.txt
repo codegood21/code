@@ -1,0 +1,5 @@
+nama=Vuvuiv
+language=javascript
+lines=1
+date=18/01/2026
+code=Cycvyvy
