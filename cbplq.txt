@@ -1,0 +1,52 @@
+nama=Tiktok Downloader
+language=javascript
+lines=48
+date=27/01/2026
+code=const axios = require("axios");
+
+async function teteDeel(tiktokUrl) {
+  try {
+    const response = await axios.post(
+      "https://downloader.bot/api/tiktok/info",
+      {
+        url: tiktokUrl
+      },
+      {
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+        },
+        timeout: 15000
+      }
+    );
+
+    if (!response.data || response.data.status !== true) {
+      throw new Error("Gagal mengambil data");
+    }
+
+    const data = response.data.data;
+
+    return {
+      status: true,
+      author: data.nick,
+      caption: data.video_info,
+      thumbnail: data.video_img,
+      video_mp4: data.mp4,
+      audio_mp3: data.mp3,
+      video_date_unix: data.video_date,
+      video_date: new Date(data.video_date * 1000).toLocaleString("id-ID")
+    };
+  } catch (err) {
+    return {
+      status: false,
+      error: err.message
+    };
+  }
+}
+
+(async () => {
+  const url = "https://vt.tiktok.com/ZSaPGAHN9/";
+  const result = await teteDeel(url);
+  console.log(result);
+})();
