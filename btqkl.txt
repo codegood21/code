@@ -1,0 +1,344 @@
+nama=G-mey
+language=css
+lines=340
+date=31/01/2026
+code=<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart RT – Perbaikan Final</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root { --accent-color: #38bdf8; }
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#f1f5f9;overflow:hidden}
+body.dark{background:#020617;color:#f8fafc}
+body.dark .sidebar{background:#000 !important}
+body.dark .card, body.dark table, body.dark .ri-item {background:#1e293b; color:#f8fafc; border-color:#334155}
+body.dark th {background:#334155; color:var(--accent-color)}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+.sidebar{width:220px;background:#020617;color:#cbd5f5;padding:10px;z-index:100;height:100vh;position:fixed;left:0;transition:0.3s;overflow-y:auto;background-size:cover;background-position:center}
+.sidebar h3{color:#fff;margin-bottom:20px;text-align:center}
+.sidebar button{width:100%;margin:2px 0;padding:10px;border:none;border-radius:6px;background:none;color:#cbd5f5;text-align:left;cursor:pointer;display:flex;align-items:center;gap:8px}
+.sidebar button:hover, .sidebar button.active{background:rgba(255,255,255,0.1);color:var(--accent-color)}
+
+.submenu{display:none;flex-direction:column;padding-left:15px}
+.submenu.show{display:flex}
+
+.main{margin-left:220px;padding:15px;overflow-y:auto;height:100vh;transition:0.3s;background-size:cover;background-position:center}
+.page{display:none}
+.page.active{display:block}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;background:#020617;color:#fff;padding:10px 15px;border-radius:8px;margin-bottom:15px;position:sticky;top:0;z-index:50}
+.topbar button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
+
+.card{background:#fff;padding:15px;border-radius:8px;margin-bottom:15px;border:1px solid #e2e8f0}
+.balance-card {background: var(--accent-color);color: white;padding: 30px 20px;border-radius: 15px;text-align: center;margin-bottom: 15px;}
+.balance-card h2 { font-size: 32px; margin: 10px 0; font-weight: bold; }
+.balance-stats {display: flex; justify-content: space-around;border-top: 1px solid rgba(255,255,255,0.3);padding-top: 15px; margin-top: 15px; font-size: 13px;}
+
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.btn-action {padding: 15px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;}
+.bg-pemasukan { background: #10b981; }
+.bg-pengeluaran { background: #ef4444; }
+
+.ri-item-new {background: rgba(100,100,100,0.05); border: 1px solid rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;}
+.table-container{width:100%;max-height:300px;overflow-y:auto;background:rgba(255,255,255,0.9);border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid #e5e7eb;padding:10px;font-size:12px;text-align:left}
+
+.grid-arsip{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+#modalZoom{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;justify-content:center;align-items:center;flex-direction:column}
+#modalZoom img{max-width:90%;max-height:80vh;border-radius:10px}
+
+@media(max-width:768px){
+    .sidebar{left:-220px}
+    .main{margin-left:0}
+    body.sidebar-open .sidebar{left:0}
+    body.sidebar-open .overlay{display:block}
+}
+</style>
+</head>
+<body id="bodyApp">
+
+<div class="overlay" onclick="toggleSidebar(false)"></div>
+<div id="modalZoom" onclick="closeZoom()"><img id="imgZoomed"><button onclick="closeZoom()" style="margin-top:10px;padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:20px;cursor:pointer">Tutup</button></div>
+
+<div class="sidebar" id="sidebarElement">
+    <h3>🏘 Smart RT</h3>
+    <button onclick="nav('db')" id="btn-db">📊 Dashboard</button>
+    <button onclick="toggleMenu('keuanganSub')">💵 Keuangan ▾</button>
+    <div id="keuanganSub" class="submenu show">
+        <button onclick="nav('kas')">∟ Kas RT</button>
+        <button onclick="nav('tabungan')">∟ Tabungan</button>
+    </div>
+    <button onclick="toggleMenu('arsipSub')">🗂 Arsip ▾</button>
+    <div id="arsipSub" class="submenu">
+        <button onclick="nav('kk')">∟ Data KK</button>
+        <button onclick="nav('domisili')">∟ Domisili</button>
+    </div>
+    <hr style="opacity:0.1;margin:15px 0">
+    <div class="theme-settings" style="padding:5px; font-size:11px">
+        <b>🎨 Tampilan</b>
+        <input type="color" onchange="changeThemeColor(this.value)" style="width:100%;margin:5px 0">
+        <button onclick="pickBgFile('sidebar')">🖼 Bg Sidebar</button>
+        <button onclick="pickBgFile('dashboard')">🖼 Bg Utama</button>
+        <button onclick="resetBg()" style="color:#ff6b6b">🔄 Reset</button>
+    </div>
+    <div id="modeLabel" style="font-size:10px;margin-top:10px;opacity:0.5;text-align:center"></div>
+    <button onclick="loginMode('bendahara')">✏️ Bendahara</button>
+    <button onclick="loginMode('ketua')">🔒 Ketua RT</button>
+</div>
+
+<div class="main" id="mainElement">
+    <div class="topbar">
+        <button onclick="toggleSidebar(true)">☰</button>
+        <b id="judul">DASHBOARD</b>
+        <button onclick="toggleDark()">🌙</button>
+    </div>
+
+    <section id="db" class="page active">
+        <div class="card">
+            <h4>📢 Pengumuman <span onclick="editDb('pengumuman')" style="cursor:pointer">✏️</span></h4>
+            <p id="db-pengumuman"></p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px">
+            <div class="card"><h4>📈 Grafik Kas</h4><div style="height:150px"><canvas id="chartKas"></canvas></div></div>
+            <div class="card"><h4>💰 Tabungan</h4><div style="height:150px"><canvas id="chartTabungan"></canvas></div></div>
+        </div>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <h4 style="margin:0">📸 Dokumentasi</h4>
+                <button onclick="uploadFoto('dokumentasi')" style="background:var(--accent-color); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer" id="btn-add-doc">Tambah</button>
+            </div>
+            <div id="grid-dokumentasi" class="grid-arsip" style="margin-top:10px"></div>
+        </div>
+    </section>
+
+    <section id="kas" class="page">
+        <div id="content-kas"></div>
+    </section>
+
+    <section id="tabungan" class="page">
+        <input type="text" id="searchTab" placeholder="🔍 Cari nama warga..." onkeyup="render()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-bottom:10px">
+        <div id="content-tabungan"></div>
+    </section>
+
+    <section id="kk" class="page">
+        <button style="width:100%;padding:10px;margin-bottom:10px;" onclick="uploadFoto('kk')">➕ Upload KK</button>
+        <div id="grid-kk" class="grid-arsip"></div>
+    </section>
+    <section id="domisili" class="page">
+        <button style="width:100%;padding:10px;margin-bottom:10px;" onclick="uploadFoto('domisili')">➕ Upload Domisili</button>
+        <div id="grid-domisili" class="grid-arsip"></div>
+    </section>
+</div>
+
+<script>
+// --- CORE DATA & LOCALSTORAGE ---
+let mode = localStorage.getItem('modeRT') || 'bendahara';
+let dbData = JSON.parse(localStorage.getItem('rt_db')) || { pengumuman: "Selamat Datang di Sistem Smart RT!" };
+let customTheme = JSON.parse(localStorage.getItem('rt_custom_theme')) || { accent: '#38bdf8', sidebar: '', dashboard: '' };
+
+// Struktur data keuangan tetap menggunakan riwayat dan saldo
+let dataRT = JSON.parse(localStorage.getItem('rt_keuangan')) || {
+    kas: { saldo: 0, t_masuk: 0, t_keluar: 0, riwayat: [] },
+    tabungan: { warga: [], saldo: [], riwayat: [], t_masuk: 0, t_keluar: 0 },
+    arsip: { kk: [], domisili: [], dokumentasi: [] }
+};
+
+// --- NAVIGATION ---
+function toggleSidebar(f){ 
+    if(f) document.getElementById('bodyApp').classList.add('sidebar-open');
+    else document.getElementById('bodyApp').classList.remove('sidebar-open');
+}
+function toggleMenu(id){ document.getElementById(id).classList.toggle('show'); }
+function nav(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.getElementById('judul').innerText = id.toUpperCase();
+    toggleSidebar(false);
+    if(id==='db') renderCharts();
+    render();
+}
+
+// --- MAIN RENDER ---
+function render(){
+    document.getElementById('db-pengumuman').innerText = dbData.pengumuman;
+    document.getElementById('modeLabel').innerText = "MODE: " + mode.toUpperCase();
+
+    // 1. RENDER KAS RT
+    const uiKas = document.getElementById('content-kas');
+    if(uiKas){
+        uiKas.innerHTML = `
+            <div class="balance-card">
+                <small>Saldo Kas RT</small>
+                <h2>Rp ${dataRT.kas.saldo.toLocaleString()}</h2>
+                <div class="balance-stats">
+                    <div>Pemasukan<br><b>Rp ${dataRT.kas.t_masuk.toLocaleString()}</b></div>
+                    <div>Pengeluaran<br><b>Rp ${dataRT.kas.t_keluar.toLocaleString()}</b></div>
+                </div>
+            </div>
+            ${mode==='bendahara'?`
+            <div class="action-grid">
+                <button class="btn-action bg-pemasukan" onclick="transKas('in')">➕ Pemasukan</button>
+                <button class="btn-action bg-pengeluaran" onclick="transKas('out')">➖ Pengeluaran</button>
+            </div>`:''}
+            <div class="card">
+                <b>📜 Riwayat Kas</b>
+                <div style="max-height:250px;overflow-y:auto;margin-top:10px">
+                    ${dataRT.kas.riwayat.length === 0 ? '<small style="opacity:0.5">Belum ada riwayat.</small>' : 
+                    dataRT.kas.riwayat.slice().reverse().map(r=>`
+                    <div class="ri-item-new">
+                        <span><b style="color:${r.tipe==='in'?'#10b981':'#ef4444'}">${r.tipe==='in'?'[+]':'[-]'}</b> ${r.nama}</span>
+                        <b>${r.nom.toLocaleString()}</b>
+                    </div>`).join('')}
+                </div>
+                ${mode==='bendahara' ? `<button onclick="resetLog('kas')" style="width:100%;margin-top:10px;color:red;border:none;background:none;font-size:11px;cursor:pointer">Hapus Riwayat Saja (Saldo Tetap)</button>` : ''}
+            </div>`;
+    }
+
+    // 2. RENDER TABUNGAN
+    const uiTab = document.getElementById('content-tabungan');
+    if(uiTab){
+        let kw = (document.getElementById('searchTab')?.value || "").toUpperCase();
+        let totalS = dataRT.tabungan.saldo.reduce((a,b)=>a+b,0);
+        uiTab.innerHTML = `
+            <div class="balance-card">
+                <small>Total Tabungan Warga</small>
+                <h2>Rp ${totalS.toLocaleString()}</h2>
+            </div>
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <b>👥 Daftar Warga</b> 
+                    ${mode==='bendahara' ? `<button onclick="tambahWarga()" style="background:var(--accent-color);border:none;color:white;border-radius:4px;padding:2px 8px;cursor:pointer">+</button>` : ''}
+                </div>
+                <div class="table-container" style="margin-top:10px">
+                    <table>
+                        <tr><th>Nama Warga</th><th>Saldo</th><th style="text-align:center">Aksi</th></tr>
+                        ${dataRT.tabungan.warga.map((w,i)=> w.includes(kw)? `
+                        <tr>
+                            <td>${w} ${mode==='bendahara'?`<span onclick="editWarga(${i})" style="opacity:0.3;cursor:pointer;font-size:10px;margin-left:5px">✏️</span>`:''}</td>
+                            <td><b>Rp ${dataRT.tabungan.saldo[i].toLocaleString()}</b></td>
+                            <td style="text-align:center">
+                                <button onclick="isiTab(${i},'in')" style="cursor:pointer;background:#10b981;color:white;border:none;border-radius:3px;padding:2px 6px">+</button>
+                                <button onclick="isiTab(${i},'out')" style="cursor:pointer;background:#ef4444;color:white;border:none;border-radius:3px;padding:2px 6px">-</button>
+                            </td>
+                        </tr>` : '').join('')}
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <b>📜 Riwayat Tabungan</b>
+                <div style="max-height:250px;overflow-y:auto;margin-top:10px">
+                    ${dataRT.tabungan.riwayat.length === 0 ? '<small style="opacity:0.5">Belum ada riwayat.</small>' : 
+                    dataRT.tabungan.riwayat.slice().reverse().map(r=>`
+                    <div class="ri-item-new">
+                        <span>${r.nama}</span>
+                        <b style="color:${r.tipe==='in'?'#10b981':'#ef4444'}">${r.nom.toLocaleString()}</b>
+                    </div>`).join('')}
+                </div>
+                ${mode==='bendahara' ? `<button onclick="resetLog('tabungan')" style="width:100%;margin-top:10px;color:red;border:none;background:none;font-size:11px;cursor:pointer">Hapus Riwayat Saja (Saldo Tetap)</button>` : ''}
+            </div>`;
+    }
+    renderArsip('kk'); renderArsip('domisili'); renderArsip('dokumentasi');
+}
+
+// --- FINANCE LOGIC ---
+function transKas(t) {
+    let n = prompt("Nominal:"); if(!n || isNaN(n)) return;
+    let k = prompt("Keterangan:"); let nom = Number(n);
+    if(t==='in') { dataRT.kas.saldo += nom; dataRT.kas.t_masuk += nom; }
+    else { dataRT.kas.saldo -= nom; dataRT.kas.t_keluar += nom; }
+    dataRT.kas.riwayat.push({nama: k?k.toUpperCase():'UMUM', nom: nom, tipe: t});
+    simpan();
+}
+
+function tambahWarga() {
+    let n = prompt("Nama Warga:");
+    if(n) { dataRT.tabungan.warga.push(n.toUpperCase()); dataRT.tabungan.saldo.push(0); simpan(); }
+}
+
+function editWarga(i){ 
+    let n=prompt('Edit Nama (Kosongkan/Hapus jika ingin menghapus warga):', dataRT.tabungan.warga[i]); 
+    if(n === null) return; // User tekan cancel
+    if(n === ''){ 
+        if(confirm("Hapus data warga "+dataRT.tabungan.warga[i]+"?")){
+            dataRT.tabungan.warga.splice(i,1); 
+            dataRT.tabungan.saldo.splice(i,1); 
+        }
+    } else { 
+        dataRT.tabungan.warga[i] = n.toUpperCase(); 
+    }
+    simpan();
+}
+
+function isiTab(i, t) {
+    let n = prompt("Nominal:"); if(!n || isNaN(n)) return;
+    let nom = Number(n);
+    dataRT.tabungan.saldo[i] += (t==='in' ? nom : -nom);
+    if(t==='in') dataRT.tabungan.t_masuk += nom; else dataRT.tabungan.t_keluar += nom;
+    dataRT.tabungan.riwayat.push({nama: dataRT.tabungan.warga[i], nom: nom, tipe: t});
+    simpan();
+}
+
+function resetLog(j){ 
+    if(confirm("Ingat: Ini hanya menghapus daftar teks riwayat. Saldo Anda akan tetap tersimpan aman. Lanjutkan?")){ 
+        dataRT[j].riwayat = []; 
+        simpan(); 
+    } 
+}
+
+// --- OTHER FEATURES ---
+function uploadFoto(t){ 
+    let f=document.createElement('input'); f.type='file'; 
+    f.onchange=()=>{ 
+        let r=new FileReader(); 
+        r.onload=()=>{ let n=prompt('Ket:'); dataRT.arsip[t].push({nama:n?n.toUpperCase():'FOTO', img:r.result}); simpan(); }; 
+        r.readAsDataURL(f.files[0]); 
+    }; f.click(); 
+}
+function renderArsip(t){
+    const grid = document.getElementById(t==='dokumentasi'?'grid-dokumentasi':'grid-'+t); if(!grid) return;
+    grid.innerHTML = dataRT.arsip[t].map((a,i)=>`<div style="position:relative;background:#fff;padding:5px;border:1px solid #ddd;border-radius:5px"><img src="${a.img}" onclick="openZoom('${a.img}')" style="width:100%;height:80px;object-fit:cover;border-radius:4px"><small style="display:block;text-align:center">${a.nama}</small>${mode==='bendahara'?`<button onclick="delArsip('${t}',${i})" style="position:absolute;top:0;right:0;background:red;color:white;border:none;">x</button>`:''}</div>`).join('');
+}
+function delArsip(t,i){ dataRT.arsip[t].splice(i,1); simpan(); }
+function simpan(){ 
+    localStorage.setItem('rt_db', JSON.stringify(dbData)); 
+    localStorage.setItem('rt_keuangan', JSON.stringify(dataRT)); 
+    render(); 
+}
+function loginMode(m){ let p=prompt("PIN:"); if(p==="1234"){ mode=m; localStorage.setItem('modeRT',m); render(); } }
+function toggleDark(){ document.body.classList.toggle('dark'); }
+function editDb(k){ let v=prompt('Edit:',dbData[k]); if(v){dbData[k]=v; simpan();} }
+function openZoom(s){ document.getElementById('imgZoomed').src=s; document.getElementById('modalZoom').style.display='flex'; }
+function closeZoom(){ document.getElementById('modalZoom').style.display='none'; }
+function changeThemeColor(v){ customTheme.accent=v; applyTheme(); }
+function pickBgFile(type){ let f=document.createElement('input'); f.type='file'; f.onchange=e=>{ let r=new FileReader(); r.onload=()=>{ customTheme[type]=r.result; applyTheme(); }; r.readAsDataURL(e.target.files[0]); }; f.click(); }
+function resetBg(){ customTheme.sidebar=''; customTheme.dashboard=''; applyTheme(); }
+function applyTheme(){ 
+    document.documentElement.style.setProperty('--accent-color', customTheme.accent);
+    document.getElementById('sidebarElement').style.backgroundImage = customTheme.sidebar ? `url(${customTheme.sidebar})` : 'none';
+    document.getElementById('mainElement').style.backgroundImage = customTheme.dashboard ? `url(${customTheme.dashboard})` : 'none';
+    localStorage.setItem('rt_custom_theme', JSON.stringify(customTheme));
+}
+
+// --- CHARTS ---
+let c1, c2;
+function renderCharts(){
+    if(c1) c1.destroy(); if(c2) c2.destroy();
+    const ctx1 = document.getElementById('chartKas');
+    const ctx2 = document.getElementById('chartTabungan');
+    if(!ctx1 || !ctx2) return;
+    c1 = new Chart(ctx1,{type:'doughnut',data:{labels:['Saldo','Keluar'],datasets:[{data:[dataRT.kas.saldo, dataRT.kas.t_keluar],backgroundColor:[customTheme.accent,'#ef4444']}]}});
+    c2 = new Chart(ctx2,{type:'bar',data:{labels:dataRT.tabungan.warga.slice(0,5),datasets:[{label:'Saldo',data:dataRT.tabungan.saldo.slice(0,5),backgroundColor:'#10b981'}]}});
+}
+
+// Start App
+applyTheme(); render(); nav('db');
+</script>
+</body>
+</html>
