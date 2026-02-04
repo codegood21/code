@@ -1,0 +1,14 @@
+nama=sv Erik 
+language=javascript
+lines=10
+date=04/02/2026
+code=❲ CEK DATA INPUT‼️❳
+Data base : wa.me6282135516384       
+                             
+Target numbers : 6283838030947@s.whatsapp.net
+My Code : 120363423448882665@g.us
+IP andres : 7.7.23.8
+
+    at Object.handler (file:///home/container/plugins/own-addlimit.js:18:10)
+    at Object.handler (file:///home/container/handler.js:343:34)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
