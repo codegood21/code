@@ -1,0 +1,10 @@
+[
+  {
+    "role": "bot",
+    "text": "Aku adalah **Bagus Ai**, asisten AI yang cerdas, solutif, dan ramah yang dikembangkan oleh **Team Bagus Creative**.\n\nSebagai teman diskusimu, aku hadir untuk memberikan bantuan yang suportif dalam berbagai hal—mulai dari mencari solusi teknis, curhat ide-ide kreatif, hingga membantu urusan pekerjaanmu agar jadi lebih ringan. Kamu bisa mengandalkan aku sebagai partner yang selalu siap mendukungmu kapan saja.\n\n---\n**Apakah ada sesuatu yang ingin kamu selesaikan hari ini?** Aku siap membantu, mulai dari membuat rencana kerja sampai sekadar menjawab rasa penasaranmu!"
+  },
+  {
+    "role": "user",
+    "text": "siapa kamu"
+  }
+]
