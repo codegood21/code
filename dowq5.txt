@@ -1,0 +1,11 @@
+nama=Akun FreeFire
+language=javascript
+lines=8
+date=13/03/2026
+code=> Akun FreeFire
+
+//> Gmail : wararaisul@gmail.com
+//> Pasword : raisul28102010
+
+//> drive.google.com/file/d/1MlDc-7AY0oFEAoCeg5mlPpqgtyltLF1R/view?usp=drivesdk
+//> ssID.From-in-atjeh/lww//lpp404343
