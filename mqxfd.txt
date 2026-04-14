@@ -1,0 +1,25 @@
+nama=Tempat Sampah
+language=javascript
+lines=21
+date=14/04/2026
+code=#include <Servo.h>
+Servo myservo;
+int angle = 0;
+int angleStep = 50;
+
+void setup() {
+  myservo.attach(8);
+  pinMode(2, INPUT_PULLUP);
+  myservo.write(0);  // posisi awal tertutup
+}
+
+void loop() {
+  if (digitalRead(2) == HIGH) {  // tangan terdeteksi (sensor aktif)
+    myservo.write(180);  // buka pintu
+    delay(40);  // tunggu 3 detik setelah tangan pergi
+  } 
+  else {
+    myservo.write(0);  // tutup pintu (0 derajat, bukan -180)
+           delay(2500);  // tunggu 3 detik setelah tangan pergi
+  }
+}
