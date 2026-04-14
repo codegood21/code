@@ -1,0 +1,27 @@
+nama=Happymod Search
+language=javascript
+lines=23
+date=14/04/2026
+code=#include <Servo.h>
+
+Servo myservo;
+
+void setup() { 
+  myservo.attach(8);        // servo di pin 8
+  pinMode(2, INPUT_PULLUP); // sensor di pin 2
+  myservo.write(0);         // posisi awal (tutup)
+}
+
+void loop() {
+
+  // kalau sensor aktif
+  if (digitalRead(2) == HIGH) {
+
+    myservo.write(180);   // buka tutup
+    delay(5000);          // tunggu 5 detik
+
+    myservo.write(0);     // tutup lagi
+    delay(1000);          // jeda biar gak langsung ke-trigger lagi
+  }
+
+}
