@@ -1,0 +1,19 @@
+nama=Laporan investor eMAS
+language=python
+lines=15
+date=18/04/2026
+code=`Laporan investasi emas`
+
+_tanggal 19 April 2026_
+
+Saldo eMAS | 0,1717g | Rp 455.554 *[ 0,1717 gram = Rp 455.554 ]*
+
+- >// Profit saat ini | Hijau | Rp9.036 (1,96%)
+
+- >// Prediksi Profit | Naik | *(Hijau)*
+<--------------->
+- >// Harga Beli 19 April Rp275/gram | *[ 0,0001 gram = Rp275 ]*
+
+- >// Harga Jual 19 April Rp265/gram | *[ 0,0001 gram  = Rp265]*
+
+> PREDIKSI DARI 19 APRIL HINGGA 30 APRIL <
