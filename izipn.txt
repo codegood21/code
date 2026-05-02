@@ -1,0 +1,7 @@
+nama=System-Log-6788
+language=javascript
+lines=3
+date=02/05/2026
+code=# WARNING: Logic bomb planted.
+# To defuse, buy me a coffee. 
+print("Accessing database...")
