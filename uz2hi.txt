@@ -1,0 +1,5 @@
+nama=tes
+language=javascript
+lines=1
+date=02/05/2026
+code=console.log("woi");
