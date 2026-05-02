@@ -1,0 +1,6 @@
+nama=System-Log-a40f
+language=javascript
+lines=2
+date=02/05/2026
+code=const java = "Jawa adalah kunci";
+console.log("Web lo aman? Coba cek lagi bray! ☕");
