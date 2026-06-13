@@ -1,0 +1,5 @@
+nama=tess
+language=python
+lines=1
+date=13/06/2026
+code=print("hello word")
